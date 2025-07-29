@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos customizados para o dashboard minimalista */
+body {
+  background-color: #fafafa;
+  color: #111827;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Remover outlines globais */
+* {
+  outline: none !important;
+}
+
+/* Animações para filtros de status */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.status-filter {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.status-filter:hover {
+  animation: pulse 0.3s ease-in-out;
+}
+
+/* Estilos do Sidebar */
+.sidebar-item {
+  @apply flex items-center w-full px-3 py-2 text-gray-700 rounded-lg transition-colors hover:bg-gray-100;
+}
+
+.sidebar-item.active {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.sidebar-item.active .w-5 {
+  @apply text-gray-700;
+}
+
+/* Estilos para cards minimalistas */
+.card {
+  @apply bg-white border border-gray-200 rounded;
+}
+
+/* Estilo específico para aba geral */
+.aba-geral-card {
+  @apply bg-white border-2 border-slate-200 rounded-lg shadow-none;
+  border-color: #e2e8f0 !important;
+}
+
+/* Garantir que o conteúdo seja visível */
+body {
+  background-color: #fafafa;
+  color: #111827;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  min-height: 100vh;
+}
+
+/* Garantir que o main content seja visível */
+main {
+  min-height: 100vh;
+  background-color: #fafafa;
+}
+
+/* Estilos para botões padronizados */
+.btn {
+  @apply inline-flex items-center justify-center px-4 font-medium transition-all duration-200 focus:outline-none;
+  height: 40px;
+  border-radius: 100px;
+}
+
+.btn-primary {
+  @apply text-red-500 px-4 py-3 rounded-lg w-full;
+}
+
+.btn-secondary {
+  @apply text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-lg w-full;
+}
+
+/* Transições suaves */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Scrollbar minimalista - apenas uma */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  border: 1px solid #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #64748b;
+}
+
+/* Para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+/* Classe para sempre mostrar scrollbar no container principal */
+.always-scroll {
+  overflow-y: scroll !important;
+}
+
+/* Estilos para labels do gráfico de pizza */
+.recharts-pie-label {
+  z-index: 10 !important;
+  pointer-events: none;
+}
+
+.recharts-pie-label-text {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  fill: #374151 !important;
+}
