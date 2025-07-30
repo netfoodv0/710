@@ -13,7 +13,7 @@ import {
   serverTimestamp,
   deleteDoc
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db } from '../../../lib/firebase';
 import { Pedido, StatusPedido } from '../types';
 
 export interface PedidoFirebase extends Omit<Pedido, 'dataHora'> {

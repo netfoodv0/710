@@ -1,1 +1,0 @@
-export { ModalCategoria } from '../ModalCategoria'; 

@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
-import { Categoria, DisponibilidadeCategoria } from '../types';
-import { categoriasMock } from '../data/cardapioMock';
-import { useNotifications } from './useNotifications';
+import { Categoria, DisponibilidadeCategoria } from '../../../types';
+import { categoriasMock } from '../../../data/cardapioMock';
+import { useNotifications } from '../../../hooks/useNotifications';
 
 export interface UseCategoriasReturn {
   categorias: Categoria[];

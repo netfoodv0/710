@@ -5,12 +5,10 @@ src/**/*.js
 src/**/*.jsx
 
 # Ignorar arquivos específicos com problemas
-src/pages/Avaliacoes.tsx
 src/pages/Cardapio.tsx
 src/pages/Configuracoes.tsx
 src/pages/Dashboard.tsx
 src/pages/Pedidos.tsx
-src/pages/Promocoes.tsx
 src/components/StatusBadge.tsx
 src/components/Table.tsx
 src/types/index.ts 

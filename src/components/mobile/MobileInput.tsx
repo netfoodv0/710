@@ -1,6 +1,6 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
+import { Eye, EyeOff, Search, X } from 'lucide-react';
 import { cn } from '../../utils';
-import { Eye, EyeOff, Search } from 'lucide-react';
 
 interface MobileInputProps {
   label?: string;
@@ -8,55 +8,85 @@ interface MobileInputProps {
   value?: string;
   onChange?: (value: string) => void;
   type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'search';
-  error?: string;
+  variant?: 'default' | 'outlined' | 'filled';
+  size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
+  error?: string;
+  success?: boolean;
   required?: boolean;
+  icon?: React.ReactNode;
+  onClear?: () => void;
   className?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
-  fullWidth?: boolean;
+  autoComplete?: string;
+  maxLength?: number;
+  minLength?: number;
+  pattern?: string;
 }
 
 export const MobileInput = forwardRef<HTMLInputElement, MobileInputProps>(({
   label,
   placeholder,
-  value,
+  value = '',
   onChange,
   type = 'text',
-  error,
+  variant = 'default',
+  size = 'md',
   disabled = false,
+  error,
+  success = false,
   required = false,
+  icon,
+  onClear,
   className,
-  leftIcon,
-  rightIcon,
-  fullWidth = false
+  autoComplete,
+  maxLength,
+  minLength,
+  pattern,
+  ...props
 }, ref) => {
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [isFocused, setIsFocused] = React.useState(false);
-
-  const inputType = type === 'password' && showPassword ? 'text' : type;
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(e.target.value);
   };
 
-  const baseClasses = 'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 text-base';
+  const handleClear = () => {
+    onChange?.('');
+    onClear?.();
+  };
+
+  const inputType = type === 'password' && showPassword ? 'text' : type;
+
+  const baseClasses = 'w-full rounded-2xl transition-all duration-200 font-medium';
+  
+  const variantClasses = {
+    default: 'border-2 border-gray-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100',
+    outlined: 'border-2 border-gray-300 bg-transparent focus:border-blue-500 focus:ring-2 focus:ring-blue-100',
+    filled: 'border-2 border-transparent bg-gray-100 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100'
+  };
+  
+  const sizeClasses = {
+    sm: 'px-3 py-2 text-sm',
+    md: 'px-4 py-3 text-base',
+    lg: 'px-5 py-4 text-lg'
+  };
+
   const stateClasses = {
-    default: 'border-gray-200 bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100',
-    error: 'border-red-300 bg-red-50 focus:border-red-500 focus:ring-2 focus:ring-red-100',
-    disabled: 'border-gray-200 bg-gray-100 text-gray-500 cursor-not-allowed'
+    error: 'border-red-500 focus:border-red-500 focus:ring-red-100',
+    success: 'border-green-500 focus:border-green-500 focus:ring-green-100',
+    disabled: 'bg-gray-100 text-gray-500 cursor-not-allowed'
   };
 
   const getStateClass = () => {
     if (disabled) return stateClasses.disabled;
     if (error) return stateClasses.error;
-    return stateClasses.default;
+    if (success) return stateClasses.success;
+    return '';
   };
 
-  const widthClass = fullWidth ? 'w-full' : '';
-
   return (
-    <div className={cn('space-y-2', widthClass, className)}>
+    <div className={cn('space-y-2', className)}>
       {label && (
         <label className="block text-sm font-medium text-gray-700">
           {label}
@@ -65,9 +95,9 @@ export const MobileInput = forwardRef<HTMLInputElement, MobileInputProps>(({
       )}
       
       <div className="relative">
-        {leftIcon && (
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-            {leftIcon}
+        {icon && (
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+            {icon}
           </div>
         )}
         
@@ -79,36 +109,68 @@ export const MobileInput = forwardRef<HTMLInputElement, MobileInputProps>(({
           placeholder={placeholder}
           disabled={disabled}
           required={required}
+          autoComplete={autoComplete}
+          maxLength={maxLength}
+          minLength={minLength}
+          pattern={pattern}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           className={cn(
             baseClasses,
+            variantClasses[variant],
+            sizeClasses[size],
             getStateClass(),
-            leftIcon && 'pl-10',
-            (rightIcon || type === 'password') && 'pr-10',
-            'focus:outline-none'
+            icon && 'pl-12',
+            (type === 'search' || onClear) && 'pr-12',
+            type === 'password' && 'pr-12',
+            'focus:outline-none',
+            'touch-manipulation'
           )}
+          {...props}
         />
         
+        {/* Password Toggle */}
         {type === 'password' && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors touch-manipulation"
           >
-            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         )}
         
-        {rightIcon && type !== 'password' && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-            {rightIcon}
+        {/* Clear Button */}
+        {((type === 'search' && value) || onClear) && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors touch-manipulation"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+        
+        {/* Search Icon */}
+        {type === 'search' && !value && (
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <Search className="w-4 h-4" />
           </div>
         )}
       </div>
       
       {error && (
-        <p className="text-sm text-red-600">{error}</p>
+        <p className="text-sm text-red-600 flex items-center gap-1">
+          <span className="w-1 h-1 bg-red-500 rounded-full"></span>
+          {error}
+        </p>
+      )}
+      
+      {success && !error && (
+        <p className="text-sm text-green-600 flex items-center gap-1">
+          <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+          Campo válido
+        </p>
       )}
     </div>
   );

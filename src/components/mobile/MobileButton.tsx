@@ -5,13 +5,14 @@ import { Loader2 } from 'lucide-react';
 interface MobileButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   loading?: boolean;
   fullWidth?: boolean;
   className?: string;
   type?: 'button' | 'submit' | 'reset';
+  icon?: React.ReactNode;
 }
 
 export function MobileButton({
@@ -23,16 +24,18 @@ export function MobileButton({
   loading = false,
   fullWidth = false,
   className,
-  type = 'button'
+  type = 'button',
+  icon
 }: MobileButtonProps) {
-  const baseClasses = 'font-medium rounded-xl transition-all duration-200 flex items-center justify-center gap-2 active:scale-95';
+  const baseClasses = 'font-medium rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 touch-manipulation active:scale-[0.98]';
   
   const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-300',
+    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-300 disabled:text-gray-500',
     secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400',
     outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 disabled:border-gray-300 disabled:text-gray-400',
     ghost: 'text-gray-700 hover:bg-gray-100 active:bg-gray-200 disabled:text-gray-400',
-    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:bg-gray-300'
+    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:bg-gray-300',
+    success: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800 disabled:bg-gray-300'
   };
   
   const sizeClasses = {
@@ -59,6 +62,7 @@ export function MobileButton({
       )}
     >
       {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+      {!loading && icon && icon}
       {children}
     </button>
   );

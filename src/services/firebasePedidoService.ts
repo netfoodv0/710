@@ -1,333 +1,250 @@
 import { 
   collection, 
   doc, 
-  addDoc, 
-  updateDoc, 
   getDocs, 
   getDoc, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
   query, 
   where, 
   orderBy, 
-  onSnapshot,
-  Timestamp,
-  serverTimestamp,
-  deleteDoc
+  limit, 
+  startAfter,
+  writeBatch,
+  serverTimestamp
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { Pedido, StatusPedido } from '../types';
+import { auth, db } from '../lib/firebase';
+import { Pedido } from '../types';
 
-export interface PedidoFirebase extends Omit<Pedido, 'dataHora'> {
-  dataHora: Timestamp;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
-}
+export class FirebasePedidoService {
+  private pedidosCollection = collection(db, 'pedidos');
 
-export interface PedidoHistoricoFirebase extends PedidoFirebase {
-  statusAnterior?: StatusPedido;
-  observacao?: string;
-}
-
-class FirebasePedidoService {
-  private readonly COLLECTION_PEDIDOS = 'pedidos';
-  private readonly COLLECTION_HISTORICO = 'historico_pedidos';
-
-  // Converter Pedido para formato Firebase
-  private converterParaFirebase(pedido: Omit<Pedido, 'id'>): Omit<PedidoFirebase, 'id'> {
-    // Remover campos undefined/null antes de enviar para Firebase
-    const pedidoLimpo = this.removerCamposVazios(pedido);
-    
-    return {
-      ...pedidoLimpo,
-      dataHora: Timestamp.fromDate(pedido.dataHora),
-      createdAt: serverTimestamp() as Timestamp,
-      updatedAt: serverTimestamp() as Timestamp
-    };
-  }
-
-  // Remover campos undefined/null
-  private removerCamposVazios(obj: any): any {
-    const novoObj: any = {};
-    
-    for (const [key, value] of Object.entries(obj)) {
-      if (value !== undefined && value !== null) {
-        if (typeof value === 'object' && !Array.isArray(value)) {
-          novoObj[key] = this.removerCamposVazios(value);
-        } else {
-          novoObj[key] = value;
-        }
-      }
+  // Método auxiliar para obter o ID da loja do usuário autenticado
+  public getLojaId(): string {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('Usuário não autenticado');
     }
-    
-    return novoObj;
+    return user.uid;
   }
 
-  // Converter documento Firebase para Pedido
-  private converterParaPedido(doc: any): Pedido {
-    const data = doc.data();
-    
-    // Converter dataHora com segurança
-    let dataHora: Date;
+  async buscarPedidos(filtros: {
+    status?: string;
+    dataInicio?: Date;
+    dataFim?: Date;
+    limit?: number;
+    startAfter?: any;
+  } = {}): Promise<Pedido[]> {
     try {
-      dataHora = data.dataHora ? data.dataHora.toDate() : new Date();
-    } catch (error) {
-      console.warn('Erro ao converter dataHora, usando data atual:', error);
-      dataHora = new Date();
-    }
-    
-    return {
-      id: doc.id,
-      numero: data.numero || '',
-      status: data.status || 'novo',
-      dataHora,
-      cliente: data.cliente || null,
-      itens: data.itens || [],
-      total: data.total || 0,
-      formaPagamento: data.formaPagamento || 'PIX',
-      formaEntrega: data.formaEntrega || 'delivery',
-      origemPedido: data.origemPedido || 'ifood',
-      pagamento: data.pagamento || {
-        valorPago: 0,
-        statusPagamento: 'pendente'
-      },
-      clienteNovo: data.clienteNovo || false,
-      tempoEstimado: data.tempoEstimado || '15 min',
-      enderecoEntrega: data.enderecoEntrega || null
-    };
-  }
-
-  // Adicionar novo pedido
-  async adicionarPedido(pedido: Omit<Pedido, 'id'>): Promise<Pedido | null> {
-    try {
-      const pedidoFirebase = this.converterParaFirebase(pedido);
-      const docRef = await addDoc(collection(db, this.COLLECTION_PEDIDOS), pedidoFirebase);
+      const lojaId = this.getLojaId();
       
-      const novoPedido: Pedido = {
-        id: docRef.id,
-        ...pedido
-      };
-
-      // Adicionar ao histórico
-      await this.adicionarAoHistorico(novoPedido, pedido.status, 'Pedido criado');
+      // Sempre filtrar por loja do usuário
+      let q = query(
+        this.pedidosCollection,
+        where('lojaId', '==', lojaId),
+        orderBy('dataHora', 'desc')
+      );
       
-      return novoPedido;
-    } catch (error) {
-      console.error('Erro ao adicionar pedido:', error);
-      return null;
-    }
-  }
+      const constraints = [];
 
-  // Atualizar status do pedido
-  async atualizarStatus(pedidoId: string, novoStatus: StatusPedido, observacao?: string): Promise<Pedido | null> {
-    try {
-      const pedidoRef = doc(db, this.COLLECTION_PEDIDOS, pedidoId);
-      const pedidoDoc = await getDoc(pedidoRef);
-      
-      if (!pedidoDoc.exists()) {
-        throw new Error('Pedido não encontrado');
+      // Filtros básicos
+      if (filtros.status) {
+        constraints.push(where('status', '==', filtros.status));
       }
 
-      const pedidoAtual = this.converterParaPedido(pedidoDoc);
-      const statusAnterior = pedidoAtual.status;
-
-      // Validar transição de status
-      if (!this.validarTransicaoStatus(statusAnterior, novoStatus)) {
-        throw new Error(`Transição inválida de ${statusAnterior} para ${novoStatus}`);
+      if (filtros.dataInicio) {
+        constraints.push(where('dataHora', '>=', filtros.dataInicio));
       }
 
-      // Atualizar pedido
-      await updateDoc(pedidoRef, {
-        status: novoStatus,
-        dataHora: serverTimestamp(),
-        updatedAt: serverTimestamp()
+      if (filtros.dataFim) {
+        constraints.push(where('dataHora', '<=', filtros.dataFim));
+      }
+
+      // Paginação
+      if (filtros.limit) {
+        constraints.push(limit(filtros.limit));
+      }
+
+      if (filtros.startAfter) {
+        constraints.push(startAfter(filtros.startAfter));
+      }
+
+      // Aplicar constraints
+      constraints.forEach(constraint => {
+        q = query(q, constraint);
       });
 
-      const pedidoAtualizado: Pedido = {
-        ...pedidoAtual,
-        status: novoStatus,
-        dataHora: new Date()
-      };
+      const snapshot = await getDocs(q);
+      const pedidos: Pedido[] = [];
 
-      // Adicionar ao histórico
-      await this.adicionarAoHistorico(pedidoAtualizado, novoStatus, observacao);
-
-      return pedidoAtualizado;
-    } catch (error) {
-      console.error('Erro ao atualizar status:', error);
-      return null;
-    }
-  }
-
-  // Obter todos os pedidos
-  async obterTodosPedidos(): Promise<Pedido[]> {
-    try {
-      const q = query(
-        collection(db, this.COLLECTION_PEDIDOS),
-        orderBy('createdAt', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => this.converterParaPedido(doc));
-    } catch (error) {
-      console.error('Erro ao obter pedidos:', error);
-      return [];
-    }
-  }
-
-  // Obter pedidos por status
-  async obterPedidosPorStatus(status: StatusPedido): Promise<Pedido[]> {
-    try {
-      const q = query(
-        collection(db, this.COLLECTION_PEDIDOS),
-        where('status', '==', status),
-        orderBy('createdAt', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => this.converterParaPedido(doc));
-    } catch (error) {
-      console.error('Erro ao obter pedidos por status:', error);
-      return [];
-    }
-  }
-
-  // Obter pedido por ID
-  async obterPedidoPorId(id: string): Promise<Pedido | null> {
-    try {
-      const docRef = doc(db, this.COLLECTION_PEDIDOS, id);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        return this.converterParaPedido(docSnap);
-      }
-      return null;
-    } catch (error) {
-      console.error('Erro ao obter pedido por ID:', error);
-      return null;
-    }
-  }
-
-  // Obter histórico de pedido
-  async obterHistoricoPedido(pedidoId: string): Promise<PedidoHistoricoFirebase[]> {
-    try {
-      const q = query(
-        collection(db, this.COLLECTION_HISTORICO),
-        where('id', '==', pedidoId),
-        orderBy('dataAlteracao', 'desc')
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => {
+      snapshot.forEach(doc => {
         const data = doc.data();
+        pedidos.push({
+          ...data,
+          id: doc.id,
+          dataHora: data.dataHora?.toDate() || new Date(),
+          dataCriacao: data.dataCriacao?.toDate() || new Date(),
+          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
+        } as Pedido);
+      });
+
+      return pedidos;
+    } catch (error) {
+      console.error('Erro ao buscar pedidos:', error);
+      throw new Error('Falha ao carregar pedidos');
+    }
+  }
+
+  async buscarPedido(id: string): Promise<Pedido | null> {
+    try {
+      const lojaId = this.getLojaId();
+      const docRef = doc(this.pedidosCollection, id);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        
+        // Verificar se o pedido pertence à loja do usuário
+        if (data.lojaId !== lojaId) {
+          throw new Error('Pedido não encontrado');
+        }
+        
         return {
           ...data,
-          dataHora: data.dataHora ? data.dataHora.toDate() : new Date()
-        } as PedidoHistoricoFirebase;
+          id: docSnap.id,
+          dataHora: data.dataHora?.toDate() || new Date(),
+          dataCriacao: data.dataCriacao?.toDate() || new Date(),
+          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
+        } as Pedido;
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Erro ao buscar pedido:', error);
+      throw new Error('Falha ao carregar pedido');
+    }
+  }
+
+  async criarPedido(pedido: Omit<Pedido, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
+    try {
+      const lojaId = this.getLojaId();
+      
+      const pedidoData = {
+        ...pedido,
+        lojaId, // Adicionar ID da loja
+        dataCriacao: serverTimestamp(),
+        dataAtualizacao: serverTimestamp()
+      };
+
+      const docRef = await addDoc(this.pedidosCollection, pedidoData);
+      return docRef.id;
+    } catch (error) {
+      console.error('Erro ao criar pedido:', error);
+      throw new Error('Falha ao criar pedido');
+    }
+  }
+
+  async atualizarStatusPedido(id: string, status: string): Promise<void> {
+    try {
+      const lojaId = this.getLojaId();
+      const docRef = doc(this.pedidosCollection, id);
+      
+      // Verificar se o pedido pertence à loja antes de atualizar
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists() || docSnap.data()?.lojaId !== lojaId) {
+        throw new Error('Pedido não encontrado');
+      }
+      
+      await updateDoc(docRef, {
+        status,
+        dataAtualizacao: serverTimestamp()
       });
     } catch (error) {
-      console.error('Erro ao obter histórico:', error);
-      return [];
+      console.error('Erro ao atualizar status do pedido:', error);
+      throw new Error('Falha ao atualizar status do pedido');
     }
   }
 
-  // Obter pedidos entregues
-  async obterPedidosEntregues(): Promise<Pedido[]> {
-    return this.obterPedidosPorStatus('entregue');
-  }
-
-  // Cancelar pedido
-  async cancelarPedido(pedidoId: string, motivo?: string): Promise<Pedido | null> {
-    return this.atualizarStatus(pedidoId, 'cancelado', motivo || 'Pedido cancelado');
-  }
-
-  // Aceitar pedido
-  async aceitarPedido(pedidoId: string): Promise<Pedido | null> {
-    return this.atualizarStatus(pedidoId, 'preparando', 'Pedido aceito e em preparo');
-  }
-
-  // Recusar pedido
-  async recusarPedido(pedidoId: string, motivo?: string): Promise<Pedido | null> {
-    return this.cancelarPedido(pedidoId, motivo || 'Pedido recusado');
-  }
-
-  // Avançar para preparo
-  async avancarParaPreparo(pedidoId: string): Promise<Pedido | null> {
-    return this.atualizarStatus(pedidoId, 'preparando', 'Pedido em preparo');
-  }
-
-  // Avançar para entrega
-  async avancarParaEntrega(pedidoId: string): Promise<Pedido | null> {
-    return this.atualizarStatus(pedidoId, 'saiu_entrega', 'Pedido saiu para entrega');
-  }
-
-  // Finalizar pedido
-  async finalizarPedido(pedidoId: string): Promise<Pedido | null> {
-    return this.atualizarStatus(pedidoId, 'entregue', 'Pedido entregue');
-  }
-
-  // Validar transição de status
-  private validarTransicaoStatus(statusAtual: StatusPedido, novoStatus: StatusPedido): boolean {
-    const transicoesValidas: Record<StatusPedido, StatusPedido[]> = {
-      'novo': ['preparando', 'cancelado'],
-      'confirmado': ['preparando', 'cancelado'],
-      'preparando': ['saiu_entrega', 'cancelado'],
-      'saiu_entrega': ['entregue', 'cancelado'],
-      'entregue': [], // Status final
-      'cancelado': [] // Status final
-    };
-
-    return transicoesValidas[statusAtual]?.includes(novoStatus) || false;
-  }
-
-  // Adicionar ao histórico
-  private async adicionarAoHistorico(pedido: Pedido, status: StatusPedido, observacao?: string) {
+  async excluirPedido(id: string): Promise<void> {
     try {
-      const historicoEntry: Omit<PedidoHistoricoFirebase, 'id'> = {
-        ...pedido,
-        dataHora: Timestamp.fromDate(pedido.dataHora),
-        createdAt: serverTimestamp() as Timestamp,
-        updatedAt: serverTimestamp() as Timestamp,
-        observacao
-      };
-
-      await addDoc(collection(db, this.COLLECTION_HISTORICO), historicoEntry);
+      const lojaId = this.getLojaId();
+      const docRef = doc(this.pedidosCollection, id);
+      
+      // Verificar se o pedido pertence à loja antes de excluir
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists() || docSnap.data()?.lojaId !== lojaId) {
+        throw new Error('Pedido não encontrado');
+      }
+      
+      await deleteDoc(docRef);
     } catch (error) {
-      console.error('Erro ao adicionar ao histórico:', error);
+      console.error('Erro ao excluir pedido:', error);
+      throw new Error('Falha ao excluir pedido');
     }
   }
 
-  // Estatísticas
-  async obterEstatisticas() {
+  async buscarHistoricoPedidos(filtros: {
+    status?: string;
+    dataInicio?: Date;
+    dataFim?: Date;
+    limit?: number;
+  } = {}): Promise<Pedido[]> {
     try {
-      const todosPedidos = await this.obterTodosPedidos();
-      const total = todosPedidos.length;
-      const porStatus = {
-        novo: todosPedidos.filter(p => p.status === 'novo').length,
-        confirmado: todosPedidos.filter(p => p.status === 'confirmado').length,
-        preparando: todosPedidos.filter(p => p.status === 'preparando').length,
-        saiu_entrega: todosPedidos.filter(p => p.status === 'saiu_entrega').length,
-        entregue: todosPedidos.filter(p => p.status === 'entregue').length,
-        cancelado: todosPedidos.filter(p => p.status === 'cancelado').length
-      };
+      const lojaId = this.getLojaId();
+      
+      // Buscar no histórico (coleção separada)
+      const historicoCollection = collection(db, 'historicoPedidos');
+      
+      let q = query(
+        historicoCollection,
+        where('lojaId', '==', lojaId),
+        orderBy('dataHora', 'desc')
+      );
+      
+      const constraints = [];
 
-      return { total, porStatus };
+      if (filtros.status) {
+        constraints.push(where('status', '==', filtros.status));
+      }
+
+      if (filtros.dataInicio) {
+        constraints.push(where('dataHora', '>=', filtros.dataInicio));
+      }
+
+      if (filtros.dataFim) {
+        constraints.push(where('dataHora', '<=', filtros.dataFim));
+      }
+
+      if (filtros.limit) {
+        constraints.push(limit(filtros.limit));
+      }
+
+      constraints.forEach(constraint => {
+        q = query(q, constraint);
+      });
+
+      const snapshot = await getDocs(q);
+      const pedidos: Pedido[] = [];
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        pedidos.push({
+          ...data,
+          id: doc.id,
+          dataHora: data.dataHora?.toDate() || new Date(),
+          dataCriacao: data.dataCriacao?.toDate() || new Date(),
+          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
+        } as Pedido);
+      });
+
+      return pedidos;
     } catch (error) {
-      console.error('Erro ao obter estatísticas:', error);
-      return { total: 0, porStatus: { novo: 0, confirmado: 0, preparando: 0, saiu_entrega: 0, entregue: 0, cancelado: 0 } };
+      console.error('Erro ao buscar histórico de pedidos:', error);
+      throw new Error('Falha ao carregar histórico de pedidos');
     }
-  }
-
-  // Listener em tempo real para pedidos
-  onPedidosChange(callback: (pedidos: Pedido[]) => void) {
-    const q = query(
-      collection(db, this.COLLECTION_PEDIDOS),
-      orderBy('createdAt', 'desc')
-    );
-
-    return onSnapshot(q, (querySnapshot) => {
-      const pedidos = querySnapshot.docs.map(doc => this.converterParaPedido(doc));
-      callback(pedidos);
-    });
   }
 }
 
+// ✅ EXPORTAR instância do serviço
 export const firebasePedidoService = new FirebasePedidoService(); 

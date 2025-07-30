@@ -1,21 +1,20 @@
-// Dashboard Feature - Exports
-// Components
-export { GraficoPizza } from './components/GraficoPizza';
-export { CardMetrica } from './components/CardMetrica';
-export { GraficoBarras } from './components/GraficoBarras';
-export { GraficoArea } from './components/GraficoArea';
-export { PedidosRecentes } from './components/PedidosRecentes';
-export { DashboardSkeleton } from './components/DashboardSkeleton';
-export { DashboardAnalytics } from './components/DashboardAnalytics';
-export { KPISection } from './components/KPISection';
-export { GraficoPerformance } from './components/GraficoPerformance';
+// Dashboard Components
+export { GraficoPizza } from '../../../components/analytics/GraficoPizza';
+export { CardMetrica } from '../../../components/cards/CardMetrica';
+export { GraficoBarras } from '../../../components/analytics/GraficoBarras';
+export { GraficoArea } from '../../../components/analytics/GraficoArea';
+export { PedidosRecentes } from '../../../components/cards/PedidosRecentes';
+export { DashboardSkeleton } from '../../../components/skeletons/DashboardSkeleton';
+export { DashboardAnalytics } from '../../../components/analytics/DashboardAnalytics';
+export { KPISection } from '../../../components/analytics/SecaoKPIs';
+export { GraficoPerformance } from '../../../components/analytics/GraficoPerformance';
 
-// Hooks
+// Dashboard Hooks
 export { useDashboard } from './hooks/useDashboard';
 export { useDashboardOptimized } from './hooks/useDashboardOptimized';
-export { useAnalytics } from './hooks/useAnalytics';
+export { useAnalytics } from '../../../hooks/useAnalytics';
 
-// Services
+// Dashboard Services
 export { dashboardService } from './services/dashboardService';
 
 // Types

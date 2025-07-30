@@ -1,6 +1,6 @@
-export { FiltrosCategorias } from './FiltrosCategorias';
-export { ModalProduto } from './ModalProduto';
-export { GerenciadorCategorias } from './GerenciadorCategorias';
-export { FiltrosCardapio } from './FiltrosCardapio';
-export { EstatisticasCardapio } from './EstatisticasCardapio';
-export { SkeletonLoading } from './SkeletonLoading';
+export { FiltrosCategorias } from '../../../components/filters/FiltrosCategorias';
+export { ModalProduto } from '../../../components/modals/ModalCriarEditarProduto';
+export { GerenciadorCategorias } from '../../../components/gerenciadores/GerenciadorCategorias';
+export { FiltrosCardapio } from '../../../components/filters/FiltrosCardapio';
+export { EstatisticasCardapio } from '../../../components/analytics/EstatisticasCardapio';
+export { SkeletonLoading } from '../../../components/skeletons/SkeletonLoading';

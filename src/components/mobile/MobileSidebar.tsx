@@ -6,9 +6,6 @@ import {
   ShoppingBag, 
   History,
   BookOpen, 
-  Star, 
-  Tag, 
-  BarChart3, 
   Settings,
   Store,
   LogOut,
@@ -41,21 +38,6 @@ const menuItems = [
     path: '/cardapio',
     label: 'Cardápio',
     icon: BookOpen
-  },
-  {
-    path: '/avaliacoes',
-    label: 'Avaliações',
-    icon: Star
-  },
-  {
-    path: '/promocoes',
-    label: 'Promoções',
-    icon: Tag
-  },
-  {
-    path: '/relatorios',
-    label: 'Relatórios',
-    icon: BarChart3
   },
   {
     path: '/configuracoes',

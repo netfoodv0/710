@@ -1,59 +1,71 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Regras para usuários
+    // Função auxiliar para verificar se o usuário está autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Função auxiliar para verificar se o usuário é dono da loja
+    function isOwner(lojaId) {
+      return isAuthenticated() && request.auth.uid == lojaId;
+    }
+    
+    // Função auxiliar para verificar se o documento pertence à loja do usuário
+    function belongsToUserLoja(lojaId) {
+      return isAuthenticated() && request.auth.uid == lojaId;
+    }
+
+    // Regras para usuários - apenas o próprio usuário pode acessar
     match /usuarios/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if isAuthenticated() && request.auth.uid == userId;
     }
     
-    // Regras para lojas
+    // Regras para lojas - apenas o dono da loja pode acessar
     match /lojas/{lojaId} {
-      allow read, write: if request.auth != null && request.auth.uid == lojaId;
+      allow read, write: if isOwner(lojaId);
     }
     
-    // Regras para pedidos
+    // Regras para pedidos - apenas pedidos da loja do usuário
     match /pedidos/{pedidoId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if isAuthenticated() && 
+        resource.data.lojaId == request.auth.uid;
     }
     
-    // Regras para produtos
+    // Regras para produtos - apenas produtos da loja do usuário
     match /produtos/{produtoId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if isAuthenticated() && 
+        resource.data.lojaId == request.auth.uid;
     }
     
-    // Regras para categorias
+    // Regras para categorias - apenas categorias da loja do usuário
     match /categorias/{categoriaId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if isAuthenticated() && 
+        resource.data.lojaId == request.auth.uid;
     }
     
-    // Regras para categorias adicionais
+    // Regras para categorias adicionais - apenas da loja do usuário
     match /categoriasAdicionais/{categoriaId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if isAuthenticated() && 
+        resource.data.lojaId == request.auth.uid;
     }
     
-    // Regras para configurações
+    // Regras para configurações - apenas da loja do usuário
     match /configuracoes/{configId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if isAuthenticated() && 
+        resource.data.lojaId == request.auth.uid;
     }
     
-    // Regras para histórico de pedidos
+    // Regras para histórico de pedidos - apenas da loja do usuário
     match /historicoPedidos/{pedidoId} {
-      allow read, write: if request.auth != null;
+      allow read, write: if isAuthenticated() && 
+        resource.data.lojaId == request.auth.uid;
     }
     
-    // Regras para avaliações
-    match /avaliacoes/{avaliacaoId} {
-      allow read, write: if request.auth != null;
-    }
-    
-    // Regras para promoções
-    match /promocoes/{promocaoId} {
-      allow read, write: if request.auth != null;
-    }
-    
-    // Regras para relatórios
-    match /relatorios/{relatorioId} {
-      allow read, write: if request.auth != null;
+    // Regras para estatísticas - apenas da loja do usuário
+    match /estatisticas/{estatisticaId} {
+      allow read, write: if isAuthenticated() && 
+        resource.data.lojaId == request.auth.uid;
     }
   }
 } 

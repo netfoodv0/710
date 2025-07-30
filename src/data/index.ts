@@ -2,6 +2,4 @@
 export * from './dashboardMock';
 export * from './pedidosMock';
 export * from './cardapioMock';
-export * from './promocoesMock';
-export * from './relatoriosMock';
 export * from './configuracaoMock';

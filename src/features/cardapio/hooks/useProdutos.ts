@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
-import { Produto, ScoreQualidade, ValidacaoProduto } from '../types/produtos';
-import { produtosMock } from '../data/produtosMock';
-import { useNotifications } from './useNotifications';
+import { Produto, ScoreQualidade, ValidacaoProduto } from '../../../types';
+import { produtosMock } from '../../../data/produtosMock';
+import { useNotifications } from '../../../hooks/useNotifications';
 
 export interface UseProdutosReturn {
   produtos: Produto[];

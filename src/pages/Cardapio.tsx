@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Package, Settings, Plus, List, AlertCircle } from 'lucide-react';
-import { GerenciadorCategorias, FiltrosCardapio, EstatisticasCardapio } from '../components/cardapio';
-import { ListaProdutos } from '../components/produtos';
+import { GerenciadorCategorias, FiltrosCardapio, EstatisticasCardapio } from '../features/cardapio/components';
+import { ListaProdutos } from '../components/lists/ListaProdutos';
 import { useProdutosFirebase } from '../hooks/useProdutosFirebase';
 import { useCategoriasFirebase } from '../hooks/useCategoriasFirebase';
 import { useFiltrosCardapio } from '../hooks/useFiltrosCardapio';
@@ -10,9 +10,11 @@ import { useAnalyticsContext } from '../context/analyticsContextUtils';
 import { useAnalyticsService } from '../utils/analytics';
 import { NotificationToast } from '../components/NotificationToast';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 export function Cardapio() {
   const [activeSection, setActiveSection] = useState<'categorias' | 'produtos'>('categorias');
+  const isMobile = useIsMobile();
 
   const {
     produtos,
@@ -150,39 +152,41 @@ export function Cardapio() {
           />
         ))}
 
-        {/* Cabeçalho Fixo */}
+        {/* Cabeçalho Fixo - Melhorado para Mobile */}
         <div className="flex-shrink-0 p-4">
-          <div className="bg-white border border-slate-200 rounded" style={{ height: '72px' }}>
-            <div className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4" style={{ height: '100%' }}>
-              {/* Esquerda: Título e subtítulo */}
-              <div>
-                <h1 className="text-sm font-bold text-gray-900">Cardápio</h1>
-                <p className="text-gray-600 mt-1 text-xs">Gerencie seus produtos e categorias</p>
+          <div className="bg-white border border-slate-200 rounded">
+            <div className="p-4">
+              {/* Título e subtítulo */}
+              <div className="mb-4">
+                <h1 className="text-lg font-bold text-gray-900">Cardápio</h1>
+                <p className="text-gray-600 mt-1 text-sm">Gerencie seus produtos e categorias</p>
               </div>
               
-              {/* Direita: Ações */}
-              <div className="flex items-center gap-3">
+              {/* Navegação por Abas - Melhorada para Mobile */}
+              <div className="flex bg-gray-100 rounded-lg p-1 cardapio-tabs">
                 <button 
                   onClick={() => handleSectionChange('categorias')}
-                  className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-md transition-all duration-200 cardapio-tab mobile-nav-button ${
                     activeSection === 'categorias'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-white text-blue-600 shadow-sm active'
+                      : 'text-gray-600 hover:text-gray-800'
                   }`}
                 >
-                  <Settings className="w-4 h-4 inline mr-2" />
-                  Categorias
+                  <Settings className="w-4 h-4" />
+                  <span className="hidden sm:inline">Categorias</span>
+                  <span className="sm:hidden">Cat.</span>
                 </button>
                 <button 
                   onClick={() => handleSectionChange('produtos')}
-                  className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
+                  className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-md transition-all duration-200 cardapio-tab mobile-nav-button ${
                     activeSection === 'produtos'
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-white text-blue-600 shadow-sm active'
+                      : 'text-gray-600 hover:text-gray-800'
                   }`}
                 >
-                  <Package className="w-4 h-4 inline mr-2" />
-                  Produtos
+                  <Package className="w-4 h-4" />
+                  <span className="hidden sm:inline">Produtos</span>
+                  <span className="sm:hidden">Prod.</span>
                 </button>
               </div>
             </div>

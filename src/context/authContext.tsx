@@ -8,9 +8,13 @@ interface AuthContextType extends AuthState {
   cadastrarLoja: (data: any) => Promise<void>;
   logout: () => Promise<void>;
   clearError: () => void;
+  refreshUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// ✅ EXPORTAR o AuthContext
+export { AuthContext };
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -32,6 +36,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Função para limpar erro
   const clearError = () => {
     updateState({ error: null });
+  };
+
+  // Função para recarregar dados do usuário
+  const refreshUserData = async () => {
+    try {
+      updateState({ status: 'loading', error: null });
+      
+      const user = await AuthService.getCurrentUser();
+      const loja = await AuthService.getCurrentLoja();
+      
+      if (user) {
+        updateState({
+          user,
+          loja,
+          status: 'authenticated',
+          error: null
+        });
+      } else {
+        updateState({
+          user: null,
+          loja: null,
+          status: 'unauthenticated',
+          error: null
+        });
+      }
+    } catch (error: any) {
+      console.error('Erro ao recarregar dados do usuário:', error);
+      updateState({
+        status: 'error',
+        error: 'Erro ao carregar dados do usuário'
+      });
+    }
   };
 
   // Função de login
@@ -103,10 +139,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Listener para mudanças de autenticação
   useEffect(() => {
-    console.log('Setting up auth listener...');
     
     const unsubscribe = AuthService.onAuthStateChanged(async (firebaseUser: FirebaseUser | null) => {
-      console.log('Auth state changed:', firebaseUser ? 'User logged in' : 'No user');
       
       if (firebaseUser) {
         try {
@@ -114,9 +148,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           
           const user = await AuthService.getCurrentUser();
           const loja = await AuthService.getCurrentLoja();
-          
-          console.log('User data:', user);
-          console.log('Loja data:', loja);
           
           if (user) {
             updateState({
@@ -126,11 +157,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               error: null
             });
           } else {
+            // Usuário Firebase existe mas não tem dados no Firestore
+            console.warn('Usuário Firebase existe mas não tem dados no Firestore');
             updateState({
               user: null,
               loja: null,
               status: 'unauthenticated',
-              error: null
+              error: 'Dados do usuário não encontrados'
             });
           }
         } catch (error) {
@@ -160,7 +193,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     cadastrarLoja,
     logout,
-    clearError
+    clearError,
+    refreshUserData
   };
 
   return (
@@ -170,11 +204,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// Hook para usar o contexto de autenticação
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth deve ser usado dentro de um AuthProvider');
-  }
-  return context;
-}; 
+// ✅ REMOVER o hook useAuth daqui para evitar conflitos
+// O hook useAuth está em src/hooks/useAuth.ts 

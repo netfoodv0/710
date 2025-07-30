@@ -1,22 +1,82 @@
 import React, { useState } from 'react';
 import { Search, Eye, Grid, List, Plus, ShoppingBag } from 'lucide-react';
 import { Card, StatusBadge } from '../components';
-import { FiltrosStatus, StatusActions, ModalDetalhesPedido, CardPedido } from '../components/pedidos';
+import { FiltrosStatus, StatusActions, ModalDetalhesPedido, CardPedido } from '../features/pedidos/components';
 import { pedidosMock } from '../data';
 import { Pedido } from '../types';
+import { usePedidos } from '../hooks/usePedidos';
 
 export function Pedidos() {
-  const [pedidos, setPedidos] = useState(pedidosMock);
-  const loading = false;
-  const error = null;
+  const { 
+    pedidos, 
+    loading, 
+    error, 
+    aceitarPedido, 
+    avancarParaPreparo, 
+    avancarParaEntrega, 
+    finalizarPedido, 
+    recusarPedido 
+  } = usePedidos();
+  
   const [filtroStatus, setFiltroStatus] = useState('todos');
   const [busca, setBusca] = useState('');
   const [pedidoSelecionado, setPedidoSelecionado] = useState<Pedido | null>(null);
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards');
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
   const handleStatusChange = (pedidoId: string, novoStatus: string) => {
     // TODO: Implementar atualização de status via hook usePedidos
     console.log(`Atualizando pedido ${pedidoId} para status ${novoStatus}`);
+  };
+
+  const handleAceitarPedido = async (pedido: Pedido) => {
+    setLoadingAction(pedido.id);
+    try {
+      await aceitarPedido(pedido.id);
+    } catch (error) {
+      console.error('Erro ao aceitar pedido:', error);
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
+  const handleAvançarPedido = async (pedido: Pedido) => {
+    setLoadingAction(pedido.id);
+    try {
+      if (pedido.status === 'confirmado') {
+        await avancarParaPreparo(pedido.id);
+      } else if (pedido.status === 'preparando') {
+        await avancarParaEntrega(pedido.id);
+      } else if (pedido.status === 'pronto') {
+        await avancarParaEntrega(pedido.id);
+      }
+    } catch (error) {
+      console.error('Erro ao avançar pedido:', error);
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
+  const handleFinalizarPedido = async (pedido: Pedido) => {
+    setLoadingAction(pedido.id);
+    try {
+      await finalizarPedido(pedido.id);
+    } catch (error) {
+      console.error('Erro ao finalizar pedido:', error);
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
+  const handleCancelarPedido = async (pedido: Pedido) => {
+    setLoadingAction(pedido.id);
+    try {
+      await recusarPedido(pedido.id, 'Pedido cancelado pelo usuário');
+    } catch (error) {
+      console.error('Erro ao cancelar pedido:', error);
+    } finally {
+      setLoadingAction(null);
+    }
   };
 
   const pedidosFiltrados = pedidos.filter(pedido => {
@@ -143,6 +203,11 @@ export function Pedidos() {
                 onPedidoClick={setPedidoSelecionado}
                 onEditarPedido={(pedido) => console.log('Editar pedido:', pedido)}
                 onImprimirPedido={(pedido) => console.log('Imprimir pedido:', pedido)}
+                onAceitarPedido={handleAceitarPedido}
+                onAvançarPedido={handleAvançarPedido}
+                onFinalizarPedido={handleFinalizarPedido}
+                onCancelarPedido={handleCancelarPedido}
+                loading={loadingAction === pedido.id}
               />
             );
           })}
@@ -158,6 +223,11 @@ export function Pedidos() {
               onPedidoClick={setPedidoSelecionado}
               onEditarPedido={(pedido) => console.log('Editar pedido:', pedido)}
               onImprimirPedido={(pedido) => console.log('Imprimir pedido:', pedido)}
+              onAceitarPedido={handleAceitarPedido}
+              onAvançarPedido={handleAvançarPedido}
+              onFinalizarPedido={handleFinalizarPedido}
+              onCancelarPedido={handleCancelarPedido}
+              loading={loadingAction === pedido.id}
             />
           ))}
         </div>

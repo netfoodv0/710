@@ -1,23 +1,10 @@
-import { 
-  collection, 
-  doc, 
-  getDocs, 
-  getDoc, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit, 
-  startAfter,
-  writeBatch,
-  serverTimestamp,
-  QueryDocumentSnapshot,
-  DocumentData
-} from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { QueryDocumentSnapshot, DocumentData, doc } from 'firebase/firestore';
+import { FirebaseProdutosService } from './firebase/produtosService';
+import { FirebaseCategoriasService } from './firebase/categoriasService';
+import { FirebaseEstatisticasService } from './firebase/estatisticasService';
 import { Produto, Categoria, CategoriaAdicional } from '../types';
+import { collection, query, where, orderBy, getDocs, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 // Tipos para queries otimizadas
 export interface FiltrosProduto {
@@ -37,270 +24,85 @@ export interface FiltrosCategoria {
   status?: 'ativo' | 'inativo';
 }
 
-// Serviço de Produtos
+export interface EstatisticasCardapio {
+  totalProdutos: number;
+  produtosAtivos: number;
+  produtosDestacados: number;
+  produtosEmFalta: number;
+  categoriasAtivas: number;
+  receitaTotal: number;
+}
+
+// Serviço principal que combina todos os serviços do Firebase
 export class FirebaseCardapioService {
-  private produtosCollection = collection(db, 'produtos');
-  private categoriasCollection = collection(db, 'categorias');
-  private categoriasAdicionaisCollection = collection(db, 'categoriasAdicionais');
+  private produtosService: FirebaseProdutosService;
+  private categoriasService: FirebaseCategoriasService;
+  private estatisticasService: FirebaseEstatisticasService;
+
+  constructor() {
+    this.produtosService = new FirebaseProdutosService();
+    this.categoriasService = new FirebaseCategoriasService();
+    this.estatisticasService = new FirebaseEstatisticasService();
+  }
 
   // ===== PRODUTOS =====
   
   async buscarProdutos(filtros: FiltrosProduto = {}): Promise<Produto[]> {
-    try {
-      let q = query(this.produtosCollection);
-      const constraints = [];
-
-      // Filtros básicos (usando índices compostos)
-      if (filtros.status) {
-        constraints.push(where('status', '==', filtros.status));
-      }
-      
-      if (filtros.destacado !== undefined) {
-        constraints.push(where('destacado', '==', filtros.destacado));
-      }
-
-      if (filtros.categoriaId) {
-        constraints.push(where('categoriaId', '==', filtros.categoriaId));
-      }
-
-      if (filtros.precoMin !== undefined) {
-        constraints.push(where('preco', '>=', filtros.precoMin));
-      }
-
-      if (filtros.precoMax !== undefined) {
-        constraints.push(where('preco', '<=', filtros.precoMax));
-      }
-
-      // Ordenação padrão (sempre incluída para usar índices)
-      constraints.push(orderBy('dataAtualizacao', 'desc'));
-
-      // Paginação
-      if (filtros.limit) {
-        constraints.push(limit(filtros.limit));
-      }
-
-      if (filtros.startAfter) {
-        constraints.push(startAfter(filtros.startAfter));
-      }
-
-      // Aplicar constraints
-      constraints.forEach(constraint => {
-        q = query(q, constraint);
-      });
-
-      const snapshot = await getDocs(q);
-      const produtos: Produto[] = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        produtos.push({
-          ...data,
-          id: doc.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Produto);
-      });
-
-      // Filtro de texto (client-side para flexibilidade)
-      if (filtros.termo) {
-        const termo = filtros.termo.toLowerCase();
-        return produtos.filter(produto => 
-          produto.nome.toLowerCase().includes(termo) ||
-          produto.descricao.toLowerCase().includes(termo) ||
-          produto.tags.some(tag => tag.toLowerCase().includes(termo))
-        );
-      }
-
-      return produtos;
-    } catch (error) {
-      console.error('Erro ao buscar produtos:', error);
-      throw new Error('Falha ao carregar produtos');
-    }
+    return this.produtosService.buscarProdutos(filtros);
   }
 
   async buscarProduto(id: string): Promise<Produto | null> {
-    try {
-      const docRef = doc(this.produtosCollection, id);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        return {
-          ...data,
-          id: docSnap.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Produto;
-      }
-
-      return null;
-    } catch (error) {
-      console.error('Erro ao buscar produto:', error);
-      throw new Error('Falha ao carregar produto');
-    }
+    return this.produtosService.buscarProduto(id);
   }
 
   async criarProduto(produto: Omit<Produto, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
-    try {
-      const produtoData = {
-        ...produto,
-        dataCriacao: serverTimestamp(),
-        dataAtualizacao: serverTimestamp()
-      };
-
-      const docRef = await addDoc(this.produtosCollection, produtoData);
-      return docRef.id;
-    } catch (error) {
-      console.error('Erro ao criar produto:', error);
-      throw new Error('Falha ao criar produto');
-    }
+    return this.produtosService.criarProduto(produto);
   }
 
   async editarProduto(id: string, dados: Partial<Produto>): Promise<void> {
-    try {
-      const docRef = doc(this.produtosCollection, id);
-      await updateDoc(docRef, {
-        ...dados,
-        dataAtualizacao: serverTimestamp()
-      });
-    } catch (error) {
-      console.error('Erro ao editar produto:', error);
-      throw new Error('Falha ao atualizar produto');
-    }
+    return this.produtosService.editarProduto(id, dados);
   }
 
   async excluirProduto(id: string): Promise<void> {
-    try {
-      const docRef = doc(this.produtosCollection, id);
-      await deleteDoc(docRef);
-    } catch (error) {
-      console.error('Erro ao excluir produto:', error);
-      throw new Error('Falha ao excluir produto');
-    }
+    return this.produtosService.excluirProduto(id);
   }
 
   async duplicarProduto(id: string): Promise<string> {
-    try {
-      const produtoOriginal = await this.buscarProduto(id);
-      if (!produtoOriginal) {
-        throw new Error('Produto não encontrado');
-      }
+    return this.produtosService.duplicarProduto(id);
+  }
 
-      const produtoDuplicado = {
-        ...produtoOriginal,
-        nome: `${produtoOriginal.nome} (Cópia)`,
-        slug: `${produtoOriginal.slug}-copia`,
-        vendasTotais: 0,
-        avaliacaoMedia: 0,
-        numeroAvaliacoes: 0,
-        dataCriacao: new Date(),
-        dataAtualizacao: new Date()
-      };
-
-      delete (produtoDuplicado as any).id;
-      return await this.criarProduto(produtoDuplicado);
-    } catch (error) {
-      console.error('Erro ao duplicar produto:', error);
-      throw new Error('Falha ao duplicar produto');
-    }
+  async atualizarStatusProdutos(ids: string[], status: 'ativo' | 'inativo' | 'em_falta'): Promise<void> {
+    return this.produtosService.atualizarStatusProdutos(ids, status);
   }
 
   // ===== CATEGORIAS =====
 
   async buscarCategorias(filtros: FiltrosCategoria = {}): Promise<Categoria[]> {
-    try {
-      let q = query(this.categoriasCollection);
-      const constraints = [];
-
-      if (filtros.ativa !== undefined) {
-        constraints.push(where('ativa', '==', filtros.ativa));
-      }
-
-      if (filtros.tipo) {
-        constraints.push(where('tipo', '==', filtros.tipo));
-      }
-
-      if (filtros.status) {
-        constraints.push(where('status', '==', filtros.status));
-      }
-
-      constraints.push(orderBy('nome', 'asc'));
-
-      constraints.forEach(constraint => {
-        q = query(q, constraint);
-      });
-
-      const snapshot = await getDocs(q);
-      const categorias: Categoria[] = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        categorias.push({
-          ...data,
-          id: doc.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Categoria);
-      });
-
-      return categorias;
-    } catch (error) {
-      console.error('Erro ao buscar categorias:', error);
-      throw new Error('Falha ao carregar categorias');
-    }
+    return this.categoriasService.buscarCategorias(filtros);
   }
 
   async criarCategoria(categoria: Omit<Categoria, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
-    try {
-      const categoriaData = {
-        ...categoria,
-        dataCriacao: serverTimestamp(),
-        dataAtualizacao: serverTimestamp()
-      };
-
-      const docRef = await addDoc(this.categoriasCollection, categoriaData);
-      return docRef.id;
-    } catch (error) {
-      console.error('Erro ao criar categoria:', error);
-      throw new Error('Falha ao criar categoria');
-    }
+    return this.categoriasService.criarCategoria(categoria);
   }
 
   async editarCategoria(id: string, dados: Partial<Categoria>): Promise<void> {
-    try {
-      const docRef = doc(this.categoriasCollection, id);
-      await updateDoc(docRef, {
-        ...dados,
-        dataAtualizacao: serverTimestamp()
-      });
-    } catch (error) {
-      console.error('Erro ao editar categoria:', error);
-      throw new Error('Falha ao atualizar categoria');
-    }
+    return this.categoriasService.editarCategoria(id, dados);
   }
 
   async excluirCategoria(id: string): Promise<void> {
-    try {
-      // Verificar se há produtos na categoria
-      const produtos = await this.buscarProdutos({ categoriaId: id });
-      if (produtos.length > 0) {
-        throw new Error('Não é possível excluir categoria com produtos');
-      }
-
-      const docRef = doc(this.categoriasCollection, id);
-      await deleteDoc(docRef);
-    } catch (error) {
-      console.error('Erro ao excluir categoria:', error);
-      throw new Error('Falha ao excluir categoria');
-    }
+    return this.categoriasService.excluirCategoria(id);
   }
 
   // ===== CATEGORIAS ADICIONAIS =====
 
+  // ✅ IMPLEMENTAR métodos de categorias adicionais
   async buscarCategoriasAdicionais(): Promise<CategoriaAdicional[]> {
     try {
+      const lojaId = this.categoriasService.getLojaId();
+      
       const q = query(
-        this.categoriasAdicionaisCollection,
+        collection(db, 'categoriasAdicionais'),
+        where('lojaId', '==', lojaId),
         orderBy('nome', 'asc')
       );
 
@@ -326,13 +128,16 @@ export class FirebaseCardapioService {
 
   async criarCategoriaAdicional(categoria: Omit<CategoriaAdicional, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
     try {
+      const lojaId = this.categoriasService.getLojaId();
+      
       const categoriaData = {
         ...categoria,
+        lojaId, // Adicionar ID da loja
         dataCriacao: serverTimestamp(),
         dataAtualizacao: serverTimestamp()
       };
 
-      const docRef = await addDoc(this.categoriasAdicionaisCollection, categoriaData);
+      const docRef = await addDoc(collection(db, 'categoriasAdicionais'), categoriaData);
       return docRef.id;
     } catch (error) {
       console.error('Erro ao criar categoria adicional:', error);
@@ -342,7 +147,15 @@ export class FirebaseCardapioService {
 
   async editarCategoriaAdicional(id: string, dados: Partial<CategoriaAdicional>): Promise<void> {
     try {
-      const docRef = doc(this.categoriasAdicionaisCollection, id);
+      const lojaId = this.categoriasService.getLojaId();
+      const docRef = doc(db, 'categoriasAdicionais', id);
+      
+      // Verificar se a categoria pertence à loja antes de editar
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists() || docSnap.data()?.lojaId !== lojaId) {
+        throw new Error('Categoria adicional não encontrada');
+      }
+      
       await updateDoc(docRef, {
         ...dados,
         dataAtualizacao: serverTimestamp()
@@ -355,7 +168,15 @@ export class FirebaseCardapioService {
 
   async excluirCategoriaAdicional(id: string): Promise<void> {
     try {
-      const docRef = doc(this.categoriasAdicionaisCollection, id);
+      const lojaId = this.categoriasService.getLojaId();
+      const docRef = doc(db, 'categoriasAdicionais', id);
+      
+      // Verificar se a categoria pertence à loja antes de excluir
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists() || docSnap.data()?.lojaId !== lojaId) {
+        throw new Error('Categoria adicional não encontrada');
+      }
+      
       await deleteDoc(docRef);
     } catch (error) {
       console.error('Erro ao excluir categoria adicional:', error);
@@ -365,58 +186,8 @@ export class FirebaseCardapioService {
 
   // ===== ESTATÍSTICAS =====
 
-  async buscarEstatisticasCardapio(): Promise<{
-    totalProdutos: number;
-    produtosAtivos: number;
-    produtosDestacados: number;
-    produtosEmFalta: number;
-    categoriasAtivas: number;
-    receitaTotal: number;
-  }> {
-    try {
-      const [produtos, categorias] = await Promise.all([
-        this.buscarProdutos(),
-        this.buscarCategorias({ ativa: true })
-      ]);
-
-      const produtosAtivos = produtos.filter(p => p.status === 'ativo');
-      const produtosDestacados = produtos.filter(p => p.destacado);
-      const produtosEmFalta = produtos.filter(p => p.status === 'em_falta');
-      const receitaTotal = produtosAtivos.reduce((total, p) => total + p.preco, 0);
-
-      return {
-        totalProdutos: produtos.length,
-        produtosAtivos: produtosAtivos.length,
-        produtosDestacados: produtosDestacados.length,
-        produtosEmFalta: produtosEmFalta.length,
-        categoriasAtivas: categorias.length,
-        receitaTotal
-      };
-    } catch (error) {
-      console.error('Erro ao buscar estatísticas:', error);
-      throw new Error('Falha ao carregar estatísticas');
-    }
-  }
-
-  // ===== OPERAÇÕES EM LOTE =====
-
-  async atualizarStatusProdutos(ids: string[], status: 'ativo' | 'inativo' | 'em_falta'): Promise<void> {
-    try {
-      const batch = writeBatch(db);
-
-      ids.forEach(id => {
-        const docRef = doc(this.produtosCollection, id);
-        batch.update(docRef, {
-          status,
-          dataAtualizacao: serverTimestamp()
-        });
-      });
-
-      await batch.commit();
-    } catch (error) {
-      console.error('Erro ao atualizar status dos produtos:', error);
-      throw new Error('Falha ao atualizar status dos produtos');
-    }
+  async buscarEstatisticasCardapio(): Promise<EstatisticasCardapio> {
+    return this.estatisticasService.buscarEstatisticasCardapio();
   }
 }
 

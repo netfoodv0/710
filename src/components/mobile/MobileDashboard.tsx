@@ -5,9 +5,12 @@ import {
   DollarSign, 
   Users,
   Clock,
-  Star
+  Star,
+  Plus,
+  Package
 } from 'lucide-react';
 import { MobileCard } from './MobileCard';
+import { MobileButton } from './MobileButton';
 import { useDashboard } from '../../hooks/useDashboard';
 
 interface MetricCardProps {
@@ -17,20 +20,27 @@ interface MetricCardProps {
   isPositive: boolean;
   icon: React.ReactNode;
   color: string;
+  trend: 'up' | 'down' | 'neutral';
 }
 
-function MetricCard({ title, value, change, isPositive, icon, color }: MetricCardProps) {
+function MetricCard({ title, value, change, isPositive, icon, color, trend }: MetricCardProps) {
   return (
-    <MobileCard className="flex items-center gap-4">
-      <div className={`p-3 rounded-xl ${color}`}>
+    <MobileCard className="flex items-center gap-4 p-4" variant="interactive">
+      <div className={`p-3 rounded-2xl ${color} flex-shrink-0`}>
         {icon}
       </div>
-      <div className="flex-1">
-        <p className="text-sm text-gray-600">{title}</p>
-        <p className="text-xl font-bold text-gray-900">{value}</p>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm text-gray-600 truncate">{title}</p>
+        <p className="text-xl font-bold text-gray-900 truncate">{value}</p>
         <div className="flex items-center gap-1 mt-1">
-          <TrendingUp className={`w-3 h-3 ${isPositive ? 'text-green-500' : 'text-red-500'}`} />
-          <span className={`text-xs font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+          <TrendingUp className={`w-3 h-3 ${
+            trend === 'up' ? 'text-green-500' : 
+            trend === 'down' ? 'text-red-500' : 'text-gray-400'
+          }`} />
+          <span className={`text-xs font-medium ${
+            trend === 'up' ? 'text-green-600' : 
+            trend === 'down' ? 'text-red-600' : 'text-gray-500'
+          }`}>
             {change}
           </span>
         </div>
@@ -46,9 +56,7 @@ export function MobileDashboard() {
     return (
       <div className="space-y-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="animate-pulse">
-            <div className="bg-gray-200 h-24 rounded-xl"></div>
-          </div>
+          <MobileCard key={i} loading={true} />
         ))}
       </div>
     );
@@ -61,7 +69,8 @@ export function MobileDashboard() {
       change: '+12.5%',
       isPositive: true,
       icon: <DollarSign className="w-6 h-6 text-white" />,
-      color: 'bg-green-500'
+      color: 'bg-gradient-to-br from-green-500 to-green-600',
+      trend: 'up' as const
     },
     {
       title: 'Pedidos',
@@ -69,7 +78,8 @@ export function MobileDashboard() {
       change: '+8.2%',
       isPositive: true,
       icon: <ShoppingBag className="w-6 h-6 text-white" />,
-      color: 'bg-blue-500'
+      color: 'bg-gradient-to-br from-blue-500 to-blue-600',
+      trend: 'up' as const
     },
     {
       title: 'Tempo Médio',
@@ -77,7 +87,8 @@ export function MobileDashboard() {
       change: '-5.1%',
       isPositive: true,
       icon: <Clock className="w-6 h-6 text-white" />,
-      color: 'bg-purple-500'
+      color: 'bg-gradient-to-br from-purple-500 to-purple-600',
+      trend: 'down' as const
     },
     {
       title: 'Avaliação',
@@ -85,15 +96,16 @@ export function MobileDashboard() {
       change: '+0.3',
       isPositive: true,
       icon: <Star className="w-6 h-6 text-white" />,
-      color: 'bg-yellow-500'
+      color: 'bg-gradient-to-br from-yellow-500 to-yellow-600',
+      trend: 'up' as const
     }
   ];
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Dashboard</h1>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-gray-600">Visão geral do seu negócio</p>
       </div>
 
@@ -108,26 +120,41 @@ export function MobileDashboard() {
       <MobileCard>
         <h3 className="font-semibold text-gray-900 mb-4">Ações Rápidas</h3>
         <div className="grid grid-cols-2 gap-3">
-          <button className="p-3 bg-blue-50 text-blue-700 rounded-lg font-medium hover:bg-blue-100 transition-colors">
+          <MobileButton
+            variant="primary"
+            size="sm"
+            icon={<Plus className="w-4 h-4" />}
+            className="h-12"
+          >
             Novo Pedido
-          </button>
-          <button className="p-3 bg-green-50 text-green-700 rounded-lg font-medium hover:bg-green-100 transition-colors">
+          </MobileButton>
+          <MobileButton
+            variant="success"
+            size="sm"
+            icon={<Package className="w-4 h-4" />}
+            className="h-12"
+          >
             Adicionar Produto
-          </button>
+          </MobileButton>
         </div>
       </MobileCard>
 
       {/* Recent Orders */}
       <MobileCard>
-        <h3 className="font-semibold text-gray-900 mb-4">Pedidos Recentes</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-gray-900">Pedidos Recentes</h3>
+          <MobileButton variant="ghost" size="sm">
+            Ver todos
+          </MobileButton>
+        </div>
         <div className="space-y-3">
           {data?.pedidosRecentes?.slice(0, 3).map((pedido, index) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div>
-                <p className="font-medium text-gray-900">#{pedido.id}</p>
-                <p className="text-sm text-gray-600">{pedido.cliente}</p>
+            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-gray-900 truncate">#{pedido.id}</p>
+                <p className="text-sm text-gray-600 truncate">{pedido.cliente}</p>
               </div>
-              <div className="text-right">
+              <div className="text-right flex-shrink-0 ml-3">
                 <p className="font-medium text-gray-900">R$ {pedido.valor}</p>
                 <span className={`text-xs px-2 py-1 rounded-full ${
                   pedido.status === 'Pendente' ? 'bg-yellow-100 text-yellow-800' :

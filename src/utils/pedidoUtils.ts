@@ -1,35 +1,10 @@
-import { 
-  Pedido, 
-  FormaPagamento, 
-  FormaEntrega, 
-  OrigemPedido, 
-  StatusPagamento 
-} from '../types';
+import { Pedido } from '../types';
 
 export const formatarMoeda = (valor: number): string => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL'
   }).format(valor);
-};
-
-export const formatarTelefone = (telefone: string): string => {
-  const cleaned = telefone.replace(/\D/g, '');
-  const match = cleaned.match(/^(\d{2})(\d{4,5})(\d{4})$/);
-  if (match) {
-    return `(${match[1]}) ${match[2]}-${match[3]}`;
-  }
-  return telefone;
-};
-
-export const formatarDataHora = (data: Date): string => {
-  return new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(data);
 };
 
 export const formatarHora = (data: Date): string => {
@@ -39,66 +14,48 @@ export const formatarHora = (data: Date): string => {
   }).format(data);
 };
 
-export const getFormaPagamentoLabel = (forma: FormaPagamento): string => {
-  const labels: Record<FormaPagamento, string> = {
-    dinheiro: 'Dinheiro',
-    pix: 'PIX',
-    cartao_credito: 'Cartão de Crédito',
-    cartao_debito: 'Cartão de Débito',
-    vale_refeicao: 'Vale Refeição',
-    vale_alimentacao: 'Vale Alimentação'
-  };
-  return labels[forma];
+export const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'novo':
+      return 'bg-orange-100 text-orange-700 border-orange-200';
+    case 'confirmado':
+      return 'bg-blue-100 text-blue-700 border-blue-200';
+    case 'preparando':
+      return 'bg-purple-100 text-purple-700 border-purple-200';
+    case 'saiu_entrega':
+      return 'bg-green-100 text-green-700 border-green-200';
+    case 'entregue':
+      return 'bg-gray-100 text-gray-700 border-gray-200';
+    case 'cancelado':
+      return 'bg-red-100 text-red-700 border-red-200';
+    default:
+      return 'bg-gray-100 text-gray-700 border-gray-200';
+  }
 };
 
-export const getFormaEntregaLabel = (forma: FormaEntrega): string => {
-  const labels: Record<FormaEntrega, string> = {
-    delivery: 'Delivery',
-    retirada: 'Retirada',
-    balcao: 'Balcão'
-  };
-  return labels[forma];
+export const getStatusText = (status: string) => {
+  switch (status) {
+    case 'novo':
+      return 'Novo';
+    case 'confirmado':
+      return 'Confirmado';
+    case 'preparando':
+      return 'Preparando';
+    case 'saiu_entrega':
+      return 'Saiu p/ Entrega';
+    case 'entregue':
+      return 'Entregue';
+    case 'cancelado':
+      return 'Cancelado';
+    default:
+      return status;
+  }
 };
 
-export const getOrigemPedidoLabel = (origem: OrigemPedido): string => {
-  const labels: Record<OrigemPedido, string> = {
-    pdv: 'PDV',
-    cardapio_digital: 'Cardápio Digital',
-    whatsapp: 'WhatsApp',
-    telefone: 'Telefone',
-    presencial: 'Presencial'
-  };
-  return labels[origem];
-};
-
-export const getStatusPagamentoLabel = (status: StatusPagamento): string => {
-  const labels: Record<StatusPagamento, string> = {
-    pendente: 'Pendente',
-    pago: 'Pago',
-    parcial: 'Pago Parcialmente',
-    cancelado: 'Cancelado'
-  };
-  return labels[status];
-};
-
-export const getStatusPagamentoColor = (status: StatusPagamento): string => {
-  const colors: Record<StatusPagamento, string> = {
-    pendente: 'text-orange-600 bg-orange-100 border-orange-200',
-    pago: 'text-green-600 bg-green-100 border-green-200',
-    parcial: 'text-blue-600 bg-blue-100 border-blue-200',
-    cancelado: 'text-red-600 bg-red-100 border-red-200'
-  };
-  return colors[status];
-};
-
-export const calcularTroco = (valorPago: number, total: number): number => {
-  return Math.max(0, valorPago - total);
-};
-
-export const gerarLinkWhatsApp = (telefone: string, mensagem?: string): string => {
+export const abrirWhatsApp = (telefone: string) => {
   const numeroLimpo = telefone.replace(/\D/g, '');
-  const texto = mensagem || 'Olá! Gostaria de falar sobre meu pedido.';
-  return `https://wa.me/55${numeroLimpo}?text=${encodeURIComponent(texto)}`;
+  const link = `https://wa.me/55${numeroLimpo}`;
+  window.open(link, '_blank');
 };
 
 export const formatarEnderecoCompleto = (endereco: any): string => {
@@ -270,9 +227,9 @@ export function gerarPedidoAleatorio(pedidosExistentes: any[] = []): Omit<Pedido
     }
   ];
 
-  const formasPagamento: FormaPagamento[] = ['PIX', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro'];
-  const formasEntrega: FormaEntrega[] = ['delivery', 'retirada'];
-  const origensPedido: OrigemPedido[] = ['ifood', 'rappi', 'uber_eats', 'telefone', 'presencial'];
+  const formasPagamento: any[] = ['PIX', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro'];
+  const formasEntrega: any[] = ['delivery', 'retirada'];
+  const origensPedido: any[] = ['ifood', 'rappi', 'uber_eats', 'telefone', 'presencial'];
 
   // Selecionar dados aleatórios
   const cliente = clientes[Math.floor(Math.random() * clientes.length)];
@@ -334,4 +291,53 @@ export function gerarPedidoAleatorio(pedidosExistentes: any[] = []): Omit<Pedido
     tempoEstimado: `${Math.floor(Math.random() * 30) + 15} min`,
     enderecoEntrega: formaEntrega === 'delivery' ? cliente.endereco : null
   };
+} 
+
+/**
+ * Formata um endereço de forma segura, lidando com strings e objetos
+ */
+export function formatarEndereco(endereco: string | object | null | undefined): string {
+  if (!endereco) return '';
+  
+  if (typeof endereco === 'string') {
+    return endereco;
+  }
+  
+  if (typeof endereco === 'object') {
+    // Se for um objeto EnderecoEntrega
+    if ('rua' in endereco) {
+      const end = endereco as any;
+      
+      // Verificar se a rua já contém o número
+      if (end.rua && end.rua.includes(',')) {
+        // Se a rua já tem vírgula, provavelmente já inclui o número
+        const partes = [
+          end.rua,
+          end.bairro,
+          end.cidade,
+          end.estado,
+          end.cep
+        ].filter(Boolean);
+        
+        return partes.join(', ');
+      } else {
+        // Se não tem vírgula, adicionar o número
+        const partes = [
+          end.rua,
+          end.numero,
+          end.bairro,
+          end.cidade,
+          end.estado,
+          end.cep
+        ].filter(Boolean);
+        
+        return partes.join(', ');
+      }
+    }
+    
+    // Se for outro tipo de objeto, converte para string
+    return JSON.stringify(endereco);
+  }
+  
+  return String(endereco);
 } 

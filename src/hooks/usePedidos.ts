@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Pedido, StatusPedido } from '../types';
-import { firebasePedidoService } from '../services/firebasePedidoService';
+import { firebasePedidoService } from '../features/pedidos/services/firebasePedidoService';
 
 export function usePedidos() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -130,15 +130,19 @@ export function usePedidos() {
     }
   }, []);
 
-  // Listener em tempo real
+  // Carregar dados iniciais e configurar listener
   useEffect(() => {
+    // Carregar dados iniciais
+    carregarPedidos();
+
+    // Configurar listener em tempo real
     const unsubscribe = firebasePedidoService.onPedidosChange((novosPedidos) => {
       setPedidos(novosPedidos);
       setError(null);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [carregarPedidos]);
 
   return {
     pedidos,

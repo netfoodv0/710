@@ -4,9 +4,6 @@ import {
   ShoppingBag, 
   History,
   BookOpen, 
-  Star, 
-  Tag, 
-  BarChart3, 
   Settings,
   ChevronLeft,
   ChevronRight,
@@ -39,21 +36,6 @@ const menuItems = [
     path: '/cardapio',
     label: 'Cardápio',
     icon: BookOpen
-  },
-  {
-    path: '/avaliacoes',
-    label: 'Avaliações',
-    icon: Star
-  },
-  {
-    path: '/promocoes',
-    label: 'Promoções',
-    icon: Tag
-  },
-  {
-    path: '/relatorios',
-    label: 'Relatórios',
-    icon: BarChart3
   },
   {
     path: '/configuracoes',
@@ -120,17 +102,14 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
               <li key={item.path}>
                 <Link
                   to={item.path}
-                  className={`group flex items-center gap-3 text-xs font-medium transition-all duration-200 w-full ${
-                    isActive 
-                      ? 'btn-primary' 
-                      : 'btn-secondary'
+                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
-                  title={isCollapsed ? item.label : undefined}
                 >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  {!isCollapsed && (
-                    <span className="truncate">{item.label}</span>
-                  )}
+                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  {!isCollapsed && <span>{item.label}</span>}
                 </Link>
               </li>
             );

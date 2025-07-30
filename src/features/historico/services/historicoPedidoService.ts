@@ -8,9 +8,10 @@ import {
   startAt,
   endAt
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
-import { Pedido, StatusPedido } from '../types';
-import { firebasePedidoService } from './firebasePedidoService';
+import { db } from '../../../lib/firebase';
+import { Pedido, StatusPedido } from '../../../types';
+import { ClientePedido, ItemPedido, PagamentoPedido, EnderecoEntrega, Extra } from '../../../types/produtos';
+import { firebasePedidoService } from '../../pedidos/services/firebasePedidoService';
 
 export interface FiltrosHistorico {
   status?: StatusPedido;
@@ -41,16 +42,24 @@ export interface EstatisticasHistorico {
 }
 
 class HistoricoPedidoService {
-  private readonly COLLECTION_PEDIDOS = 'pedidos';
+  private readonly COLLECTION_PEDIDOS = 'pedidos'; // ✅ CORREÇÃO: Usar a mesma coleção de pedidos
+
+  // ✅ NOVO: Obter lojaId do serviço de pedidos
+  private getLojaId(): string {
+    return firebasePedidoService.getLojaId();
+  }
 
   // Obter histórico de pedidos com filtros otimizado
   async obterHistoricoComFiltros(filtros: FiltrosHistorico): Promise<Pedido[]> {
     try {
+      // ✅ CORREÇÃO: Usar lojaId para isolamento
+      const lojaId = this.getLojaId();
+      
       // Primeiro, buscar todos os pedidos entregues
-      const pedidosEntregues = await this.buscarPedidosPorStatus('entregue');
+      const pedidosEntregues = await this.buscarPedidosPorStatus('entregue', lojaId);
       
       // Depois, buscar todos os pedidos cancelados
-      const pedidosCancelados = await this.buscarPedidosPorStatus('cancelado');
+      const pedidosCancelados = await this.buscarPedidosPorStatus('cancelado', lojaId);
       
       // Combinar os resultados
       let todosPedidos = [...pedidosEntregues, ...pedidosCancelados];
@@ -97,13 +106,14 @@ class HistoricoPedidoService {
     }
   }
 
-  // Buscar pedidos por status individualmente - usando createdAt
-  private async buscarPedidosPorStatus(status: StatusPedido): Promise<Pedido[]> {
+  // Buscar pedidos por status individualmente - usando dataHora
+  private async buscarPedidosPorStatus(status: StatusPedido, lojaId: string): Promise<Pedido[]> {
     try {
       const q = query(
         collection(db, this.COLLECTION_PEDIDOS),
         where('status', '==', status),
-        orderBy('createdAt', 'desc') // Usando createdAt que é o campo que existe
+        where('lojaId', '==', lojaId), // Adicionar filtro por lojaId
+        orderBy('dataHora', 'desc') // Usando dataHora que é o campo correto
       );
       
       const querySnapshot = await getDocs(q);

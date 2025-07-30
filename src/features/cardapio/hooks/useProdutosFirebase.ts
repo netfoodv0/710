@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Produto, ScoreQualidade, ValidacaoProduto } from '../types/produtos';
+import { Produto, ScoreQualidade, ValidacaoProduto } from '../../../types';
 import { firebaseCardapioService, FiltrosProduto } from '../services/firebaseCardapioService';
-import { useNotifications } from './useNotifications';
+import { useNotifications } from '../../../hooks/useNotifications';
 
 export interface UseProdutosFirebaseReturn {
   produtos: Produto[];

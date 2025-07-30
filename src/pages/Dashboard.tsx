@@ -8,11 +8,11 @@ import {
   GraficoArea,
   PedidosRecentes,
   GraficoPizza 
-} from '../components/dashboard';
+} from '../features/dashboard/components';
 import { NotificationToast } from '../components/NotificationToast';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { usePeriod } from '../context/periodContext';
-import { PeriodFilter, PeriodType } from '../components/PeriodFilter';
+import { PeriodFilter, PeriodType } from '../components/filters/FiltroPeriodo';
 
 // Componente de erro otimizado
 const DashboardError = React.memo(({ error, onRetry }: { error: string; onRetry: () => void }) => (

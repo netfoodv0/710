@@ -5,9 +5,6 @@ import {
   Pedidos,
   HistoricoPedidos,
   Cardapio,
-  Promocoes,
-  Relatorios,
-  Avaliacoes,
   Configuracoes
 } from '../pages';
 import { Login } from '../pages/Login';
@@ -49,24 +46,6 @@ export function AppRoutes() {
       <Route path="/cardapio" element={
         <ProtectedRoute>
           <Cardapio />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/promocoes" element={
-        <ProtectedRoute>
-          <Promocoes />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/relatorios" element={
-        <ProtectedRoute>
-          <Relatorios />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/avaliacoes" element={
-        <ProtectedRoute>
-          <Avaliacoes />
         </ProtectedRoute>
       } />
       

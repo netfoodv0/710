@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Categoria } from '../types';
+import { Categoria } from '../../../types';
 import { firebaseCardapioService, FiltrosCategoria } from '../services/firebaseCardapioService';
-import { useNotifications } from './useNotifications';
+import { useNotifications } from '../../../hooks/useNotifications';
 
 export interface UseCategoriasFirebaseReturn {
   categorias: Categoria[];

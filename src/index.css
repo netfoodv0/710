@@ -147,3 +147,36 @@ main {
   font-weight: 500 !important;
   fill: #374151 !important;
 }
+
+/* Garantir que modais e overlays não interfiram com a navegação */
+.modal-overlay {
+  z-index: 9998 !important;
+}
+
+/* Estilos para abas de navegação no cardápio */
+.cardapio-tabs {
+  background: #f3f4f6 !important;
+  border-radius: 8px !important;
+  padding: 4px !important;
+}
+
+.cardapio-tab {
+  flex: 1 !important;
+  min-height: 44px !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.cardapio-tab.active {
+  background: white !important;
+  color: #2563eb !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+.cardapio-tab:not(.active) {
+  color: #6b7280 !important;
+}
+
+.cardapio-tab:not(.active):hover {
+  color: #374151 !important;
+}

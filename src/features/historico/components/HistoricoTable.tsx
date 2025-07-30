@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { Eye, Calendar, User, CreditCard, DollarSign } from 'lucide-react';
-import { Pedido } from '../../types';
+import { Pedido } from '../../../types';
 import { StatusBadge } from './StatusBadge';
-import { usePagination } from '../../hooks/usePagination';
-import { LoadMoreButton } from '../LoadMoreButton';
+import { usePagination } from '../../../hooks/usePagination';
+import { LoadMoreButton } from '../../../components/LoadMoreButton';
 
 interface HistoricoTableProps {
   pedidos: Pedido[];

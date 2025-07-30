@@ -3,7 +3,7 @@ import { Download, AlertCircle, Loader2 } from 'lucide-react';
 import { useHistoricoPedidos } from '../hooks/useHistoricoPedidos';
 import { useFiltrosHistorico } from '../hooks/useFiltrosHistorico';
 import { useNotificationContext } from '../context/notificationContextUtils';
-import { HistoricoTable, HistoricoModal, FiltrosHistorico, EstatisticasHistorico } from '../components/historico';
+import { HistoricoTable, HistoricoModal, FiltrosHistorico, EstatisticasHistorico } from '../features/historico/components';
 import { NotificationToast } from '../components/NotificationToast';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { Pedido } from '../types';

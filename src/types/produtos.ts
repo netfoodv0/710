@@ -6,60 +6,73 @@ export interface Produto {
   nome: string;
   descricao: string;
   preco: number;
-  categoria: string;
+  precoPromocional?: number;
   categoriaId: string;
+  lojaId: string; // ✅ NOVO: Campo para isolamento por loja
   imagem?: string;
-  ativo: boolean;
   status: 'ativo' | 'inativo' | 'em_falta';
-  tempoPreparoMinutos: number;
-  ingredientes: string[];
-  extras: Extra[];
-  
-  // Novos campos básicos
-  tamanhoPorcao?: number; // Serve até X pessoas
-  desconto?: DescontoProduto;
-  agendamentoObrigatorio: boolean;
   destacado: boolean;
-  
-  // Mídia
-  galeriaFotos?: string[];
-  
-  // Complementos
-  complementos?: string[]; // IDs das categorias de complementos
-  
-  // Classificações
-  classificacoes?: ClassificacaoProduto;
-  
-  // Disponibilidade
-  disponibilidade?: DisponibilidadeProduto;
-  
-  // SEO e Marketing
-  slug: string;
-  tags: string[];
-  metaDescription?: string;
-  
-  // Vendas e Analytics
   vendasTotais: number;
   avaliacaoMedia: number;
   numeroAvaliacoes: number;
-  
-  // Controle de Estoque
-  estoque?: EstoqueProduto;
-  
-  // Personalização
-  variacoes?: VariacaoProduto[];
-  ingredientesObrigatorios?: string[];
-  ingredientesOpcionais?: string[];
-  
-  // Integração
-  codigoExterno?: string;
-  sincronizadoComIfood: boolean;
-  
-  // Metadados
+  tempoPreparo: number;
+  calorias?: number;
+  alergenos: string[];
+  tags: string[];
+  slug: string;
   dataCriacao: Date;
   dataAtualizacao: Date;
 }
 
+export interface Categoria {
+  id?: string; // ✅ NOVO: Campo opcional
+  nome?: string; // ✅ NOVO: Campo opcional
+  descricao?: string; // ✅ NOVO: Campo opcional
+  lojaId?: string; // ✅ NOVO: Campo opcional para isolamento por loja
+  ordem?: number; // ✅ NOVO: Campo opcional
+  ativa?: boolean; // ✅ NOVO: Campo opcional
+  status?: 'ativo' | 'inativo'; // ✅ NOVO: Campo opcional para consistência
+  tipo?: 'padrao' | 'pizza' | 'obrigatorio'; // ✅ NOVO: Campo opcional
+  tipoSelecao?: 'unica' | 'multipla' | 'somavel'; // ✅ NOVO: Campo opcional
+  quantidadeMinima?: number; // ✅ NOVO: Campo opcional
+  quantidadeMaxima?: number; // ✅ NOVO: Campo opcional
+  imagem?: string; // ✅ NOVO: Campo opcional
+  disponibilidade?: DisponibilidadeCategoria; // ✅ NOVO: Campo opcional para categorias
+  dataCriacao?: Date; // ✅ NOVO: Campo opcional
+  dataAtualizacao?: Date; // ✅ NOVO: Campo opcional
+}
+
+export interface CategoriaAdicional {
+  id?: string; // ✅ NOVO: Campo opcional
+  nome?: string; // ✅ NOVO: Campo opcional
+  descricao?: string; // ✅ NOVO: Campo opcional
+  lojaId?: string; // ✅ NOVO: Campo opcional para isolamento por loja
+  status?: 'ativo' | 'inativo'; // ✅ NOVO: Campo opcional
+  ativa?: boolean; // ✅ NOVO: Campo opcional para consistência
+  ordem?: number; // ✅ NOVO: Campo opcional para consistência
+  tipo?: 'padrao' | 'pizza' | 'obrigatorio'; // ✅ NOVO: Campo opcional
+  tipoSelecao?: 'unica' | 'multipla' | 'somavel'; // ✅ NOVO: Campo opcional
+  quantidadeMinima?: number; // ✅ NOVO: Campo opcional
+  quantidadeMaxima?: number; // ✅ NOVO: Campo opcional
+  imagem?: string; // ✅ NOVO: Campo opcional para consistência
+  disponibilidade?: DisponibilidadeCategoria; // ✅ NOVO: Campo opcional
+  dataCriacao?: Date; // ✅ NOVO: Campo opcional
+  dataAtualizacao?: Date; // ✅ NOVO: Campo opcional
+}
+
+export interface DisponibilidadeCategoria {
+  segunda?: boolean; // ✅ NOVO: Campo opcional
+  terca?: boolean; // ✅ NOVO: Campo opcional
+  quarta?: boolean; // ✅ NOVO: Campo opcional
+  quinta?: boolean; // ✅ NOVO: Campo opcional
+  sexta?: boolean; // ✅ NOVO: Campo opcional
+  sabado?: boolean; // ✅ NOVO: Campo opcional
+  domingo?: boolean; // ✅ NOVO: Campo opcional
+  horarioInicio?: string; // ✅ NOVO: Campo opcional - HH:mm
+  horarioFim?: string; // ✅ NOVO: Campo opcional - HH:mm
+}
+
+// Re-export do tipo Extra que está em pedidos.ts
 export interface Extra {
   id: string;
   nome: string;
@@ -298,3 +311,34 @@ export interface UseUploadImagemReturn {
   loading: boolean;
   error: string | null;
 } 
+
+export interface ClientePedido {
+  nome: string;
+  telefone: string;
+  endereco?: string;
+}
+
+export interface ItemPedido {
+  nome: string;
+  quantidade: number;
+  preco: number;
+  observacoes?: string;
+}
+
+export interface PagamentoPedido {
+  valorPago: number;
+  statusPagamento: 'pendente' | 'pago' | 'parcial' | 'cancelado';
+  dataPagamento?: Date;
+}
+
+export interface EnderecoEntrega {
+  rua: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  cep: string;
+  complemento?: string;
+}
+
+export type StatusPedido = 'novo' | 'confirmado' | 'preparando' | 'saiu_entrega' | 'entregue' | 'cancelado'; 

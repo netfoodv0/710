@@ -30,7 +30,6 @@ src/
 │   ├── mobile/           # Componentes mobile otimizados
 │   │   ├── MobileLayout.tsx
 │   │   ├── MobileHeader.tsx
-│   │   ├── MobileBottomNav.tsx
 │   │   ├── MobileSidebar.tsx
 │   │   ├── MobileCard.tsx
 │   │   ├── MobileButton.tsx
@@ -107,7 +106,6 @@ pnpm preview
 ### Layout
 - `MobileLayout`: Layout principal responsivo
 - `MobileHeader`: Header com menu e ações
-- `MobileBottomNav`: Navegação inferior
 - `MobileSidebar`: Sidebar overlay
 
 ### UI

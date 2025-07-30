@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { PeriodType } from '../components/PeriodFilter';
+import { PeriodType } from '../components/filters/FiltroPeriodo';
 
 interface PeriodContextType {
   selectedPeriod: PeriodType;
