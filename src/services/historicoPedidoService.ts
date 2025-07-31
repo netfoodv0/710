@@ -97,13 +97,17 @@ class HistoricoPedidoService {
     }
   }
 
-  // Buscar pedidos por status individualmente - usando createdAt
+  // Buscar pedidos por status individualmente - usando dataHora
   private async buscarPedidosPorStatus(status: StatusPedido): Promise<Pedido[]> {
     try {
+      // Obter lojaId do usuário autenticado
+      const lojaId = firebasePedidoService.getLojaId();
+      
       const q = query(
         collection(db, this.COLLECTION_PEDIDOS),
+        where('lojaId', '==', lojaId), // Filtrar por loja
         where('status', '==', status),
-        orderBy('createdAt', 'desc') // Usando createdAt que é o campo que existe
+        orderBy('dataHora', 'desc') // Usando dataHora que é o campo correto
       );
       
       const querySnapshot = await getDocs(q);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '../Card';
 import { ConfiguracaoLoja } from '../../types';
-import { diasSemana } from '../../data/configuracaoMock';
+import { diasSemana } from '../data/configuracaoData';
 
 interface AbaHorariosProps {
   config: ConfiguracaoLoja;

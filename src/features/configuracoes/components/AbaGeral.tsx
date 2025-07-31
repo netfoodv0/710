@@ -1,7 +1,7 @@
 import React from 'react';
 import { Camera, Upload, Phone, Mail } from 'lucide-react';
 import { ConfiguracaoLoja } from '../../types';
-import { estadosBrasil } from '../../data/configuracaoMock';
+import { estadosBrasil } from '../data/configuracaoData';
 import { Card } from '../Card';
 
 interface AbaGeralProps {

@@ -1,17 +1,12 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { 
-  kpisMock, 
-  formasPagamentoMock, 
-  pedidosRecentesMock,
-  estatisticasGerais 
-} from '../data/dashboardMock';
+import { firebaseDashboardService } from '../../../services/firebaseDashboardService';
 import { 
   KPI, 
   DadosFormaPagamento, 
   Pedido,
   EstatisticasGerais 
 } from '../types';
-import { PeriodType } from '../components/PeriodFilter';
+import { PeriodType } from '../../../components/PeriodFilter';
 
 interface DashboardData {
   kpis: KPI[];
@@ -53,32 +48,6 @@ export const useDashboardOptimized = (period: PeriodType = 'weekly'): UseDashboa
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  // Memoizar dados ajustados por período
-  const getAdjustedData = useCallback((baseData: DashboardData, currentPeriod: PeriodType): DashboardData => {
-    if (currentPeriod === 'monthly') {
-      const kpisAjustados = baseData.kpis.map(kpi => {
-        const multiplicador = 4.3;
-        const valorNumerico = parseFloat(kpi.valor.replace(/[^\d,]/g, '').replace(',', '.'));
-        const novoValor = valorNumerico * multiplicador;
-        
-        return {
-          ...kpi,
-          valor: kpi.valor.includes('R$') 
-            ? `R$ ${novoValor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-            : novoValor.toLocaleString('pt-BR'),
-          variacao: kpi.variacao * 1.2
-        };
-      });
-
-      return {
-        ...baseData,
-        kpis: kpisAjustados
-      };
-    }
-
-    return baseData;
-  }, []);
-
   const carregarDados = useCallback(async (isRefresh = false) => {
     try {
       if (isRefresh) {
@@ -96,22 +65,16 @@ export const useDashboardOptimized = (period: PeriodType = 'weekly'): UseDashboa
         return;
       }
 
-      // Simular carregamento assíncrono
-      await new Promise(resolve => setTimeout(resolve, isRefresh ? 500 : 1000));
-
-      const baseData = {
-        kpis: kpisMock,
-        formasPagamento: formasPagamentoMock,
-        pedidosRecentes: pedidosRecentesMock,
-        estatisticas: estatisticasGerais
-      };
-
-      const adjustedData = getAdjustedData(baseData, period);
+      // Converter PeriodType para o formato esperado pelo serviço
+      const periodo = period === 'daily' ? 'daily' : period === 'monthly' ? 'monthly' : 'weekly';
+      
+      // Buscar dados reais do Firebase
+      const dadosReais = await firebaseDashboardService.buscarDadosDashboard(periodo);
       
       // Salvar no cache
-      dataCache.set(period, adjustedData);
+      dataCache.set(period, dadosReais);
       
-      setData(adjustedData);
+      setData(dadosReais);
       setLastUpdated(new Date());
     } catch (err) {
       setError('Erro ao carregar dados do dashboard');
@@ -120,7 +83,7 @@ export const useDashboardOptimized = (period: PeriodType = 'weekly'): UseDashboa
       setLoading(false);
       setIsRefreshing(false);
     }
-  }, [period, getAdjustedData]);
+  }, [period]);
 
   const refreshData = useCallback(async () => {
     // Limpar cache para forçar recarregamento

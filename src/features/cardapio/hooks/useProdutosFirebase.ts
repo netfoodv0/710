@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Produto, ScoreQualidade, ValidacaoProduto } from '../../../types';
 import { firebaseCardapioService, FiltrosProduto } from '../services/firebaseCardapioService';
 import { useNotifications } from '../../../hooks/useNotifications';
+import { useAuth } from '../../../hooks/useAuth';
 
 export interface UseProdutosFirebaseReturn {
   produtos: Produto[];
@@ -36,7 +37,8 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
   const [error, setError] = useState<string | null>(null);
   const [estatisticas, setEstatisticas] = useState<UseProdutosFirebaseReturn['estatisticas']>(null);
   
-  const { addNotification } = useNotifications();
+  const { showSuccess, showError } = useNotifications();
+  const { user, status } = useAuth();
 
   // ✅ CORREÇÃO: Declarar recarregarProdutos antes do useEffect
   const recarregarProdutos = useCallback(async () => {
@@ -54,17 +56,19 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
     } catch (err) {
       const errorMessage = 'Erro ao carregar produtos';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao carregar produtos:', err);
     } finally {
       setLoading(false);
     }
-  }, [addNotification]);
+  }, [showError]);
 
-  // Carregar produtos iniciais
+  // Carregar produtos iniciais apenas se o usuário estiver autenticado
   useEffect(() => {
-    recarregarProdutos();
-  }, [recarregarProdutos]);
+    if (status === 'authenticated' && user) {
+      recarregarProdutos();
+    }
+  }, [recarregarProdutos, status, user]);
 
   const criarProduto = useCallback(async (produto: Omit<Produto, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => {
     setLoading(true);
@@ -73,16 +77,16 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
     try {
       await firebaseCardapioService.criarProduto(produto);
       await recarregarProdutos(); // Recarregar para pegar o novo produto
-      addNotification({ message: 'Produto criado com sucesso!', type: 'success' });
+      showSuccess('Produto criado com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao criar produto';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao criar produto:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarProdutos, addNotification]);
+  }, [recarregarProdutos, showSuccess, showError]);
 
   const editarProduto = useCallback(async (id: string, produto: Partial<Produto>) => {
     setLoading(true);
@@ -91,16 +95,16 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
     try {
       await firebaseCardapioService.editarProduto(id, produto);
       await recarregarProdutos(); // Recarregar para pegar as mudanças
-      addNotification({ message: 'Produto atualizado com sucesso!', type: 'success' });
+      showSuccess('Produto atualizado com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao editar produto';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao editar produto:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarProdutos, addNotification]);
+  }, [recarregarProdutos, showSuccess, showError]);
 
   const excluirProduto = useCallback(async (id: string) => {
     setLoading(true);
@@ -109,16 +113,16 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
     try {
       await firebaseCardapioService.excluirProduto(id);
       await recarregarProdutos(); // Recarregar para remover o produto
-      addNotification({ message: 'Produto excluído com sucesso!', type: 'success' });
+      showSuccess('Produto excluído com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao excluir produto';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao excluir produto:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarProdutos, addNotification]);
+  }, [recarregarProdutos, showSuccess, showError]);
 
   const duplicarProduto = useCallback(async (id: string) => {
     setLoading(true);
@@ -127,16 +131,16 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
     try {
       await firebaseCardapioService.duplicarProduto(id);
       await recarregarProdutos(); // Recarregar para pegar o produto duplicado
-      addNotification({ message: 'Produto duplicado com sucesso!', type: 'success' });
+      showSuccess('Produto duplicado com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao duplicar produto';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao duplicar produto:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarProdutos, addNotification]);
+  }, [recarregarProdutos, showSuccess, showError]);
 
   const buscarProduto = useCallback(async (id: string): Promise<Produto | null> => {
     try {

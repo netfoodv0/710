@@ -5,6 +5,7 @@ import { FirebaseEstatisticasService } from './firebase/estatisticasService';
 import { Produto, Categoria, CategoriaAdicional } from '../types';
 import { collection, query, where, orderBy, getDocs, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { lojaIsolation } from '../lib/lojaIsolation';
 
 // Tipos para queries otimizadas
 export interface FiltrosProduto {
@@ -98,7 +99,7 @@ export class FirebaseCardapioService {
   // ✅ IMPLEMENTAR métodos de categorias adicionais
   async buscarCategoriasAdicionais(): Promise<CategoriaAdicional[]> {
     try {
-      const lojaId = this.categoriasService.getLojaId();
+      const lojaId = lojaIsolation.getLojaId();
       
       const q = query(
         collection(db, 'categoriasAdicionais'),
@@ -128,7 +129,7 @@ export class FirebaseCardapioService {
 
   async criarCategoriaAdicional(categoria: Omit<CategoriaAdicional, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
     try {
-      const lojaId = this.categoriasService.getLojaId();
+      const lojaId = lojaIsolation.getLojaId();
       
       const categoriaData = {
         ...categoria,
@@ -147,7 +148,7 @@ export class FirebaseCardapioService {
 
   async editarCategoriaAdicional(id: string, dados: Partial<CategoriaAdicional>): Promise<void> {
     try {
-      const lojaId = this.categoriasService.getLojaId();
+      const lojaId = lojaIsolation.getLojaId();
       const docRef = doc(db, 'categoriasAdicionais', id);
       
       // Verificar se a categoria pertence à loja antes de editar
@@ -168,7 +169,7 @@ export class FirebaseCardapioService {
 
   async excluirCategoriaAdicional(id: string): Promise<void> {
     try {
-      const lojaId = this.categoriasService.getLojaId();
+      const lojaId = lojaIsolation.getLojaId();
       const docRef = doc(db, 'categoriasAdicionais', id);
       
       // Verificar se a categoria pertence à loja antes de excluir

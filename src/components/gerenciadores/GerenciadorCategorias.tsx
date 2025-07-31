@@ -122,35 +122,29 @@ export const GerenciadorCategorias: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-sm font-bold text-gray-900">Gerenciar Categorias</h1>
-          <p className="text-gray-600 mt-1 text-xs">
-            Organize suas categorias de produtos e adicionais
-          </p>
-        </div>
-        <div className="flex items-center space-x-2 text-xs text-gray-500">
-          <Settings size={14} />
-          <span>Configurações do Cardápio</span>
-        </div>
+      <div>
+        <h1 className="text-sm font-bold text-gray-900">Gerenciar Categorias</h1>
+        <p className="text-gray-600 mt-1 text-xs">
+          Organize suas categorias de produtos e adicionais
+        </p>
       </div>
 
       {/* Tabs - Melhorado para Mobile */}
-      <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-4 md:space-x-8 overflow-x-auto">
+      <div className="bg-gray-100 rounded-lg p-1">
+        <div className="flex space-x-1">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 py-2 px-1 border-b-2 font-medium text-xs transition-colors whitespace-nowrap ${
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium rounded-md transition-all duration-200 ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-800'
                 }`}
               >
-                <Icon size={14} />
+                <Icon className="w-4 h-4" />
                 <span className="hidden sm:inline">{tab.label}</span>
                 <span className="sm:hidden">
                   {tab.id === 'produtos' ? 'Produtos' : 'Adicionais'}
@@ -161,7 +155,7 @@ export const GerenciadorCategorias: React.FC = () => {
               </button>
             );
           })}
-        </nav>
+        </div>
       </div>
 
       {/* Error Messages */}
@@ -215,55 +209,6 @@ export const GerenciadorCategorias: React.FC = () => {
           tipo="adicionais"
         />
       )}
-
-      {/* Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-        <div className="bg-blue-50 border border-blue-200 rounded p-4">
-          <h3 className="text-sm font-semibold text-blue-900 mb-2">
-            Categorias de Produtos
-          </h3>
-          <p className="text-blue-700 text-xs mb-3">
-            Organize seus produtos em categorias para facilitar a navegação dos clientes.
-          </p>
-          <div className="space-y-1 text-xs text-blue-600">
-            <div className="flex items-center">
-              <span className="w-2 h-2 bg-blue-400 rounded mr-2"></span>
-              Categorias padrão para produtos gerais
-            </div>
-            <div className="flex items-center">
-              <span className="w-2 h-2 bg-blue-400 rounded mr-2"></span>
-              Categorias especiais para pizzas
-            </div>
-            <div className="flex items-center">
-              <span className="w-2 h-2 bg-blue-400 rounded mr-2"></span>
-              Configure disponibilidade por dia e horário
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-green-50 border border-green-200 rounded p-4">
-          <h3 className="text-sm font-semibold text-green-900 mb-2">
-            Categorias de Adicionais
-          </h3>
-          <p className="text-green-700 text-xs mb-3">
-            Crie categorias para organizar extras, complementos e personalizações.
-          </p>
-          <div className="space-y-1 text-xs text-green-600">
-            <div className="flex items-center">
-              <span className="w-2 h-2 bg-green-400 rounded mr-2"></span>
-              Queijos, molhos e bordas
-            </div>
-            <div className="flex items-center">
-              <span className="w-2 h-2 bg-green-400 rounded mr-2"></span>
-              Complementos e acompanhamentos
-            </div>
-            <div className="flex items-center">
-              <span className="w-2 h-2 bg-green-400 rounded mr-2"></span>
-              Personalizações específicas
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }; 

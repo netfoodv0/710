@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { CategoriaAdicional } from '../types';
 import { firebaseCardapioService } from '../services/firebaseCardapioService';
 import { useNotifications } from './useNotifications';
+import { useAuth } from './useAuth';
 
 export interface UseCategoriasAdicionaisFirebaseReturn {
   categorias: CategoriaAdicional[];
@@ -19,7 +20,8 @@ export const useCategoriasAdicionaisFirebase = (): UseCategoriasAdicionaisFireba
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const { addNotification } = useNotifications();
+  const { showSuccess, showError } = useNotifications();
+  const { user, status } = useAuth();
 
   // ✅ CORREÇÃO: Declarar recarregarCategorias antes do useEffect
   const recarregarCategorias = useCallback(async () => {
@@ -32,17 +34,19 @@ export const useCategoriasAdicionaisFirebase = (): UseCategoriasAdicionaisFireba
     } catch (err) {
       const errorMessage = 'Erro ao carregar categorias adicionais';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao carregar categorias adicionais:', err);
     } finally {
       setLoading(false);
     }
-  }, [addNotification]);
+  }, [showError]);
 
-  // Carregar categorias iniciais
+  // Carregar categorias iniciais apenas se o usuário estiver autenticado
   useEffect(() => {
-    recarregarCategorias();
-  }, [recarregarCategorias]);
+    if (status === 'authenticated' && user) {
+      recarregarCategorias();
+    }
+  }, [recarregarCategorias, status, user]);
 
   const criarCategoria = useCallback(async (categoria: Omit<CategoriaAdicional, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => {
     setLoading(true);
@@ -51,16 +55,16 @@ export const useCategoriasAdicionaisFirebase = (): UseCategoriasAdicionaisFireba
     try {
       await firebaseCardapioService.criarCategoriaAdicional(categoria);
       await recarregarCategorias();
-      addNotification({ message: 'Categoria adicional criada com sucesso!', type: 'success' });
+      showSuccess('Categoria adicional criada com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao criar categoria adicional';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao criar categoria adicional:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarCategorias, addNotification]);
+  }, [recarregarCategorias, showSuccess, showError]);
 
   const editarCategoria = useCallback(async (id: string, categoria: Partial<CategoriaAdicional>) => {
     setLoading(true);
@@ -69,16 +73,16 @@ export const useCategoriasAdicionaisFirebase = (): UseCategoriasAdicionaisFireba
     try {
       await firebaseCardapioService.editarCategoriaAdicional(id, categoria);
       await recarregarCategorias();
-      addNotification({ message: 'Categoria adicional atualizada com sucesso!', type: 'success' });
+      showSuccess('Categoria adicional atualizada com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao editar categoria adicional';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao editar categoria adicional:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarCategorias, addNotification]);
+  }, [recarregarCategorias, showSuccess, showError]);
 
   const excluirCategoria = useCallback(async (id: string) => {
     setLoading(true);
@@ -87,16 +91,16 @@ export const useCategoriasAdicionaisFirebase = (): UseCategoriasAdicionaisFireba
     try {
       await firebaseCardapioService.excluirCategoriaAdicional(id);
       await recarregarCategorias();
-      addNotification({ message: 'Categoria adicional excluída com sucesso!', type: 'success' });
+      showSuccess('Categoria adicional excluída com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao excluir categoria adicional';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao excluir categoria adicional:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarCategorias, addNotification]);
+  }, [recarregarCategorias, showSuccess, showError]);
 
   const buscarCategoria = useCallback(async (id: string): Promise<CategoriaAdicional | null> => {
     try {

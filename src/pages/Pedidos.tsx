@@ -1,265 +1,101 @@
-import React, { useState } from 'react';
-import { Search, Eye, Grid, List, Plus, ShoppingBag } from 'lucide-react';
-import { Card, StatusBadge } from '../components';
-import { FiltrosStatus, StatusActions, ModalDetalhesPedido, CardPedido } from '../features/pedidos/components';
-import { pedidosMock } from '../data';
-import { Pedido } from '../types';
-import { usePedidos } from '../hooks/usePedidos';
+import React, { useState, useCallback } from 'react';
+import { Plus, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ErrorBoundary } from '../components/ErrorBoundary';
+import { firebasePedidoService } from '../services/firebasePedidoService';
+import { gerarPedidoFicticio } from '../utils/pedidoUtils';
+import { useNotifications } from '../hooks/useNotifications';
 
 export function Pedidos() {
-  const { 
-    pedidos, 
-    loading, 
-    error, 
-    aceitarPedido, 
-    avancarParaPreparo, 
-    avancarParaEntrega, 
-    finalizarPedido, 
-    recusarPedido 
-  } = usePedidos();
-  
-  const [filtroStatus, setFiltroStatus] = useState('todos');
-  const [busca, setBusca] = useState('');
-  const [pedidoSelecionado, setPedidoSelecionado] = useState<Pedido | null>(null);
-  const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards');
-  const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const navigate = useNavigate();
+  const { showSuccess, showError } = useNotifications();
 
-  const handleStatusChange = (pedidoId: string, novoStatus: string) => {
-    // TODO: Implementar atualização de status via hook usePedidos
-    console.log(`Atualizando pedido ${pedidoId} para status ${novoStatus}`);
-  };
-
-  const handleAceitarPedido = async (pedido: Pedido) => {
-    setLoadingAction(pedido.id);
-    try {
-      await aceitarPedido(pedido.id);
-    } catch (error) {
-      console.error('Erro ao aceitar pedido:', error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const handleAvançarPedido = async (pedido: Pedido) => {
-    setLoadingAction(pedido.id);
-    try {
-      if (pedido.status === 'confirmado') {
-        await avancarParaPreparo(pedido.id);
-      } else if (pedido.status === 'preparando') {
-        await avancarParaEntrega(pedido.id);
-      } else if (pedido.status === 'pronto') {
-        await avancarParaEntrega(pedido.id);
-      }
-    } catch (error) {
-      console.error('Erro ao avançar pedido:', error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const handleFinalizarPedido = async (pedido: Pedido) => {
-    setLoadingAction(pedido.id);
-    try {
-      await finalizarPedido(pedido.id);
-    } catch (error) {
-      console.error('Erro ao finalizar pedido:', error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const handleCancelarPedido = async (pedido: Pedido) => {
-    setLoadingAction(pedido.id);
-    try {
-      await recusarPedido(pedido.id, 'Pedido cancelado pelo usuário');
-    } catch (error) {
-      console.error('Erro ao cancelar pedido:', error);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const pedidosFiltrados = pedidos.filter(pedido => {
-    const matchStatus = filtroStatus === 'todos' || pedido.status === filtroStatus;
-    const matchBusca = busca === '' || 
-      pedido.numero.includes(busca) ||
-      pedido.cliente.nome.toLowerCase().includes(busca.toLowerCase());
+  const handleCriarPedidoFicticio = useCallback(async () => {
+    setIsCreating(true);
     
-    return matchStatus && matchBusca;
-  });
-
-  // Mostrar loading enquanto carrega
-  if (loading) {
-    return (
-      <div className="p-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mx-auto mb-4"></div>
-            <p className="text-gray-600">Carregando pedidos...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Mostrar erro se houver
-  if (error) {
-    return (
-      <div className="p-8">
-        <Card className="mb-8">
-          <div className="text-center py-8">
-            <p className="text-red-600 mb-4">Erro ao carregar pedidos: {error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="btn btn-primary"
-            >
-              Tentar novamente
-            </button>
-          </div>
-        </Card>
-      </div>
-    );
-  }
+    try {
+      // Gerar pedido fictício
+      const pedidoFicticio = gerarPedidoFicticio();
+      
+      // Criar pedido no Firebase
+      const pedidoId = await firebasePedidoService.criarPedido(pedidoFicticio);
+      
+      // Mostrar sucesso
+      showSuccess('Pedido fictício criado com sucesso! Redirecionando para o histórico...', 3000);
+      
+      // Aguardar um pouco para o usuário ver a mensagem
+      setTimeout(() => {
+        // Navegar para o histórico de pedidos
+        navigate('/historico');
+      }, 1500);
+      
+    } catch (error) {
+      console.error('Erro ao criar pedido fictício:', error);
+      showError('Erro ao criar pedido fictício. Tente novamente.');
+    } finally {
+      setIsCreating(false);
+    }
+  }, [navigate, showSuccess, showError]);
 
   return (
-    <div className="p-8">
-      {/* Cabeçalho */}
-      <Card className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Gestão de Pedidos</h1>
-            <p className="text-gray-600 mt-1">
-              Acompanhe e gerencie todos os pedidos em tempo real
-            </p>
+    <ErrorBoundary>
+      <div className="h-full flex flex-col">
+        {/* Cabeçalho Fixo */}
+        <div className="flex-shrink-0 p-4">
+          <div className="bg-white border border-slate-200 rounded" style={{ height: '72px' }}>
+            <div className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4" style={{ height: '100%' }}>
+              {/* Esquerda: Título e subtítulo */}
+              <div>
+                <h1 className="text-sm font-bold text-gray-900">Gestão de Pedidos</h1>
+                <p className="text-gray-600 mt-1 text-xs">Acompanhe e gerencie todos os pedidos em tempo real</p>
+              </div>
+              
+              {/* Direita: Ações */}
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={handleCriarPedidoFicticio}
+                  disabled={isCreating}
+                  className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isCreating ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Plus className="w-4 h-4" />
+                  )}
+                  {isCreating ? 'Criando...' : 'Novo Pedido'}
+                </button>
+              </div>
+            </div>
           </div>
-          <button className="btn btn-primary">
-            <Plus className="w-4 h-4 mr-2" />
-            Novo Pedido
-          </button>
         </div>
-      </Card>
-
-      {/* Filtros por Status */}
-      <div className="mb-6">
-        <FiltrosStatus
-          pedidos={pedidos}
-          statusSelecionado={filtroStatus}
-          onStatusChange={setFiltroStatus}
-        />
+        
+        {/* Conteúdo da página */}
+        <div className="flex-1 p-4">
+          <div className="bg-white border border-slate-200 rounded-lg p-6">
+            <div className="text-center">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+                Sistema de Pedidos
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Clique no botão "Novo Pedido" para criar um pedido fictício que será salvo no histórico.
+              </p>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+                <h3 className="text-sm font-medium text-blue-900 mb-2">
+                  💡 Como funciona:
+                </h3>
+                <ul className="text-xs text-blue-800 space-y-1">
+                  <li>• Gera dados realistas de cliente e produtos</li>
+                  <li>• Salva automaticamente no Firebase</li>
+                  <li>• Redireciona para o histórico de pedidos</li>
+                  <li>• Útil para testes e demonstrações</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Barra de busca e controles */}
-      <Card className="mb-8">
-        <div className="flex items-center gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Buscar por número do pedido ou nome do cliente..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-          </div>
-          
-          {/* Controles de visualização */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setViewMode('cards')}
-              className={`p-2 rounded-lg transition-colors ${
-                viewMode === 'cards' 
-                  ? 'bg-blue-100 text-blue-600' 
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
-              title="Visualização em cards"
-            >
-              <Grid className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setViewMode('list')}
-              className={`p-2 rounded-lg transition-colors ${
-                viewMode === 'list' 
-                  ? 'bg-blue-100 text-blue-600' 
-                  : 'text-gray-400 hover:text-gray-600'
-              }`}
-              title="Visualização em lista"
-            >
-              <List className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-      </Card>
-
-      {/* Conteúdo dos pedidos */}
-      {viewMode === 'cards' ? (
-        // Visualização em cards
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {pedidosFiltrados.map((pedido) => {
-            console.log('Renderizando pedido:', pedido);
-            return (
-              <CardPedido
-                key={pedido.id}
-                pedido={pedido}
-                onPedidoClick={setPedidoSelecionado}
-                onEditarPedido={(pedido) => console.log('Editar pedido:', pedido)}
-                onImprimirPedido={(pedido) => console.log('Imprimir pedido:', pedido)}
-                onAceitarPedido={handleAceitarPedido}
-                onAvançarPedido={handleAvançarPedido}
-                onFinalizarPedido={handleFinalizarPedido}
-                onCancelarPedido={handleCancelarPedido}
-                loading={loadingAction === pedido.id}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        // Visualização em lista (tabela)
-        <div className="space-y-4">
-          {pedidosFiltrados.map((pedido) => (
-            <CardPedido
-              key={pedido.id}
-              pedido={pedido}
-              variant="compact"
-              onPedidoClick={setPedidoSelecionado}
-              onEditarPedido={(pedido) => console.log('Editar pedido:', pedido)}
-              onImprimirPedido={(pedido) => console.log('Imprimir pedido:', pedido)}
-              onAceitarPedido={handleAceitarPedido}
-              onAvançarPedido={handleAvançarPedido}
-              onFinalizarPedido={handleFinalizarPedido}
-              onCancelarPedido={handleCancelarPedido}
-              loading={loadingAction === pedido.id}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Mensagem quando não há pedidos */}
-      {pedidosFiltrados.length === 0 && (
-        <Card className="text-center py-12">
-          <div className="text-gray-500">
-            <ShoppingBag className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Nenhum pedido encontrado
-            </h3>
-            <p className="text-gray-600">
-              {busca ? 'Tente ajustar os filtros de busca.' : 'Não há pedidos para exibir.'}
-            </p>
-          </div>
-        </Card>
-      )}
-
-      {/* Modal de detalhes */}
-      {pedidoSelecionado && (
-        <ModalDetalhesPedido
-          isOpen={!!pedidoSelecionado}
-          pedido={pedidoSelecionado}
-          onClose={() => setPedidoSelecionado(null)}
-          onStatusChange={(novoStatus) => {
-            handleStatusChange(pedidoSelecionado.id, novoStatus);
-            setPedidoSelecionado(null);
-          }}
-        />
-      )}
-    </div>
+    </ErrorBoundary>
   );
 }

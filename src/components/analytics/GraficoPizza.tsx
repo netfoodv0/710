@@ -31,6 +31,12 @@ export const GraficoPizza: React.FC<GraficoPizzaProps> = ({
     );
   }
 
+  // Verificar se todos os dados têm cores válidas
+  const dadosComCores = data.every(item => item.color && item.color.startsWith('#'));
+  
+  if (!dadosComCores) {
+  }
+
   return (
     <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
       <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
@@ -84,12 +90,15 @@ export const GraficoPizza: React.FC<GraficoPizzaProps> = ({
             dataKey="value"
             startAngle={-90}
           >
-            {data.map((entry, index) => (
-              <Cell 
-                key={`cell-${index}`} 
-                fill={entry.color || COLORS[index % COLORS.length]} 
-              />
-            ))}
+            {data.map((entry, index) => {
+              const color = entry.color || COLORS[index % COLORS.length];
+              return (
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={color}
+                />
+              );
+            })}
           </Pie>
           <Tooltip 
             formatter={(value: number) => [`${value}`, 'Valor']}
@@ -107,4 +116,4 @@ export const GraficoPizza: React.FC<GraficoPizzaProps> = ({
       </ResponsiveContainer>
     </div>
   );
-}; 
+};

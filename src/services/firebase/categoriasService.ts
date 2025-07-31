@@ -12,24 +12,16 @@ import {
   writeBatch,
   serverTimestamp
 } from 'firebase/firestore';
-import { auth, db } from '../../lib/firebase';
+import { db } from '../../lib/firebase';
+import { lojaIsolation } from '../../lib/lojaIsolation';
 import { Categoria } from '../../types';
 
 export class FirebaseCategoriasService {
   private categoriasCollection = collection(db, 'categorias');
 
-  // Método auxiliar para obter o ID da loja do usuário autenticado
-  public getLojaId(): string {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('Usuário não autenticado');
-    }
-    return user.uid;
-  }
-
   async buscarCategorias(): Promise<Categoria[]> {
-    try {
-      const lojaId = this.getLojaId();
+    return lojaIsolation.withReadIsolation(async () => {
+      const lojaId = lojaIsolation.getLojaId();
       
       const q = query(
         this.categoriasCollection,
@@ -51,15 +43,12 @@ export class FirebaseCategoriasService {
       });
 
       return categorias;
-    } catch (error) {
-      console.error('Erro ao buscar categorias:', error);
-      throw new Error('Falha ao carregar categorias');
-    }
+    }, 'Falha ao carregar categorias');
   }
 
   async buscarCategoria(id: string): Promise<Categoria | null> {
-    try {
-      const lojaId = this.getLojaId();
+    return lojaIsolation.withReadIsolation(async () => {
+      const lojaId = lojaIsolation.getLojaId();
       const docRef = doc(this.categoriasCollection, id);
       const docSnap = await getDoc(docRef);
 
@@ -67,7 +56,7 @@ export class FirebaseCategoriasService {
         const data = docSnap.data();
         
         // Verificar se a categoria pertence à loja do usuário
-        if (data.lojaId !== lojaId) {
+        if (!lojaIsolation.validateLojaOwnership(data, id)) {
           throw new Error('Categoria não encontrada');
         }
         
@@ -80,39 +69,29 @@ export class FirebaseCategoriasService {
       }
 
       return null;
-    } catch (error) {
-      console.error('Erro ao buscar categoria:', error);
-      throw new Error('Falha ao carregar categoria');
-    }
+    }, 'Falha ao carregar categoria');
   }
 
   async criarCategoria(categoria: Omit<Categoria, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
-    try {
-      const lojaId = this.getLojaId();
-      
-      const categoriaData = {
+    return lojaIsolation.withWriteIsolation(async () => {
+      const categoriaData = lojaIsolation.addLojaId({
         ...categoria,
-        lojaId, // Adicionar ID da loja
         dataCriacao: serverTimestamp(),
         dataAtualizacao: serverTimestamp()
-      };
+      });
 
       const docRef = await addDoc(this.categoriasCollection, categoriaData);
       return docRef.id;
-    } catch (error) {
-      console.error('Erro ao criar categoria:', error);
-      throw new Error('Falha ao criar categoria');
-    }
+    }, 'Falha ao criar categoria');
   }
 
   async editarCategoria(id: string, dados: Partial<Categoria>): Promise<void> {
-    try {
-      const lojaId = this.getLojaId();
+    return lojaIsolation.withWriteIsolation(async () => {
       const docRef = doc(this.categoriasCollection, id);
       
       // Verificar se a categoria pertence à loja antes de editar
       const docSnap = await getDoc(docRef);
-      if (!docSnap.exists() || docSnap.data()?.lojaId !== lojaId) {
+      if (!docSnap.exists() || !lojaIsolation.validateLojaOwnership(docSnap.data(), id)) {
         throw new Error('Categoria não encontrada');
       }
       
@@ -120,33 +99,25 @@ export class FirebaseCategoriasService {
         ...dados,
         dataAtualizacao: serverTimestamp()
       });
-    } catch (error) {
-      console.error('Erro ao editar categoria:', error);
-      throw new Error('Falha ao atualizar categoria');
-    }
+    }, 'Falha ao atualizar categoria');
   }
 
   async excluirCategoria(id: string): Promise<void> {
-    try {
-      const lojaId = this.getLojaId();
+    return lojaIsolation.withWriteIsolation(async () => {
       const docRef = doc(this.categoriasCollection, id);
       
       // Verificar se a categoria pertence à loja antes de excluir
       const docSnap = await getDoc(docRef);
-      if (!docSnap.exists() || docSnap.data()?.lojaId !== lojaId) {
+      if (!docSnap.exists() || !lojaIsolation.validateLojaOwnership(docSnap.data(), id)) {
         throw new Error('Categoria não encontrada');
       }
       
       await deleteDoc(docRef);
-    } catch (error) {
-      console.error('Erro ao excluir categoria:', error);
-      throw new Error('Falha ao excluir categoria');
-    }
+    }, 'Falha ao excluir categoria');
   }
 
   async atualizarOrdemCategorias(categorias: { id: string; ordem: number }[]): Promise<void> {
-    try {
-      const lojaId = this.getLojaId();
+    return lojaIsolation.withWriteIsolation(async () => {
       const batch = writeBatch(db);
 
       // Verificar se todas as categorias pertencem à loja
@@ -154,7 +125,7 @@ export class FirebaseCategoriasService {
         const docRef = doc(this.categoriasCollection, categoria.id);
         const docSnap = await getDoc(docRef);
         
-        if (!docSnap.exists() || docSnap.data()?.lojaId !== lojaId) {
+        if (!docSnap.exists() || !lojaIsolation.validateLojaOwnership(docSnap.data(), categoria.id)) {
           throw new Error(`Categoria ${categoria.id} não encontrada`);
         }
         
@@ -165,9 +136,6 @@ export class FirebaseCategoriasService {
       }
 
       await batch.commit();
-    } catch (error) {
-      console.error('Erro ao atualizar ordem das categorias:', error);
-      throw new Error('Falha ao atualizar ordem das categorias');
-    }
+    }, 'Falha ao atualizar ordem das categorias');
   }
 } 

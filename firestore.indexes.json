@@ -1,64 +1,6 @@
 {
   "indexes": [
     {
-      "collectionGroup": "lojas",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "email",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "lojas",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "ativa",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "dataCriacao",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "usuarios",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "email",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "usuarios",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "dataCriacao",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "produtos",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lojaId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "dataAtualizacao",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
       "collectionGroup": "categorias",
       "queryScope": "COLLECTION",
       "fields": [
@@ -87,7 +29,95 @@
       ]
     },
     {
+      "collectionGroup": "historico_pedidos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "id",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dataAlteracao",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
       "collectionGroup": "pedidos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pedidos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dataCriacao",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "produtos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dataAtualizacao",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pedidos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dataHora",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pedidos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "dataHora",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "historicoPedidos",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -106,6 +136,10 @@
       "fields": [
         {
           "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "status",
           "order": "ASCENDING"
         },
         {

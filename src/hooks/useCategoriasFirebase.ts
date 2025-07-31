@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Categoria } from '../types';
 import { firebaseCardapioService, FiltrosCategoria } from '../services/firebaseCardapioService';
 import { useNotifications } from './useNotifications';
+import { useAuth } from './useAuth';
 
 export interface UseCategoriasFirebaseReturn {
   categorias: Categoria[];
@@ -20,7 +21,8 @@ export const useCategoriasFirebase = (): UseCategoriasFirebaseReturn => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const { addNotification } = useNotifications();
+  const { showSuccess, showError } = useNotifications();
+  const { user, status } = useAuth();
 
   // ✅ CORREÇÃO: Declarar recarregarCategorias antes do useEffect
   const recarregarCategorias = useCallback(async () => {
@@ -33,17 +35,19 @@ export const useCategoriasFirebase = (): UseCategoriasFirebaseReturn => {
     } catch (err) {
       const errorMessage = 'Erro ao carregar categorias';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao carregar categorias:', err);
     } finally {
       setLoading(false);
     }
-  }, [addNotification]);
+  }, [showError]);
 
-  // Carregar categorias iniciais
+  // Carregar categorias iniciais apenas se o usuário estiver autenticado
   useEffect(() => {
-    recarregarCategorias();
-  }, [recarregarCategorias]);
+    if (status === 'authenticated' && user) {
+      recarregarCategorias();
+    }
+  }, [recarregarCategorias, status, user]);
 
   const criarCategoria = useCallback(async (categoria: Omit<Categoria, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => {
     setLoading(true);
@@ -52,16 +56,16 @@ export const useCategoriasFirebase = (): UseCategoriasFirebaseReturn => {
     try {
       await firebaseCardapioService.criarCategoria(categoria);
       await recarregarCategorias();
-      addNotification({ message: 'Categoria criada com sucesso!', type: 'success' });
+      showSuccess('Categoria criada com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao criar categoria';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao criar categoria:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarCategorias, addNotification]);
+  }, [recarregarCategorias, showSuccess, showError]);
 
   const editarCategoria = useCallback(async (id: string, categoria: Partial<Categoria>) => {
     setLoading(true);
@@ -70,16 +74,16 @@ export const useCategoriasFirebase = (): UseCategoriasFirebaseReturn => {
     try {
       await firebaseCardapioService.editarCategoria(id, categoria);
       await recarregarCategorias();
-      addNotification({ message: 'Categoria atualizada com sucesso!', type: 'success' });
+      showSuccess('Categoria atualizada com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao editar categoria';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao editar categoria:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarCategorias, addNotification]);
+  }, [recarregarCategorias, showSuccess, showError]);
 
   const excluirCategoria = useCallback(async (id: string) => {
     setLoading(true);
@@ -88,16 +92,16 @@ export const useCategoriasFirebase = (): UseCategoriasFirebaseReturn => {
     try {
       await firebaseCardapioService.excluirCategoria(id);
       await recarregarCategorias();
-      addNotification({ message: 'Categoria excluída com sucesso!', type: 'success' });
+      showSuccess('Categoria excluída com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao excluir categoria';
       setError(errorMessage);
-      addNotification({ message: errorMessage, type: 'error' });
+      showError(errorMessage);
       console.error('Erro ao excluir categoria:', err);
     } finally {
       setLoading(false);
     }
-  }, [recarregarCategorias, addNotification]);
+  }, [recarregarCategorias, showSuccess, showError]);
 
   const buscarCategoria = useCallback(async (id: string): Promise<Categoria | null> => {
     try {

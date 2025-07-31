@@ -11,7 +11,7 @@ export { useConfiguracoes } from './hooks/useConfiguracoes';
 
 // Services
 export { abasConfig } from './services/abasConfig';
-export { configuracaoMock } from './services/configuracaoMock';
+// Dados fictícios removidos - agora usando dados reais do Firebase
 
 // Types
 export * from './types/configuracoes.types'; 

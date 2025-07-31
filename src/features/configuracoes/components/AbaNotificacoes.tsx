@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card } from '../Card';
 import { NotificacaoConfig } from '../../types';
-import { tiposNotificacao } from '../../data/configuracaoMock';
+import { tiposNotificacao } from '../data/configuracaoData';
 
 interface AbaNotificacoesProps {
   // Props podem ser adicionadas no futuro

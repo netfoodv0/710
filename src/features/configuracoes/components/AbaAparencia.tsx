@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from '../Card';
-import { temasDisponiveis, coresPrincipais } from '../../data/configuracaoMock';
+import { temasDisponiveis, coresPrincipais } from '../data/configuracaoData';
 
 interface AbaAparenciaProps {
   // Props podem ser adicionadas no futuro

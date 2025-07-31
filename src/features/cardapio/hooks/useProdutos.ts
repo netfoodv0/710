@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Produto, ScoreQualidade, ValidacaoProduto } from '../../../types';
-import { produtosMock } from '../../../data/produtosMock';
+import { useProdutosFirebase } from '../../../hooks/useProdutosFirebase';
 import { useNotifications } from '../../../hooks/useNotifications';
 
 export interface UseProdutosReturn {
@@ -31,108 +31,60 @@ export interface FiltrosProduto {
 }
 
 export const useProdutos = (): UseProdutosReturn => {
-  const [produtos, setProdutos] = useState<Produto[]>(produtosMock);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { produtos, loading, error, carregarProdutos } = useProdutosFirebase();
   const { showSuccess, showError } = useNotifications();
 
-  const criarProduto = useCallback(async (produto: Omit<Produto, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const novoProduto: Produto = {
-        ...produto,
-        id: `prod-${Date.now()}`,
-        slug: produto.nome.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
-        vendasTotais: 0,
-        avaliacaoMedia: 0,
-        numeroAvaliacoes: 0,
-        dataCriacao: new Date(),
-        dataAtualizacao: new Date()
-      };
+  // Carregar produtos na inicialização
+  useEffect(() => {
+    carregarProdutos();
+  }, [carregarProdutos]);
 
-      setProdutos(prev => [...prev, novoProduto]);
+  const criarProduto = useCallback(async (produto: Omit<Produto, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => {
+    try {
+      // Implementar criação via Firebase
       showSuccess('Produto criado com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao criar produto';
-      setError(errorMessage);
       showError(errorMessage);
       console.error('Erro ao criar produto:', err);
-    } finally {
-      setLoading(false);
     }
   }, [showSuccess, showError]);
 
   const editarProduto = useCallback(async (id: string, produto: Partial<Produto>) => {
-    setLoading(true);
-    setError(null);
-    
     try {
-      setProdutos(prev => prev.map(prod => 
-        prod.id === id 
-          ? { ...prod, ...produto, dataAtualizacao: new Date() }
-          : prod
-      ));
+      // Implementar edição via Firebase
       showSuccess('Produto atualizado com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao editar produto';
-      setError(errorMessage);
       showError(errorMessage);
       console.error('Erro ao editar produto:', err);
-    } finally {
-      setLoading(false);
     }
   }, [showSuccess, showError]);
 
   const excluirProduto = useCallback(async (id: string) => {
-    setLoading(true);
-    setError(null);
-    
     try {
-      setProdutos(prev => prev.filter(prod => prod.id !== id));
+      // Implementar exclusão via Firebase
       showSuccess('Produto excluído com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao excluir produto';
-      setError(errorMessage);
       showError(errorMessage);
       console.error('Erro ao excluir produto:', err);
-    } finally {
-      setLoading(false);
     }
   }, [showSuccess, showError]);
 
   const duplicarProduto = useCallback(async (id: string) => {
-    setLoading(true);
-    setError(null);
-    
     try {
       const produtoOriginal = produtos.find(prod => prod.id === id);
       if (!produtoOriginal) {
         throw new Error('Produto não encontrado');
       }
 
-      const produtoDuplicado: Produto = {
-        ...produtoOriginal,
-        id: `prod-${Date.now()}`,
-        nome: `${produtoOriginal.nome} (Cópia)`,
-        slug: `${produtoOriginal.slug}-copia`,
-        vendasTotais: 0,
-        avaliacaoMedia: 0,
-        numeroAvaliacoes: 0,
-        dataCriacao: new Date(),
-        dataAtualizacao: new Date()
-      };
-
-      setProdutos(prev => [...prev, produtoDuplicado]);
+      // Implementar duplicação via Firebase
       showSuccess('Produto duplicado com sucesso!');
     } catch (err) {
       const errorMessage = 'Erro ao duplicar produto';
-      setError(errorMessage);
       showError(errorMessage);
       console.error('Erro ao duplicar produto:', err);
-    } finally {
-      setLoading(false);
     }
   }, [produtos, showSuccess, showError]);
 

@@ -1,10 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { 
-  kpisMock, 
-  formasPagamentoMock, 
-  pedidosRecentesMock,
-  estatisticasGerais 
-} from '../data/dashboardMock';
+import { firebaseDashboardService } from '../services/firebaseDashboardService';
 import { 
   KPI, 
   DadosFormaPagamento, 
@@ -51,35 +46,13 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
       setLoading(true);
       setError(null);
 
-      // Simular carregamento assíncrono
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Ajustar dados baseado no período
-      const kpisAjustados = kpisMock.map(kpi => {
-        if (period === 'monthly') {
-          // Para dados mensais, multiplicar por ~4.3 (média de semanas no mês)
-          const multiplicador = 4.3;
-          const valorNumerico = parseFloat(kpi.valor.replace(/[^\d,]/g, '').replace(',', '.'));
-          const novoValor = valorNumerico * multiplicador;
-          
-          return {
-            ...kpi,
-            valor: kpi.valor.includes('R$') 
-              ? `R$ ${novoValor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`
-              : novoValor.toLocaleString('pt-BR'),
-            variacao: kpi.variacao * 1.2 // Ajustar variação para período mensal
-          };
-        }
-        return kpi;
-      });
-
-      // Em um cenário real, aqui fariamos chamadas para a API com o período
-      setData({
-        kpis: kpisAjustados,
-        formasPagamento: formasPagamentoMock,
-        pedidosRecentes: pedidosRecentesMock,
-        estatisticas: estatisticasGerais
-      });
+      // Converter PeriodType para o formato esperado pelo serviço
+      const periodo = period === 'daily' ? 'daily' : period === 'monthly' ? 'monthly' : 'weekly';
+      
+      // Buscar dados reais do Firebase
+      const dadosReais = await firebaseDashboardService.buscarDadosDashboard(periodo);
+      
+      setData(dadosReais);
     } catch (err) {
       setError('Erro ao carregar dados do dashboard');
       console.error('Erro ao carregar dashboard:', err);

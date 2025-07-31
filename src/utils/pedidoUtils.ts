@@ -1,4 +1,152 @@
-import { Pedido } from '../types';
+import { Pedido, ItemPedido, ClientePedido, PagamentoPedido, EnderecoEntrega } from '../types/pedidos';
+
+/**
+ * Remove campos undefined de um objeto
+ */
+function removeUndefinedFields<T extends Record<string, any>>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([_, value]) => value !== undefined)
+  ) as T;
+}
+
+// Dados fictícios para gerar pedidos realistas
+const PRODUTOS_FICTICIOS = [
+  { nome: 'X-Burger Clássico', preco: 18.90 },
+  { nome: 'X-Bacon', preco: 22.50 },
+  { nome: 'X-Salada', preco: 20.00 },
+  { nome: 'X-Tudo', preco: 25.90 },
+  { nome: 'Batata Frita', preco: 12.00 },
+  { nome: 'Refrigerante Coca-Cola', preco: 6.50 },
+  { nome: 'Refrigerante Pepsi', preco: 6.00 },
+  { nome: 'Suco Natural Laranja', preco: 8.00 },
+  { nome: 'Sorvete Casquinha', preco: 5.50 },
+  { nome: 'Milk Shake Chocolate', preco: 15.00 }
+];
+
+const CLIENTES_FICTICIOS = [
+  { nome: 'João Silva', telefone: '(11) 99999-1111' },
+  { nome: 'Maria Santos', telefone: '(11) 99999-2222' },
+  { nome: 'Pedro Oliveira', telefone: '(11) 99999-3333' },
+  { nome: 'Ana Costa', telefone: '(11) 99999-4444' },
+  { nome: 'Carlos Ferreira', telefone: '(11) 99999-5555' },
+  { nome: 'Lucia Pereira', telefone: '(11) 99999-6666' },
+  { nome: 'Roberto Almeida', telefone: '(11) 99999-7777' },
+  { nome: 'Fernanda Lima', telefone: '(11) 99999-8888' }
+];
+
+const ENDERECOS_FICTICIOS = [
+  'Rua das Flores, 123 - Vila Madalena, São Paulo - SP',
+  'Av. Paulista, 1000 - Bela Vista, São Paulo - SP',
+  'Rua Augusta, 500 - Consolação, São Paulo - SP',
+  'Rua Oscar Freire, 200 - Jardins, São Paulo - SP',
+  'Av. Brigadeiro Faria Lima, 1500 - Pinheiros, São Paulo - SP'
+];
+
+const FORMAS_PAGAMENTO = ['pix', 'dinheiro', 'cartao_credito', 'cartao_debito'];
+const FORMAS_ENTREGA = ['delivery', 'retirada'];
+const ORIGENS_PEDIDO = ['ifood', 'rappi', 'uber', 'proprio'];
+
+/**
+ * Gera um pedido fictício com dados realistas
+ */
+export function gerarPedidoFicticio(): Omit<Pedido, 'id' | 'dataCriacao' | 'dataAtualizacao'> {
+  // Gerar número de pedido único
+  const numero = `PED${Date.now().toString().slice(-6)}`;
+  
+  // Selecionar cliente aleatório
+  const clienteIndex = Math.floor(Math.random() * CLIENTES_FICTICIOS.length);
+  const cliente = CLIENTES_FICTICIOS[clienteIndex];
+  
+  // Gerar itens do pedido (1 a 4 itens)
+  const numItens = Math.floor(Math.random() * 4) + 1;
+  const itens: ItemPedido[] = [];
+  let total = 0;
+  
+  for (let i = 0; i < numItens; i++) {
+    const produtoIndex = Math.floor(Math.random() * PRODUTOS_FICTICIOS.length);
+    const produto = PRODUTOS_FICTICIOS[produtoIndex];
+    const quantidade = Math.floor(Math.random() * 3) + 1;
+    const subtotal = produto.preco * quantidade;
+    
+    itens.push(removeUndefinedFields({
+      id: `item-${i + 1}`,
+      nome: produto.nome,
+      preco: produto.preco,
+      quantidade,
+      ...(Math.random() > 0.7 && { observacoes: 'Sem cebola' })
+    }));
+    
+    total += subtotal;
+  }
+  
+  // Selecionar forma de pagamento e entrega
+  const formaPagamento = FORMAS_PAGAMENTO[Math.floor(Math.random() * FORMAS_PAGAMENTO.length)];
+  const formaEntrega = FORMAS_ENTREGA[Math.floor(Math.random() * FORMAS_ENTREGA.length)];
+  const origemPedido = ORIGENS_PEDIDO[Math.floor(Math.random() * ORIGENS_PEDIDO.length)];
+  
+  // Gerar endereço de entrega se for delivery
+  const enderecoEntrega: EnderecoEntrega | undefined = formaEntrega === 'delivery' ? removeUndefinedFields({
+    rua: ENDERECOS_FICTICIOS[Math.floor(Math.random() * ENDERECOS_FICTICIOS.length)],
+    bairro: 'Centro',
+    cidade: 'São Paulo',
+    estado: 'SP',
+    cep: '01234-567',
+    ...(Math.random() > 0.5 && { complemento: 'Apto 101' })
+  }) : undefined;
+  
+  // Gerar dados de pagamento
+  const pagamento: PagamentoPedido = {
+    valorPago: total,
+    statusPagamento: 'pago' as const,
+    dataPagamento: new Date(),
+    formaPagamento
+  };
+  
+  // Gerar observações ocasionalmente
+  const observacoes = Math.random() > 0.7 ? 'Entregar no portão' : undefined;
+  
+  // Gerar tempo estimado
+  const tempoEstimado = `${Math.floor(Math.random() * 30) + 20} min`;
+  
+  // Gerar status que apareça no histórico (entregue ou cancelado)
+  const status = Math.random() > 0.1 ? 'entregue' : 'cancelado'; // 90% entregue, 10% cancelado
+  
+  // Criar objeto do pedido removendo campos undefined
+  const pedido = {
+    numero,
+    status,
+    dataHora: new Date(),
+    cliente: {
+      nome: cliente.nome,
+      telefone: cliente.telefone,
+      ...(enderecoEntrega?.rua && { endereco: enderecoEntrega.rua })
+    },
+    itens,
+    total,
+    formaPagamento,
+    formaEntrega,
+    origemPedido,
+    pagamento,
+    clienteNovo: Math.random() > 0.6,
+    tempoEstimado,
+    ...(enderecoEntrega && { enderecoEntrega }),
+    ...(observacoes && { observacoes })
+  };
+  
+  // Remover campos undefined antes de retornar
+  return removeUndefinedFields(pedido);
+}
+
+/**
+ * Gera múltiplos pedidos fictícios
+ */
+export function gerarPedidosFicticios(quantidade: number = 1): Omit<Pedido, 'id' | 'dataCriacao' | 'dataAtualizacao'>[] {
+  const pedidos = [];
+  for (let i = 0; i < quantidade; i++) {
+    pedidos.push(gerarPedidoFicticio());
+  }
+  return pedidos;
+}
 
 export const formatarMoeda = (valor: number): string => {
   return new Intl.NumberFormat('pt-BR', {
@@ -89,209 +237,6 @@ export const getClienteTelefone = (pedido: Pedido): string => {
   }
   return pedido.cliente!.telefone;
 }; 
-
-// Função para gerar dados aleatórios de pedido
-export function gerarPedidoAleatorio(pedidosExistentes: any[] = []): Omit<Pedido, 'id'> {
-  const clientes: any[] = [
-    {
-      id: '1',
-      nome: 'João Silva',
-      telefone: '(11) 99999-9999',
-      email: 'joao@email.com',
-      endereco: {
-        rua: 'Rua das Flores, 123',
-        bairro: 'Centro',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cep: '01234-567'
-      }
-    },
-    {
-      id: '2',
-      nome: 'Maria Santos',
-      telefone: '(11) 88888-8888',
-      email: 'maria@email.com',
-      endereco: {
-        rua: 'Av. Paulista, 456',
-        bairro: 'Bela Vista',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cep: '01310-000'
-      }
-    },
-    {
-      id: '3',
-      nome: 'Carlos Lima',
-      telefone: '(11) 77777-7777',
-      email: 'carlos@email.com',
-      endereco: {
-        rua: 'Rua Augusta, 789',
-        bairro: 'Consolação',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cep: '01212-000'
-      }
-    },
-    {
-      id: '4',
-      nome: 'Ana Oliveira',
-      telefone: '(11) 66666-6666',
-      email: 'ana@email.com',
-      endereco: {
-        rua: 'Rua das Palmeiras, 321',
-        bairro: 'Moema',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cep: '04000-000'
-      }
-    },
-    {
-      id: '5',
-      nome: 'Pedro Costa',
-      telefone: '(11) 55555-5555',
-      email: 'pedro@email.com',
-      endereco: {
-        rua: 'Rua do Comércio, 654',
-        bairro: 'Jardins',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        cep: '01223-000'
-      }
-    }
-  ];
-
-  const itens: any[] = [
-    {
-      id: '1',
-      nome: 'X-Burger',
-      quantidade: 1,
-      preco: 15.90,
-      observacoes: 'Sem cebola',
-      extras: []
-    },
-    {
-      id: '2',
-      nome: 'Batata Frita',
-      quantidade: 1,
-      preco: 8.50,
-      observacoes: '',
-      extras: []
-    },
-    {
-      id: '3',
-      nome: 'Refrigerante',
-      quantidade: 1,
-      preco: 6.00,
-      observacoes: '',
-      extras: []
-    },
-    {
-      id: '4',
-      nome: 'Salada Caesar',
-      quantidade: 1,
-      preco: 18.50,
-      observacoes: 'Molho à parte',
-      extras: []
-    },
-    {
-      id: '5',
-      nome: 'Pizza Margherita',
-      quantidade: 1,
-      preco: 25.00,
-      observacoes: 'Borda recheada',
-      extras: []
-    },
-    {
-      id: '6',
-      nome: 'Lasanha Bolonhesa',
-      quantidade: 1,
-      preco: 22.00,
-      observacoes: '',
-      extras: []
-    },
-    {
-      id: '7',
-      nome: 'Sushi Combo',
-      quantidade: 1,
-      preco: 35.00,
-      observacoes: 'Molho de soja extra',
-      extras: []
-    },
-    {
-      id: '8',
-      nome: 'Sorvete',
-      quantidade: 1,
-      preco: 12.00,
-      observacoes: 'Baunilha',
-      extras: []
-    }
-  ];
-
-  const formasPagamento: any[] = ['PIX', 'Cartão de Crédito', 'Cartão de Débito', 'Dinheiro'];
-  const formasEntrega: any[] = ['delivery', 'retirada'];
-  const origensPedido: any[] = ['ifood', 'rappi', 'uber_eats', 'telefone', 'presencial'];
-
-  // Selecionar dados aleatórios
-  const cliente = clientes[Math.floor(Math.random() * clientes.length)];
-  const formaPagamento = formasPagamento[Math.floor(Math.random() * formasPagamento.length)];
-  const formaEntrega = formasEntrega[Math.floor(Math.random() * formasEntrega.length)];
-  const origemPedido = origensPedido[Math.floor(Math.random() * origensPedido.length)];
-  
-  // Gerar itens aleatórios (1 a 4 itens)
-  const numItens = Math.floor(Math.random() * 4) + 1;
-  const itensSelecionados: any[] = [];
-  const itensDisponiveis = [...itens];
-  
-  for (let i = 0; i < numItens; i++) {
-    const itemIndex = Math.floor(Math.random() * itensDisponiveis.length);
-    const item = itensDisponiveis.splice(itemIndex, 1)[0];
-    itensSelecionados.push({
-      ...item,
-      quantidade: Math.floor(Math.random() * 2) + 1
-    });
-  }
-
-  // Calcular total
-  const total = itensSelecionados.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
-
-  // Gerar número de pedido único
-  const numerosExistentes = pedidosExistentes.map(p => parseInt(p.numero));
-  let numeroPedido;
-  let tentativas = 0;
-  
-  do {
-    numeroPedido = Math.floor(Math.random() * 999) + 1;
-    tentativas++;
-    
-    // Evitar loop infinito
-    if (tentativas > 100) {
-      numeroPedido = Math.max(...numerosExistentes, 0) + 1;
-      break;
-    }
-  } while (numerosExistentes.includes(numeroPedido));
-  
-  const numeroFormatado = numeroPedido.toString().padStart(3, '0');
-
-  return {
-    numero: numeroFormatado,
-    status: 'novo',
-    dataHora: new Date(),
-    cliente,
-    itens: itensSelecionados,
-    total,
-    formaPagamento,
-    formaEntrega,
-    origemPedido,
-    pagamento: {
-      valorPago: formaPagamento === 'Dinheiro' ? 0 : total,
-      statusPagamento: formaPagamento === 'Dinheiro' ? 'pendente' : 'pago',
-      dataPagamento: formaPagamento === 'Dinheiro' ? null : new Date()
-    },
-    clienteNovo: Math.random() > 0.7, // 30% chance de ser cliente novo
-    tempoEstimado: `${Math.floor(Math.random() * 30) + 15} min`,
-    enderecoEntrega: formaEntrega === 'delivery' ? cliente.endereco : null
-  };
-} 
 
 /**
  * Formata um endereço de forma segura, lidando com strings e objetos

@@ -123,18 +123,22 @@ const ChartsGrid = React.memo(({
 }: { 
   formasPagamento: any[]; 
   selectedPeriod: PeriodType; 
-}) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-    <GraficoPizza
-      title="Formas de Pagamento"
-      data={formasPagamento}
-    />
-    <GraficoArea
-      title="Comparação de Receita"
-      period={selectedPeriod}
-    />
-  </div>
-));
+}) => {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+      <GraficoPizza
+        title="Formas de Pagamento"
+        data={formasPagamento}
+      />
+      <div className="lg:col-span-1">
+        <GraficoArea
+          title="Performance"
+          period={selectedPeriod}
+        />
+      </div>
+    </div>
+  );
+});
 
 export function Dashboard() {
   const { selectedPeriod, setSelectedPeriod } = usePeriod();

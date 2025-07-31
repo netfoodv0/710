@@ -1,5 +1,5 @@
 import { Pedido, StatusPedido } from '../types';
-import { pedidosMock } from '../data/pedidosMock';
+import { firebasePedidoService } from './firebasePedidoService';
 
 export interface PedidoHistorico extends Pedido {
   dataAlteracao: Date;
@@ -8,165 +8,109 @@ export interface PedidoHistorico extends Pedido {
 }
 
 class PedidoService {
-  private pedidos: Pedido[] = [];
-  private historico: PedidoHistorico[] = [];
-
-  constructor() {
-    // Carregar dados de exemplo na inicialização
-    this.carregarDadosExemplo();
-  }
-
-  // Carregar dados de exemplo
-  private carregarDadosExemplo() {
-    pedidosMock.forEach(pedido => {
-      this.adicionarPedido(pedido);
-    });
-  }
-
-  // Adicionar novo pedido
-  adicionarPedido(pedido: Omit<Pedido, 'id'>): Pedido {
-    const novoPedido: Pedido = {
-      ...pedido,
-      id: this.gerarId(),
-      status: 'novo',
-      dataHora: new Date(),
-      pagamento: {
-        valorPago: 0,
-        statusPagamento: 'pendente'
-      }
-    };
-
-    this.pedidos.push(novoPedido);
-    this.adicionarAoHistorico(novoPedido, 'novo', 'Pedido criado');
-    
-    return novoPedido;
-  }
-
-  // Atualizar status do pedido
-  atualizarStatus(pedidoId: string, novoStatus: StatusPedido, observacao?: string): Pedido | null {
-    const pedidoIndex = this.pedidos.findIndex(p => p.id === pedidoId);
-    
-    if (pedidoIndex === -1) return null;
-
-    const pedido = this.pedidos[pedidoIndex];
-    const statusAnterior = pedido.status;
-
-    // Validar transição de status
-    if (!this.validarTransicaoStatus(statusAnterior, novoStatus)) {
-      throw new Error(`Transição inválida de ${statusAnterior} para ${novoStatus}`);
+  // Obter todos os pedidos
+  async obterTodosPedidos(): Promise<Pedido[]> {
+    try {
+      return await firebasePedidoService.buscarPedidos();
+    } catch (error) {
+      console.error('Erro ao obter pedidos:', error);
+      throw new Error('Falha ao carregar pedidos');
     }
-
-    // Atualizar pedido
-    const pedidoAtualizado: Pedido = {
-      ...pedido,
-      status: novoStatus,
-      dataHora: new Date()
-    };
-
-    this.pedidos[pedidoIndex] = pedidoAtualizado;
-    this.adicionarAoHistorico(pedidoAtualizado, novoStatus, observacao);
-
-    return pedidoAtualizado;
   }
 
   // Obter pedidos por status
-  obterPedidosPorStatus(status: StatusPedido): Pedido[] {
-    return this.pedidos.filter(p => p.status === status);
-  }
-
-  // Obter todos os pedidos
-  obterTodosPedidos(): Pedido[] {
-    return this.pedidos;
+  async obterPedidosPorStatus(status: StatusPedido): Promise<Pedido[]> {
+    try {
+      return await firebasePedidoService.buscarPedidos({ status });
+    } catch (error) {
+      console.error('Erro ao obter pedidos por status:', error);
+      throw new Error('Falha ao carregar pedidos');
+    }
   }
 
   // Obter pedido por ID
-  obterPedidoPorId(id: string): Pedido | null {
-    return this.pedidos.find(p => p.id === id) || null;
+  async obterPedidoPorId(id: string): Promise<Pedido | null> {
+    try {
+      return await firebasePedidoService.buscarPedido(id);
+    } catch (error) {
+      console.error('Erro ao obter pedido por ID:', error);
+      throw new Error('Falha ao carregar pedido');
+    }
   }
 
-  // Obter histórico de pedido
-  obterHistoricoPedido(pedidoId: string): PedidoHistorico[] {
-    return this.historico.filter(h => h.id === pedidoId);
-  }
-
-  // Obter pedidos entregues (histórico)
-  obterPedidosEntregues(): Pedido[] {
-    return this.pedidos.filter(p => p.status === 'entregue');
+  // Atualizar status do pedido
+  async atualizarStatus(pedidoId: string, novoStatus: StatusPedido, observacao?: string): Promise<Pedido | null> {
+    try {
+      await firebasePedidoService.atualizarStatusPedido(pedidoId, novoStatus);
+      
+      // Buscar pedido atualizado
+      const pedidoAtualizado = await this.obterPedidoPorId(pedidoId);
+      return pedidoAtualizado;
+    } catch (error) {
+      console.error('Erro ao atualizar status do pedido:', error);
+      throw new Error('Falha ao atualizar status do pedido');
+    }
   }
 
   // Cancelar pedido
-  cancelarPedido(pedidoId: string, motivo?: string): Pedido | null {
+  async cancelarPedido(pedidoId: string, motivo?: string): Promise<Pedido | null> {
     return this.atualizarStatus(pedidoId, 'cancelado', motivo || 'Pedido cancelado');
   }
 
   // Aceitar pedido (novo -> preparando)
-  aceitarPedido(pedidoId: string): Pedido | null {
+  async aceitarPedido(pedidoId: string): Promise<Pedido | null> {
     return this.atualizarStatus(pedidoId, 'preparando', 'Pedido aceito e em preparo');
   }
 
   // Recusar pedido (qualquer status -> cancelado)
-  recusarPedido(pedidoId: string, motivo?: string): Pedido | null {
+  async recusarPedido(pedidoId: string, motivo?: string): Promise<Pedido | null> {
     return this.cancelarPedido(pedidoId, motivo || 'Pedido recusado');
   }
 
   // Avançar pedido (confirmado -> preparando)
-  avancarParaPreparo(pedidoId: string): Pedido | null {
+  async avancarParaPreparo(pedidoId: string): Promise<Pedido | null> {
     return this.atualizarStatus(pedidoId, 'preparando', 'Pedido em preparo');
   }
 
   // Avançar pedido (preparando -> saiu_entrega)
-  avancarParaEntrega(pedidoId: string): Pedido | null {
+  async avancarParaEntrega(pedidoId: string): Promise<Pedido | null> {
     return this.atualizarStatus(pedidoId, 'saiu_entrega', 'Pedido saiu para entrega');
   }
 
   // Finalizar pedido (saiu_entrega -> entregue)
-  finalizarPedido(pedidoId: string): Pedido | null {
+  async finalizarPedido(pedidoId: string): Promise<Pedido | null> {
     return this.atualizarStatus(pedidoId, 'entregue', 'Pedido entregue');
   }
 
-  // Validar transição de status
-  private validarTransicaoStatus(statusAtual: StatusPedido, novoStatus: StatusPedido): boolean {
-    const transicoesValidas: Record<StatusPedido, StatusPedido[]> = {
-      'novo': ['preparando', 'cancelado'],
-      'confirmado': ['preparando', 'cancelado'],
-      'preparando': ['saiu_entrega', 'cancelado'],
-      'saiu_entrega': ['entregue', 'cancelado'],
-      'entregue': [], // Status final
-      'cancelado': [] // Status final
-    };
-
-    return transicoesValidas[statusAtual]?.includes(novoStatus) || false;
-  }
-
-  // Adicionar ao histórico
-  private adicionarAoHistorico(pedido: Pedido, status: StatusPedido, observacao?: string) {
-    const historicoEntry: PedidoHistorico = {
-      ...pedido,
-      dataAlteracao: new Date(),
-      observacao
-    };
-
-    this.historico.push(historicoEntry);
-  }
-
-  // Gerar ID único
-  private gerarId(): string {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  // Obter pedidos entregues (histórico)
+  async obterPedidosEntregues(): Promise<Pedido[]> {
+    try {
+      return await firebasePedidoService.buscarHistoricoPedidos({ status: 'entregue' });
+    } catch (error) {
+      console.error('Erro ao obter pedidos entregues:', error);
+      throw new Error('Falha ao carregar histórico de pedidos');
+    }
   }
 
   // Estatísticas
-  obterEstatisticas() {
-    const total = this.pedidos.length;
-    const porStatus = {
-      novo: this.pedidos.filter(p => p.status === 'novo').length,
-      confirmado: this.pedidos.filter(p => p.status === 'confirmado').length,
-      preparando: this.pedidos.filter(p => p.status === 'preparando').length,
-      saiu_entrega: this.pedidos.filter(p => p.status === 'saiu_entrega').length,
-      entregue: this.pedidos.filter(p => p.status === 'entregue').length,
-      cancelado: this.pedidos.filter(p => p.status === 'cancelado').length
-    };
+  async obterEstatisticas() {
+    try {
+      const todosPedidos = await this.obterTodosPedidos();
+      const total = todosPedidos.length;
+      const porStatus = {
+        novo: todosPedidos.filter(p => p.status === 'novo').length,
+        confirmado: todosPedidos.filter(p => p.status === 'confirmado').length,
+        preparando: todosPedidos.filter(p => p.status === 'preparando').length,
+        saiu_entrega: todosPedidos.filter(p => p.status === 'saiu_entrega').length,
+        entregue: todosPedidos.filter(p => p.status === 'entregue').length,
+        cancelado: todosPedidos.filter(p => p.status === 'cancelado').length
+      };
 
-    return { total, porStatus };
+      return { total, porStatus };
+    } catch (error) {
+      console.error('Erro ao obter estatísticas:', error);
+      throw new Error('Falha ao carregar estatísticas');
+    }
   }
 }
 

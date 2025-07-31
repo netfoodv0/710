@@ -10,6 +10,7 @@ import {
 import { Login } from '../pages/Login';
 import { Cadastro } from '../pages/Cadastro';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
+import { LojaProtectedRoute } from '../components/auth/LojaProtectedRoute';
 
 export function AppRoutes() {
   return (
@@ -21,37 +22,49 @@ export function AppRoutes() {
       {/* Rotas protegidas */}
       <Route path="/" element={
         <ProtectedRoute>
-          <Dashboard />
+          <LojaProtectedRoute>
+            <Dashboard />
+          </LojaProtectedRoute>
         </ProtectedRoute>
       } />
       
       <Route path="/dashboard" element={
         <ProtectedRoute>
-          <Dashboard />
+          <LojaProtectedRoute>
+            <Dashboard />
+          </LojaProtectedRoute>
         </ProtectedRoute>
       } />
       
       <Route path="/pedidos" element={
         <ProtectedRoute>
-          <Pedidos />
+          <LojaProtectedRoute>
+            <Pedidos />
+          </LojaProtectedRoute>
         </ProtectedRoute>
       } />
       
       <Route path="/historico" element={
         <ProtectedRoute>
-          <HistoricoPedidos />
+          <LojaProtectedRoute>
+            <HistoricoPedidos />
+          </LojaProtectedRoute>
         </ProtectedRoute>
       } />
       
       <Route path="/cardapio" element={
         <ProtectedRoute>
-          <Cardapio />
+          <LojaProtectedRoute>
+            <Cardapio />
+          </LojaProtectedRoute>
         </ProtectedRoute>
       } />
       
       <Route path="/configuracoes" element={
         <ProtectedRoute>
-          <Configuracoes />
+          <LojaProtectedRoute>
+            <Configuracoes />
+          </LojaProtectedRoute>
         </ProtectedRoute>
       } />
       

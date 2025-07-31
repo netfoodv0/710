@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Layout } from './components';
 import { MobileLayout } from './components/mobile';
 import { AuthProvider } from './context/authContext';
+import { LojaProvider } from './context/lojaContext';
 import { PeriodProvider } from './context/periodContext';
 import { NotificationProvider } from './context/notificationContext';
 import { AnalyticsProvider } from './context/analyticsContext';
@@ -61,13 +62,15 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <NotificationProvider>
-          <AnalyticsProvider>
-            <PeriodProvider>
-              <AppWithNotifications />
-            </PeriodProvider>
-          </AnalyticsProvider>
-        </NotificationProvider>
+        <LojaProvider>
+          <NotificationProvider>
+            <AnalyticsProvider>
+              <PeriodProvider>
+                <AppWithNotifications />
+              </PeriodProvider>
+            </AnalyticsProvider>
+          </NotificationProvider>
+        </LojaProvider>
       </AuthProvider>
     </BrowserRouter>
   );

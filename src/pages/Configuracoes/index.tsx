@@ -9,14 +9,13 @@ import {
   ConfiguracoesNotificacoes,
   ConfiguracoesAparencia
 } from './components';
-import { configuracaoMock } from './data/configuracaoMock';
 import { useConfiguracoes } from './hooks/useConfiguracoes';
 
 type AbaSelecionada = 'geral' | 'entrega' | 'horarios' | 'notificacoes' | 'aparencia';
 
 export function Configuracoes() {
   const [abaSelecionada, setAbaSelecionada] = useState<AbaSelecionada>('geral');
-  const { config, setConfig, salvando, handleSalvar } = useConfiguracoes({ configuracaoInicial: configuracaoMock });
+  const { config, setConfig, salvando, handleSalvar } = useConfiguracoes();
 
   const renderAbaConteudo = () => {
     switch (abaSelecionada) {

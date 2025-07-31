@@ -52,6 +52,28 @@ export interface Extra {
   preco: number;
 }
 
+export interface ClientePedido {
+  nome: string;
+  telefone: string;
+  endereco?: string;
+}
+
+export interface PagamentoPedido {
+  valorPago: number;
+  statusPagamento: 'pendente' | 'pago' | 'parcial' | 'cancelado';
+  dataPagamento?: Date;
+  formaPagamento?: string;
+}
+
+export interface EnderecoEntrega {
+  rua: string;
+  complemento?: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+  cep: string;
+}
+
 // Schemas de validação Zod para pedidos
 export const pedidoSchema = z.object({
   id: z.string(),
