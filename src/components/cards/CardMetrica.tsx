@@ -37,7 +37,7 @@ export const CardMetrica: React.FC<CardMetricaProps> = ({
   const colorClasses = colorMap[cor] || colorMap.green;
 
   return (
-    <div className={`bg-white border border-slate-200 rounded p-4 ${className}`}>
+    <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-600 mb-1">{titulo}</p>
@@ -61,4 +61,4 @@ export const CardMetrica: React.FC<CardMetricaProps> = ({
       </div>
     </div>
   );
-}; 
+};

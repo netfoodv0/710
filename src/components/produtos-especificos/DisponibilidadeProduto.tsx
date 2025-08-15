@@ -119,7 +119,7 @@ export const DisponibilidadeProduto: React.FC<DisponibilidadeProdutoProps> = ({
                     type="checkbox"
                     checked={dia.ativo}
                     onChange={(e) => handleDiaChange(dia.id, e.target.checked)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                   />
                   <span className="text-sm font-medium text-gray-900">{dia.nome}</span>
                 </label>
@@ -139,7 +139,7 @@ export const DisponibilidadeProduto: React.FC<DisponibilidadeProdutoProps> = ({
                   type="time"
                   value={disponibilidade.horarioInicio}
                   onChange={(e) => handleHorarioChange('horarioInicio', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
               <div>
@@ -150,7 +150,7 @@ export const DisponibilidadeProduto: React.FC<DisponibilidadeProdutoProps> = ({
                   type="time"
                   value={disponibilidade.horarioFim}
                   onChange={(e) => handleHorarioChange('horarioFim', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
             </div>

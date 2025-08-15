@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Sidebar } from './';
 import { useAuth } from '../hooks';
 
@@ -6,7 +6,7 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
-export function Layout({ children }: LayoutProps) {
+export const Layout = memo(({ children }: LayoutProps) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, loja } = useAuth();
 
@@ -27,4 +27,4 @@ export function Layout({ children }: LayoutProps) {
       </div>
     </div>
   );
-}
+});

@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
-import { Search, Filter, X } from 'lucide-react';
+import { Search, Filter, X, Tag, CheckCircle, Clock } from 'lucide-react';
 import { FiltrosCardapioState } from '../../hooks/useFiltrosCardapio';
+import { CustomDropdown, DropdownOption } from '../ui/CustomDropdown';
 
 interface FiltrosCardapioProps {
   filtros: FiltrosCardapioState;
@@ -45,25 +46,34 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
     onSearchChange(e.target.value);
   }, [onSearchChange]);
 
+  // Opções para os dropdowns
+  const categoriaOptions: DropdownOption[] = [
+    { value: 'todos', label: 'Todas as Categorias' },
+    ...categorias.map(categoria => ({ value: categoria, label: categoria }))
+  ];
+
+  const statusOptions: DropdownOption[] = [
+    { value: 'todos', label: 'Todos os Status' },
+    { value: 'ativo', label: 'Ativo', icon: <CheckCircle className="w-4 h-4 text-green-500" /> },
+    { value: 'inativo', label: 'Inativo', icon: <Clock className="w-4 h-4 text-gray-500" /> },
+    { value: 'em_falta', label: 'Em Falta', icon: <Clock className="w-4 h-4 text-orange-500" /> }
+  ];
+
+  const disponibilidadeOptions: DropdownOption[] = [
+    { value: 'todos', label: 'Todos' },
+    { value: 'disponivel', label: 'Disponível', icon: <CheckCircle className="w-4 h-4 text-green-500" /> },
+    { value: 'indisponivel', label: 'Indisponível', icon: <Clock className="w-4 h-4 text-red-500" /> }
+  ];
+
   return (
-    <div className="bg-white border border-slate-200 rounded p-4">
+    <div className="bg-white border border-gray-300 rounded-lg p-4">
       <div className="space-y-4">
         {/* Cabeçalho dos filtros */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Filter className="w-4 h-4 text-gray-500" />
-            <h3 className="text-sm font-semibold text-gray-900">Filtros</h3>
+            <h3 className="text-sm font-semibold text-gray-900">Filtros do Cardápio</h3>
           </div>
-          
-          {temFiltrosAtivos && (
-            <button
-              onClick={limparFiltros}
-              className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
-            >
-              <X className="w-3 h-3" />
-              Limpar Filtros
-            </button>
-          )}
         </div>
 
         {/* Filtros em grid */}
@@ -73,18 +83,13 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
             <label className="block text-xs font-medium text-gray-700 mb-2">
               Categoria
             </label>
-            <select
-              value={filtros.categoria}
-              onChange={(e) => handleFiltroChange('categoria', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-            >
-              <option value="todos">Todas as Categorias</option>
-              {categorias.map((categoria) => (
-                <option key={categoria} value={categoria}>
-                  {categoria}
-                </option>
-              ))}
-            </select>
+            <CustomDropdown
+              options={categoriaOptions}
+              selectedValue={filtros.categoria}
+              onValueChange={(value) => handleFiltroChange('categoria', value)}
+              triggerIcon={<Tag className="w-4 h-4 text-gray-500" />}
+              size="sm"
+            />
           </div>
 
           {/* Filtro por Status */}
@@ -92,16 +97,12 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
             <label className="block text-xs font-medium text-gray-700 mb-2">
               Status
             </label>
-            <select
-              value={filtros.status}
-              onChange={(e) => handleFiltroChange('status', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-            >
-              <option value="todos">Todos os Status</option>
-              <option value="ativo">Ativo</option>
-              <option value="inativo">Inativo</option>
-              <option value="em_falta">Em Falta</option>
-            </select>
+            <CustomDropdown
+              options={statusOptions}
+              selectedValue={filtros.status}
+              onValueChange={(value) => handleFiltroChange('status', value)}
+              size="sm"
+            />
           </div>
 
           {/* Filtro por Disponibilidade */}
@@ -109,15 +110,12 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
             <label className="block text-xs font-medium text-gray-700 mb-2">
               Disponibilidade
             </label>
-            <select
-              value={filtros.disponibilidade}
-              onChange={(e) => handleFiltroChange('disponibilidade', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-            >
-              <option value="todos">Todos</option>
-              <option value="disponivel">Disponível</option>
-              <option value="indisponivel">Indisponível</option>
-            </select>
+            <CustomDropdown
+              options={disponibilidadeOptions}
+              selectedValue={filtros.disponibilidade}
+              onValueChange={(value) => handleFiltroChange('disponibilidade', value)}
+              size="sm"
+            />
           </div>
         </div>
 
@@ -129,7 +127,7 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
             placeholder="Buscar por nome, descrição, categoria..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full pl-8 pr-4 h-9 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            className="w-full pl-8 pr-4 h-9 border border-gray-300 rounded-md text-xs focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           />
         </div>
 
@@ -137,24 +135,48 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
         {temFiltrosAtivos && (
           <div className="flex flex-wrap gap-2 pt-2">
             {filtros.categoria !== 'todos' && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
                 Categoria: {filtros.categoria}
+                <button
+                  onClick={() => handleFiltroChange('categoria', 'todos')}
+                  className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
             {filtros.status !== 'todos' && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
                 Status: {filtros.status === 'ativo' ? 'Ativo' : filtros.status === 'inativo' ? 'Inativo' : 'Em Falta'}
+                <button
+                  onClick={() => handleFiltroChange('status', 'todos')}
+                  className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
 
             {filtros.disponibilidade !== 'todos' && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
                 Disponibilidade: {filtros.disponibilidade === 'disponivel' ? 'Disponível' : 'Indisponível'}
+                <button
+                  onClick={() => handleFiltroChange('disponibilidade', 'todos')}
+                  className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
             {searchTerm && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+              <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
                 Busca: {searchTerm}
+                <button
+                  onClick={() => onSearchChange('')}
+                  className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
           </div>

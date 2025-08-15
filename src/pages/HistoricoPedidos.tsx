@@ -3,14 +3,21 @@ import { Download, AlertCircle, Loader2 } from 'lucide-react';
 import { useHistoricoPedidos } from '../hooks/useHistoricoPedidos';
 import { useFiltrosHistorico } from '../hooks/useFiltrosHistorico';
 import { useNotificationContext } from '../context/notificationContextUtils';
+
 import { HistoricoTable, HistoricoModal, FiltrosHistorico, EstatisticasHistorico } from '../features/historico/components';
 import { NotificationToast } from '../components/NotificationToast';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { RelatorioHeader } from '../features/relatorios/components/RelatorioHeader';
+import { usePeriodFilter } from '../hooks/usePeriodFilter';
 import { Pedido } from '../types';
 
 export function HistoricoPedidos() {
   const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const { selectedPeriod, handlePeriodChange } = usePeriodFilter();
+
+
+
 
   const {
     pedidosHistorico,
@@ -70,7 +77,7 @@ export function HistoricoPedidos() {
   if (error) {
     return (
       <div className="h-full p-4">
-        <div className="bg-red-50 border border-red-200 rounded p-6">
+        <div className="bg-red-50 border border-red-200 rounded p-0">
           <div className="flex items-center mb-4">
             <AlertCircle className="w-6 h-6 text-red-600 mr-3" />
             <h3 className="text-lg font-medium text-red-800">Erro ao carregar dados</h3>
@@ -81,7 +88,7 @@ export function HistoricoPedidos() {
               onClick={handleRetry}
               className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors"
             >
-              Tentar Novamente
+  
             </button>
             <button
               onClick={() => window.location.reload()}
@@ -95,9 +102,17 @@ export function HistoricoPedidos() {
     );
   }
 
+  const handleExportExcel = async () => {
+    await handleExport();
+  };
+
+  const handleExportPDF = async () => {
+    await handleExport();
+  };
+
   return (
     <ErrorBoundary>
-      <div className="h-full flex flex-col">
+      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -110,46 +125,30 @@ export function HistoricoPedidos() {
           />
         ))}
 
-        {/* Cabeçalho Fixo */}
-        <div className="flex-shrink-0 p-4">
-          <div className="bg-white border border-slate-200 rounded" style={{ height: '72px' }}>
-            <div className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4" style={{ height: '100%' }}>
-              {/* Esquerda: Título e subtítulo */}
-              <div>
-                <h1 className="text-sm font-bold text-gray-900">Histórico de Pedidos</h1>
-                <p className="text-gray-600 mt-1 text-xs">Visualize todos os pedidos finalizados, entregues e cancelados</p>
-              </div>
-              
-              {/* Direita: Ações */}
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={handleExport}
-                  disabled={loading.exportacao}
-                  className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading.exportacao ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Download className="w-4 h-4" />
-                  )}
-                  {loading.exportacao ? 'Exportando...' : 'Exportar'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Cabeçalho fixo reutilizável */}
+        <RelatorioHeader
+          title="Histórico de Pedidos"
+          subtitle="Visualize todos os pedidos finalizados, entregues e cancelados"
+          selectedPeriod={selectedPeriod}
+          onPeriodChange={handlePeriodChange}
+          onExportExcel={handleExportExcel}
+          onExportPDF={handleExportPDF}
+          loading={loading.exportacao}
+        />
+        {/* Espaço para não sobrepor o conteúdo */}
+        <div className="h-[66px]" />
 
         {/* Conteúdo Principal */}
-        <div className="flex-1 flex flex-col px-4 pb-4">
+        <div className="p-4" style={{ padding: '16px' }}>
           {/* Estatísticas */}
           {estatisticas && (
-            <div className="flex-shrink-0 mb-4">
+            <div className="mt-4 mb-4" style={{ marginBottom: '16px' }}>
               <EstatisticasHistorico estatisticas={estatisticas} />
             </div>
           )}
 
           {/* Filtros */}
-          <div className="flex-shrink-0 mb-4">
+          <div className="mb-4" style={{ marginBottom: '16px' }}>
             <FiltrosHistorico
               filtros={filtros}
               onFiltrosChange={handleFiltrosChange}
@@ -159,13 +158,11 @@ export function HistoricoPedidos() {
           </div>
 
           {/* Tabela */}
-          <div className="flex-1 bg-white border border-slate-200 rounded">
-            <div>
-              <HistoricoTable
-                pedidos={pedidosFiltrados}
-                onViewPedido={handleViewPedido}
-              />
-            </div>
+          <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <HistoricoTable
+              pedidos={pedidosFiltrados}
+              onViewPedido={handleViewPedido}
+            />
           </div>
         </div>
 
@@ -180,4 +177,4 @@ export function HistoricoPedidos() {
       </div>
     </ErrorBoundary>
   );
-} 
+}

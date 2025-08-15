@@ -1,0 +1,23 @@
+/* Estilos para a barra de scroll escura */
+.scrollbar-dark::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-track {
+  background: #202c33;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  background: #8696a0;
+  border-radius: 3px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb:hover {
+  background: #aebac1;
+}
+
+/* Para Firefox */
+.scrollbar-dark {
+  scrollbar-width: thin;
+  scrollbar-color: #8696a0 #202c33;
+}

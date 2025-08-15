@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Tag, Clock, Star, Package, Plus } from 'lucide-react';
 
-type TabType = 'basico' | 'midia' | 'complementos' | 'classificacoes' | 'disponibilidade' | 'descontos';
+type TabType = 'basico' | 'midia' | 'classificacoes' | 'disponibilidade' | 'descontos';
 
 interface FormularioProdutoTabsProps {
   activeTab: TabType;
@@ -11,7 +11,6 @@ interface FormularioProdutoTabsProps {
 const tabs = [
   { id: 'basico' as const, label: 'Informações Básicas', icon: Package },
   { id: 'midia' as const, label: 'Mídia', icon: Image },
-  { id: 'complementos' as const, label: 'Complementos', icon: Plus },
   { id: 'classificacoes' as const, label: 'Classificações', icon: Tag },
   { id: 'disponibilidade' as const, label: 'Disponibilidade', icon: Clock },
   { id: 'descontos' as const, label: 'Descontos', icon: Star }

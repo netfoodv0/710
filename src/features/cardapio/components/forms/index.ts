@@ -1,2 +1,1 @@
-export { FiltrosCardapio } from '../FiltrosCardapio';
-export { FiltrosCategorias } from '../FiltrosCategorias'; 
+export { FiltrosCardapio } from '../FiltrosCardapio'; 

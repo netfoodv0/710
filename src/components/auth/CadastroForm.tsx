@@ -53,7 +53,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <div className="bg-white border border-slate-200 rounded p-8">
+      <div className="bg-white border border-slate-200 rounded-lg p-8">
         <div className="text-center mb-8">
           <h1 className="text-sm font-bold text-gray-900 mb-2">
             Crie sua loja

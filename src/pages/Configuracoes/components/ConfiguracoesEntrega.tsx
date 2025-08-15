@@ -16,19 +16,19 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded shadow-none min-h-[600px]">
-      <div className="p-4 space-y-4">
-        <h3 className="text-xs font-semibold text-gray-900">Configurações de Entrega</h3>
+    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div className="p-6 space-y-6">
+        <h3 className="text-lg font-semibold text-gray-900">Configurações de Entrega</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Taxa de Entrega */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-gray-600" />
-              <h4 className="text-xs font-medium text-gray-900">Taxa de Entrega</h4>
+              <DollarSign className="w-5 h-5 text-blue-600" />
+              <h4 className="text-sm font-medium text-gray-900">Taxa de Entrega</h4>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Valor da Taxa (R$)
               </label>
               <input
@@ -37,7 +37,7 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
                 min="0"
                 value={config.taxaEntrega}
                 onChange={(e) => handleInputChange('taxaEntrega', parseFloat(e.target.value) || 0)}
-                className="w-full bg-[#eeeeee] text-[rgb(97,97,97)] p-1.5 border border-gray-300 rounded focus:outline-none text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -45,11 +45,11 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
           {/* Valor Mínimo */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-gray-600" />
-              <h4 className="text-xs font-medium text-gray-900">Valor Mínimo</h4>
+              <DollarSign className="w-5 h-5 text-blue-600" />
+              <h4 className="text-sm font-medium text-gray-900">Valor Mínimo</h4>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Valor Mínimo para Entrega (R$)
               </label>
               <input
@@ -58,7 +58,7 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
                 min="0"
                 value={config.valorMinimoEntrega}
                 onChange={(e) => handleInputChange('valorMinimoEntrega', parseFloat(e.target.value) || 0)}
-                className="w-full bg-[#eeeeee] text-[rgb(97,97,97)] p-1.5 border border-gray-300 rounded focus:outline-none text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -66,11 +66,11 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
           {/* Tempo de Preparo */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-600" />
-              <h4 className="text-xs font-medium text-gray-900">Tempo de Preparo</h4>
+              <Clock className="w-5 h-5 text-blue-600" />
+              <h4 className="text-sm font-medium text-gray-900">Tempo de Preparo</h4>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Tempo Médio de Preparo (minutos)
               </label>
               <input
@@ -78,7 +78,7 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
                 min="1"
                 value={config.tempoPreparoMedio}
                 onChange={(e) => handleInputChange('tempoPreparoMedio', parseInt(e.target.value) || 0)}
-                className="w-full bg-[#eeeeee] text-[rgb(97,97,97)] p-1.5 border border-gray-300 rounded focus:outline-none text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
@@ -86,11 +86,11 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
           {/* Raio de Entrega */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-gray-600" />
-              <h4 className="text-xs font-medium text-gray-900">Raio de Entrega</h4>
+              <MapPin className="w-5 h-5 text-blue-600" />
+              <h4 className="text-sm font-medium text-gray-900">Raio de Entrega</h4>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Raio de Entrega (km)
               </label>
               <input
@@ -99,18 +99,18 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
                 step="0.1"
                 value={config.raioEntregaKm}
                 onChange={(e) => handleInputChange('raioEntregaKm', parseFloat(e.target.value) || 0)}
-                className="w-full bg-[#eeeeee] text-[rgb(97,97,97)] p-1.5 border border-gray-300 rounded focus:outline-none text-sm"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
         </div>
 
-        {/* Status da Entrega */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Truck className="w-4 h-4 text-gray-600" />
-            <h4 className="text-xs font-medium text-gray-900">Status da Entrega</h4>
-          </div>
+        {/* Status de Entrega */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Truck className="w-5 h-5 text-blue-600" />
+              <h4 className="text-sm font-medium text-gray-900">Status de Entrega</h4>
+            </div>
           <div className="flex items-center gap-4">
             <label className="relative inline-flex items-center cursor-pointer">
               <input 
@@ -140,4 +140,4 @@ export function ConfiguracoesEntrega({ config, setConfig }: ConfiguracoesEntrega
       </div>
     </div>
   );
-} 
+}

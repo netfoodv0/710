@@ -1,6 +1,7 @@
-import React from 'react';
-import { Menu, Bell, Search, User, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { Menu, Bell, Search, User, ChevronDown, Store } from 'lucide-react';
 import { useAuth } from '../../hooks';
+import { CustomDropdown, DropdownOption } from '../ui/CustomDropdown';
 
 interface MobileHeaderProps {
   onMenuToggle: () => void;
@@ -22,12 +23,20 @@ const getPageTitle = (path: string): string => {
 export function MobileHeader({ onMenuToggle, currentPath, isScrolled = false }: MobileHeaderProps) {
   const { user, loja } = useAuth();
   const pageTitle = getPageTitle(currentPath);
+  const [isLojaDropdownOpen, setIsLojaDropdownOpen] = useState(false);
+
+  // Opções para o dropdown de loja (simulado - em um app real viria do contexto)
+  const lojaOptions: DropdownOption[] = [
+    { value: 'loja1', label: loja?.nome || 'Minha Loja', icon: <Store className="w-4 h-4 text-blue-600" /> },
+    { value: 'loja2', label: 'Loja 2', icon: <Store className="w-4 h-4 text-gray-600" /> },
+    { value: 'loja3', label: 'Loja 3', icon: <Store className="w-4 h-4 text-gray-600" /> }
+  ];
 
   return (
     <header className={`sticky top-0 z-40 bg-white border-b transition-all duration-200 ${
       isScrolled ? 'border-gray-200 shadow-md' : 'border-gray-100'
-    }`}>
-      <div className="flex items-center justify-between px-4 py-3">
+    }`} style={{ height: '73px' }}>
+      <div className="flex items-center justify-between px-4 py-3" style={{ height: '73px' }}>
         {/* Left Section */}
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <button
@@ -46,8 +55,14 @@ export function MobileHeader({ onMenuToggle, currentPath, isScrolled = false }: 
               <h1 className="font-semibold text-gray-900 text-base truncate">{pageTitle}</h1>
               {loja && (
                 <div className="flex items-center gap-1">
-                  <p className="text-xs text-gray-500 truncate">{loja.nome}</p>
-                  <ChevronDown className="w-3 h-3 text-gray-400" />
+                  <CustomDropdown
+                    options={lojaOptions}
+                    selectedValue="loja1"
+                    onValueChange={() => {}} // Em um app real, mudaria a loja ativa
+                    triggerIcon={<Store className="w-3 h-3 text-gray-500" />}
+                    size="sm"
+                    className="text-xs"
+                  />
                 </div>
               )}
             </div>

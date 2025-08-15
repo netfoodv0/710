@@ -9,7 +9,10 @@ import {
   Settings,
   Store,
   LogOut,
-  User
+  User,
+  BarChart3,
+  Ticket,
+  Map
 } from 'lucide-react';
 import { useAuth } from '../../hooks';
 
@@ -39,10 +42,21 @@ const menuItems = [
     label: 'Cardápio',
     icon: BookOpen
   },
+
   {
     path: '/configuracoes',
     label: 'Configurações',
     icon: Settings
+  },
+  {
+    path: '/mapa',
+    label: 'Mapa',
+    icon: Map
+  },
+  {
+    path: '/relatorios',
+    label: 'Relatórios',
+    icon: BarChart3
   }
 ];
 
@@ -73,13 +87,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-                  <Store className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h1 className="font-bold text-gray-900 text-lg">NetFood</h1>
-                  <p className="text-sm text-gray-500">Gestão de Pedidos</p>
-                </div>
+                <h1 className="text-2xl font-bold italic text-gray-900">VAULT</h1>
               </div>
               <button
                 onClick={onClose}
@@ -114,11 +122,6 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto p-4">
-            <div className="mb-4">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
-                Menu Principal
-              </p>
-            </div>
             
             <ul className="space-y-1">
               {menuItems.map((item) => {
@@ -167,4 +170,4 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
       </div>
     </>
   );
-} 
+}

@@ -58,7 +58,7 @@ body {
 
 /* Estilos para cards minimalistas */
 .card {
-  @apply bg-white border border-gray-200 rounded;
+  @apply bg-white border border-gray-200 rounded-lg;
 }
 
 /* Estilo específico para aba geral */
@@ -85,15 +85,15 @@ main {
 .btn {
   @apply inline-flex items-center justify-center px-4 font-medium transition-all duration-200 focus:outline-none;
   height: 40px;
-  border-radius: 100px;
+  border-radius: 2px;
 }
 
 .btn-primary {
-  @apply text-red-500 px-4 py-3 rounded-lg w-full;
+  @apply text-red-500 px-4 py-3 rounded-sm w-full;
 }
 
 .btn-secondary {
-  @apply text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-lg w-full;
+  @apply text-gray-700 hover:bg-gray-100 px-4 py-3 rounded-sm w-full;
 }
 
 /* Transições suaves */
@@ -153,30 +153,164 @@ main {
   z-index: 9998 !important;
 }
 
-/* Estilos para abas de navegação no cardápio */
-.cardapio-tabs {
-  background: #f3f4f6 !important;
-  border-radius: 8px !important;
-  padding: 4px !important;
+/* Estilos para drag and drop de produtos */
+.sortable-produto {
+  transition: transform 0.2s ease;
 }
 
-.cardapio-tab {
-  flex: 1 !important;
-  min-height: 44px !important;
-  border-radius: 6px !important;
-  transition: all 0.2s ease !important;
+.sortable-produto.dragging {
+  cursor: grabbing;
+  transform-origin: center;
 }
 
-.cardapio-tab.active {
-  background: white !important;
-  color: #2563eb !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
 }
 
-.cardapio-tab:not(.active) {
-  color: #6b7280 !important;
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
-.cardapio-tab:not(.active):hover {
-  color: #374151 !important;
+/* Animação para modal slide da direita */
+.slide-right-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-right-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.slide-right-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.slide-right-exit-active {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+}
+
+/* Máscara do modal */
+.slide-right-enter .ant-modal-mask {
+  opacity: 0;
+}
+
+.slide-right-enter-active .ant-modal-mask {
+  opacity: 1;
+  transition: opacity 0.3s ease-out;
+}
+
+.slide-right-exit .ant-modal-mask {
+  opacity: 1;
+}
+
+.slide-right-exit-active .ant-modal-mask {
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+/* Estilos customizados para checkboxes roxos */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+input[type="checkbox"]:hover {
+  border-color: #9333ea;
+}
+
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.2);
 }

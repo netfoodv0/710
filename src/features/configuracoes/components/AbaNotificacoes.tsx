@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card } from '../Card';
-import { NotificacaoConfig } from '../../types';
-import { tiposNotificacao } from '../data/configuracaoData';
+import { Card } from '../../../components/ui/card';
+import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
+import { Calendar, Volume2 } from 'lucide-react';
 
 interface AbaNotificacoesProps {
   // Props podem ser adicionadas no futuro
@@ -9,21 +9,30 @@ interface AbaNotificacoesProps {
 }
 
 export function AbaNotificacoes(props: AbaNotificacoesProps) {
-  const [notificacoes, setNotificacoes] = useState<NotificacaoConfig[]>(
-    tiposNotificacao.map(notif => ({ ...notif, ativo: true }))
-  );
+  const [frequenciaBackup, setFrequenciaBackup] = useState('diario');
+
+  const notificacoes = [
+    { key: 'novos_pedidos', label: 'Novos Pedidos', desc: 'Receber notificação quando chegar um novo pedido', ativo: true },
+    { key: 'pedidos_cancelados', label: 'Pedidos Cancelados', desc: 'Receber notificação quando um pedido for cancelado', ativo: true },
+    { key: 'pedidos_entregues', label: 'Pedidos Entregues', desc: 'Receber notificação quando um pedido for entregue', ativo: false },
+    { key: 'estoque_baixo', label: 'Estoque Baixo', desc: 'Receber notificação quando produtos estiverem com estoque baixo', ativo: true },
+    { key: 'relatorios_diarios', label: 'Relatórios Diários', desc: 'Receber relatório diário por e-mail', ativo: false },
+  ];
 
   const handleToggleNotificacao = (key: string) => {
-    setNotificacoes(prev => 
-      prev.map(notif => 
-        notif.key === key ? { ...notif, ativo: !notif.ativo } : notif
-      )
-    );
+    // Lógica para alternar notificação
+    console.log('Toggle notificação:', key);
   };
 
+  const frequenciaOptions: DropdownOption[] = [
+    { value: 'diario', label: 'Diário', icon: <Calendar className="w-4 h-4 text-blue-500" /> },
+    { value: 'semanal', label: 'Semanal', icon: <Calendar className="w-4 h-4 text-green-500" /> },
+    { value: 'mensal', label: 'Mensal', icon: <Calendar className="w-4 h-4 text-purple-500" /> }
+  ];
+
   return (
-    <Card className="p-0 min-h-[600px] rounded">
-      <div className="p-6 space-y-6">
+    <Card className="p-6">
+      <div className="space-y-6">
         <h3 className="text-xs font-semibold text-gray-900">Configurações de Notificações</h3>
         
         <div className="space-y-4">
@@ -77,11 +86,12 @@ export function AbaNotificacoes(props: AbaNotificacoesProps) {
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   Frequência de Backup
                 </label>
-                <select className="bg-[#eeeeee] text-[rgb(97,97,97)] w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none text-sm">
-                  <option value="diario">Diário</option>
-                  <option value="semanal">Semanal</option>
-                  <option value="mensal">Mensal</option>
-                </select>
+                <CustomDropdown
+                  options={frequenciaOptions}
+                  selectedValue={frequenciaBackup}
+                  onValueChange={setFrequenciaBackup}
+                  size="sm"
+                />
               </div>
             </div>
           </div>

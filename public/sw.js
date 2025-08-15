@@ -21,11 +21,41 @@ self.addEventListener('install', (event) => {
 
 // Fetch event
 self.addEventListener('fetch', (event) => {
+  // Skip cross-origin requests and non-GET requests
+  if (!event.request.url.startsWith(self.location.origin) || event.request.method !== 'GET') {
+    return;
+  }
+
+  // Skip Vite dev server requests in development
+  if (event.request.url.includes('@vite') || 
+      event.request.url.includes('@react-refresh') ||
+      event.request.url.includes('localhost:5174')) {
+    return;
+  }
+
+  // Skip Firebase and external API requests
+  if (event.request.url.includes('firestore.googleapis.com') || 
+      event.request.url.includes('firebase') ||
+      event.request.url.includes('googleapis.com')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
         // Return cached version or fetch from network
-        return response || fetch(event.request);
+        return response || fetch(event.request).catch((error) => {
+          console.log('Fetch failed for:', event.request.url, error);
+          // For navigation requests, return a fallback page
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html');
+          }
+          // For other requests, return a generic error response
+          return new Response('Network error', {
+            status: 408,
+            statusText: 'Network timeout'
+          });
+        });
       })
   );
 });
@@ -85,4 +115,4 @@ self.addEventListener('notificationclick', (event) => {
       clients.openWindow('/pedidos')
     );
   }
-}); 
+});

@@ -1,8 +1,8 @@
 import { QueryDocumentSnapshot, DocumentData, doc } from 'firebase/firestore';
 import { FirebaseProdutosService } from './firebase/produtosService';
-import { FirebaseCategoriasService } from './firebase/categoriasService';
+
 import { FirebaseEstatisticasService } from './firebase/estatisticasService';
-import { Produto, Categoria, CategoriaAdicional } from '../types';
+import { Produto, CategoriaAdicional } from '../types';
 import { collection, query, where, orderBy, getDocs, getDoc, addDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { lojaIsolation } from '../lib/lojaIsolation';
@@ -19,30 +19,26 @@ export interface FiltrosProduto {
   startAfter?: QueryDocumentSnapshot<DocumentData>;
 }
 
-export interface FiltrosCategoria {
-  ativa?: boolean;
-  tipo?: string;
-  status?: 'ativo' | 'inativo';
-}
+
 
 export interface EstatisticasCardapio {
   totalProdutos: number;
   produtosAtivos: number;
   produtosDestacados: number;
   produtosEmFalta: number;
-  categoriasAtivas: number;
+
   receitaTotal: number;
 }
 
 // Serviço principal que combina todos os serviços do Firebase
 export class FirebaseCardapioService {
   private produtosService: FirebaseProdutosService;
-  private categoriasService: FirebaseCategoriasService;
+
   private estatisticasService: FirebaseEstatisticasService;
 
   constructor() {
     this.produtosService = new FirebaseProdutosService();
-    this.categoriasService = new FirebaseCategoriasService();
+
     this.estatisticasService = new FirebaseEstatisticasService();
   }
 
@@ -76,23 +72,7 @@ export class FirebaseCardapioService {
     return this.produtosService.atualizarStatusProdutos(ids, status);
   }
 
-  // ===== CATEGORIAS =====
 
-  async buscarCategorias(filtros: FiltrosCategoria = {}): Promise<Categoria[]> {
-    return this.categoriasService.buscarCategorias(filtros);
-  }
-
-  async criarCategoria(categoria: Omit<Categoria, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
-    return this.categoriasService.criarCategoria(categoria);
-  }
-
-  async editarCategoria(id: string, dados: Partial<Categoria>): Promise<void> {
-    return this.categoriasService.editarCategoria(id, dados);
-  }
-
-  async excluirCategoria(id: string): Promise<void> {
-    return this.categoriasService.excluirCategoria(id);
-  }
 
   // ===== CATEGORIAS ADICIONAIS =====
 

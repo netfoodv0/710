@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import { Eye, Calendar, User, CreditCard, DollarSign } from 'lucide-react';
+import { Eye, Calendar, User, CreditCard, DollarSign, List } from 'lucide-react';
 import { Pedido } from '../../../types';
 import { StatusBadge } from './StatusBadge';
 import { usePagination } from '../../../hooks/usePagination';
 import { LoadMoreButton } from '../../../components/LoadMoreButton';
+import { FormSection } from '../../../components/forms/FormSection';
 
 interface HistoricoTableProps {
   pedidos: Pedido[];
@@ -17,7 +18,9 @@ export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onVi
     hasMore,
     loadMore,
     totalItems,
-  } = usePagination(pedidos, { itemsPerPage: 10 });
+    currentPage,
+    loadPage,
+  } = usePagination(pedidos, { itemsPerPage: 8 });
   // Memoizar funções de formatação
   const formatarData = useMemo(() => (data: Date) => {
     return new Intl.DateTimeFormat('pt-BR', {
@@ -55,137 +58,148 @@ export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onVi
 
   if (pedidosPaginados.length === 0) {
     return (
-      <div className="p-8 text-center">
-        <div className="text-gray-400 mb-4">
-          <Calendar className="w-12 h-12 mx-auto mb-4" />
+      <FormSection
+        title="Histórico de Pedidos"
+        description="Lista de todos os pedidos finalizados"
+        className="mt-4"
+      >
+        <div className="p-8 text-center">
+          <div className="text-gray-400 mb-4">
+            <Calendar className="w-12 h-12 mx-auto mb-4" />
+          </div>
+          <h3 className="text-sm font-medium text-gray-900 mb-2">Nenhum pedido encontrado</h3>
+          <p className="text-gray-500 text-xs">
+            Não há pedidos entregues ou cancelados no período selecionado.
+          </p>
         </div>
-        <h3 className="text-sm font-medium text-gray-900 mb-2">Nenhum pedido encontrado</h3>
-        <p className="text-gray-500 text-xs">
-          Não há pedidos entregues ou cancelados no período selecionado.
-        </p>
-      </div>
+      </FormSection>
     );
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="border-b border-gray-200">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Pedido
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Cliente
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Pagamento
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Status
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Data/Hora
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Total
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              Ações
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-100">
-          {pedidosPaginados.map((pedido) => (
-            <tr key={pedido.id} className="hover:bg-gray-50 transition-colors">
-              {/* Número do Pedido */}
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <div className="text-xs font-medium text-gray-900">
-                    #{pedido.numero}
+    <FormSection
+      title="Histórico de Pedidos"
+      description="Lista de todos os pedidos finalizados"
+      className="mt-4"
+    >
+      <div className="overflow-x-auto">
+        <table className="w-full">
+                      <thead className="border-b border-gray-200" style={{ height: '73px' }}>
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  Pedido
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  Cliente
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  Pagamento
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  Data/Hora
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  Total
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  Ações
+                </th>
+              </tr>
+            </thead>
+          <tbody className="divide-y divide-gray-100">
+            {pedidosPaginados.map((pedido) => (
+              <tr key={pedido.id} className="hover:bg-gray-50 transition-colors">
+                {/* Número do Pedido */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="text-xs font-medium text-gray-900">
+                      #{pedido.numero}
+                    </div>
+                    <div className="ml-2 text-xs text-gray-500">
+                      {pedido.itens.length} itens
+                    </div>
                   </div>
-                  <div className="ml-2 text-xs text-gray-500">
-                    {pedido.itens.length} itens
-                  </div>
-                </div>
-              </td>
+                </td>
 
-              {/* Cliente */}
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div>
-                  <div className="text-xs font-medium text-gray-900">
-                    {pedido.cliente?.nome || 'Cliente não identificado'}
+                {/* Cliente */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div>
+                    <div className="text-xs font-medium text-gray-900">
+                      {pedido.cliente?.nome || 'Cliente não identificado'}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {pedido.cliente?.telefone || 'N/A'}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {pedido.cliente?.telefone || 'N/A'}
-                  </div>
-                </div>
-              </td>
+                </td>
 
-              {/* Pagamento */}
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div>
-                  <div className="text-xs font-medium text-gray-900">
-                    {formatarFormaPagamento(pedido.formaPagamento)}
+                {/* Pagamento */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div>
+                    <div className="text-xs font-medium text-gray-900">
+                      {formatarFormaPagamento(pedido.formaPagamento)}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {pedido.pagamento.statusPagamento === 'pago' ? 'Pago' : 'Pendente'}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {pedido.pagamento.statusPagamento === 'pago' ? 'Pago' : 'Pendente'}
-                  </div>
-                </div>
-              </td>
+                </td>
 
-              {/* Status */}
-              <td className="px-6 py-4 whitespace-nowrap">
-                <StatusBadge status={pedido.status} />
-              </td>
+                {/* Status */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <StatusBadge status={pedido.status} />
+                </td>
 
-              {/* Data/Hora */}
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div>
-                  <div className="text-xs font-medium text-gray-900">
-                    {formatarData(pedido.dataHora)}
+                {/* Data/Hora */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div>
+                    <div className="text-xs font-medium text-gray-900">
+                      {formatarData(pedido.dataHora)}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {pedido.tempoEstimado}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {pedido.tempoEstimado}
-                  </div>
-                </div>
-              </td>
+                </td>
 
-              {/* Total */}
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div>
-                  <div className="text-xs font-bold text-gray-900">
-                    {formatarValor(pedido.total)}
+                {/* Total */}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div>
+                    <div className="text-xs font-bold text-gray-900">
+                      {formatarValor(pedido.total)}
+                    </div>
                   </div>
-                </div>
-              </td>
+                </td>
 
-              {/* Ações */}
-              <td className="px-6 py-4 whitespace-nowrap text-right text-xs font-medium">
-                <button
-                  onClick={() => handleViewPedido(pedido)}
-                  className="inline-flex items-center px-3 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 focus:outline-none transition-colors rounded"
-                >
-                  <Eye className="w-3 h-3 mr-2" />
-                  Ver
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      
-      {/* Botão Carregar Mais */}
-      {pedidos.length > 10 && (
+                {/* Ações */}
+                <td className="px-6 py-4 whitespace-nowrap text-right text-xs font-medium">
+                  <button
+                    onClick={() => handleViewPedido(pedido)}
+                    className="inline-flex items-center px-3 py-2 text-xs font-medium text-gray-700 hover:text-gray-900 focus:outline-none transition-colors rounded"
+                  >
+                    <Eye className="w-3 h-3 mr-2" />
+                    Ver
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        
+        {/* Paginação */}
         <LoadMoreButton
-          onLoadMore={loadMore}
-          hasMore={hasMore}
+          onLoadMore={loadPage}
+          hasMore={true}
           loading={false}
           totalItems={totalItems}
           currentItems={pedidosPaginados.length}
-          itemsPerPage={10}
+          itemsPerPage={8}
+          currentPage={currentPage}
         />
-      )}
-    </div>
+      </div>
+    </FormSection>
   );
 }); 

@@ -1,1 +1,1 @@
-export { ModalCategoria } from '../ModalCategoria'; 
+ 

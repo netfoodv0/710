@@ -1,4 +1,4 @@
-import { Categoria, CategoriaAdicional } from './index';
+
 
 // Tipos principais de produtos
 export interface Produto {
@@ -24,53 +24,11 @@ export interface Produto {
   dataAtualizacao: Date;
 }
 
-export interface Categoria {
-  id?: string; // ✅ NOVO: Campo opcional
-  nome?: string; // ✅ NOVO: Campo opcional
-  descricao?: string; // ✅ NOVO: Campo opcional
-  lojaId?: string; // ✅ NOVO: Campo opcional para isolamento por loja
-  ordem?: number; // ✅ NOVO: Campo opcional
-  ativa?: boolean; // ✅ NOVO: Campo opcional
-  status?: 'ativo' | 'inativo'; // ✅ NOVO: Campo opcional para consistência
-  tipo?: 'padrao' | 'pizza' | 'obrigatorio'; // ✅ NOVO: Campo opcional
-  tipoSelecao?: 'unica' | 'multipla' | 'somavel'; // ✅ NOVO: Campo opcional
-  quantidadeMinima?: number; // ✅ NOVO: Campo opcional
-  quantidadeMaxima?: number; // ✅ NOVO: Campo opcional
-  imagem?: string; // ✅ NOVO: Campo opcional
-  disponibilidade?: DisponibilidadeCategoria; // ✅ NOVO: Campo opcional para categorias
-  dataCriacao?: Date; // ✅ NOVO: Campo opcional
-  dataAtualizacao?: Date; // ✅ NOVO: Campo opcional
-}
 
-export interface CategoriaAdicional {
-  id?: string; // ✅ NOVO: Campo opcional
-  nome?: string; // ✅ NOVO: Campo opcional
-  descricao?: string; // ✅ NOVO: Campo opcional
-  lojaId?: string; // ✅ NOVO: Campo opcional para isolamento por loja
-  status?: 'ativo' | 'inativo'; // ✅ NOVO: Campo opcional
-  ativa?: boolean; // ✅ NOVO: Campo opcional para consistência
-  ordem?: number; // ✅ NOVO: Campo opcional para consistência
-  tipo?: 'padrao' | 'pizza' | 'obrigatorio'; // ✅ NOVO: Campo opcional
-  tipoSelecao?: 'unica' | 'multipla' | 'somavel'; // ✅ NOVO: Campo opcional
-  quantidadeMinima?: number; // ✅ NOVO: Campo opcional
-  quantidadeMaxima?: number; // ✅ NOVO: Campo opcional
-  imagem?: string; // ✅ NOVO: Campo opcional para consistência
-  disponibilidade?: DisponibilidadeCategoria; // ✅ NOVO: Campo opcional
-  dataCriacao?: Date; // ✅ NOVO: Campo opcional
-  dataAtualizacao?: Date; // ✅ NOVO: Campo opcional
-}
 
-export interface DisponibilidadeCategoria {
-  segunda?: boolean; // ✅ NOVO: Campo opcional
-  terca?: boolean; // ✅ NOVO: Campo opcional
-  quarta?: boolean; // ✅ NOVO: Campo opcional
-  quinta?: boolean; // ✅ NOVO: Campo opcional
-  sexta?: boolean; // ✅ NOVO: Campo opcional
-  sabado?: boolean; // ✅ NOVO: Campo opcional
-  domingo?: boolean; // ✅ NOVO: Campo opcional
-  horarioInicio?: string; // ✅ NOVO: Campo opcional - HH:mm
-  horarioFim?: string; // ✅ NOVO: Campo opcional - HH:mm
-}
+
+
+
 
 // Re-export do tipo Extra que está em pedidos.ts
 export interface Extra {
@@ -135,7 +93,7 @@ export interface VariacaoProduto {
 export interface TemplateProduto {
   id: string;
   nome: string;
-  categoria: string;
+
   camposPredefinidos: Partial<Produto>;
   classificacoes: ClassificacaoProduto;
 }
@@ -143,7 +101,7 @@ export interface TemplateProduto {
 // Score de qualidade
 export interface ScoreQualidade {
   total: number; // 0-100
-  categorias: {
+  componentes: {
     informacoes: number;
     midia: number;
     classificacoes: number;
@@ -189,7 +147,7 @@ export interface MetricasProduto {
 export interface TemplateLayout {
   id: string;
   nome: string;
-  categoria: string;
+
   layout: {
     posicaoFoto: 'top' | 'left' | 'right';
     tamanhoFoto: 'small' | 'medium' | 'large';
@@ -217,7 +175,7 @@ export interface IntegracaoExterna {
 // Wizard de criação
 export type StepWizard = 
   | 'informacoes-basicas'
-  | 'selecionar-categoria'
+
   | 'upload-fotos'
   | 'configurar-preco'
   | 'adicionar-complementos'
@@ -235,12 +193,13 @@ export interface ModalProdutoProps {
   onDelete?: (id: string) => Promise<void>;
   onDuplicate?: (id: string) => Promise<void>;
   loading?: boolean;
+
+  isPageMode?: boolean;
 }
 
 export interface FormularioProdutoProps {
   produto?: Produto;
-  categorias: Categoria[];
-  categoriasAdicionais: CategoriaAdicional[];
+
   onSubmit: (data: Partial<Produto>) => void;
   onCancel: () => void;
   loading?: boolean;
@@ -275,19 +234,21 @@ export interface DescontoProdutoProps {
 
 export interface ComplementosProdutoProps {
   complementos: string[];
-  categoriasAdicionais: CategoriaAdicional[];
+
   onChange: (complementos: string[]) => void;
 }
 
 export interface ListaProdutosProps {
   produtos: Produto[];
-  categorias: Categoria[];
+  categorias: string[];
   loading: boolean;
-  onCreate: (produto: Omit<Produto, 'id' | 'dataCriacao' | 'dataAtualizacao'>) => Promise<void>;
-  onEdit: (id: string, produto: Partial<Produto>) => Promise<void>;
+  onCreate: () => void;
+  onEdit: (produto: Produto) => void;
   onDelete: (id: string) => Promise<void>;
   onDuplicate: (id: string) => Promise<void>;
   onToggleStatus: (id: string, status: Produto['status']) => Promise<void>;
+  categoriaSelecionada?: string;
+  onShowCategoryToast?: () => void;
 }
 
 // Hooks
@@ -341,4 +302,4 @@ export interface EnderecoEntrega {
   complemento?: string;
 }
 
-export type StatusPedido = 'novo' | 'confirmado' | 'preparando' | 'saiu_entrega' | 'entregue' | 'cancelado'; 
+export type StatusPedido = 'novo' | 'confirmado' | 'preparando' | 'saiu_entrega' | 'entregue' | 'cancelado';

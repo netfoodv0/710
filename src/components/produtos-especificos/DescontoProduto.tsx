@@ -122,7 +122,7 @@ export const DescontoProduto: React.FC<DescontoProdutoProps> = ({
                   value="percentual"
                   checked={desconto.tipo === 'percentual'}
                   onChange={() => handleTipoChange('percentual')}
-                  className="text-blue-600 focus:ring-blue-500"
+                  className="text-purple-600 focus:ring-purple-500"
                 />
                 <div className="flex items-center space-x-2">
                   <Percent size={20} className="text-green-600" />
@@ -140,7 +140,7 @@ export const DescontoProduto: React.FC<DescontoProdutoProps> = ({
                   value="valor_fixo"
                   checked={desconto.tipo === 'valor_fixo'}
                   onChange={() => handleTipoChange('valor_fixo')}
-                  className="text-blue-600 focus:ring-blue-500"
+                  className="text-purple-600 focus:ring-purple-500"
                 />
                 <div className="flex items-center space-x-2">
                   <DollarSign size={20} className="text-green-600" />
@@ -168,7 +168,7 @@ export const DescontoProduto: React.FC<DescontoProdutoProps> = ({
                 type="number"
                 value={desconto.valor}
                 onChange={(e) => handleValorChange(parseFloat(e.target.value) || 0)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 min="0"
                 max={desconto.tipo === 'percentual' ? 100 : 999}
                 step={desconto.tipo === 'percentual' ? 1 : 0.01}
@@ -191,7 +191,7 @@ export const DescontoProduto: React.FC<DescontoProdutoProps> = ({
                   type="date"
                   value={formatarData(desconto.dataInicio)}
                   onChange={(e) => handleDataChange('dataInicio', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
               <div>
@@ -202,7 +202,7 @@ export const DescontoProduto: React.FC<DescontoProdutoProps> = ({
                   type="date"
                   value={formatarData(desconto.dataFim)}
                   onChange={(e) => handleDataChange('dataFim', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
             </div>

@@ -47,12 +47,12 @@ export const LojaProvider: React.FC<LojaProviderProps> = ({ children }) => {
         const lojaData = lojaDoc.data() as Loja;
         setLoja(lojaData);
       } else {
-        setError('Dados da loja não encontrados');
+
         setLoja(null);
       }
     } catch (err: any) {
       console.error('Erro ao carregar dados da loja:', err);
-      setError('Erro ao carregar dados da loja');
+      
       setLoja(null);
     } finally {
       setIsLoading(false);

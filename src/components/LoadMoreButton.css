@@ -1,0 +1,86 @@
+/* Estilos personalizados para o componente de paginação */
+.ant-pagination-custom {
+  /* Estilo geral da paginação */
+  font-family: inherit;
+}
+
+.ant-pagination-custom .ant-pagination-item {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.ant-pagination-custom .ant-pagination-item:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ant-pagination-custom .ant-pagination-item-active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.ant-pagination-custom .ant-pagination-item-active:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+.ant-pagination-custom .ant-pagination-prev,
+.ant-pagination-custom .ant-pagination-next {
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.ant-pagination-custom .ant-pagination-prev:hover,
+.ant-pagination-custom .ant-pagination-next:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.ant-pagination-custom .ant-pagination-prev:disabled,
+.ant-pagination-custom .ant-pagination-next:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.ant-pagination-custom .ant-pagination-total-text {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+/* Estilo para o estado de loading */
+.ant-pagination-custom.ant-pagination-disabled .ant-pagination-item,
+.ant-pagination-custom.ant-pagination-disabled .ant-pagination-prev,
+.ant-pagination-custom.ant-pagination-disabled .ant-pagination-next {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .ant-pagination-custom .ant-pagination-total-text {
+    font-size: 0.75rem;
+  }
+  
+  .ant-pagination-custom .ant-pagination-item {
+    min-width: 32px;
+    height: 32px;
+    line-height: 30px;
+  }
+}
+
+
+
+

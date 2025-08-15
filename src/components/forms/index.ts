@@ -1,6 +1,12 @@
-export { FormularioProduto } from '../FormularioProduto';
-export { UploadImagem } from '../UploadImagem';
-export { ClassificacoesProduto } from '../ClassificacoesProduto';
-export { DisponibilidadeProduto } from '../DisponibilidadeProduto';
-export { DescontoProduto } from '../DescontoProduto';
-export { ComplementosProduto } from '../ComplementosProduto'; 
+export { InputPersonalizado } from './InputPersonalizado';
+export { InputPersonalizadoPreco } from './InputPersonalizadoPreco';
+export { InputNumericoComSpinner } from './InputNumericoComSpinner';
+export { InputPersonalizadoQuantidade } from './InputPersonalizadoQuantidade';
+export { UnidadeSelect } from './UnidadeSelect';
+export { FormTextarea } from './FormTextarea';
+export { FormSelect } from './FormSelect';
+export { FormInput } from './FormInput';
+export { FormSwitch } from './FormSwitch';
+export { FormImageUpload } from './FormImageUpload';
+
+export { FormSection } from './FormSection'; 

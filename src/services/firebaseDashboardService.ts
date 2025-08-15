@@ -124,9 +124,38 @@ export class FirebaseDashboardService {
         } as Pedido;
       });
 
-      // Se não há pedidos, retornar dados de fallback
+      // Se não há pedidos, retornar KPIs zerados
       if (todosPedidos.length === 0) {
-        return this.getDadosFallback().kpis;
+        return [
+          {
+            titulo: 'Faturamento Total',
+            valor: 'R$ 0,00',
+            variacao: 0,
+            tipo: 'positivo' as const,
+            icone: 'TrendingUp' as const
+          },
+          {
+            titulo: 'Pedidos Hoje',
+            valor: '0',
+            variacao: 0,
+            tipo: 'neutro' as const,
+            icone: 'ShoppingBag' as const
+          },
+          {
+            titulo: 'Ticket Médio',
+            valor: 'R$ 0,00',
+            variacao: 0,
+            tipo: 'neutro' as const,
+            icone: 'DollarSign' as const
+          },
+          {
+            titulo: 'Taxa de Conversão',
+            valor: '0%',
+            variacao: 0,
+            tipo: 'neutro' as const,
+            icone: 'Target' as const
+          }
+        ];
       }
 
       // Filtrar por período no código
@@ -204,8 +233,37 @@ export class FirebaseDashboardService {
       ];
     } catch (error) {
       console.error('❌ Erro ao calcular KPIs:', error);
-      // Retornar dados de fallback em caso de erro
-      return this.getDadosFallback().kpis;
+      // Retornar dados zerados em caso de erro
+      return [
+        {
+          titulo: 'Faturamento Total',
+          valor: 'R$ 0,00',
+          variacao: 0,
+          tipo: 'positivo' as const,
+          icone: 'TrendingUp' as const
+        },
+        {
+          titulo: 'Pedidos Hoje',
+          valor: '0',
+          variacao: 0,
+          tipo: 'neutro' as const,
+          icone: 'ShoppingBag' as const
+        },
+        {
+          titulo: 'Ticket Médio',
+          valor: 'R$ 0,00',
+          variacao: 0,
+          tipo: 'neutro' as const,
+          icone: 'DollarSign' as const
+        },
+        {
+          titulo: 'Taxa de Conversão',
+          valor: '0%',
+          variacao: 0,
+          tipo: 'neutro' as const,
+          icone: 'Target' as const
+        }
+      ];
     }
   }
 
@@ -233,9 +291,9 @@ export class FirebaseDashboardService {
         } as Pedido;
       });
 
-      // Se não há pedidos, retornar dados de fallback
+      // Se não há pedidos, retornar dados zerados
       if (todosPedidos.length === 0) {
-        return this.getDadosFallback().formasPagamento;
+        return [];
       }
 
       // Filtrar últimos 30 dias - usar todos os pedidos, não apenas entregues
@@ -252,10 +310,9 @@ export class FirebaseDashboardService {
 
       const total = Object.values(formasPagamento).reduce((sum, count) => sum + count, 0);
 
-      // Se não há formas de pagamento, retornar dados de fallback
+      // Se não há formas de pagamento, retornar dados zerados
       if (total === 0) {
-        const fallbackData = this.getDadosFallback().formasPagamento;
-        return fallbackData;
+        return [];
       }
 
       // Mapear cores para formas de pagamento
@@ -289,8 +346,8 @@ export class FirebaseDashboardService {
       return resultado;
     } catch (error) {
       console.error('Erro ao calcular formas de pagamento:', error);
-      // Retornar dados de fallback em caso de erro
-      return this.getDadosFallback().formasPagamento;
+      // Retornar array vazio em caso de erro
+      return [];
     }
   }
 
@@ -352,9 +409,18 @@ export class FirebaseDashboardService {
         } as Pedido;
       });
 
-      // Se não há pedidos, retornar dados de fallback
+      // Se não há pedidos, retornar dados zerados
       if (todosPedidos.length === 0) {
-        return this.getDadosFallback().estatisticas;
+        return {
+          faturamentoTotal: 0,
+          ticketMedio: 0,
+          totalPedidos: 0,
+          totalClientes: 0,
+          receita7Dias: 0,
+          pedidos7Dias: 0,
+          tempoMedioEntrega: 0,
+          avaliacaoMedia: 0
+        };
       }
 
       // Filtrar últimos 7 dias - usar todos os pedidos, não apenas entregues
@@ -449,11 +515,50 @@ export class FirebaseDashboardService {
       };
     } catch (error) {
       console.error('Erro ao buscar dados do dashboard:', error);
-      // Retornar dados de fallback em caso de erro
-      const fallback = this.getDadosFallback();
+      // Retornar dados zerados em caso de erro
       return {
-        ...fallback,
-        pedidosRecentes: []
+        kpis: [
+          {
+            titulo: 'Faturamento Total',
+            valor: 'R$ 0,00',
+            variacao: 0,
+            tipo: 'positivo' as const,
+            icone: 'TrendingUp' as const
+          },
+          {
+            titulo: 'Pedidos Hoje',
+            valor: '0',
+            variacao: 0,
+            tipo: 'neutro' as const,
+            icone: 'ShoppingBag' as const
+          },
+          {
+            titulo: 'Ticket Médio',
+            valor: 'R$ 0,00',
+            variacao: 0,
+            tipo: 'neutro' as const,
+            icone: 'DollarSign' as const
+          },
+          {
+            titulo: 'Taxa de Conversão',
+            valor: '0%',
+            variacao: 0,
+            tipo: 'neutro' as const,
+            icone: 'Target' as const
+          }
+        ],
+        formasPagamento: [],
+        pedidosRecentes: [],
+        estatisticas: {
+          faturamentoTotal: 0,
+          ticketMedio: 0,
+          totalPedidos: 0,
+          totalClientes: 0,
+          receita7Dias: 0,
+          pedidos7Dias: 0,
+          tempoMedioEntrega: 0,
+          avaliacaoMedia: 0
+        }
       };
     }
   }
@@ -487,8 +592,16 @@ export class FirebaseDashboardService {
       });
 
       if (todosPedidos.length === 0) {
-        // Retornar dados de fallback
-        return this.getDadosPerformanceFallback(periodo);
+        // Retornar dados zerados
+        const categorias = periodo === 'weekly' 
+          ? ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+          : ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        
+        return {
+          receitaAtual: new Array(categorias.length).fill(0),
+          receitaAnterior: new Array(categorias.length).fill(0),
+          categorias
+        };
       }
 
       const agora = new Date();
@@ -656,7 +769,168 @@ export class FirebaseDashboardService {
       };
     }
   }
+
+  // Calcular vendas por categoria
+  async calcularVendasPorCategoria(periodo: 'daily' | 'weekly' | 'monthly' = 'weekly'): Promise<Array<{
+    categoria: string;
+    valor: number;
+    quantidade: number;
+    percentual: number;
+  }>> {
+    try {
+      const lojaId = this.getLojaId();
+      
+      // Definir período de busca
+      const agora = new Date();
+      let dataInicio: Date;
+      
+      switch (periodo) {
+        case 'daily':
+          dataInicio = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
+          break;
+        case 'weekly':
+          dataInicio = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'monthly':
+          dataInicio = new Date(agora.getFullYear(), agora.getMonth(), 1);
+          break;
+        default:
+          dataInicio = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+      }
+      
+      // Buscar pedidos do período
+      const q = query(
+        this.pedidosCollection,
+        where('lojaId', '==', lojaId),
+        where('dataHora', '>=', Timestamp.fromDate(dataInicio)),
+        where('dataHora', '<=', Timestamp.fromDate(agora))
+      );
+      
+      const snapshot = await getDocs(q);
+      
+      // Agrupar por categoria
+      const vendasPorCategoria: { [categoria: string]: { valor: number; quantidade: number } } = {};
+      let totalValor = 0;
+      let totalQuantidade = 0;
+      
+      snapshot.docs.forEach(doc => {
+        const pedido = doc.data();
+        if (pedido.itens && Array.isArray(pedido.itens)) {
+          pedido.itens.forEach((item: any) => {
+            const categoria = item.categoria || 'Sem Categoria';
+            const valor = item.preco * item.quantidade;
+            const quantidade = item.quantidade;
+            
+            if (!vendasPorCategoria[categoria]) {
+              vendasPorCategoria[categoria] = { valor: 0, quantidade: 0 };
+            }
+            
+            vendasPorCategoria[categoria].valor += valor;
+            vendasPorCategoria[categoria].quantidade += quantidade;
+            totalValor += valor;
+            totalQuantidade += quantidade;
+          });
+        }
+      });
+      
+      // Converter para array com percentuais
+      const resultado = Object.entries(vendasPorCategoria).map(([categoria, dados]) => ({
+        categoria,
+        valor: dados.valor,
+        quantidade: dados.quantidade,
+        percentual: totalValor > 0 ? (dados.valor / totalValor) * 100 : 0
+      }));
+      
+      // Ordenar por valor decrescente
+      resultado.sort((a, b) => b.valor - a.valor);
+      
+      // Se não há dados, retornar array vazio
+      if (resultado.length === 0) {
+        return [];
+      }
+      
+      return resultado;
+    } catch (error) {
+      console.error('Erro ao calcular vendas por categoria:', error);
+      // Retornar array vazio em caso de erro
+      return [];
+    }
+  }
+
+  // Calcular dados de pedidos mensais para gráfico de relatórios
+  async calcularPedidosMensais(): Promise<{
+    pedidosMensais: number[];
+    categorias: string[];
+  }> {
+    try {
+      const lojaId = this.getLojaId();
+      
+      // Buscar todos os pedidos da loja
+      const q = query(
+        this.pedidosCollection,
+        where('lojaId', '==', lojaId),
+        orderBy('dataHora', 'desc')
+      );
+
+      const snapshot = await getDocs(q);
+      const todosPedidos = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          ...data,
+          id: doc.id,
+          dataHora: data.dataHora?.toDate() || new Date(),
+          dataCriacao: data.dataCriacao?.toDate() || new Date(),
+          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
+        } as Pedido;
+      });
+
+      if (todosPedidos.length === 0) {
+        // Retornar dados zerados
+        const categorias = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        return {
+          pedidosMensais: new Array(categorias.length).fill(0),
+          categorias
+        };
+      }
+
+      const agora = new Date();
+      const anoAtual = agora.getFullYear();
+      const pedidosMensais: number[] = [];
+      const categorias = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+      // Calcular pedidos por mês do ano atual
+      for (let mes = 0; mes < 12; mes++) {
+        const dataInicio = new Date(anoAtual, mes, 1);
+        const dataFim = new Date(anoAtual, mes + 1, 0, 23, 59, 59, 999);
+
+        const pedidosMes = todosPedidos.filter(p => 
+          p.dataHora >= dataInicio && p.dataHora <= dataFim
+        );
+
+        pedidosMensais.push(pedidosMes.length);
+      }
+
+      return {
+        pedidosMensais,
+        categorias
+      };
+    } catch (error) {
+      console.error('Erro ao calcular pedidos mensais:', error);
+      return this.getPedidosMensaisFallback();
+    }
+  }
+
+  // Dados de fallback para pedidos mensais
+  private getPedidosMensaisFallback(): {
+    pedidosMensais: number[];
+    categorias: string[];
+  } {
+    return {
+      pedidosMensais: [65, 59, 80, 81, 56, 55, 70, 85, 92, 78, 88, 95],
+      categorias: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+    };
+  }
 }
 
 // ✅ EXPORTAR instância do serviço
-export const firebaseDashboardService = new FirebaseDashboardService(); 
+export const firebaseDashboardService = new FirebaseDashboardService();

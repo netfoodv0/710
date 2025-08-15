@@ -1,21 +1,31 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { Layout } from './components';
+import { HeroUIProvider } from '@heroui/react';
+import { Layout, LoadingScreen } from './components';
 import { MobileLayout } from './components/mobile';
 import { AuthProvider } from './context/authContext';
 import { LojaProvider } from './context/lojaContext';
 import { PeriodProvider } from './context/periodContext';
 import { NotificationProvider } from './context/notificationContext';
 import { AnalyticsProvider } from './context/analyticsContext';
+import { CacheProvider } from './context/cacheContext';
+import { LoadingProvider } from './context/loadingContext';
+
 import { useNotificationContext } from './context/notificationContextUtils';
 import { NotificationToast } from './components/NotificationToast';
+import { useLoading } from './context/loadingContext';
+
 import { AppRoutes } from './routes';
 import { useAuth } from './hooks/useAuth';
 import { useIsMobile } from './hooks/useMediaQuery';
+import { usePageLoading } from './hooks/usePageLoading';
 
 function AppContent() {
   const { status, user } = useAuth();
   const isMobile = useIsMobile();
+  
+  // Hook para controlar o carregamento da página
+  usePageLoading();
 
   // Se estiver carregando ou não autenticado, renderizar apenas as rotas sem layout
   if (status === 'idle' || status === 'loading' || status === 'unauthenticated') {
@@ -40,9 +50,11 @@ function AppContent() {
 
 function AppWithNotifications() {
   const { notifications, removeNotification } = useNotificationContext();
+  const { isLoading } = useLoading();
 
   return (
     <>
+      <LoadingScreen isVisible={isLoading} />
       <AppContent />
       {notifications.map((notification) => (
         <NotificationToast
@@ -54,25 +66,32 @@ function AppWithNotifications() {
           onClose={removeNotification}
         />
       ))}
+
     </>
   );
 }
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <LojaProvider>
-          <NotificationProvider>
-            <AnalyticsProvider>
-              <PeriodProvider>
-                <AppWithNotifications />
-              </PeriodProvider>
-            </AnalyticsProvider>
-          </NotificationProvider>
-        </LojaProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <HeroUIProvider>
+      <BrowserRouter>
+        <CacheProvider>
+          <LoadingProvider>
+            <AuthProvider>
+              <LojaProvider>
+                <NotificationProvider>
+                  <AnalyticsProvider>
+                    <PeriodProvider>
+                      <AppWithNotifications />
+                    </PeriodProvider>
+                  </AnalyticsProvider>
+                </NotificationProvider>
+              </LojaProvider>
+            </AuthProvider>
+          </LoadingProvider>
+        </CacheProvider>
+      </BrowserRouter>
+    </HeroUIProvider>
   );
 }
 

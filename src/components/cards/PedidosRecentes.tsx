@@ -47,7 +47,7 @@ export const PedidosRecentes: React.FC<PedidosRecentesProps> = ({
 }) => {
   if (!pedidos || pedidos.length === 0) {
     return (
-      <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Pedidos Recentes</h3>
         <div className="flex items-center justify-center h-48 text-gray-500">
           Nenhum pedido recente
@@ -57,7 +57,7 @@ export const PedidosRecentes: React.FC<PedidosRecentesProps> = ({
   }
 
   return (
-    <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
+    <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Pedidos Recentes</h3>
       
       <div className="space-y-4">

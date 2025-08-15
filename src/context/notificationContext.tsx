@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import React, { ReactNode, useState, useCallback } from 'react';
 
 export interface Notification {
@@ -10,6 +10,7 @@ export interface Notification {
 
 interface NotificationContextType {
   notifications: Notification[];
+  addNotification: (notification: Omit<Notification, 'id'>) => void;
   showSuccess: (message: string, duration?: number) => void;
   showError: (message: string, duration?: number) => void;
   showInfo: (message: string, duration?: number) => void;
@@ -20,6 +21,7 @@ interface NotificationContextType {
 // ✅ CORREÇÃO: Inicializar com valor padrão
 const defaultContext: NotificationContextType = {
   notifications: [],
+  addNotification: () => {},
   showSuccess: () => {},
   showError: () => {},
   showInfo: () => {},
@@ -68,6 +70,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
 
   const value = {
     notifications,
+    addNotification,
     showSuccess,
     showError,
     showInfo,
@@ -80,4 +83,13 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
       {children}
     </NotificationContext.Provider>
   );
-}; 
+};
+
+// Custom hook to use the notification context
+export const useNotificationContext = () => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error('useNotificationContext must be used within a NotificationProvider');
+  }
+  return context;
+};

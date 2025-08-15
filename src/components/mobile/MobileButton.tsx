@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button as HeroButton } from '@heroui/react';
 import { cn } from '../../utils';
 import { Loader2 } from 'lucide-react';
 
@@ -27,43 +28,78 @@ export function MobileButton({
   type = 'button',
   icon
 }: MobileButtonProps) {
-  const baseClasses = 'font-medium rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 touch-manipulation active:scale-[0.98]';
-  
-  const variantClasses = {
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-300 disabled:text-gray-500',
-    secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300 disabled:bg-gray-100 disabled:text-gray-400',
-    outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50 active:bg-blue-100 disabled:border-gray-300 disabled:text-gray-400',
-    ghost: 'text-gray-700 hover:bg-gray-100 active:bg-gray-200 disabled:text-gray-400',
-    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:bg-gray-300',
-    success: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800 disabled:bg-gray-300'
+  // Mapeamento de variantes para cores do HeroUI
+  const getColor = (variant: string) => {
+    switch (variant) {
+      case 'primary':
+        return 'primary';
+      case 'secondary':
+        return 'secondary';
+      case 'success':
+        return 'success';
+      case 'danger':
+        return 'danger';
+      case 'outline':
+        return 'default';
+      case 'ghost':
+        return 'default';
+      default:
+        return 'primary';
+    }
   };
-  
-  const sizeClasses = {
-    sm: 'px-3 py-2 text-sm',
-    md: 'px-4 py-3 text-base',
-    lg: 'px-6 py-4 text-lg'
+
+  // Mapeamento de tamanhos
+  const getSize = (size: string) => {
+    switch (size) {
+      case 'sm':
+        return 'sm';
+      case 'lg':
+        return 'lg';
+      default:
+        return 'md';
+    }
   };
-  
-  const widthClasses = fullWidth ? 'w-full' : '';
-  const disabledClasses = disabled || loading ? 'cursor-not-allowed' : 'cursor-pointer';
+
+  // Determina se é outline ou ghost
+  const getVariant = (variant: string) => {
+    switch (variant) {
+      case 'outline':
+        return 'bordered';
+      case 'ghost':
+        return 'light';
+      default:
+        return 'solid';
+    }
+  };
 
   return (
-    <button
+    <HeroButton
+      color={getColor(variant)}
+      size={getSize(size)}
+      variant={getVariant(variant)}
+      isLoading={loading}
+      isDisabled={disabled}
+      fullWidth={fullWidth}
       type={type}
       onClick={onClick}
-      disabled={disabled || loading}
+      startContent={!loading && icon ? icon : undefined}
       className={cn(
-        baseClasses,
-        variantClasses[variant],
-        sizeClasses[size],
-        widthClasses,
-        disabledClasses,
+        // Animações suaves para mobile
+        'transition-all duration-200 ease-out',
+        // Efeitos hover aprimorados
+        'hover:scale-105 hover:shadow-lg',
+        // Efeitos de foco
+        'focus:ring-2 focus:ring-offset-2 focus:ring-opacity-50',
+        // Efeitos de pressionar (touch-friendly)
+        'active:scale-[0.98]',
+        // Bordas arredondadas para mobile
+        'rounded-2xl',
+        // Animações de loading
+        loading && 'animate-pulse',
         className
       )}
     >
-      {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-      {!loading && icon && icon}
       {children}
-    </button>
+    </HeroButton>
   );
 } 

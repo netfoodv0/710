@@ -113,25 +113,33 @@ export class FirebaseProdutosService {
   async buscarProduto(id: string): Promise<Produto | null> {
     try {
       const lojaId = this.getLojaId();
+      console.log('Buscando produto com ID:', id, 'para loja:', lojaId);
+      
       const docRef = doc(this.produtosCollection, id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const data = docSnap.data();
+        console.log('Dados do documento:', data);
         
         // Verificar se o produto pertence à loja do usuário
         if (data.lojaId !== lojaId) {
+          console.log('Produto não pertence à loja. Loja do produto:', data.lojaId, 'Loja do usuário:', lojaId);
           throw new Error('Produto não encontrado');
         }
         
-        return {
+        const produto = {
           ...data,
           id: docSnap.id,
           dataCriacao: data.dataCriacao?.toDate() || new Date(),
           dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
         } as Produto;
+        
+        console.log('Produto retornado:', produto);
+        return produto;
       }
 
+      console.log('Documento não existe');
       return null;
     } catch (error) {
       console.error('Erro ao buscar produto:', error);

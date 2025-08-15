@@ -50,12 +50,12 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
 
   if (loading) {
     return (
-      <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
         <div className="flex items-center justify-center h-48">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-            <p className="text-gray-600 text-sm">Carregando dados...</p>
+
+
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
 
   if (error) {
     return (
-      <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
         <div className="flex items-center justify-center h-48 text-red-600">
           <p className="text-sm">{error}</p>
@@ -75,7 +75,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
 
   if (!data) {
     return (
-      <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
         <div className="flex items-center justify-center h-48 text-gray-500">
           Nenhum dado disponível
@@ -167,7 +167,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
   ];
 
   return (
-    <div className={`bg-white border border-slate-200 rounded-lg p-4 ${className}`}>
+    <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
       <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
       
       <div className="w-full">
@@ -180,4 +180,4 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
       </div>
     </div>
   );
-}; 
+};

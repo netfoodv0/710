@@ -11,11 +11,25 @@ export function usePeriodFilter(initialPeriod: PeriodType = 'weekly') {
   }, []);
 
   const getPeriodLabel = useCallback((period: PeriodType) => {
-    return period === 'weekly' ? 'Semanal' : 'Mensal';
+    switch (period) {
+      case 'weekly':
+        return 'Semanal';
+      case 'monthly':
+        return 'Mensal';
+      default:
+        return 'Semanal';
+    }
   }, []);
 
   const getPeriodDays = useCallback((period: PeriodType) => {
-    return period === 'weekly' ? 7 : 30;
+    switch (period) {
+      case 'weekly':
+        return 7;
+      case 'monthly':
+        return 30;
+      default:
+        return 7;
+    }
   }, []);
 
   return {
@@ -24,4 +38,4 @@ export function usePeriodFilter(initialPeriod: PeriodType = 'weekly') {
     getPeriodLabel,
     getPeriodDays
   };
-} 
+}

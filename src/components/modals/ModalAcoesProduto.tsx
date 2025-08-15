@@ -21,13 +21,13 @@ export function ModalProdutoActions({
   onFormSubmit
 }: ModalProdutoActionsProps) {
   return (
-    <div className="flex items-center justify-between p-6 border-t bg-gray-50">
+    <div className="flex items-center justify-between p-0 border-t border-gray-200 bg-white">
       <div className="flex space-x-2">
         {isEditing && onDelete && (
           <button
             type="button"
             onClick={onDelete}
-            className="flex items-center px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors"
+            className="flex items-center px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded border border-gray-200 transition-colors"
           >
             <Trash2 size={16} className="mr-1" />
             Excluir
@@ -37,7 +37,7 @@ export function ModalProdutoActions({
           <button
             type="button"
             onClick={onDuplicate}
-            className="flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors"
+            className="flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded border border-gray-200 transition-colors"
           >
             <Copy size={16} className="mr-1" />
             Duplicar
@@ -49,7 +49,7 @@ export function ModalProdutoActions({
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+          className="px-4 py-2 text-gray-600 hover:text-gray-700 hover:bg-gray-100 rounded border border-gray-200 transition-colors"
         >
           Cancelar
         </button>
@@ -58,7 +58,7 @@ export function ModalProdutoActions({
             type="button"
             onClick={onFormSubmit}
             disabled={loading}
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded border border-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             <Save size={16} className="mr-1" />
             {loading ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Criar')}
@@ -67,4 +67,4 @@ export function ModalProdutoActions({
       </div>
     </div>
   );
-} 
+}

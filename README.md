@@ -212,3 +212,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 ---
 
 **NetFood Dashboard** - Transformando a gestão de restaurantes com tecnologia mobile-first! 🍕📱
+
+
+cd "whatsapp-backend\whatsapp-backend"

@@ -25,5 +25,4 @@ export {
 // PWA Components
 export { MobilePWAInstall, MobilePWAInstalled } from './MobilePWAInstall';
 
-// Test Component
-export { MobileTest } from './MobileTest'; 
+ 

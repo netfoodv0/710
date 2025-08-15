@@ -5,8 +5,12 @@ export { ErrorBoundary } from './ErrorBoundary';
 export { NotificationToast } from './NotificationToast';
 export { PeriodFilter } from './filters/FiltroPeriodo';
 
+// Componentes de carregamento
+export { LoadingScreen } from './LoadingScreen';
+export { LoadingTest } from './LoadingTest';
+
 // Componentes genéricos
-export { Card, StatsCard, QuickActionCard } from './Card';
+export { Card, StatsCard, QuickActionCard, ProductCard } from './Card';
 
 // Tabela genérica
 export { Table, TableActions } from './Table';
@@ -19,9 +23,7 @@ export { LoadMoreButton } from './LoadMoreButton';
 
 // Componentes de listas
 export { ListaProdutos } from './lists/ListaProdutos';
-export { ListaCategorias } from './lists/ListaCategorias';
 export { ListaProdutosTable } from './lists/TabelaProdutos';
-export { ListaCategoriasTable } from './lists/TabelaCategorias';
 
 // Componentes de cardápio (movidos para features/cardapio/components)
 // export * from './cardapio';

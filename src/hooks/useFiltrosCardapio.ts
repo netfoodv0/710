@@ -7,7 +7,7 @@ export interface FiltrosCardapioState {
   disponibilidade: string;
 }
 
-export function useFiltrosCardapio(produtos: Produto[]) {
+export function useFiltrosCardapio(produtos: Produto[], categorias: string[] = []) {
   const [filtros, setFiltros] = useState<FiltrosCardapioState>({
     categoria: 'todos',
     status: 'todos',
@@ -26,13 +26,23 @@ export function useFiltrosCardapio(produtos: Produto[]) {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  // ✅ NOVA FUNCIONALIDADE: Pré-selecionar primeira categoria
+  useEffect(() => {
+    if (categorias.length > 0 && filtros.categoria === 'todos') {
+      setFiltros(prev => ({
+        ...prev,
+        categoria: categorias[0]
+      }));
+    }
+  }, [categorias, filtros.categoria]);
+
   const handleFiltrosChange = useCallback((novosFiltros: FiltrosCardapioState) => {
     setFiltros(novosFiltros);
   }, []);
 
   const produtosFiltrados = useMemo(() => {
     return produtos.filter(produto => {
-      // Filtro por categoria
+      // Filtro por categoria (usando nome da categoria)
       if (filtros.categoria !== 'todos' && produto.categoria !== filtros.categoria) {
         return false;
       }
@@ -61,7 +71,7 @@ export function useFiltrosCardapio(produtos: Produto[]) {
         return (
           produto.nome.toLowerCase().includes(termo) ||
           produto.descricao?.toLowerCase().includes(termo) ||
-          produto.categoria.toLowerCase().includes(termo)
+          produto.categoria?.toLowerCase().includes(termo)
         );
       }
 

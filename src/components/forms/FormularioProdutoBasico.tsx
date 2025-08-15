@@ -1,5 +1,7 @@
 import React from 'react';
 import { Categoria } from '../../types/produtos';
+import { InputPersonalizado } from './InputPersonalizado';
+import { GoogleFloatingSelect } from '../ui/google-floating-select';
 
 interface FormularioProdutoBasicoProps {
   formData: Partial<Produto>;
@@ -18,131 +20,115 @@ export function FormularioProdutoBasico({
   formatarPreco, 
   parsearPreco 
 }: FormularioProdutoBasicoProps) {
+  // Preparar opções para o select de categoria
+  const categoriaOptions = categorias.map((categoria) => ({
+    value: categoria.id,
+    label: categoria.nome
+  }));
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Nome */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Nome do Produto *
-          </label>
-          <input
-            type="text"
+          <InputPersonalizado
+            label="Nome do Produto"
+            name="nome"
             value={formData.nome || ''}
-            onChange={(e) => onInputChange('nome', e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.nome ? 'border-red-300' : 'border-gray-300'
-            }`}
+            onChange={(value) => onInputChange('nome', value)}
             placeholder="Ex: Smashelândia Burger"
+            required
+            error={errors.nome}
           />
-          {errors.nome && <p className="text-red-500 text-sm mt-1">{errors.nome}</p>}
         </div>
 
         {/* Categoria */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Categoria *
-          </label>
-          <select
+          <GoogleFloatingSelect
+            label="Categoria *"
             value={formData.categoriaId || ''}
-            onChange={(e) => {
-              const categoria = categorias.find(cat => cat.id === e.target.value);
-              onInputChange('categoriaId', e.target.value);
+            onChange={(value) => {
+              const categoria = categorias.find(cat => cat.id === value);
+              onInputChange('categoriaId', value);
               onInputChange('categoria', categoria?.nome || '');
             }}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.categoria ? 'border-red-300' : 'border-gray-300'
-            }`}
-          >
-            <option value="">Selecione uma categoria</option>
-            {categorias.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>
-                {categoria.nome}
-              </option>
-            ))}
-          </select>
-          {errors.categoria && <p className="text-red-500 text-sm mt-1">{errors.categoria}</p>}
+            options={categoriaOptions}
+            placeholder="Selecione uma categoria"
+            error={errors.categoria}
+            required
+          />
         </div>
 
         {/* Preço */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Preço (R$) *
-          </label>
-          <input
-            type="text"
+          <InputPersonalizado
+            label="Preço (R$)"
+            name="preco"
             value={formatarPreco(formData.preco || 0)}
-            onChange={(e) => onInputChange('preco', parsearPreco(e.target.value))}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.preco ? 'border-red-300' : 'border-gray-300'
-            }`}
+            onChange={(value) => onInputChange('preco', parsearPreco(value))}
             placeholder="0,00"
+            required
+            error={errors.preco}
+            suffix="R$"
           />
-          {errors.preco && <p className="text-red-500 text-sm mt-1">{errors.preco}</p>}
         </div>
 
         {/* Tamanho da Porção */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Serve até (pessoas)
-          </label>
-          <input
+          <InputPersonalizado
+            label="Serve até (pessoas)"
+            name="tamanhoPorcao"
             type="number"
-            value={formData.tamanhoPorcao || 1}
-            onChange={(e) => onInputChange('tamanhoPorcao', parseInt(e.target.value) || 1)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            min="1"
-            max="10"
+            value={formData.tamanhoPorcao?.toString() || '1'}
+            onChange={(value) => onInputChange('tamanhoPorcao', parseInt(value) || 1)}
+            placeholder="1"
+            min={1}
+            max={10}
           />
         </div>
 
         {/* Tempo de Preparo */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Tempo de Preparo (minutos)
-          </label>
-          <input
+          <InputPersonalizado
+            label="Tempo de Preparo (minutos)"
+            name="tempoPreparoMinutos"
             type="number"
-            value={formData.tempoPreparoMinutos || 20}
-            onChange={(e) => onInputChange('tempoPreparoMinutos', parseInt(e.target.value) || 20)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            min="1"
-            max="120"
+            value={formData.tempoPreparoMinutos?.toString() || '20'}
+            onChange={(value) => onInputChange('tempoPreparoMinutos', parseInt(value) || 20)}
+            placeholder="20"
+            min={1}
+            max={120}
+            suffix="min"
           />
         </div>
 
         {/* Status */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Status
-          </label>
-          <select
+          <GoogleFloatingSelect
+            label="Status"
             value={formData.status || 'ativo'}
-            onChange={(e) => onInputChange('status', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="ativo">Ativo</option>
-            <option value="inativo">Inativo</option>
-            <option value="em_falta">Em Falta</option>
-          </select>
+            onChange={(value) => onInputChange('status', value)}
+            options={[
+              { value: 'ativo', label: 'Ativo' },
+              { value: 'inativo', label: 'Inativo' },
+              { value: 'em_falta', label: 'Em Falta' }
+            ]}
+            placeholder="Selecione o status"
+          />
         </div>
       </div>
 
       {/* Descrição */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Descrição do Produto *
-        </label>
-        <textarea
+        <InputPersonalizado
+          label="Descrição do Produto"
+          name="descricao"
           value={formData.descricao || ''}
-          onChange={(e) => onInputChange('descricao', e.target.value)}
-          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            errors.descricao ? 'border-red-300' : 'border-gray-300'
-          }`}
+          onChange={(value) => onInputChange('descricao', value)}
           placeholder="Descreva o produto..."
-          rows={4}
+          required
+          error={errors.descricao}
         />
-        {errors.descricao && <p className="text-red-500 text-sm mt-1">{errors.descricao}</p>}
       </div>
 
       {/* Checkboxes */}

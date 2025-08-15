@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Produto, FormularioProdutoProps } from '../types/produtos';
 
-type TabType = 'basico' | 'midia' | 'complementos' | 'classificacoes' | 'disponibilidade' | 'descontos';
+type TabType = 'basico' | 'midia' | 'classificacoes' | 'disponibilidade' | 'descontos';
 
 interface UseFormularioProdutoProps {
   produto?: Produto;

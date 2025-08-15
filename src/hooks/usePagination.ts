@@ -14,13 +14,14 @@ interface UsePaginationReturn<T> {
   loadMore: () => void;
   resetPagination: () => void;
   goToPage: (page: number) => void;
+  loadPage: (page: number, pageSize?: number) => void;
 }
 
 export function usePagination<T>(
   items: T[],
   options: UsePaginationOptions = {}
 ): UsePaginationReturn<T> {
-  const { itemsPerPage = 10, initialPage = 1 } = options;
+  const { itemsPerPage = 8, initialPage = 1 } = options;
   
   const [currentPage, setCurrentPage] = useState(initialPage);
 
@@ -28,14 +29,14 @@ export function usePagination<T>(
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const currentItems = useMemo(() => {
-    const startIndex = 0;
-    const endIndex = currentPage * itemsPerPage;
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
     return items.slice(startIndex, endIndex);
   }, [items, currentPage, itemsPerPage]);
 
   const hasMore = useMemo(() => {
-    return currentPage * itemsPerPage < totalItems;
-  }, [currentPage, itemsPerPage, totalItems]);
+    return currentPage < totalPages;
+  }, [currentPage, totalPages]);
 
   const loadMore = useCallback(() => {
     if (hasMore) {
@@ -53,6 +54,15 @@ export function usePagination<T>(
     }
   }, [totalPages]);
 
+  const loadPage = useCallback((page: number, pageSize?: number) => {
+    const targetPage = page >= 1 ? page : 1;
+    const maxPage = pageSize ? Math.ceil(totalItems / pageSize) : totalPages;
+    
+    if (targetPage <= maxPage) {
+      setCurrentPage(targetPage);
+    }
+  }, [totalPages, totalItems]);
+
   return {
     currentItems,
     hasMore,
@@ -61,6 +71,7 @@ export function usePagination<T>(
     totalItems,
     loadMore,
     resetPagination,
-    goToPage
+    goToPage,
+    loadPage
   };
 } 

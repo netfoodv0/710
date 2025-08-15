@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Card } from '../Card';
-import { temasDisponiveis, coresPrincipais } from '../data/configuracaoData';
+import { Card } from '../../../components/ui/card';
+import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
+import { Type, Palette } from 'lucide-react';
 
 interface AbaAparenciaProps {
   // Props podem ser adicionadas no futuro
@@ -8,46 +9,56 @@ interface AbaAparenciaProps {
 }
 
 export function AbaAparencia(props: AbaAparenciaProps) {
-  const [temaSelecionado, setTemaSelecionado] = useState('light');
-  const [corSelecionada, setCorSelecionada] = useState('bg-red-500');
+  const [corSelecionada, setCorSelecionada] = useState('bg-blue-600');
+  const [tamanhoFonte, setTamanhoFonte] = useState('media');
+  const [familiaFonte, setFamiliaFonte] = useState('inter');
+
+  const cores = [
+    'bg-blue-600',
+    'bg-green-600',
+    'bg-purple-600',
+    'bg-orange-600',
+    'bg-red-600',
+    'bg-pink-600',
+    'bg-indigo-600',
+    'bg-teal-600'
+  ];
+
+  const tamanhoFonteOptions: DropdownOption[] = [
+    { value: 'pequena', label: 'Pequena', icon: <Type className="w-4 h-4 text-gray-500" /> },
+    { value: 'media', label: 'Média', icon: <Type className="w-4 h-4 text-gray-700" /> },
+    { value: 'grande', label: 'Grande', icon: <Type className="w-4 h-4 text-gray-900" /> }
+  ];
+
+  const familiaFonteOptions: DropdownOption[] = [
+    { value: 'inter', label: 'Inter (Padrão)', icon: <Type className="w-4 h-4 text-blue-500" /> },
+    { value: 'roboto', label: 'Roboto', icon: <Type className="w-4 h-4 text-green-500" /> },
+    { value: 'opensans', label: 'Open Sans', icon: <Type className="w-4 h-4 text-purple-500" /> },
+    { value: 'poppins', label: 'Poppins', icon: <Type className="w-4 h-4 text-orange-500" /> }
+  ];
 
   return (
-    <Card className="p-0 min-h-[600px] rounded">
-      <div className="p-6 space-y-6">
+    <Card className="p-6">
+      <div className="space-y-6">
         <h3 className="text-xs font-semibold text-gray-900">Configurações de Aparência</h3>
         
         <div className="space-y-6">
-          {/* Tema */}
+          {/* Tema de Cores */}
           <div>
-            <h4 className="font-medium text-gray-900 mb-3 text-sm">Tema</h4>
-            <div className="grid grid-cols-3 gap-4">
-              {temasDisponiveis.map((tema) => (
-                <div key={tema.key} className="text-center">
-                  <div 
-                    className={`w-full h-18 rounded-lg ${tema.preview} border-gray-300 mb-2 cursor-pointer hover:border-red-500 ${
-                      temaSelecionado === tema.key ? 'border-red-500 border-2' : 'border-2'
-                    }`}
-                    onClick={() => setTemaSelecionado(tema.key)}
+            <h4 className="font-medium text-gray-900 mb-4 text-sm">Tema de Cores</h4>
+            <div className="space-y-3">
+              <p className="text-xs text-gray-600">Escolha a cor principal do seu dashboard</p>
+              <div className="flex flex-wrap gap-3">
+                {cores.map((cor) => (
+                  <div
+                    key={cor}
+                    className={`w-8 h-8 rounded-lg cursor-pointer border-2 transition-all ${
+                      corSelecionada === cor ? 'border-gray-900 scale-110' : 'border-gray-300 hover:border-gray-500'
+                    } ${cor}`}
+                    onClick={() => setCorSelecionada(cor)}
                   ></div>
-                  <span className="text-xs text-gray-700">{tema.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Cor Principal */}
-          <div>
-            <h4 className="font-medium text-gray-900 mb-3 text-sm">Cor Principal</h4>
-            <div className="grid grid-cols-6 gap-3">
-              {coresPrincipais.map((cor, index) => (
-                <div 
-                  key={index} 
-                  className={`w-11 h-11 rounded-lg ${cor} cursor-pointer hover:scale-110 transition-transform ${
-                    corSelecionada === cor ? 'ring-2 ring-gray-400 ring-offset-2' : ''
-                  }`}
-                  onClick={() => setCorSelecionada(cor)}
-                ></div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
@@ -98,23 +109,24 @@ export function AbaAparencia(props: AbaAparenciaProps) {
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   Tamanho da Fonte
                 </label>
-                <select className="bg-[#eeeeee] text-[rgb(97,97,97)] w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none text-sm">
-                  <option value="pequena">Pequena</option>
-                  <option value="media" selected>Média</option>
-                  <option value="grande">Grande</option>
-                </select>
+                <CustomDropdown
+                  options={tamanhoFonteOptions}
+                  selectedValue={tamanhoFonte}
+                  onValueChange={setTamanhoFonte}
+                  size="sm"
+                />
               </div>
               
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">
                   Família da Fonte
                 </label>
-                <select className="bg-[#eeeeee] text-[rgb(97,97,97)] w-full p-1.5 border border-gray-300 rounded-lg focus:outline-none text-sm">
-                  <option value="inter" selected>Inter (Padrão)</option>
-                  <option value="roboto">Roboto</option>
-                  <option value="opensans">Open Sans</option>
-                  <option value="poppins">Poppins</option>
-                </select>
+                <CustomDropdown
+                  options={familiaFonteOptions}
+                  selectedValue={familiaFonte}
+                  onValueChange={setFamiliaFonte}
+                  size="sm"
+                />
               </div>
             </div>
           </div>

@@ -1,29 +1,50 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import {
-  Dashboard,
-  Pedidos,
-  HistoricoPedidos,
-  Cardapio,
-  Configuracoes
-} from '../pages';
-import { Login } from '../pages/Login';
-import { Cadastro } from '../pages/Cadastro';
+import { SkeletonLoading } from '../components/skeletons/SkeletonLoading';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import { LojaProtectedRoute } from '../components/auth/LojaProtectedRoute';
+import { LoadingTest } from '../components/LoadingTest';
+
+// Lazy loading das páginas para melhor performance
+const Dashboard = lazy(() => import('../pages/Dashboard').then(module => ({ default: module.Dashboard })));
+const Pedidos = lazy(() => import('../pages/Pedidos').then(module => ({ default: module.Pedidos })));
+const HistoricoPedidos = lazy(() => import('../pages/HistoricoPedidos').then(module => ({ default: module.HistoricoPedidos })));
+const Cardapio = lazy(() => import('../pages/Cardapio').then(module => ({ default: module.Cardapio })));
+const CadastroProduto = lazy(() => import('../pages/CadastroProduto').then(module => ({ default: module.CadastroProduto })));
+const Cupons = lazy(() => import('../pages/Cupons').then(module => ({ default: module.Cupons })));
+const Atendimento = lazy(() => import('../pages/Atendimento').then(module => ({ default: module.Atendimento })));
+const Configuracoes = lazy(() => import('../pages/Configuracoes').then(module => ({ default: module.Configuracoes })));
+
+const Relatorios = lazy(() => import('../pages/Relatorios').then(module => ({ default: module.Relatorios })));
+const Mapa = lazy(() => import('../pages/Mapa').then(module => ({ default: module.Mapa })));
+const Login = lazy(() => import('../pages/Login').then(module => ({ default: module.Login })));
+const Cadastro = lazy(() => import('../pages/Cadastro').then(module => ({ default: module.Cadastro })));
+
+// Componente de fallback otimizado
+const RouteFallback = () => <SkeletonLoading />;
 
 export function AppRoutes() {
   return (
     <Routes>
       {/* Rotas públicas */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/cadastro" element={<Cadastro />} />
+      <Route path="/login" element={
+        <Suspense fallback={<RouteFallback />}>
+          <Login />
+        </Suspense>
+      } />
+      <Route path="/cadastro" element={
+        <Suspense fallback={<RouteFallback />}>
+          <Cadastro />
+        </Suspense>
+      } />
       
       {/* Rotas protegidas */}
       <Route path="/" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Dashboard />
+            <Suspense fallback={<RouteFallback />}>
+              <Dashboard />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -31,7 +52,9 @@ export function AppRoutes() {
       <Route path="/dashboard" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Dashboard />
+            <Suspense fallback={<RouteFallback />}>
+              <Dashboard />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -39,7 +62,9 @@ export function AppRoutes() {
       <Route path="/pedidos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Pedidos />
+            <Suspense fallback={<RouteFallback />}>
+              <Pedidos />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -47,7 +72,29 @@ export function AppRoutes() {
       <Route path="/historico" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <HistoricoPedidos />
+            <Suspense fallback={<RouteFallback />}>
+              <HistoricoPedidos />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/cardapio/novo-produto" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<RouteFallback />}>
+              <CadastroProduto />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/cardapio/editar-produto/:id" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<RouteFallback />}>
+              <CadastroProduto />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -55,7 +102,29 @@ export function AppRoutes() {
       <Route path="/cardapio" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Cardapio />
+            <Suspense fallback={<RouteFallback />}>
+              <Cardapio />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/cupons" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<RouteFallback />}>
+              <Cupons />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/atendimento" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<RouteFallback />}>
+              <Atendimento />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -63,7 +132,38 @@ export function AppRoutes() {
       <Route path="/configuracoes" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Configuracoes />
+            <Suspense fallback={<RouteFallback />}>
+              <Configuracoes />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/relatorios" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<RouteFallback />}>
+              <Relatorios />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+
+       <Route path="/mapa" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<RouteFallback />}>
+              <Mapa />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      {/* Rota de teste para o sistema de carregamento */}
+      <Route path="/loading-test" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <LoadingTest />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />

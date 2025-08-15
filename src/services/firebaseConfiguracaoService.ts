@@ -1,0 +1,281 @@
+import { 
+  collection, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  updateDoc, 
+  query, 
+  where, 
+  getDocs,
+  Timestamp,
+  serverTimestamp 
+} from 'firebase/firestore';
+import { db } from '../lib/firebase';
+import { ConfiguracaoLoja } from '../types';
+
+const COLLECTION_NAME = 'configuracoes';
+console.log('FirebaseConfiguracaoService - COLLECTION_NAME:', COLLECTION_NAME);
+
+/**
+ * Serviço para gerenciar configurações da loja no Firebase
+ */
+export class FirebaseConfiguracaoService {
+  
+  /**
+   * Salva ou atualiza as configurações da loja
+   */
+  static async salvarConfiguracao(configuracao: ConfiguracaoLoja): Promise<void> {
+    try {
+      console.log('Tentando salvar configuração:', configuracao.id);
+      const configRef = doc(db, COLLECTION_NAME, configuracao.id);
+      
+      const dadosParaSalvar = {
+        ...configuracao,
+        lojaId: configuracao.restauranteId, // Campo necessário para as regras do Firestore
+        dataAtualizacao: serverTimestamp(),
+        // Se for nova configuração, adicionar data de criação
+        ...(!(await getDoc(configRef)).exists() && { dataCriacao: serverTimestamp() })
+      };
+
+      console.log('Dados para salvar:', dadosParaSalvar);
+      await setDoc(configRef, dadosParaSalvar, { merge: true });
+      console.log('Configuração salva com sucesso:', configuracao.id);
+    } catch (error) {
+      console.error('Erro detalhado ao salvar configuração:', error);
+      throw new Error(`Falha ao salvar configurações da loja: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+    }
+  }
+
+  /**
+   * Carrega as configurações de uma loja específica
+   */
+  static async carregarConfiguracao(lojaId: string): Promise<ConfiguracaoLoja | null> {
+    try {
+      console.log('Tentando carregar configuração para lojaId:', lojaId);
+      console.log('FirebaseConfiguracaoService - db:', db);
+      console.log('FirebaseConfiguracaoService - COLLECTION_NAME:', COLLECTION_NAME);
+      
+      // Verificar se a coleção existe primeiro
+      console.log('Verificando se a coleção existe...');
+      const collectionRef = collection(db, COLLECTION_NAME);
+      console.log('collectionRef criado:', collectionRef);
+      
+      // Primeiro tenta buscar por ID direto
+      const configRef = doc(db, COLLECTION_NAME, lojaId);
+      console.log('Buscando por ID direto:', lojaId);
+      console.log('configRef criado:', configRef);
+      const configSnap = await getDoc(configRef);
+      
+      if (configSnap.exists()) {
+        const data = configSnap.data();
+        return {
+          ...data,
+          id: configSnap.id,
+          // Converter timestamps para strings se necessário
+          dataCriacao: data.dataCriacao?.toDate?.()?.toISOString() || data.dataCriacao,
+          dataAtualizacao: data.dataAtualizacao?.toDate?.()?.toISOString() || data.dataAtualizacao,
+        } as ConfiguracaoLoja;
+      }
+
+      console.log('Configuração não encontrada por ID, buscando por lojaId...');
+      // Se não encontrar por ID, busca por lojaId (campo usado nas regras)
+      const q = query(
+        collection(db, COLLECTION_NAME),
+        where('lojaId', '==', lojaId)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      console.log('Resultado da busca por lojaId:', querySnapshot.size, 'documentos encontrados');
+      
+      if (!querySnapshot.empty) {
+        const doc = querySnapshot.docs[0];
+        const data = doc.data();
+        return {
+          ...data,
+          id: doc.id,
+          dataCriacao: data.dataCriacao?.toDate?.()?.toISOString() || data.dataCriacao,
+          dataAtualizacao: data.dataAtualizacao?.toDate?.()?.toISOString() || data.dataAtualizacao,
+        } as ConfiguracaoLoja;
+      }
+
+      console.log('Nenhuma configuração encontrada, retornando null');
+      return null;
+    } catch (error) {
+      console.error('Erro detalhado ao carregar configuração:', error);
+      throw new Error(`Falha ao carregar configurações da loja: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
+    }
+  }
+
+  /**
+   * Atualiza campos específicos da configuração
+   */
+  static async atualizarCampo(
+    configuracaoId: string, 
+    campo: keyof ConfiguracaoLoja, 
+    valor: any
+  ): Promise<void> {
+    try {
+      const configRef = doc(db, COLLECTION_NAME, configuracaoId);
+      await updateDoc(configRef, {
+        [campo]: valor,
+        dataAtualizacao: serverTimestamp()
+      });
+      console.log(`Campo ${campo} atualizado com sucesso`);
+    } catch (error) {
+      console.error(`Erro ao atualizar campo ${campo}:`, error);
+      throw new Error(`Falha ao atualizar ${campo}`);
+    }
+  }
+
+  /**
+   * Verifica se existe configuração para uma loja
+   */
+  static async existeConfiguracao(lojaId: string): Promise<boolean> {
+    try {
+      const configuracao = await this.carregarConfiguracao(lojaId);
+      return configuracao !== null;
+    } catch (error) {
+      console.error('Erro ao verificar existência da configuração:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Cria configuração padrão para uma nova loja
+   */
+  static async criarConfiguracaoPadrao(lojaId: string, nomeRestaurante: string): Promise<ConfiguracaoLoja> {
+    const configuracaoPadrao: ConfiguracaoLoja = {
+      id: lojaId,
+      restauranteId: lojaId,
+      lojaId: lojaId, // Campo necessário para as regras do Firestore
+      nomeRestaurante,
+      descricao: 'Restaurante especializado em comida caseira e tradicional',
+      cnpj: '',
+      telefone: '',
+      email: '',
+      endereco: {
+        rua: '',
+        bairro: '',
+        cidade: '',
+        estado: '',
+        cep: ''
+      },
+      horarioFuncionamento: {
+        segunda: { abertura: '08:00', fechamento: '22:00', ativo: true, pausas: [], entregaAte: '21:30', pedidoAte: '21:00' },
+        terca: { abertura: '08:00', fechamento: '22:00', ativo: true, pausas: [], entregaAte: '21:30', pedidoAte: '21:00' },
+        quarta: { abertura: '08:00', fechamento: '22:00', ativo: true, pausas: [], entregaAte: '21:30', pedidoAte: '21:00' },
+        quinta: { abertura: '08:00', fechamento: '22:00', ativo: true, pausas: [], entregaAte: '21:30', pedidoAte: '21:00' },
+        sexta: { abertura: '08:00', fechamento: '23:00', ativo: true, pausas: [], entregaAte: '22:30', pedidoAte: '22:00' },
+        sabado: { abertura: '09:00', fechamento: '23:00', ativo: true, pausas: [], entregaAte: '22:30', pedidoAte: '22:00' },
+        domingo: { abertura: '10:00', fechamento: '22:00', ativo: true, pausas: [], entregaAte: '21:30', pedidoAte: '21:00' }
+      },
+      horariosEspeciais: [],
+      configuracaoAvancada: {
+        aceitarPedidosForaHorario: false,
+        tempoLimiteEntrega: 60,
+        pausaAutomatica: true,
+        notificarMudancaHorario: true
+      },
+      taxaEntrega: 5.00,
+      tempoPreparoMedio: 30,
+      valorMinimoEntrega: 15.00,
+      raioEntregaKm: 5,
+      ativo: true,
+      
+      // Configurações de entrega
+      entregaDomicilio: true,
+      retiradaLocal: true,
+      entregaDelivery: true,
+      pedidoMinimo: '15,00',
+      raioEntrega: '5',
+      
+      // Horários simplificados
+      horarioAbertura: '08:00',
+      horarioFechamento: '22:00',
+      diasFuncionamento: {
+        segunda: true,
+        terca: true,
+        quarta: true,
+        quinta: true,
+        sexta: true,
+        sabado: true,
+        domingo: true
+      },
+      
+      // Formas de pagamento
+      pagamentoDinheiro: true,
+      pagamentoCredito: true,
+      pagamentoDebito: true,
+      pagamentoPix: true,
+      pagamentoValeRefeicao: false,
+      
+      // Notificações
+      notificacoesEmail: true,
+      notificacoesSMS: false,
+      notificacoesPush: true,
+      alertasEstoque: true,
+      
+      // Aparência
+      tema: 'claro',
+      corPrincipal: 'azul',
+      modoCompacto: false,
+      animacoes: true,
+
+      // Informações da Loja
+      fotoLoja: '',
+      bannerLoja: '',
+      nomeMarca: nomeRestaurante,
+      identificacaoUnidade: '',
+      linkPersonalizado: '',
+      
+      // Modos de pedidos
+      aceitarPedidosDelivery: true,
+      aceitarPedidosRetirada: true,
+      aceitarPedidosBalcao: true,
+      
+      // Configurações de agendamento
+      agendamentoAtivo: false,
+      agendamentoAntecedencia: 2,
+      agendamentoLimite: 7,
+
+      // Configurações de Impressão
+      imprimirPeloComputador: true,
+      imprimirPeloCelular: false,
+      assistenteBrendi: false,
+      impressoraPrincipal: '',
+      
+      // Configurações da Notinha
+      mostrarCNPJ: true,
+      mostrarCategoria: true,
+      mostrarDescricao: true,
+      mostrarProdutosPizza: 'nome-completo',
+      mostrarQuantidadeAdicionais: true
+    };
+
+    await this.salvarConfiguracao(configuracaoPadrao);
+    return configuracaoPadrao;
+  }
+
+  /**
+   * Lista todas as configurações (para admin)
+   */
+  static async listarConfiguracoes(): Promise<ConfiguracaoLoja[]> {
+    try {
+      const q = query(collection(db, COLLECTION_NAME));
+      const querySnapshot = await getDocs(q);
+      
+      return querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          ...data,
+          id: doc.id,
+          dataCriacao: data.dataCriacao?.toDate?.()?.toISOString() || data.dataCriacao,
+          dataAtualizacao: data.dataAtualizacao?.toDate?.()?.toISOString() || data.dataAtualizacao,
+        } as ConfiguracaoLoja;
+      });
+    } catch (error) {
+      console.error('Erro ao listar configurações:', error);
+      throw new Error('Falha ao listar configurações');
+    }
+  }
+}

@@ -35,7 +35,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   return (
     <div className="w-full max-w-md mx-auto">
-      <div className="bg-white border border-slate-200 rounded p-8">
+      <div className="bg-white border border-slate-200 rounded-lg p-8">
         <div className="text-center mb-8">
           <h1 className="text-sm font-bold text-gray-900 mb-2">
             Bem-vindo de volta

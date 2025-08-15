@@ -1,22 +1,19 @@
 import { EstatisticasCardapio } from '../firebaseCardapioService';
 import { FirebaseProdutosService } from './produtosService';
-import { FirebaseCategoriasService } from './categoriasService';
+
 
 export class FirebaseEstatisticasService {
   private produtosService: FirebaseProdutosService;
-  private categoriasService: FirebaseCategoriasService;
+
 
   constructor() {
     this.produtosService = new FirebaseProdutosService();
-    this.categoriasService = new FirebaseCategoriasService();
+
   }
 
   async buscarEstatisticasCardapio(): Promise<EstatisticasCardapio> {
     try {
-      const [produtos, categorias] = await Promise.all([
-        this.produtosService.buscarProdutos(),
-        this.categoriasService.buscarCategorias({ ativa: true })
-      ]);
+      const produtos = await this.produtosService.buscarProdutos();
 
       const produtosAtivos = produtos.filter(p => p.status === 'ativo');
       const produtosDestacados = produtos.filter(p => p.destacado);
@@ -28,7 +25,7 @@ export class FirebaseEstatisticasService {
         produtosAtivos: produtosAtivos.length,
         produtosDestacados: produtosDestacados.length,
         produtosEmFalta: produtosEmFalta.length,
-        categoriasAtivas: categorias.length,
+
         receitaTotal
       };
     } catch (error) {

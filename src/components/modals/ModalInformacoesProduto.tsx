@@ -1,6 +1,8 @@
 import React from 'react';
-import { Clock, DollarSign } from 'lucide-react';
+import { Clock, DollarSign, Tag } from 'lucide-react';
 import { Produto, Categoria } from '../../../types';
+import { CustomDropdown, DropdownOption } from '../ui/CustomDropdown';
+import { GoogleFloatingInput } from '../ui/google-floating-input';
 
 interface ModalProdutoInformacoesProps {
   produto: Produto;
@@ -9,80 +11,73 @@ interface ModalProdutoInformacoesProps {
 }
 
 export function ModalProdutoInformacoes({ produto, categorias, modoEdicao }: ModalProdutoInformacoesProps) {
+  // Opções para dropdown de categoria
+  const categoriaOptions: DropdownOption[] = categorias.map((categoria) => ({
+    value: categoria.id,
+    label: categoria.nome,
+    icon: <Tag className="w-4 h-4 text-blue-500" />
+  }));
+
   return (
     <>
       {/* Informações básicas */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Nome do Produto
-          </label>
-          <input
-            type="text"
-            defaultValue={produto.nome}
+          <GoogleFloatingInput
+            label="Nome do Produto"
+            value={produto.nome}
+            onChange={() => {}} // Em modo de edição, seria uma função para atualizar
             disabled={!modoEdicao}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
+            placeholder="Digite o nome do produto"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Categoria
           </label>
-          <select
-            defaultValue={produto.categoriaId}
+          <CustomDropdown
+            options={categoriaOptions}
+            selectedValue={produto.categoriaId}
+            onValueChange={() => {}} // Em modo de edição, seria uma função para atualizar
             disabled={!modoEdicao}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
-          >
-            {categorias.map((categoria) => (
-              <option key={categoria.id} value={categoria.id}>
-                {categoria.nome}
-              </option>
-            ))}
-          </select>
+            size="sm"
+          />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Preço
-          </label>
-          <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="number"
-              step="0.01"
-              defaultValue={produto.preco}
-              disabled={!modoEdicao}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
-            />
-          </div>
+          <GoogleFloatingInput
+            label="Preço"
+            value={produto.preco?.toString() || ''}
+            onChange={() => {}} // Em modo de edição, seria uma função para atualizar
+            type="number"
+            step="0.01"
+            disabled={!modoEdicao}
+            placeholder="0,00"
+          />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Tempo de Preparo (min)
-          </label>
-          <div className="relative">
-            <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="number"
-              defaultValue={produto.tempoPreparoMinutos}
-              disabled={!modoEdicao}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
-            />
-          </div>
+          <GoogleFloatingInput
+            label="Tempo de Preparo (min)"
+            value={produto.tempoPreparoMinutos?.toString() || ''}
+            onChange={() => {}} // Em modo de edição, seria uma função para atualizar
+            type="number"
+            disabled={!modoEdicao}
+            placeholder="20"
+          />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Descrição
-        </label>
-        <textarea
-          rows={3}
-          defaultValue={produto.descricao}
+        <GoogleFloatingInput
+          label="Descrição"
+          value={produto.descricao || ''}
+          onChange={() => {}} // Em modo de edição, seria uma função para atualizar
           disabled={!modoEdicao}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50"
+          placeholder="Descreva o produto..."
+          as="textarea"
+          rows={3}
         />
       </div>
     </>

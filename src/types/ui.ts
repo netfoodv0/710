@@ -18,7 +18,7 @@ export interface TableColumn<T = any> {
 }
 
 export interface StatusBadgeProps {
-  status: StatusPedido;
+  status: StatusPedido | 'ativo' | 'inativo' | 'em_falta' | string;
   size?: 'sm' | 'md' | 'lg';
 }
 

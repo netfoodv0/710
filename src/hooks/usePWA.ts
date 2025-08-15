@@ -11,8 +11,8 @@ export function usePWA() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
   useEffect(() => {
-    // Register service worker
-    if ('serviceWorker' in navigator) {
+    // Register service worker only in production
+    if ('serviceWorker' in navigator && import.meta.env.PROD) {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {

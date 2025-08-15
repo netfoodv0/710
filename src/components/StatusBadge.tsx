@@ -6,11 +6,14 @@ import {
   ChefHat, 
   Truck, 
   Package, 
-  XCircle
+  XCircle,
+  AlertCircle
 } from 'lucide-react';
-import { StatusBadgeProps, StatusPedido } from '../types';
+import { StatusBadgeProps } from '../types/ui';
+import { StatusPedido } from '../types/pedidos';
 
-const statusConfig: Record<StatusPedido, {
+// Configuração para status de pedidos
+const statusPedidoConfig: Record<StatusPedido, {
   label: string;
   color: string;
   bgColor: string;
@@ -54,9 +57,65 @@ const statusConfig: Record<StatusPedido, {
   }
 };
 
+// Configuração para status de produtos
+const statusProdutoConfig: Record<string, {
+  label: string;
+  color: string;
+  bgColor: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}> = {
+  ativo: {
+    label: 'Ativo',
+    color: 'text-green-800',
+    bgColor: 'bg-green-100 border-green-200',
+    icon: CheckCircle
+  },
+  inativo: {
+    label: 'Inativo',
+    color: 'text-gray-800',
+    bgColor: 'bg-gray-100 border-gray-200',
+    icon: XCircle
+  },
+  em_falta: {
+    label: 'Em Falta',
+    color: 'text-red-800',
+    bgColor: 'bg-red-100 border-red-200',
+    icon: AlertCircle
+  }
+};
+
 export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
-  const config = statusConfig[status];
-  const Icon = config.icon;
+  // Configuração padrão para produtos
+  const config = {
+    ativo: {
+      label: 'Ativo',
+      color: 'text-green-800',
+      bgColor: 'bg-green-100 border-green-200',
+      icon: CheckCircle
+    },
+    inativo: {
+      label: 'Inativo',
+      color: 'text-gray-800',
+      bgColor: 'bg-gray-100 border-gray-200',
+      icon: XCircle
+    },
+    em_falta: {
+      label: 'Em Falta',
+      color: 'text-red-800',
+      bgColor: 'bg-red-100 border-red-200',
+      icon: AlertCircle
+    }
+  };
+
+  // Usar configuração de produto ou fallback
+  const statusConfig = config[status as keyof typeof config] || {
+    label: status || 'Desconhecido',
+    color: 'text-gray-800',
+    bgColor: 'bg-gray-100 border-gray-200',
+    icon: Package
+  };
+
+  const Icon = statusConfig.icon;
 
   const sizeClasses = {
     sm: 'px-2 py-1 text-xs',
@@ -65,20 +124,20 @@ export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
   };
 
   const iconSizes = {
-    sm: 'w-6 h-6',
-    md: 'w-6 h-6',
-    lg: 'w-6 h-6'
+    sm: 'w-4 h-4',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5'
   };
 
   return (
     <span className={clsx(
       'inline-flex items-center gap-1.5 font-medium rounded-full border',
-      config.color,
-      config.bgColor,
+      statusConfig.color,
+      statusConfig.bgColor,
       sizeClasses[size]
     )}>
       <Icon className={iconSizes[size]} />
-      {config.label}
+      {statusConfig.label}
     </span>
   );
 }
@@ -114,7 +173,7 @@ export function StatusProgress({ currentStatus }: { currentStatus: StatusPedido 
       
       <div className="flex items-center">
         {steps.map((step, index) => {
-          const config = statusConfig[step];
+          const config = statusPedidoConfig[step];
           const Icon = config.icon;
           const isCompleted = index <= currentIndex;
           const isCurrent = index === currentIndex;
@@ -188,7 +247,7 @@ export function StatusActions({
           onClick={() => onStatusChange(nextStatus)}
           className="btn btn-primary"
         >
-          {statusConfig[nextStatus].label}
+          {statusPedidoConfig[nextStatus].label}
         </button>
       )}
       

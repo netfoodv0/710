@@ -51,7 +51,7 @@ export function Table<T = any>({
     <div className={clsx('bg-white rounded-lg border border-gray-200 overflow-hidden', className)}>
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-gray-50 border-b border-gray-200" style={{ height: '73px' }}>
             <tr>
               {columns.map((column) => (
                 <th
@@ -60,6 +60,7 @@ export function Table<T = any>({
                     'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
                     column.sortable && 'cursor-pointer hover:bg-gray-100 select-none'
                   )}
+                  style={{ height: '73px' }}
                   onClick={() => handleSort(column)}
                 >
                   <div className="flex items-center gap-1">

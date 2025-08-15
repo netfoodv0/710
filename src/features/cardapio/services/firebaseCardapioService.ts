@@ -17,7 +17,7 @@ import {
   DocumentData
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { Produto, Categoria, CategoriaAdicional } from '../types';
+import { Produto, CategoriaAdicional } from '../types';
 
 // Tipos para queries otimizadas
 export interface FiltrosProduto {
@@ -31,16 +31,12 @@ export interface FiltrosProduto {
   startAfter?: QueryDocumentSnapshot<DocumentData>;
 }
 
-export interface FiltrosCategoria {
-  ativa?: boolean;
-  tipo?: string;
-  status?: 'ativo' | 'inativo';
-}
+
 
 // Serviço de Produtos
 export class FirebaseCardapioService {
   private produtosCollection = collection(db, 'produtos');
-  private categoriasCollection = collection(db, 'categorias');
+
   private categoriasAdicionaisCollection = collection(db, 'categoriasAdicionais');
 
   // ===== PRODUTOS =====
@@ -205,95 +201,7 @@ export class FirebaseCardapioService {
     }
   }
 
-  // ===== CATEGORIAS =====
 
-  async buscarCategorias(filtros: FiltrosCategoria = {}): Promise<Categoria[]> {
-    try {
-      let q = query(this.categoriasCollection);
-      const constraints = [];
-
-      if (filtros.ativa !== undefined) {
-        constraints.push(where('ativa', '==', filtros.ativa));
-      }
-
-      if (filtros.tipo) {
-        constraints.push(where('tipo', '==', filtros.tipo));
-      }
-
-      if (filtros.status) {
-        constraints.push(where('status', '==', filtros.status));
-      }
-
-      constraints.push(orderBy('nome', 'asc'));
-
-      constraints.forEach(constraint => {
-        q = query(q, constraint);
-      });
-
-      const snapshot = await getDocs(q);
-      const categorias: Categoria[] = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        categorias.push({
-          ...data,
-          id: doc.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Categoria);
-      });
-
-      return categorias;
-    } catch (error) {
-      console.error('Erro ao buscar categorias:', error);
-      throw new Error('Falha ao carregar categorias');
-    }
-  }
-
-  async criarCategoria(categoria: Omit<Categoria, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
-    try {
-      const categoriaData = {
-        ...categoria,
-        dataCriacao: serverTimestamp(),
-        dataAtualizacao: serverTimestamp()
-      };
-
-      const docRef = await addDoc(this.categoriasCollection, categoriaData);
-      return docRef.id;
-    } catch (error) {
-      console.error('Erro ao criar categoria:', error);
-      throw new Error('Falha ao criar categoria');
-    }
-  }
-
-  async editarCategoria(id: string, dados: Partial<Categoria>): Promise<void> {
-    try {
-      const docRef = doc(this.categoriasCollection, id);
-      await updateDoc(docRef, {
-        ...dados,
-        dataAtualizacao: serverTimestamp()
-      });
-    } catch (error) {
-      console.error('Erro ao editar categoria:', error);
-      throw new Error('Falha ao atualizar categoria');
-    }
-  }
-
-  async excluirCategoria(id: string): Promise<void> {
-    try {
-      // Verificar se há produtos na categoria
-      const produtos = await this.buscarProdutos({ categoriaId: id });
-      if (produtos.length > 0) {
-        throw new Error('Não é possível excluir categoria com produtos');
-      }
-
-      const docRef = doc(this.categoriasCollection, id);
-      await deleteDoc(docRef);
-    } catch (error) {
-      console.error('Erro ao excluir categoria:', error);
-      throw new Error('Falha ao excluir categoria');
-    }
-  }
 
   // ===== CATEGORIAS ADICIONAIS =====
 
@@ -374,10 +282,7 @@ export class FirebaseCardapioService {
     receitaTotal: number;
   }> {
     try {
-      const [produtos, categorias] = await Promise.all([
-        this.buscarProdutos(),
-        this.buscarCategorias({ ativa: true })
-      ]);
+      const produtos = await this.buscarProdutos();
 
       const produtosAtivos = produtos.filter(p => p.status === 'ativo');
       const produtosDestacados = produtos.filter(p => p.destacado);
@@ -389,7 +294,7 @@ export class FirebaseCardapioService {
         produtosAtivos: produtosAtivos.length,
         produtosDestacados: produtosDestacados.length,
         produtosEmFalta: produtosEmFalta.length,
-        categoriasAtivas: categorias.length,
+
         receitaTotal
       };
     } catch (error) {

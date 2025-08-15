@@ -36,9 +36,9 @@ export function ConfiguracoesNotificacoes() {
   ];
 
   return (
-    <div className="bg-white border border-slate-200 rounded shadow-none min-h-[600px]">
-      <div className="p-4 space-y-4">
-        <h3 className="text-xs font-semibold text-gray-900">Configurações de Notificações</h3>
+    <div className="bg-white border border-slate-200 rounded-lg shadow-sm min-h-[600px]">
+      <div className="p-6 space-y-6">
+        <h3 className="text-lg font-semibold text-gray-900">Configurações de Notificações</h3>
         
         <div className="space-y-4">
           {notificacoes.map((notif) => (
@@ -62,10 +62,10 @@ export function ConfiguracoesNotificacoes() {
         {/* Informações Adicionais */}
         <div className="bg-yellow-50 rounded-lg p-4 space-y-3">
           <div className="flex items-center gap-2">
-            <Bell className="w-4 h-4 text-yellow-600" />
-            <h4 className="text-xs font-medium text-yellow-900">Sobre as Notificações</h4>
+            <Bell className="w-5 h-5 text-yellow-600" />
+            <h4 className="text-sm font-medium text-yellow-900">Sobre as Notificações</h4>
           </div>
-          <ul className="text-xs text-yellow-700 space-y-1">
+          <ul className="text-sm text-yellow-700 space-y-1">
             <li>• As notificações aparecerão no painel e podem ser enviadas por e-mail</li>
             <li>• Você pode personalizar quais notificações deseja receber</li>
             <li>• Notificações importantes sempre serão exibidas</li>
@@ -75,4 +75,4 @@ export function ConfiguracoesNotificacoes() {
       </div>
     </div>
   );
-} 
+}

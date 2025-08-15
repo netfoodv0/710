@@ -8,23 +8,8 @@ interface UseListaProdutosProps {
 }
 
 export function useListaProdutos({ onDelete, onDuplicate, onToggleStatus }: UseListaProdutosProps) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [produtoSelecionado, setProdutoSelecionado] = useState<Produto | undefined>();
-
-  const handleCreate = () => {
-    setProdutoSelecionado(undefined);
-    setModalOpen(true);
-  };
-
-  const handleEdit = (produto: Produto) => {
-    setProdutoSelecionado(produto);
-    setModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setProdutoSelecionado(undefined);
-  };
+  // Removido modalOpen e produtoSelecionado pois não são mais necessários para criação
+  // Mantido apenas para edição se necessário no futuro
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja excluir este produto?')) {
@@ -42,11 +27,6 @@ export function useListaProdutos({ onDelete, onDuplicate, onToggleStatus }: UseL
   };
 
   return {
-    modalOpen,
-    produtoSelecionado,
-    handleCreate,
-    handleEdit,
-    handleCloseModal,
     handleDelete,
     handleDuplicate,
     handleToggleStatus

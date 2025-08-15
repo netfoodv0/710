@@ -56,7 +56,7 @@ export function ModalDetalhesPedido({ pedido, isOpen, onClose, onStatusChange }:
 
         <div className="space-y-6">
           {/* Informações do Cliente */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
             <h3 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
               <User className="w-4 h-4" />
               Informações do Cliente
@@ -78,7 +78,7 @@ export function ModalDetalhesPedido({ pedido, isOpen, onClose, onStatusChange }:
           </div>
 
           {/* Itens do Pedido */}
-          <div>
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
             <h3 className="font-semibold text-gray-900 mb-3">Itens do Pedido</h3>
             <div className="space-y-2">
               {pedido.itens.map((item, index) => (
@@ -96,7 +96,7 @@ export function ModalDetalhesPedido({ pedido, isOpen, onClose, onStatusChange }:
           </div>
 
           {/* Resumo Financeiro */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
             <h3 className="font-semibold text-gray-900 mb-3">Resumo Financeiro</h3>
             <div className="space-y-2">
               <div className="flex justify-between">
@@ -115,27 +115,29 @@ export function ModalDetalhesPedido({ pedido, isOpen, onClose, onStatusChange }:
           </div>
 
           {/* Informações Adicionais */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-2">
-              <CreditCard className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">Pagamento:</span>
-              <span className="text-gray-900">{pedido.formaPagamento}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">Tempo Estimado:</span>
-              <span className="text-gray-900">{pedido.tempoEstimado}</span>
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center gap-2">
+                <CreditCard className="w-4 h-4 text-gray-500" />
+                <span className="text-gray-600">Pagamento:</span>
+                <span className="text-gray-900">{pedido.formaPagamento}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-gray-500" />
+                <span className="text-gray-600">Tempo Estimado:</span>
+                <span className="text-gray-900">{pedido.tempoEstimado}</span>
+              </div>
             </div>
           </div>
 
           {/* Observações */}
           {pedido.observacoes && (
-            <div>
+            <div className="bg-white border border-gray-200 rounded-lg p-4">
               <h3 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 Observações
               </h3>
-              <p className="text-gray-700 bg-gray-50 rounded-lg p-3">
+              <p className="text-gray-700 bg-gray-50 rounded p-3">
                 {pedido.observacoes}
               </p>
             </div>

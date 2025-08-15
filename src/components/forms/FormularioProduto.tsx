@@ -5,7 +5,6 @@ import { FormularioProdutoTabs } from './FormularioProdutoTabs';
 import { FormularioProdutoBasico } from './FormularioProdutoBasico';
 import { FormularioProdutoMidia } from './FormularioProdutoMidia';
 import { FormularioProdutoOutrasAbas } from './FormularioProdutoOutrasAbas';
-import { ComplementosProduto } from '../produtos-especificos/ComplementosProduto';
 
 export const FormularioProduto: React.FC<FormularioProdutoProps> = ({
   produto,
@@ -34,7 +33,7 @@ export const FormularioProduto: React.FC<FormularioProdutoProps> = ({
     <div className="space-y-6">
       <FormularioProdutoTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-      <form ref={formRef || undefined} onSubmit={handleSubmit} className="space-y-6">
+      <form id="produto-form" ref={formRef || undefined} onSubmit={handleSubmit} className="space-y-6">
         {/* Aba: Informações Básicas */}
         {activeTab === 'basico' && (
           <FormularioProdutoBasico
@@ -57,17 +56,6 @@ export const FormularioProduto: React.FC<FormularioProdutoProps> = ({
           />
         )}
 
-        {/* Aba: Complementos */}
-        {activeTab === 'complementos' && (
-          <div className="space-y-6">
-            <ComplementosProduto
-              complementos={formData.complementos || []}
-              categoriasAdicionais={categoriasAdicionais}
-              onChange={(complementos) => handleInputChange('complementos', complementos)}
-            />
-          </div>
-        )}
-
         {/* Outras Abas */}
         {(activeTab === 'classificacoes' || activeTab === 'disponibilidade' || activeTab === 'descontos') && (
           <FormularioProdutoOutrasAbas
@@ -79,4 +67,4 @@ export const FormularioProduto: React.FC<FormularioProdutoProps> = ({
       </form>
     </div>
   );
-}; 
+};

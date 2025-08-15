@@ -8,13 +8,13 @@ interface SkeletonLoadingProps {
 export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type, rows = 5 }) => {
   if (type === 'table') {
     return (
-      <div className="bg-white border border-slate-200 rounded overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50" style={{ height: '73px' }}>
               <tr>
                 {['Produto', 'Categoria', 'Preço', 'Status', 'Vendas', 'Criado em', 'Ações'].map((header) => (
-                  <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
                     <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
                   </th>
                 ))}
@@ -63,7 +63,7 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type, rows = 5
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: rows }).map((_, index) => (
-          <div key={index} className="bg-white border border-slate-200 rounded p-4">
+          <div key={index} className="bg-white border border-slate-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="h-6 bg-gray-200 rounded animate-pulse w-32"></div>
               <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
@@ -83,7 +83,7 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type, rows = 5
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index} className="bg-white border border-slate-200 rounded p-4">
+          <div key={index} className="bg-white border border-slate-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
                 <div className="h-4 bg-gray-200 rounded animate-pulse w-24 mb-2"></div>

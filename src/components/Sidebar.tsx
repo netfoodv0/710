@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { 
   Home, 
   ShoppingBag, 
   History,
   BookOpen, 
+  Tag,
   Settings,
   ChevronLeft,
   ChevronRight,
-  Store
+  Store,
+  BarChart3,
+  Map,
+  MessageCircle
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { LogOut } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { useOptimizedNavigation } from '@/hooks/useOptimizedNavigation';
 
 interface SidebarProps {
   isCollapsed?: boolean;
@@ -38,14 +45,40 @@ const menuItems = [
     icon: BookOpen
   },
   {
+    path: '/cupons',
+    label: 'Cupons',
+    icon: Tag
+  },
+  {
+    path: '/atendimento',
+    label: 'Atendimento',
+    icon: MessageCircle
+  },
+  {
     path: '/configuracoes',
     label: 'Configurações',
     icon: Settings
+  },
+  {
+    path: '/mapa',
+    label: 'Mapa',
+    icon: Map
+  },
+  {
+    path: '/relatorios',
+    label: 'Relatórios',
+    icon: BarChart3
   }
 ];
 
-export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
+export const Sidebar = memo(({ isCollapsed = false, onToggle }: SidebarProps) => {
   const location = useLocation();
+  const { logout } = useAuth();
+  const { navigateTo } = useOptimizedNavigation();
+
+  const handleNavigation = (path: string) => {
+    navigateTo(path);
+  };
 
   return (
     <aside className={`bg-white border-r border-slate-200 flex flex-col h-screen ${isCollapsed ? 'w-14' : 'w-[243px]'} transition-all duration-300 flex-shrink-0 shadow-sm`}>
@@ -54,19 +87,13 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
         <div className="flex items-center justify-between">
           {!isCollapsed && (
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
-                <Store className="w-4.5 h-4.5 text-white" />
-              </div>
-              <div>
-                <h1 className="font-semibold text-slate-900 text-base">NetFood</h1>
-                <p className="text-xs text-slate-500">Gestão de Pedidos</p>
-              </div>
+              <h1 className="text-2xl font-bold italic text-slate-900">VAULT</h1>
             </div>
           )}
           
           {isCollapsed && (
-            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center mx-auto shadow-lg">
-              <Store className="w-4.5 h-4.5 text-white" />
+            <div className="mx-auto">
+              <h1 className="text-2xl font-bold italic text-slate-900">VAULT</h1>
             </div>
           )}
           
@@ -87,11 +114,6 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto">
-        {!isCollapsed && (
-          <div className="mb-5">
-            <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-3">Menu Principal</p>
-          </div>
-        )}
         
         <ul className="space-y-0">
           {menuItems.map((item) => {
@@ -100,9 +122,9 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
             
             return (
               <li key={item.path}>
-                <Link
-                  to={item.path}
-                  className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+                <button
+                  onClick={() => handleNavigation(item.path)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -110,7 +132,7 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
                 >
                   <Icon className="w-4 h-4 flex-shrink-0" />
                   {!isCollapsed && <span>{item.label}</span>}
-                </Link>
+                </button>
               </li>
             );
           })}
@@ -125,10 +147,17 @@ export function Sidebar({ isCollapsed = false, onToggle }: SidebarProps) {
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-xs font-medium text-slate-700">Sistema Online</span>
             </div>
-            <p className="text-xs text-slate-500">Última sincronização: agora</p>
+            <p className="text-xs text-slate-500 mb-3">Última sincronização: agora</p>
+            <button
+              onClick={logout}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+            >
+              <LogOut className="w-4 h-4" />
+              Sair
+            </button>
           </div>
         </div>
       )}
     </aside>
   );
-}
+});

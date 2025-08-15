@@ -6,7 +6,7 @@ export function Card({ title, children, className, actions, noPadding = false }:
   return (
     <div className={clsx('card', className)}>
       {(title || actions) && (
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-0 border-b border-gray-200">
           {title && (
             <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
           )}
@@ -17,7 +17,7 @@ export function Card({ title, children, className, actions, noPadding = false }:
           )}
         </div>
       )}
-      <div className={noPadding ? 'p-0' : 'p-6'}>
+      <div className={noPadding ? 'p-0' : 'p-0'}>
         {children}
       </div>
     </div>
@@ -49,7 +49,7 @@ export function StatsCard({
   };
 
   return (
-    <Card className={clsx('p-6', className)}>
+    <Card className={clsx('p-0', className)}>
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
@@ -91,7 +91,7 @@ export function QuickActionCard({
     <Card className={clsx('cursor-pointer hover:shadow-md transition-shadow', className)}>
       <button 
         onClick={onClick}
-        className="w-full p-6 text-left"
+        className="w-full p-0 text-left"
       >
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 p-3 bg-gray-50 rounded-lg">

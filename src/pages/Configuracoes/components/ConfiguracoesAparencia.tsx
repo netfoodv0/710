@@ -14,14 +14,14 @@ export function ConfiguracoesAparencia() {
   ];
 
   return (
-    <div className="bg-white border border-slate-200 rounded shadow-none min-h-[600px]">
-      <div className="p-4 space-y-4">
-        <h3 className="text-xs font-semibold text-gray-900">Configurações de Aparência</h3>
+    <div className="bg-white border border-slate-200 rounded-lg shadow-sm min-h-[600px]">
+      <div className="p-6 space-y-6">
+        <h3 className="text-lg font-semibold text-gray-900">Configurações de Aparência</h3>
         
         <div className="space-y-4">
           {/* Tema */}
           <div>
-            <h4 className="font-medium text-gray-900 mb-3 text-sm">Tema</h4>
+            <h4 className="text-sm font-medium text-gray-900 mb-3">Tema</h4>
             <div className="grid grid-cols-3 gap-4">
               {temas.map((tema) => (
                 <div key={tema.key} className="text-center">
@@ -34,7 +34,7 @@ export function ConfiguracoesAparencia() {
           
           {/* Cor Principal */}
           <div>
-            <h4 className="font-medium text-gray-900 mb-3 text-sm">Cor Principal</h4>
+            <h4 className="text-sm font-medium text-gray-900 mb-3">Cor Principal</h4>
             <div className="grid grid-cols-6 gap-3">
               {cores.map((cor, index) => (
                 <div 
@@ -47,7 +47,7 @@ export function ConfiguracoesAparencia() {
 
           {/* Configurações Adicionais */}
           <div className="space-y-4">
-            <h4 className="font-medium text-gray-900 text-sm">Outras Configurações</h4>
+            <h4 className="text-sm font-medium text-gray-900">Outras Configurações</h4>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200">
@@ -89,10 +89,10 @@ export function ConfiguracoesAparencia() {
         {/* Informações Adicionais */}
         <div className="bg-purple-50 rounded-lg p-4 space-y-3">
           <div className="flex items-center gap-2">
-            <Palette className="w-4 h-4 text-purple-600" />
-            <h4 className="text-xs font-medium text-purple-900">Personalização</h4>
+            <Palette className="w-5 h-5 text-purple-600" />
+            <h4 className="text-sm font-medium text-purple-900">Personalização</h4>
           </div>
-          <ul className="text-xs text-purple-700 space-y-1">
+          <ul className="text-sm text-purple-700 space-y-1">
             <li>• Escolha entre tema claro, escuro ou automático</li>
             <li>• Personalize a cor principal do sistema</li>
             <li>• Ative ou desative animações conforme sua preferência</li>
@@ -102,4 +102,4 @@ export function ConfiguracoesAparencia() {
       </div>
     </div>
   );
-} 
+}

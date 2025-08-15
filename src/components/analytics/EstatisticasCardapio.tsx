@@ -28,13 +28,13 @@ export function EstatisticasCardapio({ estatisticas }: EstatisticasCardapioProps
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {/* Total de Produtos */}
-      <div className="bg-white border border-slate-200 rounded p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Total de Produtos</p>
             <p className="text-2xl font-bold text-gray-900">{estatisticas.total}</p>
           </div>
-          <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
+          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
             <Package className="w-4 h-4 text-gray-600" />
           </div>
         </div>
@@ -46,13 +46,13 @@ export function EstatisticasCardapio({ estatisticas }: EstatisticasCardapioProps
       </div>
 
       {/* Produtos Ativos */}
-      <div className="bg-white border border-slate-200 rounded p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Produtos Ativos</p>
             <p className="text-2xl font-bold text-gray-900">{estatisticas.ativos}</p>
           </div>
-          <div className="w-8 h-8 bg-green-100 rounded flex items-center justify-center">
+          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
             <CheckCircle className="w-4 h-4 text-green-600" />
           </div>
         </div>
@@ -64,13 +64,13 @@ export function EstatisticasCardapio({ estatisticas }: EstatisticasCardapioProps
       </div>
 
       {/* Valor Total */}
-      <div className="bg-white border border-slate-200 rounded p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Valor Total</p>
             <p className="text-2xl font-bold text-gray-900">{formatarValor(estatisticas.valorTotal)}</p>
           </div>
-          <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
+          <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
             <DollarSign className="w-4 h-4 text-gray-600" />
           </div>
         </div>
@@ -82,7 +82,7 @@ export function EstatisticasCardapio({ estatisticas }: EstatisticasCardapioProps
       </div>
 
       {/* Produtos em Falta */}
-      <div className="bg-white border border-slate-200 rounded p-4">
+      <div className="bg-white border border-slate-200 rounded-lg p-4">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-600 mb-1">Em Falta</p>

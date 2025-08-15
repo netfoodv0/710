@@ -1,15 +1,22 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Plus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { RelatorioHeader } from '../features/relatorios/components/RelatorioHeader';
 import { firebasePedidoService } from '../services/firebasePedidoService';
 import { gerarPedidoFicticio } from '../utils/pedidoUtils';
 import { useNotifications } from '../hooks/useNotifications';
+import { usePeriodFilter } from '../hooks/usePeriodFilter';
+
 
 export function Pedidos() {
   const [isCreating, setIsCreating] = useState(false);
   const navigate = useNavigate();
   const { showSuccess, showError } = useNotifications();
+  const { selectedPeriod, handlePeriodChange } = usePeriodFilter();
+
+
+
 
   const handleCriarPedidoFicticio = useCallback(async () => {
     setIsCreating(true);
@@ -38,47 +45,40 @@ export function Pedidos() {
     }
   }, [navigate, showSuccess, showError]);
 
+  const handleExportExcel = useCallback(async () => {
+    await handleCriarPedidoFicticio();
+  }, [handleCriarPedidoFicticio]);
+
+  const handleExportPDF = useCallback(async () => {
+    await handleCriarPedidoFicticio();
+  }, [handleCriarPedidoFicticio]);
+
   return (
     <ErrorBoundary>
-      <div className="h-full flex flex-col">
-        {/* Cabeçalho Fixo */}
-        <div className="flex-shrink-0 p-4">
-          <div className="bg-white border border-slate-200 rounded" style={{ height: '72px' }}>
-            <div className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4" style={{ height: '100%' }}>
-              {/* Esquerda: Título e subtítulo */}
-              <div>
-                <h1 className="text-sm font-bold text-gray-900">Gestão de Pedidos</h1>
-                <p className="text-gray-600 mt-1 text-xs">Acompanhe e gerencie todos os pedidos em tempo real</p>
-              </div>
-              
-              {/* Direita: Ações */}
-              <div className="flex items-center gap-3">
-                <button 
-                  onClick={handleCriarPedidoFicticio}
-                  disabled={isCreating}
-                  className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isCreating ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Plus className="w-4 h-4" />
-                  )}
-                  {isCreating ? 'Criando...' : 'Novo Pedido'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
+      <div className="min-h-screen bg-slate-50">
+        {/* Cabeçalho fixo reutilizável */}
+        <RelatorioHeader
+          title=""
+          subtitle="Acompanhe e gerencie todos os pedidos em tempo real"
+          selectedPeriod={selectedPeriod}
+          onPeriodChange={handlePeriodChange}
+          onExportExcel={handleExportExcel}
+          onExportPDF={handleExportPDF}
+          loading={isCreating}
+          showNewOrderButton={true}
+          onNewOrder={handleCriarPedidoFicticio}
+        />
+        {/* Espaço para não sobrepor o conteúdo */}
+        <div className="h-[80px] md:h-[88px]" />
         {/* Conteúdo da página */}
-        <div className="flex-1 p-4">
-          <div className="bg-white border border-slate-200 rounded-lg p-6">
+        <div className="pb-4 px-4">
+          <div className="bg-white border border-slate-200 rounded-lg p-0">
             <div className="text-center">
               <h2 className="text-lg font-semibold text-gray-900 mb-2">
                 Sistema de Pedidos
               </h2>
               <p className="text-gray-600 mb-6">
-                Clique no botão "Novo Pedido" para criar um pedido fictício que será salvo no histórico.
+                Clique no botão "Novo Pedido" no cabeçalho para criar um pedido fictício que será salvo no histórico.
               </p>
               
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">

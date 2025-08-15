@@ -1,6 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
-import { Search, Filter, Calendar, X } from 'lucide-react';
+import { Search, Filter, Calendar, X, CheckCircle, XCircle, CreditCard, DollarSign, QrCode, Settings } from 'lucide-react';
 import { FiltrosHistoricoState } from '../../types';
+import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
+import { InputPersonalizado } from '../../../components/forms/InputPersonalizado';
 
 interface FiltrosHistoricoProps {
   filtros: FiltrosHistoricoState;
@@ -45,25 +47,26 @@ export const FiltrosHistorico = React.memo(function FiltrosHistorico({
     onSearchChange(e.target.value);
   }, [onSearchChange]);
 
+  // Opções para os dropdowns
+  const statusOptions: DropdownOption[] = [
+    { value: 'todos', label: 'Todos os Status' },
+    { value: 'entregue', label: 'Entregue', icon: <CheckCircle className="w-4 h-4 text-green-500" /> },
+    { value: 'cancelado', label: 'Cancelado', icon: <XCircle className="w-4 h-4 text-red-500" /> }
+  ];
+
+  const formaPagamentoOptions: DropdownOption[] = [
+    { value: 'todos', label: 'Todas as Formas' },
+    { value: 'dinheiro', label: 'Dinheiro', icon: <DollarSign className="w-4 h-4 text-green-600" /> },
+    { value: 'pix', label: 'PIX', icon: <QrCode className="w-4 h-4 text-blue-600" /> },
+    { value: 'cartao', label: 'Cartão', icon: <CreditCard className="w-4 h-4 text-purple-600" /> }
+  ];
+
   return (
-    <div className="bg-white border border-gray-200 rounded p-4">
-      <div className="space-y-4">
+    <div className="space-y-4">
         {/* Cabeçalho dos filtros */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-500" />
-            <h3 className="text-sm font-semibold text-gray-900">Filtros</h3>
-          </div>
-          
-          {temFiltrosAtivos && (
-            <button
-              onClick={limparFiltros}
-              className="flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded transition-colors"
-            >
-              <X className="w-3 h-3" />
-              Limpar Filtros
-            </button>
-          )}
+        <div className="flex items-center gap-2">
+          <Filter className="w-4 h-4 text-gray-500" />
+          <h3 className="text-sm font-semibold text-gray-900">Filtros</h3>
         </div>
 
         {/* Filtros em grid */}
@@ -73,15 +76,12 @@ export const FiltrosHistorico = React.memo(function FiltrosHistorico({
             <label className="block text-xs font-medium text-gray-700 mb-2">
               Status
             </label>
-            <select
-              value={filtros.status}
-              onChange={(e) => handleFiltroChange('status', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-            >
-              <option value="todos">Todos os Status</option>
-              <option value="entregue">Entregue</option>
-              <option value="cancelado">Cancelado</option>
-            </select>
+            <CustomDropdown
+              options={statusOptions}
+              selectedValue={filtros.status}
+              onValueChange={(value) => handleFiltroChange('status', value)}
+              size="sm"
+            />
           </div>
 
           {/* Filtro por Forma de Pagamento */}
@@ -89,16 +89,12 @@ export const FiltrosHistorico = React.memo(function FiltrosHistorico({
             <label className="block text-xs font-medium text-gray-700 mb-2">
               Forma de Pagamento
             </label>
-            <select
-              value={filtros.formaPagamento}
-              onChange={(e) => handleFiltroChange('formaPagamento', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-            >
-              <option value="todos">Todas as Formas</option>
-              <option value="dinheiro">Dinheiro</option>
-              <option value="pix">PIX</option>
-              <option value="cartao">Cartão</option>
-            </select>
+            <CustomDropdown
+              options={formaPagamentoOptions}
+              selectedValue={filtros.formaPagamento}
+              onValueChange={(value) => handleFiltroChange('formaPagamento', value)}
+              size="sm"
+            />
           </div>
 
           {/* Filtro por Data Início */}
@@ -135,43 +131,71 @@ export const FiltrosHistorico = React.memo(function FiltrosHistorico({
         </div>
 
         {/* Barra de pesquisa principal */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Buscar por número do pedido, cliente, telefone, forma de pagamento, status..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="w-full pl-8 pr-4 h-8 border border-gray-300 rounded text-xs focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-          />
-        </div>
+        <InputPersonalizado
+          name="search"
+          type="search"
+          value={searchTerm}
+          onChange={(value) => onSearchChange(value as string)}
+          placeholder="Buscar por número do pedido, cliente, telefone, forma de pagamento, status..."
+          icon={<Search className="w-4 h-4" />}
+          size="md"
+          variant="default"
+          className="w-full"
+          inputClassName="pl-12"
+        />
 
         {/* Indicador de filtros ativos */}
         {temFiltrosAtivos && (
           <div className="flex flex-wrap gap-2 pt-2">
             {filtros.status !== 'todos' && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
-                Status: {filtros.status === 'entregue' ? 'Entregue' : 'Cancelado'}
+              <span className="inline-flex items-center gap-2 px-3 h-7 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 border border-purple-200">
+                <span>Status: {filtros.status === 'entregue' ? 'Entregue' : 'Cancelado'}</span>
+                <button
+                  onClick={() => handleFiltroChange('status', 'todos')}
+                  className="ml-1 hover:bg-purple-200 rounded-full p-1 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
             {filtros.formaPagamento !== 'todos' && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
-                Pagamento: {filtros.formaPagamento}
+              <span className="inline-flex items-center gap-2 px-3 h-7 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 border border-purple-200">
+                <span>Pagamento: {filtros.formaPagamento}</span>
+                <button
+                  onClick={() => handleFiltroChange('formaPagamento', 'todos')}
+                  className="ml-1 hover:bg-purple-200 rounded-full p-1 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
             {(filtros.dataInicio || filtros.dataFim) && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
-                Período: {filtros.dataInicio} - {filtros.dataFim}
+              <span className="inline-flex items-center gap-2 px-3 h-7 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 border border-purple-200">
+                <span>Período: {filtros.dataInicio} - {filtros.dataFim}</span>
+                <button
+                  onClick={() => {
+                    handleFiltroChange('dataInicio', '');
+                    handleFiltroChange('dataFim', '');
+                  }}
+                  className="ml-1 hover:bg-purple-200 rounded-full p-1 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
             {searchTerm && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
-                Busca: {searchTerm}
+              <span className="inline-flex items-center gap-2 px-3 h-7 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 border border-purple-200">
+                <span>Busca: {searchTerm}</span>
+                <button
+                  onClick={() => onSearchChange('')}
+                  className="ml-1 hover:bg-purple-200 rounded-full p-1 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
               </span>
             )}
           </div>
         )}
       </div>
-    </div>
   );
 }); 

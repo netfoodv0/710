@@ -8,7 +8,7 @@ interface ConfiguracoesSidebarProps {
 
 export function ConfiguracoesSidebar({ abaSelecionada, onAbaChange }: ConfiguracoesSidebarProps) {
   return (
-    <div className="bg-white border border-slate-200 rounded">
+    <div className="bg-white border border-slate-200 rounded-lg">
       <nav className="space-y-0">
         {abas.map((aba) => {
           const Icon = aba.icon;

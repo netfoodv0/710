@@ -11,10 +11,10 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type, rows = 5
       <div className="bg-white border border-slate-200 rounded overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50" style={{ height: '73px' }}>
               <tr>
                 {['Pedido', 'Cliente', 'Status', 'Total', 'Pagamento', 'Data', 'Ações'].map((header) => (
-                  <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
                     <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
                   </th>
                 ))}

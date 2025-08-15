@@ -18,7 +18,7 @@ export function MobileCard({
   padding = 'md',
   loading = false
 }: MobileCardProps) {
-  const baseClasses = 'rounded-2xl transition-all duration-200';
+  const baseClasses = 'rounded-sm transition-all duration-200';
   
   const variantClasses = {
     default: 'bg-white shadow-sm border border-gray-200',
