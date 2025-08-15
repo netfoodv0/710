@@ -1,6 +1,6 @@
 import React from 'react';
 import { Save, Trash2 } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import { CupomFormData } from '../../types/cupons';
 
 interface ModalCupomActionsProps {

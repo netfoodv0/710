@@ -58,7 +58,6 @@ function SplitTextComponent({
         return (
           <span
             key={`char-${index}-${char}`}
-            data-char
             data-char={true}
             aria-hidden="true"
             className="inline-block will-change-transform"
