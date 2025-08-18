@@ -18,6 +18,11 @@ export { Table, TableActions } from './Table';
 // Status badges
 export { StatusBadge } from './StatusBadge';
 
+// Componentes de estatísticas
+export { default as EstatisticasCard } from './EstatisticasCard';
+export { default as EstatisticasContainer } from './EstatisticasContainer';
+export { default as EstatisticasHistoricoContainer } from './EstatisticasHistoricoContainer';
+
 // Componentes de paginação
 export { LoadMoreButton } from './LoadMoreButton';
 
@@ -42,3 +47,6 @@ export { ListaProdutosTable } from './lists/TabelaProdutos';
 
 // Componentes de configurações (movidos para features/configuracoes/components)
 // export * from './configuracoes';
+
+// Componentes de relatórios
+export * from './relatorios';

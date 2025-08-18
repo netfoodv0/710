@@ -3,6 +3,7 @@ import { DadosRelatorios } from '../types/relatorios.types';
 import { PeriodType } from '../../../components/filters/FiltroPeriodo';
 import { FormSection } from '../../../components/forms/FormSection';
 import { KPICard } from '../../../components/ui';
+import { NewCustomerIcon, DiscountIcon } from '../../../components/ui';
 
 interface RelatoriosKPIsProps {
   dados: DadosRelatorios | null;
@@ -32,9 +33,7 @@ export const RelatoriosKPIs: React.FC<RelatoriosKPIsProps> = ({ dados, period })
       variacao: loading ? 0 : dados.kpis.receitaVariacao,
       icone: null,
       cor: 'bg-green-100',
-      descricao: loading ? '' : dados.kpis.receitaVariacao >= 0 ? 
-        `+${formatCurrency(dados.kpis.receitaTotal - (dados.kpis.receitaTotal / (1 + dados.kpis.receitaVariacao / 100)))}` : 
-        `${formatCurrency((dados.kpis.receitaTotal / (1 + dados.kpis.receitaVariacao / 100)) - dados.kpis.receitaTotal)}`
+      descricao: ''
     },
     {
       titulo: 'Total de Pedidos',
@@ -68,28 +67,44 @@ export const RelatoriosKPIs: React.FC<RelatoriosKPIsProps> = ({ dados, period })
 
   return (
     <div className="mt-4" style={{ marginTop: '16px' }}>
-      {/* KPIs Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {kpis.map((kpi, index) => (
-          <KPICard
-            key={index}
-            titulo={kpi.titulo}
-            valor={kpi.valor}
-            variacao={kpi.variacao}
-            icone={kpi.icone}
-            cor={kpi.cor}
-            loading={loading}
-            descricao={kpi.descricao}
-            period={period}
-          />
-        ))}
-      </div>
-
-      {!loading && (
-        <div className="mt-4 text-xs text-gray-500 text-right">
-          Última atualização: {new Date().toLocaleString('pt-BR')}
+      {/* Container pai com fundo branco e bordas */}
+      <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+        {/* KPIs Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {kpis.map((kpi, index) => (
+            <div key={index} className="bg-gray-50 p-3 rounded-lg border w-full" style={{ borderColor: '#cfd1d3', height: '106px' }}>
+              <div className="flex items-center justify-between h-full">
+                <div>
+                  <p className="text-xs font-medium text-gray-600">{kpi.titulo}</p>
+                  <p className="text-lg font-bold text-gray-900">{kpi.valor}</p>
+                </div>
+                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                  {kpi.titulo === 'Receita Total' && (
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                    </svg>
+                  )}
+                  {kpi.titulo === 'Total de Pedidos' && (
+                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                  )}
+                  {kpi.titulo === 'Produtos Ativos' && (
+                    <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                  )}
+                  {kpi.titulo === 'Clientes Ativos' && (
+                    <NewCustomerIcon size={20} color="#8B5CF6" />
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+
+
+      </div>
     </div>
   );
 };

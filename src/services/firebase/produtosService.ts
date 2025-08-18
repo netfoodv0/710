@@ -63,8 +63,7 @@ export class FirebaseProdutosService {
         constraints.push(where('preco', '<=', filtros.precoMax));
       }
 
-      // Ordenação padrão (sempre incluída para usar índices)
-      constraints.push(orderBy('dataAtualizacao', 'desc'));
+      // Sem ordenação no Firebase - será feita client-side para evitar problemas de índices
 
       // Paginação
       if (filtros.limit) {
@@ -93,6 +92,19 @@ export class FirebaseProdutosService {
         } as Produto);
       });
 
+      // Ordenação client-side por posição (produtos sem posição vão para o final)
+      produtos.sort((a, b) => {
+        const posicaoA = a.posicao || 9999;
+        const posicaoB = b.posicao || 9999;
+        
+        if (posicaoA !== posicaoB) {
+          return posicaoA - posicaoB;
+        }
+        
+        // Fallback para data de criação se posições forem iguais
+        return a.dataCriacao.getTime() - b.dataCriacao.getTime();
+      });
+
       // Filtro de texto (client-side para flexibilidade)
       if (filtros.termo) {
         const termo = filtros.termo.toLowerCase();
@@ -113,18 +125,15 @@ export class FirebaseProdutosService {
   async buscarProduto(id: string): Promise<Produto | null> {
     try {
       const lojaId = this.getLojaId();
-      console.log('Buscando produto com ID:', id, 'para loja:', lojaId);
       
       const docRef = doc(this.produtosCollection, id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         const data = docSnap.data();
-        console.log('Dados do documento:', data);
         
         // Verificar se o produto pertence à loja do usuário
         if (data.lojaId !== lojaId) {
-          console.log('Produto não pertence à loja. Loja do produto:', data.lojaId, 'Loja do usuário:', lojaId);
           throw new Error('Produto não encontrado');
         }
         
@@ -135,11 +144,9 @@ export class FirebaseProdutosService {
           dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
         } as Produto;
         
-        console.log('Produto retornado:', produto);
         return produto;
       }
 
-      console.log('Documento não existe');
       return null;
     } catch (error) {
       console.error('Erro ao buscar produto:', error);
@@ -151,8 +158,32 @@ export class FirebaseProdutosService {
     try {
       const lojaId = this.getLojaId();
       
+      // Se não foi especificada posição, buscar a próxima posição disponível
+      let posicao = produto.posicao;
+      if (posicao === undefined) {
+        // Buscar a maior posição atual para esta loja com query simples
+        const q = query(
+          this.produtosCollection,
+          where('lojaId', '==', lojaId)
+        );
+        
+        const snapshot = await getDocs(q);
+        let maxPosicao = 0;
+        
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const pos = data.posicao || 0;
+          if (pos > maxPosicao) {
+            maxPosicao = pos;
+          }
+        });
+        
+        posicao = maxPosicao + 1;
+      }
+      
       const produtoData = {
         ...produto,
+        posicao,
         lojaId, // Adicionar ID da loja
         dataCriacao: serverTimestamp(),
         dataAtualizacao: serverTimestamp()
@@ -228,6 +259,84 @@ export class FirebaseProdutosService {
     } catch (error) {
       console.error('Erro ao duplicar produto:', error);
       throw new Error('Falha ao duplicar produto');
+    }
+  }
+
+  async atualizarPosicoesProdutos(lojaId: string, produtosOrdenados: string[]): Promise<void> {
+    try {
+      // Buscar todos os produtos com query simples
+      const q = query(
+        this.produtosCollection,
+        where('lojaId', '==', lojaId)
+      );
+      
+      const snapshot = await getDocs(q);
+      const produtosPorNome = new Map<string, string>(); // nome -> id
+      
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        produtosPorNome.set(data.nome, doc.id);
+      });
+      
+      // Criar batch de atualizações
+      const updates = produtosOrdenados.map((nome, index) => {
+        const produtoId = produtosPorNome.get(nome);
+        if (produtoId) {
+          const docRef = doc(this.produtosCollection, produtoId);
+          return updateDoc(docRef, { 
+            posicao: index + 1,
+            dataAtualizacao: serverTimestamp()
+          });
+        }
+        return null;
+      }).filter(Boolean);
+
+      // Executar todas as atualizações
+      await Promise.all(updates);
+    } catch (error) {
+      console.error('Erro ao atualizar posições dos produtos:', error);
+      throw new Error('Falha ao atualizar posições dos produtos');
+    }
+  }
+
+  async migrarProdutosParaPosicao(lojaId: string): Promise<void> {
+    try {
+      // Buscar produtos com query simples para evitar erro de índice
+      const q = query(
+        this.produtosCollection,
+        where('lojaId', '==', lojaId)
+      );
+      
+      const snapshot = await getDocs(q);
+      const produtosSemPosicao: {id: string, posicao?: number}[] = [];
+      
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.posicao === undefined || data.posicao === null) {
+          produtosSemPosicao.push({
+            id: doc.id,
+            posicao: data.posicao
+          });
+        }
+      });
+      
+      if (produtosSemPosicao.length === 0) {
+        return; // Já migraram
+      }
+
+      // Atualizar produtos sem posição
+      const updates = produtosSemPosicao.map((produto, index) => {
+        const docRef = doc(this.produtosCollection, produto.id);
+        return updateDoc(docRef, { 
+          posicao: index + 1,
+          dataAtualizacao: serverTimestamp()
+        });
+      });
+
+      await Promise.all(updates);
+    } catch (error) {
+      console.error('Erro ao migrar produtos para posição:', error);
+      throw new Error('Falha ao migrar produtos');
     }
   }
 

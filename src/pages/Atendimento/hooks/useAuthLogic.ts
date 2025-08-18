@@ -16,21 +16,16 @@ export const useAuthLogic = () => {
   // Verificar status de autenticação no Firebase
   const checkFirebaseAuthStatus = useCallback(async () => {
     try {
-      console.log('🔍 Verificando status de autenticação no Firebase...');
-      
       const isConnected = await firebaseWhatsAppService.isUserConnected(currentUserId.current);
       
       // IMPORTANTE: Só considerar autenticado se o usuário autenticou manualmente
       if (isConnected && hasUserAuthenticated) {
-        console.log('✅ Usuário conectado no Firebase, mantendo autenticação');
         setIsAuthenticated(true);
       } else {
-        console.log('❌ Usuário não conectado no Firebase, mostrando autenticação');
         setIsAuthenticated(false);
         setHasUserAuthenticated(false); // Resetar flag se não estiver conectado
       }
     } catch (error) {
-      console.error('❌ Erro ao verificar status no Firebase:', error);
       setIsAuthenticated(false);
       setHasUserAuthenticated(false); // Resetar flag em caso de erro
     } finally {
@@ -50,9 +45,8 @@ export const useAuthLogic = () => {
           platform: 'web'
         } : undefined
       );
-      console.log(`📡 Status atualizado no Firebase: ${connected ? 'conectado' : 'desconectado'}`);
     } catch (error) {
-      console.error('❌ Erro ao atualizar status no Firebase:', error);
+      // Tratar erro silenciosamente
     }
   }, []);
 
@@ -75,8 +69,6 @@ export const useAuthLogic = () => {
         currentUserId.current,
         (status) => {
           if (status) {
-            console.log('📡 Status atualizado em tempo real:', status);
-            
             // Verificar se ainda está conectado (considerando timeout)
             const now = new Date();
             let isStillConnected = status.isConnected;
@@ -90,10 +82,8 @@ export const useAuthLogic = () => {
             
             // IMPORTANTE: Só mudar autenticação se o usuário autenticou manualmente
             if (isStillConnected && hasUserAuthenticated) {
-              console.log('✅ Reconectado via Firebase, restaurando autenticação');
               setIsAuthenticated(true);
             } else if (!isStillConnected && isAuthenticated && hasUserAuthenticated) {
-              console.log('❌ Desconectado via Firebase, removendo autenticação');
               setIsAuthenticated(false);
               setHasUserAuthenticated(false);
             }

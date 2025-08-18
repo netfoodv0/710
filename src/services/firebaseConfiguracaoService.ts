@@ -14,7 +14,6 @@ import { db } from '../lib/firebase';
 import { ConfiguracaoLoja } from '../types';
 
 const COLLECTION_NAME = 'configuracoes';
-console.log('FirebaseConfiguracaoService - COLLECTION_NAME:', COLLECTION_NAME);
 
 /**
  * Serviço para gerenciar configurações da loja no Firebase
@@ -26,7 +25,6 @@ export class FirebaseConfiguracaoService {
    */
   static async salvarConfiguracao(configuracao: ConfiguracaoLoja): Promise<void> {
     try {
-      console.log('Tentando salvar configuração:', configuracao.id);
       const configRef = doc(db, COLLECTION_NAME, configuracao.id);
       
       const dadosParaSalvar = {
@@ -37,11 +35,8 @@ export class FirebaseConfiguracaoService {
         ...(!(await getDoc(configRef)).exists() && { dataCriacao: serverTimestamp() })
       };
 
-      console.log('Dados para salvar:', dadosParaSalvar);
       await setDoc(configRef, dadosParaSalvar, { merge: true });
-      console.log('Configuração salva com sucesso:', configuracao.id);
     } catch (error) {
-      console.error('Erro detalhado ao salvar configuração:', error);
       throw new Error(`Falha ao salvar configurações da loja: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     }
   }
@@ -51,19 +46,11 @@ export class FirebaseConfiguracaoService {
    */
   static async carregarConfiguracao(lojaId: string): Promise<ConfiguracaoLoja | null> {
     try {
-      console.log('Tentando carregar configuração para lojaId:', lojaId);
-      console.log('FirebaseConfiguracaoService - db:', db);
-      console.log('FirebaseConfiguracaoService - COLLECTION_NAME:', COLLECTION_NAME);
-      
       // Verificar se a coleção existe primeiro
-      console.log('Verificando se a coleção existe...');
       const collectionRef = collection(db, COLLECTION_NAME);
-      console.log('collectionRef criado:', collectionRef);
       
       // Primeiro tenta buscar por ID direto
       const configRef = doc(db, COLLECTION_NAME, lojaId);
-      console.log('Buscando por ID direto:', lojaId);
-      console.log('configRef criado:', configRef);
       const configSnap = await getDoc(configRef);
       
       if (configSnap.exists()) {
@@ -77,7 +64,6 @@ export class FirebaseConfiguracaoService {
         } as ConfiguracaoLoja;
       }
 
-      console.log('Configuração não encontrada por ID, buscando por lojaId...');
       // Se não encontrar por ID, busca por lojaId (campo usado nas regras)
       const q = query(
         collection(db, COLLECTION_NAME),
@@ -85,7 +71,6 @@ export class FirebaseConfiguracaoService {
       );
       
       const querySnapshot = await getDocs(q);
-      console.log('Resultado da busca por lojaId:', querySnapshot.size, 'documentos encontrados');
       
       if (!querySnapshot.empty) {
         const doc = querySnapshot.docs[0];
@@ -98,10 +83,8 @@ export class FirebaseConfiguracaoService {
         } as ConfiguracaoLoja;
       }
 
-      console.log('Nenhuma configuração encontrada, retornando null');
       return null;
     } catch (error) {
-      console.error('Erro detalhado ao carregar configuração:', error);
       throw new Error(`Falha ao carregar configurações da loja: ${error instanceof Error ? error.message : 'Erro desconhecido'}`);
     }
   }

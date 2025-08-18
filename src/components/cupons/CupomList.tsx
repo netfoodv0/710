@@ -1,5 +1,6 @@
 import React from 'react';
-import { Tag, List } from 'lucide-react';
+import { List } from 'lucide-react';
+import { CouponIcon } from '../ui';
 import { Cupom } from '../../types/cupons';
 import { CupomCard } from './CupomCard';
 import { FormSection } from '../forms/FormSection';
@@ -20,7 +21,7 @@ export function CupomList({ cupons, onEdit, onToggleStatus }: CupomListProps) {
         className="mt-4"
       >
         <div className="text-center py-8">
-          <Tag className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <CouponIcon size={48} color="#9ca3af" />
           <p className="text-gray-600">Nenhum cupom cadastrado ainda.</p>
           <p className="text-gray-500 text-sm">Clique em "Novo Cupom" para criar o primeiro.</p>
         </div>

@@ -2,7 +2,8 @@ import Avatar from "../Avatar";
 import ConversationList from "../ConversationList";
 import { useState, useEffect, useContext, useRef } from "react";
 import { ConversationContext } from "../context/ConversationContext";
-import { LogOut, User, Settings, MessageCircle, RefreshCw, WifiOff, Bot } from "lucide-react";
+import { LogOut, User, MessageCircle, RefreshCw, WifiOff, Bot } from "lucide-react";
+import { SettingsIcon } from "../../ui";
 import { useLoja } from "../../../context/lojaContext";
 import { useWhatsAppConnection } from "../../../hooks/useWhatsAppConnection";
 import BotSettingsModal from "../BotSettingsModal";
@@ -135,7 +136,7 @@ export default function SideBar() {
                     onClick={handleSettings}
                     className="flex items-center gap-3 w-full px-4 py-2 text-white text-sm hover:bg-[#3a4952] transition-colors"
                   >
-                    <Settings className="w-4 h-4" />
+                    <SettingsIcon size={24} color="#ffffff" />
                     <span>Configurações</span>
                   </button>
                   

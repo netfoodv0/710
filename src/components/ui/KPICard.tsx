@@ -55,7 +55,7 @@ export const KPICard: React.FC<KPICardProps> = ({
 
   if (loading) {
     return (
-      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ padding: '16px', borderColor: 'rgb(207 209 211)' }}>
         <div className="animate-pulse">
           <div className="flex items-center justify-between">
             <div>
@@ -73,7 +73,7 @@ export const KPICard: React.FC<KPICardProps> = ({
   }
 
   const cardContent = (
-    <div className={`bg-white border border-gray-200 rounded-lg p-4 transition-all duration-200 hover:shadow-md ${className} ${onClick || href ? 'cursor-pointer' : ''}`}>
+    <div className={`bg-white border rounded-lg p-4 transition-all duration-200 hover:shadow-md ${className} ${onClick || href ? 'cursor-pointer' : ''}`} style={{ padding: '16px', borderColor: 'rgb(207 209 211)' }}>
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-600 mb-1">{titulo}</p>

@@ -10,10 +10,12 @@ import { NotificationProvider } from './context/notificationContext';
 import { AnalyticsProvider } from './context/analyticsContext';
 import { CacheProvider } from './context/cacheContext';
 import { LoadingProvider } from './context/loadingContext';
+import { NavigationProvider } from './context/navigationContext';
 
 import { useNotificationContext } from './context/notificationContextUtils';
 import { NotificationToast } from './components/NotificationToast';
 import { useLoading } from './context/loadingContext';
+import { LoadingDebug } from './components/LoadingDebug';
 
 import { AppRoutes } from './routes';
 import { useAuth } from './hooks/useAuth';
@@ -55,6 +57,7 @@ function AppWithNotifications() {
   return (
     <>
       <LoadingScreen isVisible={isLoading} />
+      <LoadingDebug />
       <AppContent />
       {notifications.map((notification) => (
         <NotificationToast
@@ -63,7 +66,7 @@ function AppWithNotifications() {
           message={notification.message}
           type={notification.type}
           duration={notification.duration}
-          onClose={removeNotification}
+          onClose={() => removeNotification(notification.id)}
         />
       ))}
 
@@ -82,7 +85,9 @@ function App() {
                 <NotificationProvider>
                   <AnalyticsProvider>
                     <PeriodProvider>
-                      <AppWithNotifications />
+                      <NavigationProvider>
+                        <AppWithNotifications />
+                      </NavigationProvider>
                     </PeriodProvider>
                   </AnalyticsProvider>
                 </NotificationProvider>

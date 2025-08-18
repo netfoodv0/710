@@ -20,16 +20,11 @@ export const GraficosVendas: React.FC<GraficosVendasProps> = ({ dados, period })
     categorias: string[];
   } | null>(null);
   const [loadingPerformance, setLoadingPerformance] = useState(true);
-  const [formasPagamento, setFormasPagamento] = useState<any[]>([]);
-  const [loadingFormas, setLoadingFormas] = useState(true);
-  const [totalTransacoes, setTotalTransacoes] = useState(0);
-  const [receitaTotal, setReceitaTotal] = useState(0);
 
   useEffect(() => {
     const carregarDados = async () => {
       try {
         setLoadingPerformance(true);
-        setLoadingFormas(true);
         
         // Carregar dados de performance
         const dadosPerformance = await firebaseDashboardService.calcularDadosPerformance(
@@ -37,21 +32,10 @@ export const GraficosVendas: React.FC<GraficosVendasProps> = ({ dados, period })
         );
         setPerformanceData(dadosPerformance);
         
-        // Carregar dados de formas de pagamento
-        const dadosFormas = await firebaseDashboardService.calcularFormasPagamento();
-        setFormasPagamento(dadosFormas);
-        
-        // Calcular totais
-        const totalTrans = dadosFormas.reduce((acc, forma) => acc + forma.quantidade, 0);
-        const totalRec = dadosFormas.reduce((acc, forma) => acc + forma.value, 0);
-        setTotalTransacoes(totalTrans);
-        setReceitaTotal(totalRec);
-        
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       } finally {
         setLoadingPerformance(false);
-        setLoadingFormas(false);
       }
     };
 
@@ -74,7 +58,7 @@ export const GraficosVendas: React.FC<GraficosVendasProps> = ({ dados, period })
   // Configuração do gráfico de área do dashboard
   const areaOptions: ApexOptions = {
     chart: {
-      height: 250,
+      height: 175,
       type: 'area',
       toolbar: {
         show: false
@@ -149,61 +133,24 @@ export const GraficosVendas: React.FC<GraficosVendasProps> = ({ dados, period })
   ];
 
   return (
-    <FormSection
-      title="Análise de Vendas"
-      description="Dados de performance e formas de pagamento"
-    >
-      {/* Cards de Resumo com Borda Cinza */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        {loadingFormas ? (
-          // Loading skeleton
-          Array.from({ length: 4 }).map((_, index) => (
-            <div key={index} className="bg-white border border-gray-200 rounded-lg p-4">
-              <div className="animate-pulse">
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-6 bg-gray-200 rounded w-full"></div>
-              </div>
-            </div>
-          ))
-        ) : (
-          formasPagamento.map((forma, index) => {
-            const porcentagem = receitaTotal > 0 ? ((forma.value / receitaTotal) * 100).toFixed(1) : '0.0';
-            return (
-              <div key={index} className="bg-white border border-gray-200 rounded-lg p-4">
-                <div className="text-sm font-medium text-gray-700 mb-1">{porcentagem}%</div>
-                <div className="text-sm font-medium text-gray-900 mb-1">{forma.name}</div>
-                <div className="text-lg font-bold text-gray-900">
-                  {new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                  }).format(forma.value)}
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
-
-
-
+    <>
       {/* Gráficos lado a lado: Formas de Pagamento e Performance */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Gráfico de Formas de Pagamento */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <div className="mb-2">
-          <h3 className="text-lg font-semibold text-gray-900">Formas de Pagamento</h3>
-        </div>
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+          <div className="mb-2">
+            <h3 className="text-lg font-semibold text-gray-900">Formas de Pagamento</h3>
+          </div>
           <GraficoFormasPagamento period={period} />
         </div>
         
         {/* Gráfico de Performance Semanal */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
-                  <div className="mb-2">
-          <h3 className="text-lg font-semibold text-gray-900">
-            {period === 'monthly' ? 'Performance Mensal' : 'Performance Semanal'}
-          </h3>
-        </div>
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+          <div className="mb-2">
+            <h3 className="text-lg font-semibold text-gray-900">
+              {period === 'monthly' ? 'Performance Mensal' : 'Performance Semanal'}
+            </h3>
+          </div>
           
           {loadingPerformance ? (
             <div className="flex items-center justify-center h-64">
@@ -218,7 +165,7 @@ export const GraficosVendas: React.FC<GraficosVendasProps> = ({ dados, period })
                 options={areaOptions}
                 series={areaSeries}
                 type="area"
-                height={300}
+                height={210}
               />
               
               {/* Legenda personalizada */}
@@ -238,8 +185,8 @@ export const GraficosVendas: React.FC<GraficosVendasProps> = ({ dados, period })
               </div>
             </div>
           )}
+                  </div>
         </div>
-      </div>
-    </FormSection>
-  );
-};
+      </>
+    );
+  };

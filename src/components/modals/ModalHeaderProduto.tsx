@@ -36,8 +36,8 @@ export function ModalProdutoHeader({ isEditing, produto, onClose }: ModalProduto
   };
 
   return (
-    <div className="flex items-center justify-between p-0 border-b" style={{ height: '73px' }}>
-      <div className="flex items-center space-x-4" style={{ height: '73px' }}>
+          <div className="flex items-center justify-between p-0 border-b" style={{ height: '73px' }}>
+        <div className="flex items-center space-x-4 h-full">
         <h2 className="text-xl font-semibold text-gray-900">
           {isEditing ? 'Editar Produto' : 'Novo Produto'}
         </h2>

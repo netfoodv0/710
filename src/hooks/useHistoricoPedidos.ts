@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Pedido, StatusPedido, filtrosHistoricoSchema, pedidoSchema } from '../types';
 import { historicoPedidoService, FiltrosHistorico, EstatisticasHistorico } from '../services/historicoPedidoService';
+import { useAuth } from './useAuth';
 
 interface LoadingStates {
   data: boolean;
@@ -9,6 +10,7 @@ interface LoadingStates {
 }
 
 export function useHistoricoPedidos() {
+  const { status } = useAuth();
   const [pedidosHistorico, setPedidosHistorico] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState<LoadingStates>({
     data: false,
@@ -20,6 +22,12 @@ export function useHistoricoPedidos() {
 
   // Carregar histórico de pedidos com validação
   const carregarHistorico = useCallback(async (filtros?: FiltrosHistorico) => {
+    // Verificar se o usuário está autenticado
+    if (status !== 'authenticated') {
+      console.log('Usuário não autenticado, aguardando...');
+      return;
+    }
+
     setLoading(prev => ({ ...prev, data: true }));
     setError(null);
     
@@ -51,10 +59,16 @@ export function useHistoricoPedidos() {
     } finally {
       setLoading(prev => ({ ...prev, data: false }));
     }
-  }, []);
+  }, [status]);
 
   // Carregar estatísticas com loading separado
   const carregarEstatisticas = useCallback(async (filtros?: FiltrosHistorico) => {
+    // Verificar se o usuário está autenticado
+    if (status !== 'authenticated') {
+      console.log('Usuário não autenticado, aguardando...');
+      return;
+    }
+
     setLoading(prev => ({ ...prev, estatisticas: true }));
     
     try {
@@ -66,7 +80,7 @@ export function useHistoricoPedidos() {
     } finally {
       setLoading(prev => ({ ...prev, estatisticas: false }));
     }
-  }, []);
+  }, [status]);
 
   // Buscar pedidos por período
   const buscarPorPeriodo = useCallback(async (dataInicio: Date, dataFim: Date) => {
@@ -135,9 +149,11 @@ export function useHistoricoPedidos() {
 
   // Carregar dados iniciais
   useEffect(() => {
-    carregarHistorico();
-    carregarEstatisticas();
-  }, [carregarHistorico, carregarEstatisticas]);
+    if (status === 'authenticated') {
+      carregarHistorico();
+      carregarEstatisticas();
+    }
+  }, [status]); // Remover dependências que causam re-renders
 
   return {
     pedidosHistorico,

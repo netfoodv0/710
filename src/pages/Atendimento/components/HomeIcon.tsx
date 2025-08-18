@@ -1,12 +1,12 @@
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
+import { SupportIcon } from '../../../components/ui';
 
 export const HomeIcon: React.FC = () => {
   return (
     <div className="flex flex-col w-full h-full items-center justify-center">
       <div className="flex flex-col items-center text-center max-w-md">
         <div className="w-20 h-20 bg-[#00a884] rounded-full flex items-center justify-center mb-6">
-          <MessageCircle className="w-10 h-10 text-white" />
+          <SupportIcon size={40} color="#ffffff" />
         </div>
         
         <h1 className="text-[#e9edef] text-3xl font-extralight mb-4">WhatsApp Web</h1>

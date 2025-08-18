@@ -2,14 +2,11 @@ import React from 'react';
 
 // Skeleton para card de métrica
 const MetricCardSkeleton = () => (
-      <div className="bg-white border border-slate-200 rounded-lg p-4 animate-pulse">
-    <div className="flex items-center justify-between">
-      <div className="flex-1">
-        <div className="h-4 bg-gray-200 rounded mb-2 w-3/4"></div>
-        <div className="h-8 bg-gray-300 rounded mb-2 w-1/2"></div>
-        <div className="h-3 bg-gray-200 rounded w-1/3"></div>
-      </div>
-      <div className="w-12 h-12 bg-gray-200 rounded-lg"></div>
+  <div className="border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+    <div className="animate-pulse">
+      <div className="h-4 bg-gray-200 rounded mb-2"></div>
+      <div className="h-8 bg-gray-200 rounded mb-2"></div>
+      <div className="h-3 bg-gray-200 rounded w-2/3"></div>
     </div>
   </div>
 );

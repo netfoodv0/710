@@ -98,12 +98,8 @@ export function useConfiguracoes({ configuracaoInicial }: UseConfiguracoesProps 
   useEffect(() => {
     const carregarConfiguracoes = async () => {
       const lojaId = user?.uid || loja?.id;
-      console.log('useConfiguracoes - user:', user);
-      console.log('useConfiguracoes - loja:', loja);
-      console.log('useConfiguracoes - lojaId calculado:', lojaId);
       
       if (!lojaId) {
-        console.log('useConfiguracoes - Nenhum lojaId encontrado');
         return;
       }
 

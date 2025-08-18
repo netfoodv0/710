@@ -36,7 +36,7 @@ export function MobileHeader({ onMenuToggle, currentPath, isScrolled = false }: 
     <header className={`sticky top-0 z-40 bg-white border-b transition-all duration-200 ${
       isScrolled ? 'border-gray-200 shadow-md' : 'border-gray-100'
     }`} style={{ height: '73px' }}>
-      <div className="flex items-center justify-between px-4 py-3" style={{ height: '73px' }}>
+              <div className="flex items-center justify-between px-4 py-3 h-full">
         {/* Left Section */}
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <button

@@ -1,0 +1,35 @@
+/* Estilos para os ícones do sidebar */
+.sidebar-icon {
+  transition: fill 0.3s ease;
+}
+
+/* Hover para itens inativos - cor mais escura */
+.sidebar-item-inactive:hover .sidebar-icon {
+  fill: #374151 !important; /* Cinza mais escuro no hover */
+}
+
+/* Hover para texto dos itens inativos - cor mais escura */
+.sidebar-item-inactive:hover span {
+  color: #374151 !important; /* Cinza mais escuro no hover */
+}
+
+/* Hover para itens ativos - roxo mais forte */
+.sidebar-item-active:hover .sidebar-icon {
+  fill: #6b21a8 !important; /* Roxo mais forte no hover */
+}
+
+/* Hover para texto dos itens ativos - roxo mais forte */
+.sidebar-item-active:hover {
+  color: #6b21a8 !important; /* Roxo mais forte no hover */
+  background-color: #f1f5f9 !important; /* Fundo cinza escuro no hover */
+}
+
+/* Hover para texto dos itens ativos - roxo mais forte */
+.sidebar-item-active:hover span {
+  color: #6b21a8 !important; /* Roxo mais forte no hover */
+}
+
+/* Hover direto no ícone */
+.sidebar-icon:hover {
+  fill: #374151 !important; /* Cinza escuro no hover geral */
+}

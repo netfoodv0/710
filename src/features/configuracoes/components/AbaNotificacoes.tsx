@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Card } from '../../../components/ui/card';
-import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
-import { Calendar, Volume2 } from 'lucide-react';
+import { Calendar } from 'lucide-react';
+import { CustomDropdown, DropdownOption } from '../../../components/forms/CustomDropdown';
+import { FormSwitch } from '../../../components/forms/FormSwitch';
 
 interface AbaNotificacoesProps {
   // Props podem ser adicionadas no futuro
@@ -21,7 +22,6 @@ export function AbaNotificacoes(props: AbaNotificacoesProps) {
 
   const handleToggleNotificacao = (key: string) => {
     // Lógica para alternar notificação
-    console.log('Toggle notificação:', key);
   };
 
   const frequenciaOptions: DropdownOption[] = [
@@ -42,15 +42,13 @@ export function AbaNotificacoes(props: AbaNotificacoesProps) {
                 <h4 className="font-medium text-gray-900 text-sm">{notif.label}</h4>
                 <p className="text-xs text-gray-600">{notif.desc}</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  className="sr-only peer" 
-                  checked={notif.ativo}
-                  onChange={() => handleToggleNotificacao(notif.key)}
-                />
-                <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
-              </label>
+              <FormSwitch
+                name={notif.key}
+                label=""
+                checked={notif.ativo}
+                onChange={() => handleToggleNotificacao(notif.key)}
+                className="mb-0"
+              />
             </div>
           ))}
         </div>
@@ -106,10 +104,13 @@ export function AbaNotificacoes(props: AbaNotificacoesProps) {
                 <span className="text-sm font-medium text-gray-900">Som para Novos Pedidos</span>
                 <p className="text-xs text-gray-600">Reproduzir som quando receber um novo pedido</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
-              </label>
+              <FormSwitch
+                name="somNovosPedidos"
+                label=""
+                checked={true}
+                onChange={() => {}}
+                className="mb-0"
+              />
             </div>
             
             <div>

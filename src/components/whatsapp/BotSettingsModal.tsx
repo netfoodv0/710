@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Bot, Clock, MessageSquare, Settings } from 'lucide-react';
+import { X, Bot, Clock, MessageSquare } from 'lucide-react';
+import { SettingsIcon } from '../../ui';
 import { useBot } from '../../context/botContext';
 
 interface BotSettingsModalProps {

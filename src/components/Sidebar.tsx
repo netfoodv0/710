@@ -1,22 +1,22 @@
 import React, { memo } from 'react';
+import './Sidebar.css';
 import { 
-  Home, 
-  ShoppingBag, 
-  History,
-  BookOpen, 
-  Tag,
-  Settings,
   ChevronLeft,
   ChevronRight,
-  Store,
-  BarChart3,
-  Map,
-  MessageCircle
+  Store
 } from 'lucide-react';
+import { SettingsIcon, ClockIcon, ReportIcon, CouponIcon, HistoryIcon, OrderIcon, DashboardIcon, MenuIcon, SupportIcon, MapIcon, TableIcon, TestIcon, UsersIcon, BagIcon } from './ui';
 import { Link, useLocation } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useOptimizedNavigation } from '@/hooks/useOptimizedNavigation';
+
+interface MenuItem {
+  path: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string; color?: string }>;
+  subItems?: MenuItem[];
+}
 
 interface SidebarProps {
   isCollapsed?: boolean;
@@ -27,47 +27,79 @@ const menuItems = [
   {
     path: '/',
     label: 'Dashboard',
-    icon: Home
+    icon: DashboardIcon
   },
   {
     path: '/pedidos',
     label: 'Pedidos',
-    icon: ShoppingBag
+    icon: OrderIcon
   },
   {
     path: '/historico',
     label: 'Histórico',
-    icon: History
+    icon: HistoryIcon
   },
   {
     path: '/cardapio',
     label: 'Cardápio',
-    icon: BookOpen
+    icon: MenuIcon
   },
   {
     path: '/cupons',
     label: 'Cupons',
-    icon: Tag
+    icon: CouponIcon
   },
   {
     path: '/atendimento',
     label: 'Atendimento',
-    icon: MessageCircle
+    icon: SupportIcon
   },
   {
     path: '/configuracoes',
     label: 'Configurações',
-    icon: Settings
+    icon: SettingsIcon
+  },
+  {
+    path: '/horarios',
+    label: 'Horários',
+    icon: ClockIcon
   },
   {
     path: '/mapa',
     label: 'Mapa',
-    icon: Map
+    icon: MapIcon
   },
   {
     path: '/relatorios',
     label: 'Relatórios',
-    icon: BarChart3
+    icon: ReportIcon,
+    subItems: [
+      {
+        path: '/relatorios',
+        label: 'Geral',
+        icon: ReportIcon
+      },
+      {
+        path: '/relatorios/clientes',
+        label: 'Clientes',
+        icon: UsersIcon
+      },
+      {
+        path: '/relatorios/produtos',
+        label: 'Produtos',
+        icon: BagIcon
+      }
+    ]
+  },
+  {
+    path: '/tabelas',
+    label: 'Tabelas',
+    icon: TableIcon
+  },
+  {
+    path: '/teste',
+    label: 'Teste',
+    icon: TestIcon
   }
 ];
 
@@ -103,9 +135,9 @@ export const Sidebar = memo(({ isCollapsed = false, onToggle }: SidebarProps) =>
               className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
             >
               {isCollapsed ? (
-                <ChevronRight className="w-3.5 h-3.5" />
+                <ChevronRight className="w-3.5 h-3.5 text-[#747e91]" />
               ) : (
-                <ChevronLeft className="w-3.5 h-3.5" />
+                <ChevronLeft className="w-3.5 h-3.5 text-[#747e91]" />
               )}
             </button>
           )}
@@ -118,7 +150,9 @@ export const Sidebar = memo(({ isCollapsed = false, onToggle }: SidebarProps) =>
         <ul className="space-y-0">
           {menuItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path || 
+                           (item.subItems && item.subItems.some(subItem => location.pathname === subItem.path));
+            const hasSubItems = item.subItems && item.subItems.length > 0;
             
             return (
               <li key={item.path}>
@@ -126,13 +160,39 @@ export const Sidebar = memo(({ isCollapsed = false, onToggle }: SidebarProps) =>
                   onClick={() => handleNavigation(item.path)}
                   className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-700'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      ? 'text-[#8217d5] sidebar-item-active'
+                      : 'text-[#525866] hover:text-[#525866] hover:bg-slate-50 sidebar-item-inactive'
                   }`}
                 >
-                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  <Icon className="w-6 h-6 flex-shrink-0" color={isActive ? "#8217d5" : "#525866"} />
                   {!isCollapsed && <span>{item.label}</span>}
                 </button>
+                
+                {/* Sublinks */}
+                {!isCollapsed && hasSubItems && isActive && (
+                  <ul className="ml-6 space-y-0">
+                    {item.subItems.map((subItem) => {
+                      const SubIcon = subItem.icon;
+                      const isSubActive = location.pathname === subItem.path;
+                      
+                      return (
+                        <li key={subItem.path}>
+                          <button
+                            onClick={() => handleNavigation(subItem.path)}
+                            className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
+                              isSubActive
+                                ? 'text-[#8217d5] bg-purple-50 border-l-2 border-[#8217d5]'
+                                : 'text-[#525866] hover:text-[#525866] hover:bg-slate-50'
+                            }`}
+                          >
+                            <SubIcon className="w-4 h-4 flex-shrink-0" color={isSubActive ? "#8217d5" : "#525866"} />
+                            <span>{subItem.label}</span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
               </li>
             );
           })}
@@ -145,14 +205,14 @@ export const Sidebar = memo(({ isCollapsed = false, onToggle }: SidebarProps) =>
           <div className="bg-slate-50 rounded-xl p-3">
             <div className="flex items-center gap-3 mb-2">
               <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-xs font-medium text-slate-700">Sistema Online</span>
+              <span className="text-xs font-medium text-[#525866]">Sistema Online</span>
             </div>
-            <p className="text-xs text-slate-500 mb-3">Última sincronização: agora</p>
+                          <p className="text-xs text-[#525866] mb-3">Última sincronização: agora</p>
             <button
               onClick={logout}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-md border border-slate-200 px-3 py-2 text-sm font-medium text-[#525866] hover:bg-slate-100 transition-colors"
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-6 h-6 text-[#525866]" />
               Sair
             </button>
           </div>

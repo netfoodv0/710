@@ -22,7 +22,7 @@ export const GraficoPizza: React.FC<GraficoPizzaProps> = ({
 }) => {
   if (!data || data.length === 0) {
     return (
-      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: 'rgb(207 209 211)' }}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
         <div className="flex items-center justify-center h-48 text-gray-500">
           Nenhum dado disponível
@@ -38,7 +38,7 @@ export const GraficoPizza: React.FC<GraficoPizzaProps> = ({
   }
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+    <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: 'rgb(207 209 211)' }}>
       <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
       
       <ResponsiveContainer width="100%" height={200}>

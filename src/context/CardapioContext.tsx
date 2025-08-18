@@ -121,6 +121,9 @@ interface CardapioContextType {
   
   // Ações para seções
   setActiveSection: (section: 'produtos') => void;
+  
+  // ✅ NOVA FUNCIONALIDADE: Selecionar primeira categoria
+  selecionarPrimeiraCategoria: (categorias: Categoria[]) => void;
 }
 
 // Criação do contexto
@@ -181,6 +184,19 @@ export function CardapioProvider({ children }: CardapioProviderProps) {
     dispatch({ type: 'SET_ACTIVE_SECTION', payload: section });
   }, []);
 
+  // ✅ NOVA FUNCIONALIDADE: Selecionar primeira categoria automaticamente
+  const selecionarPrimeiraCategoria = useCallback((categorias: Categoria[]) => {
+    if (categorias.length > 0 && state.filtros.categoria === 'todos') {
+      const primeiraCategoria = categorias[0]?.nome;
+      if (primeiraCategoria) {
+        dispatch({ 
+          type: 'SET_FILTROS', 
+          payload: { categoria: primeiraCategoria } 
+        });
+      }
+    }
+  }, [state.filtros.categoria]);
+
   const value: CardapioContextType = {
     state,
     dispatch,
@@ -193,7 +209,8 @@ export function CardapioProvider({ children }: CardapioProviderProps) {
     setLoadingProdutos,
     setLoadingCategorias,
     setErrorProdutos,
-    setActiveSection
+    setActiveSection,
+    selecionarPrimeiraCategoria // ✅ Nova função
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card } from '../../../components/ui/card';
-import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
+import { CustomDropdown, DropdownOption } from '../../../components/forms/CustomDropdown';
+import { FormSwitch } from '../../../components/forms/FormSwitch';
 import { Type, Palette } from 'lucide-react';
 
 interface AbaAparenciaProps {
@@ -71,10 +72,13 @@ export function AbaAparencia(props: AbaAparenciaProps) {
                   <span className="text-sm font-medium text-gray-900">Modo Compacto</span>
                   <p className="text-xs text-gray-600">Reduz o espaçamento entre elementos</p>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" />
-                  <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
-                </label>
+                <FormSwitch
+                  name="modoCompacto"
+                  label=""
+                  checked={false}
+                  onChange={() => {}}
+                  className="mb-0"
+                />
               </div>
               
               <div className="flex items-center justify-between">
@@ -82,10 +86,13 @@ export function AbaAparencia(props: AbaAparenciaProps) {
                   <span className="text-sm font-medium text-gray-900">Animações</span>
                   <p className="text-xs text-gray-600">Habilita transições e animações suaves</p>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" defaultChecked />
-                  <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
-                </label>
+                <FormSwitch
+                  name="animações"
+                  label=""
+                  checked={true}
+                  onChange={() => {}}
+                  className="mb-0"
+                />
               </div>
               
               <div className="flex items-center justify-between">
@@ -93,10 +100,13 @@ export function AbaAparencia(props: AbaAparenciaProps) {
                   <span className="text-sm font-medium text-gray-900">Sidebar Recolhida</span>
                   <p className="text-xs text-gray-600">Mantém a barra lateral sempre recolhida</p>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" className="sr-only peer" />
-                  <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
-                </label>
+                <FormSwitch
+                  name="sidebarRecolhida"
+                  label=""
+                  checked={false}
+                  onChange={() => {}}
+                  className="mb-0"
+                />
               </div>
             </div>
           </div>

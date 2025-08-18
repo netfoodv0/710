@@ -1,5 +1,5 @@
 import React from 'react';
-import { Save, Copy, Trash2 } from 'lucide-react';
+import { TrashIcon, DuplicateIcon, SaveIcon } from '../ui';
 
 interface ModalProdutoActionsProps {
   isEditing: boolean;
@@ -29,7 +29,7 @@ export function ModalProdutoActions({
             onClick={onDelete}
             className="flex items-center px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded border border-gray-200 transition-colors"
           >
-            <Trash2 size={16} className="mr-1" />
+            <TrashIcon size={24} color="#dc2626" className="mr-1" />
             Excluir
           </button>
         )}
@@ -39,7 +39,7 @@ export function ModalProdutoActions({
             onClick={onDuplicate}
             className="flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded border border-gray-200 transition-colors"
           >
-            <Copy size={16} className="mr-1" />
+            <DuplicateIcon size={24} color="#3b82f6" className="mr-1" />
             Duplicar
           </button>
         )}
@@ -60,7 +60,7 @@ export function ModalProdutoActions({
             disabled={loading}
             className="flex items-center px-4 py-2 bg-blue-600 text-white rounded border border-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <Save size={16} className="mr-1" />
+            <SaveIcon size={24} color="#ffffff" className="mr-1" />
             {loading ? 'Salvando...' : (isEditing ? 'Atualizar' : 'Criar')}
           </button>
         )}

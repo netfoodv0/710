@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Plus, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import { RelatorioHeader } from '../features/relatorios/components/RelatorioHeader';
+import { PageHeader } from '../components/ui';
 import { firebasePedidoService } from '../services/firebasePedidoService';
 import { gerarPedidoFicticio } from '../utils/pedidoUtils';
 import { useNotifications } from '../hooks/useNotifications';
@@ -56,17 +56,42 @@ export function Pedidos() {
   return (
     <ErrorBoundary>
       <div className="min-h-screen bg-slate-50">
-        {/* Cabeçalho fixo reutilizável */}
-        <RelatorioHeader
-          title=""
+        {/* Cabeçalho da página */}
+        <PageHeader
+          title="Pedidos"
           subtitle="Acompanhe e gerencie todos os pedidos em tempo real"
-          selectedPeriod={selectedPeriod}
-          onPeriodChange={handlePeriodChange}
-          onExportExcel={handleExportExcel}
-          onExportPDF={handleExportPDF}
-          loading={isCreating}
-          showNewOrderButton={true}
-          onNewOrder={handleCriarPedidoFicticio}
+          rightContent={
+            <div className="flex items-center gap-4">
+              {/* Filtro de período */}
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">Período:</label>
+                <select
+                  value={selectedPeriod}
+                  onChange={(e) => handlePeriodChange(e.target.value)}
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="today">Hoje</option>
+                  <option value="week">Esta Semana</option>
+                  <option value="month">Este Mês</option>
+                  <option value="year">Este Ano</option>
+                </select>
+              </div>
+              
+              {/* Botão Novo Pedido */}
+              <button
+                onClick={handleCriarPedidoFicticio}
+                disabled={isCreating}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {isCreating ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+                Novo Pedido
+              </button>
+            </div>
+          }
         />
         {/* Espaço para não sobrepor o conteúdo */}
         <div className="h-[80px] md:h-[88px]" />

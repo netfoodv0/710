@@ -4,9 +4,9 @@ import { CardProps } from '../types';
 
 export function Card({ title, children, className, actions, noPadding = false }: CardProps) {
   return (
-    <div className={clsx('card', className)}>
+    <div className={clsx('card', className)} style={{ borderColor: '#cfd1d3' }}>
       {(title || actions) && (
-        <div className="flex items-center justify-between p-0 border-b border-gray-200">
+        <div className="flex items-center justify-between p-0 border-b" style={{ borderColor: '#cfd1d3' }}>
           {title && (
             <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
           )}

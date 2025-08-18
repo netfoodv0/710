@@ -12,8 +12,10 @@ export function CardapioMain() {
     handleExcluirProduto, 
     handleDuplicarProduto, 
     handleToggleStatus,
+    handleReordenarProdutos,
     produtos,
     categoriasCompletas
+    // loadingEdicao removido
   } = useCardapioActions();
   const { 
     produtosFiltrados, 
@@ -27,14 +29,15 @@ export function CardapioMain() {
   }, []);
 
   return (
-    <div className="flex-1 space-y-4">
+    <div className="flex-1 space-y-6">
       {/* Lista de Produtos */}
-      <div className="bg-white border border-slate-200 rounded-lg">
+      <div className="bg-white border rounded-lg" style={{ borderColor: 'rgb(207 209 211)' }}>
         <div className="p-4">
           <ListaProdutos
             produtos={produtosFiltrados}
             categorias={categoriasUnicas}
-            loading={state.loadingProdutos}
+            // loading={state.loadingProdutos} // REMOVIDO
+            // loadingEdicao={loadingEdicao} // REMOVIDO
             onCreate={handleAbrirModalProduto}
             onEdit={handleEditarProduto}
             onDelete={handleExcluirProduto}
@@ -42,6 +45,7 @@ export function CardapioMain() {
             onToggleStatus={handleToggleStatus}
             categoriaSelecionada={state.filtros.categoria}
             onShowCategoryToast={handleShowCategoryToast}
+            onReorderProdutos={handleReordenarProdutos}
           />
         </div>
       </div>

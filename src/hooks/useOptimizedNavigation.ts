@@ -31,7 +31,6 @@ export function useOptimizedNavigation() {
 
     lastRouteRef.current = location.pathname;
     
-    console.log('🧭 Navegando para:', path, 'de:', location.pathname);
     navigate(path, options);
   }, [navigate, location.pathname]);
 

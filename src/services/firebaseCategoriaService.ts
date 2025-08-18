@@ -35,8 +35,6 @@ export class FirebaseCategoriaService {
   
   async buscarCategorias(lojaId: string, filtros: FiltrosCategoria = {}): Promise<Categoria[]> {
     try {
-      console.log('🔍 Buscando categorias com filtros:', { lojaId, filtros });
-      
       let q = query(this.categoriasCollection);
       const constraints = [];
 
@@ -56,8 +54,7 @@ export class FirebaseCategoriaService {
         constraints.push(where('tempoExtraProducao', '==', filtros.tempoExtraProducao));
       }
 
-      // Ordenação padrão
-      constraints.push(orderBy('dataAtualizacao', 'desc'));
+      // Sem ordenação no Firebase - será feita client-side para evitar problemas de índices
 
       // Paginação
       if (filtros.limit) {
@@ -73,8 +70,6 @@ export class FirebaseCategoriaService {
         q = query(q, constraint);
       });
 
-      console.log('🔍 Query aplicada com constraints:', constraints);
-
       const snapshot = await getDocs(q);
       const categorias: Categoria[] = [];
 
@@ -88,22 +83,30 @@ export class FirebaseCategoriaService {
         } as Categoria);
       });
 
-      console.log('🔍 Categorias encontradas (antes do filtro de texto):', categorias);
+      // Ordenação client-side para garantir ordem correta (categorias sem posição vão para o final)
+      categorias.sort((a, b) => {
+        const posicaoA = a.posicao || 9999;
+        const posicaoB = b.posicao || 9999;
+        
+        if (posicaoA !== posicaoB) {
+          return posicaoA - posicaoB;
+        }
+        
+        // Fallback para data de criação se posições forem iguais
+        return a.dataCriacao.getTime() - b.dataCriacao.getTime();
+      });
 
       // Filtro de texto (client-side para flexibilidade)
       if (filtros.nome) {
         const nomeFilter = filtros.nome.toLowerCase();
-        const categoriasFiltradas = categorias.filter(categoria => 
+        return categorias.filter(categoria => 
           categoria.nome.toLowerCase().includes(nomeFilter)
         );
-        console.log('🔍 Categorias após filtro de texto:', categoriasFiltradas);
-        return categoriasFiltradas;
       }
 
-      console.log('🔍 Retornando todas as categorias:', categorias);
       return categorias;
     } catch (error) {
-      console.error('❌ Erro ao buscar categorias:', error);
+      console.error('Erro ao buscar categorias:', error);
       throw new Error('Falha ao carregar categorias');
     }
   }
@@ -132,36 +135,52 @@ export class FirebaseCategoriaService {
 
   async criarCategoria(lojaId: string, dados: CriarCategoriaData): Promise<string> {
     try {
-      console.log('🚀 Criando categoria no Firebase:', { lojaId, dados });
-      
       const agora = Timestamp.now();
+      
+      // Se não foi especificada posição, buscar a próxima posição disponível
+      let posicao = dados.posicao;
+      if (posicao === undefined) {
+        // Buscar a maior posição atual para esta loja com query simples
+        const q = query(
+          this.categoriasCollection,
+          where('lojaId', '==', lojaId)
+        );
+        
+        const snapshot = await getDocs(q);
+        let maxPosicao = 0;
+        
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const pos = data.posicao || 0;
+          if (pos > maxPosicao) {
+            maxPosicao = pos;
+          }
+        });
+        
+        posicao = maxPosicao + 1;
+      }
       
       const novaCategoria = {
         nome: dados.nome.trim(),
         status: dados.status,
         agendamentoPrevio: dados.agendamentoPrevio,
         tempoExtraProducao: dados.tempoExtraProducao,
+        posicao,
         lojaId,
         dataCriacao: agora,
         dataAtualizacao: agora
       };
 
-      console.log('🚀 Dados da nova categoria:', novaCategoria);
-
       const docRef = await addDoc(this.categoriasCollection, novaCategoria);
-      
-      console.log('✅ Categoria criada no Firebase com ID:', docRef.id);
       
       // Salvar períodos de disponibilidade se houver
       if (dados.disponibilidade && dados.disponibilidade.length > 0) {
-        console.log('🚀 Salvando disponibilidade para categoria:', docRef.id);
         await this.salvarDisponibilidade(docRef.id, dados.disponibilidade);
-        console.log('✅ Disponibilidade salva com sucesso');
       }
 
       return docRef.id;
     } catch (error) {
-      console.error('❌ Erro ao criar categoria:', error);
+      console.error('Erro ao criar categoria:', error);
       throw new Error('Falha ao criar categoria');
     }
   }
@@ -188,6 +207,10 @@ export class FirebaseCategoriaService {
       
       if (dados.tempoExtraProducao !== undefined) {
         dadosAtualizacao.tempoExtraProducao = dados.tempoExtraProducao;
+      }
+      
+      if (dados.posicao !== undefined) {
+        dadosAtualizacao.posicao = dados.posicao;
       }
 
       await updateDoc(docRef, dadosAtualizacao);
@@ -235,6 +258,84 @@ export class FirebaseCategoriaService {
     } catch (error) {
       console.error('Erro ao duplicar categoria:', error);
       throw new Error('Falha ao duplicar categoria');
+    }
+  }
+
+  async atualizarPosicoesCategorias(lojaId: string, categoriasOrdenadas: string[]): Promise<void> {
+    try {
+      // Buscar todas as categorias com query simples
+      const q = query(
+        this.categoriasCollection,
+        where('lojaId', '==', lojaId)
+      );
+      
+      const snapshot = await getDocs(q);
+      const categoriasPorNome = new Map<string, string>(); // nome -> id
+      
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        categoriasPorNome.set(data.nome, doc.id);
+      });
+      
+      // Criar batch de atualizações
+      const updates = categoriasOrdenadas.map((nome, index) => {
+        const categoriaId = categoriasPorNome.get(nome);
+        if (categoriaId) {
+          const docRef = doc(this.categoriasCollection, categoriaId);
+          return updateDoc(docRef, { 
+            posicao: index + 1,
+            dataAtualizacao: Timestamp.now()
+          });
+        }
+        return null;
+      }).filter(Boolean);
+
+      // Executar todas as atualizações
+      await Promise.all(updates);
+    } catch (error) {
+      console.error('Erro ao atualizar posições das categorias:', error);
+      throw new Error('Falha ao atualizar posições das categorias');
+    }
+  }
+
+  async migrarCategoriasParaPosicao(lojaId: string): Promise<void> {
+    try {
+      // Buscar categorias com query simples para evitar erro de índice
+      const q = query(
+        this.categoriasCollection,
+        where('lojaId', '==', lojaId)
+      );
+      
+      const snapshot = await getDocs(q);
+      const categoriasSemPosicao: {id: string, posicao?: number}[] = [];
+      
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.posicao === undefined || data.posicao === null) {
+          categoriasSemPosicao.push({
+            id: doc.id,
+            posicao: data.posicao
+          });
+        }
+      });
+      
+      if (categoriasSemPosicao.length === 0) {
+        return; // Já migraram
+      }
+
+      // Atualizar categorias sem posição
+      const updates = categoriasSemPosicao.map((categoria, index) => {
+        const docRef = doc(this.categoriasCollection, categoria.id);
+        return updateDoc(docRef, { 
+          posicao: index + 1,
+          dataAtualizacao: Timestamp.now()
+        });
+      });
+
+      await Promise.all(updates);
+    } catch (error) {
+      console.error('Erro ao migrar categorias para posição:', error);
+      throw new Error('Falha ao migrar categorias');
     }
   }
 

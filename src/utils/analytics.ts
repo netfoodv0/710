@@ -20,13 +20,11 @@ export class AnalyticsService {
    */
   logEvent(eventName: string, parameters?: Record<string, any>): void {
     if (!this.analytics) {
-      console.log(`Analytics não disponível - Evento: ${eventName}`, parameters);
       return;
     }
 
     try {
       logEvent(this.analytics, eventName, parameters);
-      console.log(`Evento enviado: ${eventName}`, parameters);
     } catch (error) {
       console.warn(`Erro ao enviar evento ${eventName}:`, error);
     }

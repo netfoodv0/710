@@ -52,7 +52,7 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center h-64 ${className}`}>
+      <div className={`flex items-center justify-center h-45 ${className}`}>
         <div className="text-center">
           
           
@@ -71,7 +71,7 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
 
   return (
     <div className={className}>
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={245}>
         <PieChart>
           <Pie
             data={dadosGrafico}
@@ -92,7 +92,7 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
               
               return (
                 <g>
-                  {/* Linha com dobra */}
+                  {/* Linha com dobra (perninha) */}
                   <path
                     d={`M ${cx + outerRadius * Math.cos(-midAngle * RADIAN)} ${cy + outerRadius * Math.sin(-midAngle * RADIAN)} 
                        L ${x} ${y} 
@@ -114,7 +114,7 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
                 </g>
               );
             }}
-            outerRadius={80}
+            outerRadius={56}
             fill="#8884d8"
             dataKey="value"
             startAngle={-90}

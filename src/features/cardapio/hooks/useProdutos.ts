@@ -31,7 +31,7 @@ export interface FiltrosProduto {
 }
 
 export const useProdutos = (): UseProdutosReturn => {
-  const { produtos, loading, error, carregarProdutos } = useProdutosFirebase();
+  const { produtos, loading, loadingEdicao, error, carregarProdutos } = useProdutosFirebase();
   const { showSuccess, showError } = useNotifications();
 
   // Carregar produtos na inicialização

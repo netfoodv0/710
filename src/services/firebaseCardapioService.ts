@@ -72,6 +72,10 @@ export class FirebaseCardapioService {
     return this.produtosService.atualizarStatusProdutos(ids, status);
   }
 
+  async atualizarPosicoesProdutos(lojaId: string, produtosOrdenados: string[]): Promise<void> {
+    return this.produtosService.atualizarPosicoesProdutos(lojaId, produtosOrdenados);
+  }
+
 
 
   // ===== CATEGORIAS ADICIONAIS =====

@@ -38,7 +38,6 @@ export const useWhatsAppConnection = () => {
       return; // Já conectado ou inicializando
     }
 
-    console.log('🔌 Conectando ao backend WhatsApp...');
     isInitializedRef.current = true;
     
     const config = getWhatsAppConfig();
@@ -54,7 +53,6 @@ export const useWhatsAppConnection = () => {
 
     // Eventos do Socket
     socketRef.current.on('connect', () => {
-      console.log('✅ Conectado ao backend!');
       connectionAttemptsRef.current = 0; // Resetar tentativas
       setConnectionState(prev => ({ 
         ...prev, 
@@ -64,14 +62,9 @@ export const useWhatsAppConnection = () => {
     });
 
     socketRef.current.on('disconnect', (reason: string) => {
-      console.log('❌ Desconectado do backend:', reason);
-      
       // Só tentar reconectar se não foi uma desconexão intencional
       if (reason !== 'io client disconnect') {
         connectionAttemptsRef.current++;
-        if (connectionAttemptsRef.current < maxAttempts) {
-          console.log(`🔄 Tentativa ${connectionAttemptsRef.current}/${maxAttempts} de reconexão...`);
-        }
       }
       
       setConnectionState(prev => ({ 
@@ -83,7 +76,6 @@ export const useWhatsAppConnection = () => {
 
     // Status da conexão
     socketRef.current.on('connection-status', (status) => {
-      console.log('📊 Status atual:', status);
       setConnectionState(prev => ({
         ...prev,
         isConnected: status.connected,
@@ -95,7 +87,6 @@ export const useWhatsAppConnection = () => {
 
     // QR Code recebido
     socketRef.current.on('qr-code', (qr: string) => {
-      console.log('📱 QR Code recebido!');
       setConnectionState(prev => ({ 
         ...prev, 
         qrCode: qr, 
@@ -107,7 +98,6 @@ export const useWhatsAppConnection = () => {
 
     // WhatsApp conectado
     socketRef.current.on('connected', (info: any) => {
-      console.log('🚀 WhatsApp conectado!', info);
       setConnectionState(prev => ({ 
         ...prev, 
         isConnected: true, 
@@ -122,7 +112,6 @@ export const useWhatsAppConnection = () => {
 
     // Evento global de WhatsApp pronto (enviado para todos os clientes)
     socketRef.current.on('whatsapp-ready', (info: any) => {
-      console.log('🚀 WhatsApp pronto (evento global)!', info);
       setConnectionState(prev => ({ 
         ...prev, 
         isConnected: true, 
@@ -233,7 +222,6 @@ export const useWhatsAppConnection = () => {
     // Cleanup apenas na desmontagem do componente
     return () => {
       if (socketRef.current) {
-        console.log('🔌 Desconectando socket na desmontagem...');
         socketRef.current.disconnect();
         socketRef.current = null;
         isInitializedRef.current = false;
@@ -243,7 +231,6 @@ export const useWhatsAppConnection = () => {
   }, [connectToBackend]);
 
   const initializeClient = async () => {
-    console.log('🚀 Iniciando conexão com WhatsApp...');
     setConnectionState(prev => ({ 
       ...prev, 
       isConnecting: true, 
@@ -266,7 +253,6 @@ export const useWhatsAppConnection = () => {
   };
 
   const disconnect = async () => {
-    console.log('🔌 Desconectando WhatsApp...');
     setConnectionState(prev => ({ 
       ...prev,
       statusMessage: 'Desconectando...',
@@ -310,8 +296,6 @@ export const useWhatsAppConnection = () => {
         return;
       }
 
-      console.log('📤 Enviando mensagem:', { number, message });
-
       // Emitir evento para enviar mensagem
       socketRef.current.emit('send-message', { number, message });
 
@@ -324,10 +308,8 @@ export const useWhatsAppConnection = () => {
         clearTimeout(timeout);
         
         if (result.success) {
-          console.log('✅ Mensagem enviada com sucesso!', result.messageId);
           resolve(true);
         } else {
-          console.error('❌ Erro ao enviar mensagem:', result.error);
           reject(new Error(result.error || 'Erro desconhecido'));
         }
       });

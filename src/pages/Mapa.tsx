@@ -1,9 +1,10 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { MapPin, Layers, Filter, X, Bike, CheckCircle2, Clock4, PackageOpen, XCircle, Map, Route, Calendar } from 'lucide-react';
+import { MapPin, Layers, Filter, X, Bike, CheckCircle2, Clock4, PackageOpen, XCircle, Route, Calendar } from 'lucide-react';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { CustomDropdown, DropdownOption } from '../components/ui/CustomDropdown';
 import { LeafletMap } from '../components/maps/LeafletMap';
 import { useMapData } from '../hooks/useMapData';
+import { MapIcon } from '../components/ui';
 
 interface FiltrosMapa {
   statusPedidos: string;
@@ -61,7 +62,7 @@ export function Mapa(): JSX.Element {
   const entregadoresOptions: DropdownOption[] = [
     { value: 'todos', label: 'Todos os Entregadores' },
     { value: 'disponiveis', label: 'Disponíveis', icon: <Bike className="w-4 h-4 text-blue-600" /> },
-    { value: 'rota', label: 'Em rota', icon: <Map className="w-4 h-4 text-emerald-600" /> },
+    { value: 'rota', label: 'Em rota', icon: <MapIcon size={16} color="#10b981" /> },
     { value: 'coletando', label: 'Coletando', icon: <PackageOpen className="w-4 h-4 text-amber-600" /> }
   ];
 

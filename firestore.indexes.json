@@ -127,6 +127,20 @@
           "order": "ASCENDING"
         },
         {
+          "fieldPath": "posicao",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "categoriasProdutos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
           "fieldPath": "tempoExtraProducao",
           "order": "ASCENDING"
         },
@@ -365,6 +379,20 @@
         {
           "fieldPath": "dataAtualizacao",
           "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "produtos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "posicao",
+          "order": "ASCENDING"
         }
       ]
     },

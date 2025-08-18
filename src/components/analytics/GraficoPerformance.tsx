@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card } from '../';
+import { Card } from '../Card';
 import { BarChart3 } from 'lucide-react';
 
 interface GraficoPerformanceProps {
@@ -28,10 +28,10 @@ export function GraficoPerformance({ className }: GraficoPerformanceProps) {
               <button
                 key={periodo.key}
                 onClick={() => setPeriodoSelecionado(periodo.key)}
-                className={`btn text-sm ${
+                className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                   periodoSelecionado === periodo.key
-                    ? 'btn-primary'
-                    : 'btn-secondary'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
                 {periodo.label}

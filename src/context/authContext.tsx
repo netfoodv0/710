@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback, useMemo } from 'react';
 import { User as FirebaseUser } from 'firebase/auth';
 import { AuthService } from '../services/authService';
 import type { Usuario, Loja, AuthState, AuthStatus } from '../types/auth';
@@ -29,22 +29,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   });
 
   // Função para atualizar o estado
-  const updateState = (updates: Partial<AuthState>) => {
+  const updateState = useCallback((updates: Partial<AuthState>) => {
     setState(prev => ({ ...prev, ...updates }));
-  };
+  }, []);
 
   // Função para limpar erro
-  const clearError = () => {
+  const clearError = useCallback(() => {
     updateState({ error: null });
-  };
+  }, [updateState]);
 
   // Função para recarregar dados do usuário
-  const refreshUserData = async () => {
+  const refreshUserData = useCallback(async () => {
     try {
+      console.log('🔄 Recarregando dados do usuário...');
       updateState({ status: 'loading', error: null });
       
       const user = await AuthService.getCurrentUser();
       const loja = await AuthService.getCurrentLoja();
+      
+      console.log('👤 Usuário obtido:', user?.uid, 'Email:', user?.email);
+      console.log('🏪 Loja obtida:', loja?.nomeLoja);
       
       if (user) {
         updateState({
@@ -53,6 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           status: 'authenticated',
           error: null
         });
+        console.log('✅ Usuário autenticado com sucesso');
       } else {
         updateState({
           user: null,
@@ -60,18 +65,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           status: 'unauthenticated',
           error: null
         });
+        console.log('❌ Usuário não autenticado');
       }
     } catch (error: any) {
-      console.error('Erro ao recarregar dados do usuário:', error);
+      console.error('❌ Erro ao recarregar dados do usuário:', error);
       updateState({
         status: 'error',
         error: 'Erro ao carregar dados do usuário'
       });
     }
-  };
+  }, [updateState]);
 
   // Função de login
-  const login = async (email: string, senha: string) => {
+  const login = useCallback(async (email: string, senha: string) => {
     try {
       updateState({ status: 'loading', error: null });
       
@@ -91,10 +97,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       throw error;
     }
-  };
+  }, [updateState]);
 
   // Função de cadastro
-  const cadastrarLoja = async (data: any) => {
+  const cadastrarLoja = useCallback(async (data: any) => {
     try {
       updateState({ status: 'loading', error: null });
       
@@ -113,10 +119,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       throw error;
     }
-  };
+  }, [updateState]);
 
   // Função de logout
-  const logout = async () => {
+  const logout = useCallback(async () => {
     try {
       updateState({ status: 'loading' });
       
@@ -133,9 +139,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         status: 'error',
         error: error.message
       });
-      throw error;
     }
-  };
+  }, [updateState]);
 
   // Listener para mudanças de autenticação
   useEffect(() => {
@@ -188,14 +193,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     ...state,
     login,
     cadastrarLoja,
     logout,
     clearError,
     refreshUserData
-  };
+  }), [state, login, cadastrarLoja, logout, clearError, refreshUserData]);
 
   return (
     <AuthContext.Provider value={value}>

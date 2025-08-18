@@ -14,20 +14,12 @@ interface WhatsAppChatsState {
 }
 
 export const useWhatsAppChats = () => {
-  console.log('🚀 useWhatsAppChats - Hook inicializado');
-  
   // Hook do robô
   const { isBotEnabled, isBotActiveForChat } = useBot();
   
   // Cache para conversas e mensagens
   const chatsCache = useCache<WhatsAppChat[]>({ key: 'whatsapp-chats', ttl: 10 * 60 * 1000 }); // 10 minutos
   const messagesCache = useCache<{ [chatId: string]: Message[] }>({ key: 'whatsapp-messages', ttl: 15 * 60 * 1000 }); // 15 minutos
-  
-  console.log('📦 Cache de conversas:', {
-    isValid: chatsCache.isCacheValid(),
-    hasData: !!chatsCache.cachedData,
-    dataLength: chatsCache.cachedData?.length || 0
-  });
   
   const [state, setState] = useState<WhatsAppChatsState>({
     chats: [],
@@ -151,7 +143,6 @@ export const useWhatsAppChats = () => {
 
   // Função para parar polling
   const stopMessagePolling = useCallback(() => {
-    console.log('⏹️ Parando polling automático');
     if (pollingIntervalRef.current) {
       clearInterval(pollingIntervalRef.current);
       pollingIntervalRef.current = null;
@@ -165,11 +156,9 @@ export const useWhatsAppChats = () => {
 
   useEffect(() => {
     // Conectar ao backend
-    console.log('🔌 useWhatsAppChats - Conectando ao backend...', new Date().toISOString());
     
     // Verificar se já existe uma conexão
     if (socketRef.current) {
-      console.log('⚠️ Socket já existe, desconectando anterior...');
       socketRef.current.disconnect();
     }
     
@@ -184,7 +173,6 @@ export const useWhatsAppChats = () => {
 
     // Eventos de conexão do socket
     socketRef.current.on('connect', () => {
-      console.log('✅ useWhatsAppChats - Socket conectado:', socketRef.current?.id);
       // Atualizar status no Firebase
       updateFirebaseStatus(true);
       
@@ -196,7 +184,6 @@ export const useWhatsAppChats = () => {
     });
 
     socketRef.current.on('disconnect', () => {
-      console.log('❌ useWhatsAppChats - Socket desconectado');
       stopMessagePolling(); // Parar polling quando desconectar
       // Atualizar status no Firebase
       updateFirebaseStatus(false);
@@ -212,7 +199,6 @@ export const useWhatsAppChats = () => {
     });
 
     socketRef.current.on('reconnect', () => {
-      console.log('🔄 useWhatsAppChats - Socket reconectado');
       // Atualizar status no Firebase
       updateFirebaseStatus(true);
       
@@ -234,14 +220,11 @@ export const useWhatsAppChats = () => {
     });
 
     socketRef.current.on('reconnect_error', (error) => {
-      console.log('❌ useWhatsAppChats - Erro na reconexão:', error);
+      // Tratar erro de reconexão silenciosamente
     });
 
     // Status de conexão do WhatsApp
     socketRef.current.on('connection-status', (status) => {
-      console.log('📊 useWhatsAppChats - Status de conexão:', status);
-      console.log('📊 Estado atual:', state);
-      
       // Atualizar estado de conexão estável
       if (status.connected) {
         if (connectionTimeoutRef.current) {
@@ -259,7 +242,6 @@ export const useWhatsAppChats = () => {
       }
       
       if (status.connected && !state.loading && state.chats.length === 0) {
-        console.log('🚀 WhatsApp conectado - carregando conversas automaticamente...');
         // Aguardar um pouco para garantir que o socket esteja estável
         setTimeout(() => {
           console.log('⏰ Executando loadChats após delay...');
@@ -504,7 +486,6 @@ export const useWhatsAppChats = () => {
     });
 
     return () => {
-      console.log('🧹 useWhatsAppChats - Cleanup, desconectando socket...');
       if (connectionTimeoutRef.current) {
         clearTimeout(connectionTimeoutRef.current);
       }
@@ -516,20 +497,12 @@ export const useWhatsAppChats = () => {
   }, []);
 
   const selectChat = useCallback((chat: WhatsAppChat) => {
-    console.log('📱 Selecionando conversa:', chat.name);
-    console.log('📱 Dados da conversa:', chat);
-    console.log('🔌 Socket status na seleção:', {
-      connected: socketRef.current?.connected,
-      socketId: socketRef.current?.id
-    });
-    
     // Parar polling anterior
     stopMessagePolling();
     
     // Verificar se há mensagens em cache para este chat
     const cachedMessages = messagesCache.cachedData?.[chat.id];
     if (cachedMessages && cachedMessages.length > 0) {
-      console.log('📦 Usando mensagens do cache para:', chat.id);
       setState(prev => ({ 
         ...prev, 
         currentChat: chat, 
@@ -554,9 +527,6 @@ export const useWhatsAppChats = () => {
     }));
     
     if (socketRef.current && socketRef.current.connected) {
-      console.log('📤 Emitindo evento get-messages para:', chat.id);
-      console.log('📤 Dados enviados:', { chatId: chat.id, limit: 50 });
-      
       // Buscar mensagens iniciais
       socketRef.current.emit('get-messages', { 
         chatId: chat.id, 
@@ -571,10 +541,6 @@ export const useWhatsAppChats = () => {
       // Adicionar timeout para detectar se a resposta não chegar
       setTimeout(() => {
         setState(currentState => {
-          console.log('⏰ Timeout - Verificando se as mensagens foram carregadas...');
-          console.log('📊 Estado atual das mensagens:', currentState.messages.length);
-          console.log('📊 Estado atual do loading:', currentState.loading);
-          
           // Se ainda estiver carregando após 5 segundos, mostrar erro
           if (currentState.loading && currentState.messages.length === 0) {
             return {
@@ -587,17 +553,13 @@ export const useWhatsAppChats = () => {
         });
       }, 5000);
     } else {
-      console.warn('⚠️ Socket não conectado - tentando reconectar para carregar mensagens...');
-      
       // Tentar reconectar antes de mostrar erro
       if (socketRef.current && !socketRef.current.connected) {
-        console.log('🔄 Tentando reconectar socket...');
         socketRef.current.connect();
         
         // Aguardar um tempo para reconexão e tentar novamente
         setTimeout(() => {
           if (socketRef.current && socketRef.current.connected) {
-            console.log('✅ Reconectado! Tentando carregar mensagens novamente...');
             socketRef.current.emit('get-messages', { 
               chatId: chat.id, 
               limit: 50 
@@ -606,7 +568,6 @@ export const useWhatsAppChats = () => {
               startMessagePolling(chat.id);
             }, 2000);
           } else {
-            console.error('❌ Não foi possível reconectar o socket');
             setState(prev => ({ 
               ...prev, 
               error: 'Não conectado ao servidor. Verifique se o servidor WhatsApp está rodando.', 
@@ -630,7 +591,6 @@ export const useWhatsAppChats = () => {
     
     // Carregar conversas do cache se disponíveis
     if (chatsCache.isCacheValid() && chatsCache.cachedData && chatsCache.cachedData.length > 0) {
-      console.log('📦 Cache de conversas válido, carregando...');
       setState(prev => ({ 
         ...prev, 
         chats: chatsCache.cachedData!,
@@ -643,7 +603,6 @@ export const useWhatsAppChats = () => {
   // Monitorar mudanças no cache e atualizar estado
   useEffect(() => {
     if (chatsCache.cachedData && chatsCache.cachedData.length > 0) {
-      console.log('📦 Cache atualizado, sincronizando estado...');
       setState(prev => ({ 
         ...prev, 
         chats: chatsCache.cachedData!,
@@ -676,9 +635,6 @@ export const useWhatsAppChats = () => {
       return;
     }
 
-    console.log('📤 Enviando mensagem para:', targetChatId);
-    console.log('📤 Mensagem:', message);
-    
     // Adicionar mensagem temporária imediatamente para feedback visual
     const tempMessage = {
       id: `temp-${Date.now()}`,
@@ -696,12 +652,10 @@ export const useWhatsAppChats = () => {
 
     setState(prev => {
       if (prev.currentChat && prev.currentChat.id === targetChatId) {
-        console.log('➕ Adicionando mensagem temporária para feedback visual');
         // Garantir que a mensagem temporária seja adicionada por último (mais recente)
         const updatedMessages = [...prev.messages, tempMessage];
         // Ordenar novamente para garantir ordem correta
         const sortedMessages = updatedMessages.sort((a, b) => a.timestamp - b.timestamp);
-        console.log('📊 Mensagem temporária adicionada:', tempMessage);
         return {
           ...prev,
           messages: sortedMessages
@@ -719,12 +673,9 @@ export const useWhatsAppChats = () => {
   // Função de auto-resposta do robô
   const sendBotAutoReply = useCallback(async (chatId: string, originalMessage: string) => {
     if (!isBotEnabled || !isBotActiveForChat(chatId)) {
-      console.log('🤖 Robô não está ativo para este chat:', chatId);
       return;
     }
 
-    console.log('🤖 Robô ativo, respondendo automaticamente para:', chatId);
-    
     // Aguardar um pouco para parecer mais natural
     await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
 
@@ -732,15 +683,12 @@ export const useWhatsAppChats = () => {
     const customMessage = localStorage.getItem('botDefaultMessage');
     const autoReply = customMessage || 'Obrigado pela sua mensagem! Nossa equipe entrará em contato em breve.';
 
-    console.log('🤖 Resposta automática gerada:', autoReply);
-
     // Enviar a resposta automática
     if (socketRef.current) {
       socketRef.current.emit('send-message', {
         chatId,
         message: autoReply
       });
-      console.log('🤖 Resposta automática enviada com sucesso!');
     }
   }, [isBotEnabled, isBotActiveForChat]);
 
@@ -753,7 +701,6 @@ export const useWhatsAppChats = () => {
       return;
     }
 
-    console.log('📤 Enviando mensagem para número:', number);
     socketRef.current.emit('send-message', { 
       number, 
       message 
@@ -767,19 +714,7 @@ export const useWhatsAppChats = () => {
   // Função global para teste de cache
   if (typeof window !== 'undefined') {
     (window as any).testCache = () => {
-      console.log('🧪 TESTE DE CACHE GLOBAL');
-      console.log('📦 Cache de conversas:', {
-        isValid: chatsCache.isCacheValid(),
-        hasData: !!chatsCache.cachedData,
-        dataLength: chatsCache.cachedData?.length || 0,
-        data: chatsCache.cachedData
-      });
-      console.log('📦 Cache de mensagens:', {
-        isValid: messagesCache.isCacheValid(),
-        hasData: !!messagesCache.cachedData,
-        keys: messagesCache.cachedData ? Object.keys(messagesCache.cachedData) : []
-      });
-      console.log('📊 Estado atual:', state);
+      // Função de teste de cache removida para limpeza do console
     };
   }
 

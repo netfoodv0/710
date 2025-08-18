@@ -95,7 +95,7 @@ export const InputNumericoComSpinner = forwardRef<HTMLInputElement, InputNumeric
               disabled={disabled || (max !== undefined && (typeof value === 'string' ? parseFloat(value) || 0 : value) >= max)}
               className="spinner-btn"
             >
-              <ChevronUp className="w-3 h-3" />
+              <ChevronUp className="w-6 h-6" />
             </button>
             <button
               type="button"
@@ -103,7 +103,7 @@ export const InputNumericoComSpinner = forwardRef<HTMLInputElement, InputNumeric
               disabled={disabled || (min !== undefined && (typeof value === 'string' ? parseFloat(value) || 0 : value) <= min)}
               className="spinner-btn"
             >
-              <ChevronDown className="w-3 h-3" />
+              <ChevronDown className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -130,6 +130,7 @@ export const InputNumericoComSpinner = forwardRef<HTMLInputElement, InputNumeric
 );
 
 InputNumericoComSpinner.displayName = 'InputNumericoComSpinner';
+
 
 
 

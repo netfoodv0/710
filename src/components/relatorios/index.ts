@@ -1,3 +1,4 @@
-export { RelatoriosErrorState } from './RelatoriosErrorState';
-export { RelatoriosLoadingState } from './RelatoriosLoadingState';
-export { RelatoriosContent } from './RelatoriosContent';
+export { EstatisticasProdutos } from './EstatisticasProdutos';
+export { DistribuicaoCategoria } from './DistribuicaoCategoria';
+export { HeaderRelatorioProdutos } from './HeaderRelatorioProdutos';
+export { useConfiguracaoTabelaProdutos } from './ConfiguracaoTabelaProdutos';

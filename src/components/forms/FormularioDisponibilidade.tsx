@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, Clock } from 'lucide-react';
+import { Plus } from 'lucide-react';
+import { TrashIcon, ClockIcon } from '../ui';
 import { PeriodoDisponibilidade, DiaSemana, DIAS_SEMANA } from '../../types/categoria';
 
 interface FormularioDisponibilidadeProps {
@@ -87,7 +88,7 @@ export function FormularioDisponibilidade({ periodos, onChange }: FormularioDisp
               }`}
             >
               <div className="flex items-center gap-3">
-                <Clock className={`w-4 h-4 ${periodo.ativo ? 'text-green-600' : 'text-gray-400'}`} />
+                                 <ClockIcon size={24} color={periodo.ativo ? '#16a34a' : '#9ca3af'} />
                 <div>
                   <span className={`text-sm font-medium ${periodo.ativo ? 'text-green-900' : 'text-gray-500'}`}>
                     {periodo.diaSemana.nome}
@@ -115,7 +116,7 @@ export function FormularioDisponibilidade({ periodos, onChange }: FormularioDisp
                   onClick={() => removerPeriodo(periodo.id)}
                   className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <TrashIcon size={24} color="#dc2626" />
                 </button>
               </div>
             </div>
@@ -123,7 +124,7 @@ export function FormularioDisponibilidade({ periodos, onChange }: FormularioDisp
         </div>
       ) : (
         <div className="text-center py-6 border-2 border-dashed border-gray-300 rounded-lg">
-          <Clock className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+          <ClockIcon size={32} color="#9ca3af" />
           <p className="text-sm text-gray-500">
             Nenhum período de disponibilidade adicionado
           </p>

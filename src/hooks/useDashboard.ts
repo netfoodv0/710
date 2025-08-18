@@ -4,26 +4,20 @@ import {
   KPI, 
   DadosFormaPagamento, 
   Pedido,
-  EstatisticasGerais 
+  EstatisticasGerais,
+  DashboardData as DashboardDataType
 } from '../types';
 import { PeriodType } from '../components/PeriodFilter';
 
-interface DashboardData {
-  kpis: KPI[];
-  formasPagamento: DadosFormaPagamento[];
-  pedidosRecentes: Pedido[];
-  estatisticas: EstatisticasGerais;
-}
-
 interface UseDashboardReturn {
-  data: DashboardData;
+  data: DashboardDataType;
   loading: boolean;
   error: string | null;
   refreshData: () => Promise<void>;
 }
 
 export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn => {
-  const [data, setData] = useState<DashboardData>({
+  const [data, setData] = useState<DashboardDataType>({
     kpis: [],
     formasPagamento: [],
     pedidosRecentes: [],
@@ -35,8 +29,12 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
       receita7Dias: 0,
       pedidos7Dias: 0,
       tempoMedioEntrega: 0,
-      avaliacaoMedia: 0
-    }
+      avaliacaoMedia: 0,
+      pedidosPendentes: 0
+    },
+    formasPedidas: [],
+    produtosVendidos: [],
+    pedidosEmAndamento: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,7 +50,15 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
       // Buscar dados reais do Firebase
       const dadosReais = await firebaseDashboardService.buscarDadosDashboard(periodo);
       
-      setData(dadosReais);
+      // Adicionar dados padrão para os novos componentes
+      const dadosCompletos: DashboardDataType = {
+        ...dadosReais,
+        formasPedidas: [],
+        produtosVendidos: [],
+        pedidosEmAndamento: []
+      };
+      
+      setData(dadosCompletos);
     } catch (err) {
       setError('Erro ao carregar dados do dashboard');
       console.error('Erro ao carregar dashboard:', err);

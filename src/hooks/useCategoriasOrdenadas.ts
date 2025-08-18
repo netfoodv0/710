@@ -11,7 +11,7 @@ export function useCategoriasOrdenadas({
 }: UseCategoriasOrdenadasProps) {
   const [categoriasOrdenadas, setCategoriasOrdenadas] = useState<string[]>([]);
 
-  // Carregar ordem salva do localStorage
+  // ✅ CORREÇÃO: Carregar ordem salva do localStorage, mantendo posições fixas
   useEffect(() => {
     try {
       const savedOrder = localStorage.getItem(storageKey);
@@ -30,18 +30,18 @@ export function useCategoriasOrdenadas({
       console.warn('Erro ao carregar ordem das categorias:', error);
     }
     
-    // Se não há ordem salva ou é inválida, usar ordem padrão
+    // Se não há ordem salva ou é inválida, usar ordem alfabética por nome
     if (categorias.length > 0) {
-      setCategoriasOrdenadas([...categorias]);
+      const ordemAlfabetica = [...categorias].sort((a, b) => a.localeCompare(b));
+      setCategoriasOrdenadas(ordemAlfabetica);
     }
   }, [categorias, storageKey]);
 
-  // Atualizar automaticamente quando novas categorias são adicionadas
+  // ✅ CORREÇÃO: Atualizar automaticamente quando novas categorias são adicionadas, mantendo ordem
   useEffect(() => {
     if (categorias.length > 0) {
       // Se não há categorias ordenadas, usar todas as categorias
       if (categoriasOrdenadas.length === 0) {
-        console.log('🆕 Primeira inicialização das categorias:', categorias);
         setCategoriasOrdenadas([...categorias]);
         return;
       }
@@ -49,27 +49,22 @@ export function useCategoriasOrdenadas({
       // Verificar se há novas categorias
       const novasCategorias = categorias.filter(cat => !categoriasOrdenadas.includes(cat));
       if (novasCategorias.length > 0) {
-        console.log('🆕 Novas categorias detectadas:', novasCategorias);
-        console.log('🆕 Categorias existentes:', categoriasOrdenadas);
-        
         // Adicionar novas categorias ao final da lista ordenada
         const novaOrdem = [...categoriasOrdenadas, ...novasCategorias];
-        console.log('🆕 Nova ordem completa:', novaOrdem);
         
         setCategoriasOrdenadas(novaOrdem);
         
         // Salvar nova ordem no localStorage
         try {
           localStorage.setItem(storageKey, JSON.stringify(novaOrdem));
-          console.log('💾 Nova ordem salva no localStorage');
         } catch (error) {
           console.warn('Erro ao salvar nova ordem das categorias:', error);
         }
       }
     }
-  }, [categorias]); // Remover dependências que causam loops
+  }, [categorias, categoriasOrdenadas.length, storageKey]);
 
-  // Salvar nova ordem no localStorage
+  // ✅ CORREÇÃO: Salvar nova ordem no localStorage, garantindo posições fixas
   const reordenarCategorias = useCallback((novasCategorias: string[]) => {
     setCategoriasOrdenadas(novasCategorias);
     
@@ -80,15 +75,17 @@ export function useCategoriasOrdenadas({
     }
   }, [storageKey]);
 
-  // Resetar para ordem padrão
+  // ✅ CORREÇÃO: Resetar para ordem alfabética por nome
   const resetarOrdem = useCallback(() => {
-    const ordemPadrao = [...categorias];
-    setCategoriasOrdenadas(ordemPadrao);
-    
-    try {
-      localStorage.removeItem(storageKey);
-    } catch (error) {
-      console.warn('Erro ao resetar ordem das categorias:', error);
+    if (categorias.length > 0) {
+      const ordemAlfabetica = [...categorias].sort((a, b) => a.localeCompare(b));
+      setCategoriasOrdenadas(ordemAlfabetica);
+      
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(ordemAlfabetica));
+      } catch (error) {
+        console.warn('Erro ao salvar ordem alfabética das categorias:', error);
+      }
     }
   }, [categorias, storageKey]);
 

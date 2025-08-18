@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { Search, Filter, X, Tag, CheckCircle, Clock } from 'lucide-react';
+import { Search, Filter, X, Tag, CheckCircle } from 'lucide-react';
+import { ClockIcon } from '../ui';
 import { FiltrosCardapioState } from '../../hooks/useFiltrosCardapio';
 import { CustomDropdown, DropdownOption } from '../ui/CustomDropdown';
 
@@ -55,14 +56,14 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
   const statusOptions: DropdownOption[] = [
     { value: 'todos', label: 'Todos os Status' },
     { value: 'ativo', label: 'Ativo', icon: <CheckCircle className="w-4 h-4 text-green-500" /> },
-    { value: 'inativo', label: 'Inativo', icon: <Clock className="w-4 h-4 text-gray-500" /> },
-    { value: 'em_falta', label: 'Em Falta', icon: <Clock className="w-4 h-4 text-orange-500" /> }
+    { value: 'inativo', label: 'Inativo', icon: <ClockIcon size={24} color="#6b7280" /> },
+    { value: 'em_falta', label: 'Em Falta', icon: <ClockIcon size={24} color="#f97316" /> }
   ];
 
   const disponibilidadeOptions: DropdownOption[] = [
     { value: 'todos', label: 'Todos' },
     { value: 'disponivel', label: 'Disponível', icon: <CheckCircle className="w-4 h-4 text-green-500" /> },
-    { value: 'indisponivel', label: 'Indisponível', icon: <Clock className="w-4 h-4 text-red-500" /> }
+    { value: 'indisponivel', label: 'Indisponível', icon: <ClockIcon size={24} color="#ef4444" /> }
   ];
 
   return (
@@ -121,13 +122,13 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
 
         {/* Barra de pesquisa principal */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-3 h-3 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400" />
           <input
             type="text"
             placeholder="Buscar por nome, descrição, categoria..."
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full pl-8 pr-4 h-9 border border-gray-300 rounded-md text-xs focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 h-9 border border-gray-300 rounded-md text-xs focus:ring-2 focus:ring-purple-500 focus:border-transparent"
           />
         </div>
 
@@ -141,7 +142,7 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
                   onClick={() => handleFiltroChange('categoria', 'todos')}
                   className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-6 h-6" />
                 </button>
               </span>
             )}
@@ -152,7 +153,7 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
                   onClick={() => handleFiltroChange('status', 'todos')}
                   className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-6 h-6" />
                 </button>
               </span>
             )}
@@ -164,7 +165,7 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
                   onClick={() => handleFiltroChange('disponibilidade', 'todos')}
                   className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-6 h-6" />
                 </button>
               </span>
             )}
@@ -175,7 +176,7 @@ export const FiltrosCardapio = React.memo(function FiltrosCardapio({
                   onClick={() => onSearchChange('')}
                   className="ml-1 hover:bg-gray-200 rounded-full p-0.5 transition-colors"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-6 h-6" />
                 </button>
               </span>
             )}

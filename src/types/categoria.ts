@@ -8,6 +8,7 @@ export interface Categoria {
   dataCriacao: Date;
   dataAtualizacao: Date;
   lojaId: string;
+  posicao?: number; // Posição para ordenação personalizada
 }
 
 export interface PeriodoDisponibilidade {
@@ -40,6 +41,7 @@ export interface CriarCategoriaData {
   agendamentoPrevio: boolean;
   tempoExtraProducao: boolean;
   disponibilidade: PeriodoDisponibilidade[];
+  posicao?: number;
 }
 
 export interface ModalCategoriaProps {

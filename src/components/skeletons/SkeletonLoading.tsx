@@ -1,11 +1,92 @@
 import React from 'react';
 
 interface SkeletonLoadingProps {
-  type: 'table' | 'cards' | 'stats';
+  type?: 'table' | 'cards' | 'stats' | 'historico';
   rows?: number;
 }
 
-export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type, rows = 5 }) => {
+export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'historico', rows = 5 }) => {
+  // Fallback específico para histórico que não causa piscada
+  if (type === 'historico') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Header skeleton */}
+        <div className="bg-white border-b border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="h-8 bg-gray-200 rounded animate-pulse w-64 mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse w-96"></div>
+            </div>
+            <div className="h-10 bg-gray-200 rounded animate-pulse w-40"></div>
+          </div>
+        </div>
+        
+        {/* Content skeleton */}
+        <div className="px-6 pt-6">
+          {/* Filtros skeleton */}
+          <div className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
+            <div className="flex flex-col lg:flex-row gap-4">
+              <div className="flex-1 lg:w-80">
+                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+              </div>
+              <div className="lg:w-80">
+                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+              </div>
+              <div className="lg:w-40">
+                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+              </div>
+              <div className="lg:w-40">
+                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Tabela skeleton */}
+          <div className="bg-white rounded-lg overflow-hidden border border-gray-200">
+            <div className="overflow-x-auto">
+              {/* Header da tabela */}
+              <div className="bg-gray-50 border-b border-gray-200 px-4 py-3">
+                <div className="grid grid-cols-7 gap-4">
+                  {['Pedido', 'Cliente', 'Pagamento', 'Status', 'Data/Hora', 'Total', 'Ações'].map((header) => (
+                    <div key={header} className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Linhas da tabela */}
+              <div className="divide-y divide-gray-200">
+                {Array.from({ length: rows }).map((_, rowIndex) => (
+                  <div key={rowIndex} className="px-4 py-3">
+                    <div className="grid grid-cols-7 gap-4 items-center">
+                      {Array.from({ length: 7 }).map((_, colIndex) => (
+                        <div key={colIndex} className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Footer com paginação */}
+            <div className="bg-gray-50 px-4 py-4 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="h-4 bg-gray-200 rounded w-48 animate-pulse"></div>
+                  <div className="h-10 bg-gray-200 rounded w-32 animate-pulse"></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="h-8 bg-gray-200 rounded w-8 animate-pulse"></div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (type === 'table') {
     return (
       <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
@@ -14,7 +95,7 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type, rows = 5
             <thead className="bg-gray-50" style={{ height: '73px' }}>
               <tr>
                 {['Produto', 'Categoria', 'Preço', 'Status', 'Vendas', 'Criado em', 'Ações'].map((header) => (
-                  <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
+                  <th key={header} className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
                     <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
                   </th>
                 ))}

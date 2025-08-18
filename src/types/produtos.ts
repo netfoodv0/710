@@ -20,6 +20,7 @@ export interface Produto {
   alergenos: string[];
   tags: string[];
   slug: string;
+  posicao?: number; // ✅ NOVO: Campo para ordenação personalizada
   dataCriacao: Date;
   dataAtualizacao: Date;
 }
@@ -249,6 +250,7 @@ export interface ListaProdutosProps {
   onToggleStatus: (id: string, status: Produto['status']) => Promise<void>;
   categoriaSelecionada?: string;
   onShowCategoryToast?: () => void;
+  onReorderProdutos?: (produtosOrdenados: string[]) => void;
 }
 
 // Hooks

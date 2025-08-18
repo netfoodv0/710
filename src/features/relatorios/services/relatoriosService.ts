@@ -18,13 +18,18 @@ import { PeriodType } from '../../../components/filters/FiltroPeriodo';
 class RelatoriosService {
   async obterDadosCompletos(period: PeriodType): Promise<DadosRelatorios> {
     try {
+      console.log('🔄 RelatoriosService: Iniciando busca de dados para período:', period);
+      
       // Usar o novo serviço Firebase para relatórios
-      return await firebaseRelatoriosService.obterDadosCompletos(period);
+      const dados = await firebaseRelatoriosService.obterDadosCompletos(period);
+      
+      console.log('✅ RelatoriosService: Dados obtidos com sucesso do Firebase');
+      return dados;
     } catch (error) {
-      console.error('Erro ao obter dados completos dos relatórios:', error);
+      console.error('❌ RelatoriosService: Erro ao obter dados completos dos relatórios:', error);
       
       // Fallback para dados simulados em caso de erro
-      console.warn('Usando dados simulados como fallback');
+      console.warn('⚠️ RelatoriosService: Usando dados simulados como fallback');
       return await this.obterDadosSimulados(period);
     }
   }

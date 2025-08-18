@@ -31,9 +31,14 @@ export class FirebaseRelatoriosService {
   // Método auxiliar para obter o ID da loja do usuário autenticado
   private getLojaId(): string {
     const user = auth.currentUser;
+    console.log('👤 Usuário atual:', user?.uid, 'Email:', user?.email);
+    
     if (!user) {
+      console.error('❌ Usuário não autenticado');
       throw new Error('Usuário não autenticado');
     }
+    
+    console.log('✅ LojaId obtido:', user.uid);
     return user.uid;
   }
 
@@ -83,6 +88,7 @@ export class FirebaseRelatoriosService {
   private async buscarPedidosPorPeriodo(inicio: Date, fim: Date): Promise<Pedido[]> {
     try {
       const lojaId = this.getLojaId();
+      console.log('🏪 Buscando pedidos para loja:', lojaId);
       
       const q = query(
         this.pedidosCollection,
@@ -92,6 +98,8 @@ export class FirebaseRelatoriosService {
         orderBy('dataHora', 'desc')
       );
 
+      console.log('🔍 Query executada para período:', inicio.toISOString(), 'até', fim.toISOString());
+      
       const snapshot = await getDocs(q);
       const pedidos: Pedido[] = [];
 
@@ -106,9 +114,10 @@ export class FirebaseRelatoriosService {
         } as Pedido);
       });
 
+      console.log(`📦 ${pedidos.length} pedidos encontrados para o período`);
       return pedidos;
     } catch (error) {
-      console.error('Erro ao buscar pedidos por período:', error);
+      console.error('❌ Erro ao buscar pedidos por período:', error);
       return [];
     }
   }
@@ -116,13 +125,19 @@ export class FirebaseRelatoriosService {
   // Obter dados completos dos relatórios
   async obterDadosCompletos(period: PeriodType): Promise<DadosRelatorios> {
     try {
+      console.log('🔍 FirebaseRelatoriosService: Iniciando busca de dados para período:', period);
+      
       const { inicio, fim, periodoAnterior } = this.calcularIntervaloDatas(period);
+      console.log('📅 Período atual:', inicio.toISOString(), 'até', fim.toISOString());
+      console.log('📅 Período anterior:', periodoAnterior.inicio.toISOString(), 'até', periodoAnterior.fim.toISOString());
       
       // Buscar dados do período atual e anterior em paralelo
       const [pedidosAtual, pedidosAnterior] = await Promise.all([
         this.buscarPedidosPorPeriodo(inicio, fim),
         this.buscarPedidosPorPeriodo(periodoAnterior.inicio, periodoAnterior.fim)
       ]);
+
+      console.log('📊 Pedidos encontrados - Atual:', pedidosAtual.length, 'Anterior:', pedidosAnterior.length);
 
       // Calcular todos os dados em paralelo
       const [kpis, vendasCategoria, performance, formasPagamento, topProdutos] = await Promise.all([
@@ -133,6 +148,8 @@ export class FirebaseRelatoriosService {
         this.calcularTopProdutos(pedidosAtual)
       ]);
 
+      console.log('📈 KPIs calculados:', kpis);
+
       const [horariosPico, satisfacao, crescimento, metricas] = await Promise.all([
         this.calcularHorariosPico(pedidosAtual),
         this.calcularSatisfacaoCliente(pedidosAtual),
@@ -140,7 +157,7 @@ export class FirebaseRelatoriosService {
         this.calcularMetricasComparativas(pedidosAtual, pedidosAnterior)
       ]);
 
-      return {
+      const resultado = {
         kpis,
         vendasPorCategoria: vendasCategoria,
         performanceTemporal: performance,
@@ -151,8 +168,11 @@ export class FirebaseRelatoriosService {
         dadosCrescimento: crescimento,
         metricasComparativas: metricas
       };
+
+      console.log('✅ Dados completos dos relatórios obtidos com sucesso');
+      return resultado;
     } catch (error) {
-      console.error('Erro ao obter dados completos dos relatórios:', error);
+      console.error('❌ Erro ao obter dados completos dos relatórios:', error);
       throw new Error('Falha ao carregar dados dos relatórios');
     }
   }

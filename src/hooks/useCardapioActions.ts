@@ -37,11 +37,12 @@ export function useCardapioActions() {
     editarProduto,
     excluirProduto,
     duplicarProduto,
+    atualizarPosicoesProdutos,
     estatisticas
   } = useProdutosFirebase();
 
   // Hook de categorias Firebase
-  const { getLojaId } = useAuth();
+  const { getLojaId, user, isAuthenticated } = useAuth();
   const lojaId = getLojaId();
   
   const {
@@ -50,8 +51,12 @@ export function useCardapioActions() {
     criarCategoria: criarCategoriaFirebase,
     editarCategoria: editarCategoriaFirebase,
     excluirCategoria: excluirCategoriaFirebase,
-    duplicarCategoria: duplicarCategoriaFirebase
-  } = useCategorias(lojaId || '', { status: 'ativo' });
+    duplicarCategoria: duplicarCategoriaFirebase,
+    recarregar: recarregarCategorias,
+    atualizarPosicoesCategorias
+  } = useCategorias(lojaId || '', {});
+
+
 
   // Sincronizar estados de loading
   useEffect(() => {
@@ -198,6 +203,34 @@ export function useCardapioActions() {
     }
   }, [excluirCategoriaFirebase, showSuccess, showError, analyticsService]);
 
+  // ✅ FUNCIONALIDADE: Toggle de status da categoria no Firebase
+  const handleToggleStatusCategoria = useCallback(async (categoria: Categoria) => {
+    try {
+      const novoStatus = categoria.status === 'ativo' ? 'inativo' : 'ativo';
+      
+      // Mostrar feedback imediato
+      showSuccess(`Alterando status da categoria "${categoria.nome}"...`);
+      
+      // Atualizar o status no Firebase
+      await editarCategoriaFirebase(categoria.id, { status: novoStatus });
+      
+      // ✅ CORREÇÃO: Forçar recarregamento imediato das categorias
+      await new Promise(resolve => setTimeout(resolve, 300)); // Aguardar propagação no Firebase
+      await recarregarCategorias(true); // Forçar reload ignorando cache
+      
+      // Feedback final de sucesso
+      showSuccess(`Categoria "${categoria.nome}" ${novoStatus === 'ativo' ? 'ativada' : 'desativada'} com sucesso!`);
+      
+    } catch (error) {
+      console.error('❌ ERRO COMPLETO ao alterar status da categoria:', {
+        categoria: categoria.nome,
+        error: error,
+        message: error instanceof Error ? error.message : 'Erro desconhecido'
+      });
+      showError(`Erro ao alterar status da categoria "${categoria.nome}". Tente novamente.`);
+    }
+  }, [editarCategoriaFirebase, recarregarCategorias, showSuccess, showError]);
+
   // Ações de filtros
   const handleFiltrosChange = useCallback((novosFiltros: any) => {
     updateFiltros(novosFiltros);
@@ -225,6 +258,30 @@ export function useCardapioActions() {
     // Log do evento de analytics
     analyticsService.logCardapioEvent('categoria_selecionada', { categoria });
   }, [handleFiltrosChange, analyticsService]);
+
+  const handleReordenarCategorias = useCallback(async (categoriasOrdenadas: string[]) => {
+    try {
+      await atualizarPosicoesCategorias(categoriasOrdenadas);
+      showSuccess('Ordem das categorias atualizada com sucesso!');
+      
+      // Log do evento de analytics
+      analyticsService.logCardapioEvent('categorias_reordenadas');
+    } catch (error) {
+      console.error('Erro ao reordenar categorias:', error);
+      showError('Erro ao atualizar ordem das categorias. Tente novamente.');
+    }
+  }, [atualizarPosicoesCategorias, showSuccess, showError, analyticsService]);
+
+  const handleReordenarProdutos = useCallback(async (produtosOrdenados: string[]) => {
+    try {
+      await atualizarPosicoesProdutos(produtosOrdenados);
+      showSuccess('Ordem dos produtos atualizada com sucesso!');
+      analyticsService.logCardapioEvent('produtos_reordenados');
+    } catch (error) {
+      console.error('Erro ao reordenar produtos:', error);
+      showError('Erro ao atualizar ordem dos produtos. Tente novamente.');
+    }
+  }, [atualizarPosicoesProdutos, showSuccess, showError, analyticsService]);
 
   // Ações de exportação
   const handleExportExcel = useCallback(async () => {
@@ -256,6 +313,9 @@ export function useCardapioActions() {
     handleSalvarEdicaoCategoria,
     handleDuplicarCategoria,
     handleExcluirCategoria,
+    handleToggleStatusCategoria,
+    handleReordenarCategorias,
+    handleReordenarProdutos,
     
     // Ações de filtros
     handleFiltrosChange,

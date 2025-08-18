@@ -1,5 +1,5 @@
 import React from 'react';
-import { Save, Trash2 } from 'lucide-react';
+import { TrashIcon, SaveIcon } from '../ui';
 import { Button } from '../ui/Button';
 import { CupomFormData } from '../../types/cupons';
 
@@ -31,7 +31,7 @@ export function ModalCupomActions({
             disabled={loading}
             className="flex items-center gap-2"
           >
-            <Trash2 className="w-4 h-4" />
+            <TrashIcon size={24} color="#dc2626" />
             Excluir
           </Button>
         )}
@@ -53,7 +53,7 @@ export function ModalCupomActions({
           disabled={loading}
           className="flex items-center gap-2"
         >
-          <Save className="w-4 h-4" />
+          <SaveIcon size={24} color="#ffffff" />
           {loading ? 'Salvando...' : (isEditing ? 'Salvar Alterações' : 'Criar Cupom')}
         </Button>
       </div>

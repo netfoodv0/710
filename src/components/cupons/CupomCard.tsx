@@ -2,6 +2,8 @@ import React from 'react';
 import { Calendar, DollarSign, Percent, Truck, Gift } from 'lucide-react';
 import { Cupom } from '../../types/cupons';
 import { Badge } from '../ui/badge';
+import { FormSwitch } from '../forms/FormSwitch';
+import { DiscountIcon } from '../ui/DiscountIcon';
 
 interface CupomCardProps {
   cupom: Cupom;
@@ -47,9 +49,9 @@ export function CupomCard({ cupom, onEdit, onToggleStatus }: CupomCardProps) {
   const getTipoIcon = (tipo: string) => {
     switch (tipo) {
       case 'desconto_percentual':
-        return <Percent className="w-4 h-4" />;
+        return <DiscountIcon size={16} color="#666666" />;
       case 'desconto_fixo':
-        return <DollarSign className="w-4 h-4" />;
+        return <DiscountIcon size={16} color="#666666" />;
       case 'frete_gratis':
         return <Truck className="w-4 h-4" />;
       case 'brinde':
@@ -60,7 +62,7 @@ export function CupomCard({ cupom, onEdit, onToggleStatus }: CupomCardProps) {
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+    <div className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow" style={{ padding: '16px', borderColor: 'rgb(207 209 211)' }}>
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
@@ -105,16 +107,18 @@ export function CupomCard({ cupom, onEdit, onToggleStatus }: CupomCardProps) {
           >
             Editar
           </button>
-          <button
-            className={`inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-              cupom.ativo 
-                ? 'text-white bg-red-600 hover:bg-red-700 focus:ring-red-500' 
-                : 'text-white bg-green-600 hover:bg-green-700 focus:ring-green-500'
-            }`}
-            onClick={() => onToggleStatus(cupom.id)}
-          >
-            {cupom.ativo ? 'Desativar' : 'Ativar'}
-          </button>
+          <div className="flex items-center gap-2">
+            <FormSwitch
+              name="status"
+              label=""
+              checked={cupom.ativo}
+              onChange={() => onToggleStatus(cupom.id)}
+              className="mb-0"
+            />
+            <span className="text-xs text-gray-600 font-medium">
+              {cupom.ativo ? 'Ativo' : 'Inativo'}
+            </span>
+          </div>
         </div>
       </div>
     </div>

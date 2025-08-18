@@ -1,5 +1,6 @@
 import React from 'react';
-import { X, Tag } from 'lucide-react';
+import { X } from 'lucide-react';
+import { CouponIcon } from '../ui';
 
 interface ModalCupomHeaderProps {
   isEditing: boolean;
@@ -9,9 +10,9 @@ interface ModalCupomHeaderProps {
 export function ModalCupomHeader({ isEditing, onClose }: ModalCupomHeaderProps) {
   return (
     <div className="flex items-center justify-between p-0 border-b border-gray-200" style={{ height: '73px' }}>
-      <div className="flex items-center gap-3" style={{ height: '73px' }}>
+      <div className="flex items-center gap-3 h-full">
         <div className="p-2 bg-blue-100 rounded-lg">
-          <Tag className="w-5 h-5 text-blue-600" />
+          <CouponIcon size={24} color="#2563eb" />
         </div>
         <div>
           <h2 className="text-xl font-semibold text-gray-900">

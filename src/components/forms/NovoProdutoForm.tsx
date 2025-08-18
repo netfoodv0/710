@@ -144,11 +144,11 @@ export function NovoProdutoForm({ onSubmit, status, onStatusChange, categorias =
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
       <style>{spinnerStyles}</style>
-      <div className="p-4 space-y-4">
-        <form id="produto-form" onSubmit={handleSubmit} className="space-y-4">
+      <div className="p-6 space-y-6" style={{ backgroundColor: '#f7f5f3' }}>
+        <form id="produto-form" onSubmit={handleSubmit} className="space-y-6">
         
         {/* Grid principal com 2 colunas para os cards */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         
         {/* Informações Básicas */}
         <FormSection
@@ -328,7 +328,7 @@ export function NovoProdutoForm({ onSubmit, status, onStatusChange, categorias =
                         onClick={() => removeFromArray('ingredientes', index)}
                         className="text-purple-600 hover:text-purple-800"
                       >
-                        <Minus className="w-3 h-3" />
+                        <Minus className="w-6 h-6" />
                       </button>
                     </span>
                   ))}
@@ -414,7 +414,6 @@ export function NovoProdutoForm({ onSubmit, status, onStatusChange, categorias =
         <FormSection
           title="Tags e Características"
           description="Adicione tags para facilitar a busca"
-          icon={<Tag className="w-5 h-5" />}
         >
           <div className="space-y-3">
             <div className="flex gap-2">
@@ -466,7 +465,7 @@ export function NovoProdutoForm({ onSubmit, status, onStatusChange, categorias =
                     onClick={() => removeFromArray('tags', index)}
                     className="text-purple-600 hover:text-purple-800"
                   >
-                    <Minus className="w-3 h-3" />
+                    <Minus className="w-6 h-6" />
                   </button>
                 </span>
               ))}
@@ -681,6 +680,9 @@ export function NovoProdutoForm({ onSubmit, status, onStatusChange, categorias =
         </div> {/* Fim do grid principal */}
 
         </form>
+        
+        {/* Margem inferior da página */}
+        <div className="h-25"></div>
       </div>
     </div>
   );

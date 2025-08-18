@@ -17,6 +17,7 @@ interface CustomDropdownProps {
   triggerIcon?: React.ReactNode;
   disabled?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  dropUp?: boolean;
 }
 
 export function CustomDropdown({
@@ -27,7 +28,8 @@ export function CustomDropdown({
   className = '',
   triggerIcon,
   disabled = false,
-  size = 'md'
+  size = 'md',
+  dropUp = false
 }: CustomDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -71,11 +73,15 @@ export function CustomDropdown({
         <span className="flex-1 truncate">
           {selectedOption?.label || placeholder}
         </span>
-        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ease-in-out flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ease-in-out flex-shrink-0 ${isOpen ? 'rotate-180' : ''} ${dropUp ? 'rotate-180' : ''}`} />
       </button>
 
       <div 
-        className={`absolute right-0 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[8rem] transition-opacity duration-200 ease-in-out ${
+        className={`absolute right-0 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 min-w-[8rem] transition-opacity duration-200 ease-in-out ${
+          dropUp 
+            ? 'bottom-full mb-2' 
+            : 'top-full mt-2'
+        } ${
           isOpen 
             ? 'opacity-100 visible' 
             : 'opacity-0 invisible'
@@ -92,7 +98,7 @@ export function CustomDropdown({
                   ? 'text-gray-400 cursor-not-allowed'
                   : selectedValue === option.value
                   ? 'bg-blue-50 text-blue-700 font-medium hover:bg-blue-100'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
               {option.icon && <span className="flex-shrink-0">{option.icon}</span>}

@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import { Search, Filter, Calendar, X, CheckCircle, XCircle, CreditCard, DollarSign, QrCode, Settings } from 'lucide-react';
+import { Search, Filter, Calendar, X, CheckCircle, XCircle, CreditCard, DollarSign, QrCode } from 'lucide-react';
+import { SettingsIcon } from '../../../components/ui';
 import { FiltrosHistoricoState } from '../../types';
 import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
 import { InputPersonalizado } from '../../../components/forms/InputPersonalizado';

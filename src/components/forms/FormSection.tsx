@@ -22,7 +22,7 @@ export function FormSection({
   const [expanded, setExpanded] = React.useState(defaultExpanded);
 
   return (
-    <div className={`bg-white rounded-lg p-4 ${className}`} style={{ padding: '16px' }}>
+    <div className={`bg-white rounded-lg p-4 border ${className}`} style={{ padding: '16px', borderColor: 'rgb(207 209 211)' }}>
       <div
         className={`mb-4 ${
           collapsible ? 'cursor-pointer hover:bg-gray-50 p-2 rounded' : ''
@@ -30,8 +30,8 @@ export function FormSection({
         onClick={collapsible ? () => setExpanded(!expanded) : undefined}
         style={{ height: '73px' }}
       >
-        <div className="flex items-center justify-between" style={{ height: '73px' }}>
-          <div className="flex items-center space-x-3" style={{ height: '73px' }}>
+        <div className="flex items-center justify-between h-full">
+          <div className="flex items-center space-x-3 h-full">
             {icon && (
               <div className="flex-shrink-0 w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 <div className="text-purple-600">{icon}</div>

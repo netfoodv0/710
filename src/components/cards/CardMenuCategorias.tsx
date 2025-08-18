@@ -1,10 +1,12 @@
 import React from 'react';
-import { Tag, Package, Coffee, Pizza, Cake, Wine, Utensils, Plus, GripVertical } from 'lucide-react';
+import { Tag, Package, Coffee, Pizza, Cake, Wine, Utensils, Plus } from 'lucide-react';
+import { DragIcon } from '../ui';
 import { MenuAcoesCategoria } from '../menus/MenuAcoesCategoria';
 import { Categoria } from '../../types/categoria';
-import { DndContext, DragEndEvent, closestCenter } from '@dnd-kit/core';
+import { DndContext, DragEndEvent, closestCenter, MeasuringStrategy } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { FormSwitch } from '../forms/FormSwitch';
 
 interface CardMenuCategoriasProps {
   categorias: string[];
@@ -16,6 +18,7 @@ interface CardMenuCategoriasProps {
   onDuplicateCategoria?: (categoria: Categoria) => void;
   onDeleteCategoria?: (categoria: Categoria) => void;
   onReorderCategorias?: (categorias: string[]) => void;
+  onToggleStatus?: (categoria: Categoria) => void; // ✅ NOVA FUNCIONALIDADE: Toggle de status
 }
 
 // Mapeamento de ícones para categorias comuns
@@ -62,15 +65,16 @@ const getCoresCategoria = (categoria: string, isSelected: boolean) => {
   };
 };
 
-// Componente SortableItem que combina Draggable e Droppable
-function SortableItem({ 
+// ✅ CORREÇÃO: Componente SortableItem memoizado para evitar re-renders desnecessários
+const SortableItem = React.memo(function SortableItem({ 
   categoria, 
   categoriaCompleta, 
   categoriaSelecionada, 
   onCategoriaClick, 
   onEditCategoria, 
   onDuplicateCategoria, 
-  onDeleteCategoria 
+  onDeleteCategoria,
+  onToggleStatus
 }: {
   categoria: string;
   categoriaCompleta?: Categoria;
@@ -79,6 +83,7 @@ function SortableItem({
   onEditCategoria?: (categoria: Categoria) => void;
   onDuplicateCategoria?: (categoria: Categoria) => void;
   onDeleteCategoria?: (categoria: Categoria) => void;
+  onToggleStatus?: (categoria: Categoria) => void;
 }) {
   const {
     attributes,
@@ -91,7 +96,7 @@ function SortableItem({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isDragging ? 'none' : transition,
     zIndex: isDragging ? 9999 : 'auto',
   };
 
@@ -99,16 +104,20 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className=""
+      className={`sortable-categoria ${isDragging ? 'dragging' : ''}`}
     >
-      <div className={`flex-shrink-0 lg:w-full w-auto flex items-center gap-3 p-3 rounded-lg border border-slate-200 transition-all duration-200 relative hover:bg-gray-50`}>
+      <div className={`flex-shrink-0 lg:w-full w-auto flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 relative hover:bg-gray-50 ${
+        categoriaCompleta?.status === 'inativo' 
+          ? 'bg-gray-50 opacity-75' 
+          : ''
+      }`} style={{ borderColor: '#cfd1d3' }}>
         {/* Ícone de arrasto */}
         <div 
           {...attributes} 
           {...listeners}
           className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors cursor-grab active:cursor-grabbing"
         >
-          <GripVertical className="w-4 h-4" />
+          <DragIcon size={24} color="#9ca3af" />
         </div>
         
         {/* Conteúdo clicável da categoria */}
@@ -117,11 +126,63 @@ function SortableItem({
           className="flex-1 flex items-center text-left min-w-0"
         >
           <div className="flex-1 min-w-0">
-            <span className={`text-sm font-medium block truncate whitespace-nowrap lg:whitespace-normal ${categoriaSelecionada === categoria ? 'text-red-600' : 'text-gray-900'}`}>
+            <span className={`text-sm font-medium block truncate whitespace-nowrap lg:whitespace-normal ${
+              categoriaSelecionada === categoria 
+                ? 'text-purple-600' 
+                : categoriaCompleta?.status === 'inativo' 
+                  ? 'text-gray-500' 
+                  : 'text-gray-900'
+            }`}>
               {categoria}
             </span>
           </div>
         </button>
+
+        {/* ✅ Toggle de Status da Categoria - Isolado do Drag */}
+        {onToggleStatus && categoriaCompleta && (
+          <div 
+            className="flex items-center gap-2 flex-shrink-0 mr-2"
+            onMouseDown={(e) => e.stopPropagation()} // ✅ CRÍTICO: Bloquear drag no toggle
+            onTouchStart={(e) => e.stopPropagation()} // ✅ CRÍTICO: Bloquear drag no mobile
+          >
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault(); // Evitar comportamento padrão
+                e.stopPropagation(); // Evitar propagação para elementos pais
+                onToggleStatus(categoriaCompleta);
+              }}
+              onMouseDown={(e) => {
+                e.preventDefault(); // ✅ CRÍTICO: Evitar que o mouseDown inicie o drag
+                e.stopPropagation();
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault(); // ✅ CRÍTICO: Evitar que o touch inicie o drag
+                e.stopPropagation();
+              }}
+              className={`
+                relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 flex-shrink-0
+                ${categoriaCompleta.status === 'ativo'
+                  ? 'bg-purple-600 hover:bg-purple-700' 
+                  : 'bg-gray-300 hover:bg-gray-400'
+                }
+                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
+                cursor-pointer z-10
+              `}
+              title={categoriaCompleta.status === 'ativo' ? 'Clique para desativar categoria' : 'Clique para ativar categoria'}
+            >
+              <span
+                className={`
+                  inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 shadow-lg
+                  ${categoriaCompleta.status === 'ativo' ? 'translate-x-6' : 'translate-x-1'}
+                `}
+              />
+            </button>
+            <span className="text-xs text-gray-600 font-medium w-12 text-center">
+              {categoriaCompleta.status === 'ativo' ? 'Ativo' : 'Inativo'}
+            </span>
+          </div>
+        )}
 
         {/* Menu de ações */}
         {onEditCategoria && onDuplicateCategoria && onDeleteCategoria && (
@@ -147,7 +208,7 @@ function SortableItem({
       </div>
     </div>
   );
-}
+});
 
 export function CardMenuCategorias({ 
   categorias, 
@@ -158,16 +219,11 @@ export function CardMenuCategorias({
   onEditCategoria,
   onDuplicateCategoria,
   onDeleteCategoria,
-  onReorderCategorias
+  onReorderCategorias,
+  onToggleStatus
 }: CardMenuCategoriasProps) {
   // Sempre mostrar o card, mesmo sem categorias (para permitir criar)
   const temCategorias = categorias && categorias.length > 0;
-  
-  console.log('🔄 CardMenuCategorias renderizado com:', { 
-    categorias, 
-    temCategorias, 
-    categoriasCompletas: categoriasCompletas?.length 
-  });
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -181,15 +237,14 @@ export function CardMenuCategorias({
         const [removed] = newCategorias.splice(oldIndex, 1);
         newCategorias.splice(newIndex, 0, removed);
         
-        console.log('🔄 Reordenando categorias:', { oldIndex, newIndex, newCategorias });
         onReorderCategorias(newCategorias);
       }
     }
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-lg p-4">
-      <div className="bg-white border border-slate-200 rounded-lg p-4 mb-4">
+    <div className="bg-white border rounded-lg p-4" style={{ borderColor: 'rgb(207 209 211)' }}>
+      <div className="bg-white border rounded-lg p-4 mb-4" style={{ borderColor: 'rgb(207 209 211)' }}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold text-gray-900">Categorias</h3>
@@ -197,7 +252,7 @@ export function CardMenuCategorias({
           {onNovaCategoria && (
             <button
               onClick={onNovaCategoria}
-              className="inline-flex items-center gap-1.5 px-3 h-9 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded-sm transition-colors duration-200"
+              className="inline-flex items-center gap-1.5 px-3 h-9 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200"
             >
               <Plus className="w-3.5 h-3.5" />
               Nova categoria
@@ -223,19 +278,24 @@ export function CardMenuCategorias({
         <DndContext 
           onDragEnd={handleDragEnd}
           collisionDetection={closestCenter}
+          measuring={{
+            droppable: {
+              strategy: MeasuringStrategy.Always
+            }
+          }}
+          modifiers={[]}
         >
-          <div className="space-y-2 lg:space-y-2 flex flex-row lg:flex-col gap-2 lg:gap-0 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
+          <div className="space-y-3 lg:space-y-3 flex flex-row lg:flex-col gap-3 lg:gap-0 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
             <SortableContext
               items={categorias}
               strategy={verticalListSortingStrategy}
             >
               {categorias.map((categoria, index) => {
                 const categoriaCompleta = categoriasCompletas?.find(c => c.nome === categoria);
-                const isCategoriaFirebase = !!categoriaCompleta;
                 
                 return (
                   <SortableItem
-                    key={`droppable-${categoria}`}
+                    key={`categoria-${categoria}-${index}`} // ✅ CORREÇÃO: Key mais estável
                     categoria={categoria}
                     categoriaCompleta={categoriaCompleta}
                     categoriaSelecionada={categoriaSelecionada}
@@ -243,6 +303,7 @@ export function CardMenuCategorias({
                     onEditCategoria={onEditCategoria}
                     onDuplicateCategoria={onDuplicateCategoria}
                     onDeleteCategoria={onDeleteCategoria}
+                    onToggleStatus={onToggleStatus}
                   />
                 );
               })}

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Download, Loader2, FileDown, Plus, Package, ArrowLeft, CheckCircle, Clock } from 'lucide-react';
+import { Download, Loader2, FileDown, Plus, ArrowLeft, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react';
+import { SaveIcon } from '../../../components/ui';
 import { PeriodFilter, PeriodType } from '../../../components/filters/FiltroPeriodo';
 import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
 
@@ -58,7 +59,7 @@ export const RelatorioHeader: React.FC<RelatorioHeaderProps> = ({
   // O layout principal já tem display flex, então usamos w-full e deixamos o header dentro do fluxo do conteúdo
   return (
     <div
-      className="fixed top-0 left-[243px] z-20 w-[calc(100%-243px)] bg-white border-b border-gray-200 px-6 py-4 mb-4 transition-all duration-300"
+              className="fixed top-0 left-[243px] z-20 w-[calc(100%-243px)] bg-white border-b border-gray-200 px-6 py-3 mb-4 transition-all duration-300"
       style={{ height: '73px' }}
     >
       <div className="flex items-center justify-between">
@@ -103,6 +104,8 @@ export const RelatorioHeader: React.FC<RelatorioHeaderProps> = ({
                 selectedValue={selectedStatus}
                 onValueChange={onStatusChange}
                 size="sm"
+                placeholder="Selecione o status"
+                className="min-w-[140px]"
               />
             </div>
           ) : (
@@ -152,7 +155,7 @@ export const RelatorioHeader: React.FC<RelatorioHeaderProps> = ({
                   </>
                 ) : (
                   <>
-                    <Package className="w-4 h-4" />
+                    <SaveIcon size={24} color="#ffffff" />
                     Salvar Produto
                   </>
                 )}
@@ -196,6 +199,6 @@ export const RelatorioHeader: React.FC<RelatorioHeaderProps> = ({
 
 const statusOptions: DropdownOption[] = [
   { value: 'ativo', label: 'Ativo', icon: <CheckCircle className="w-4 h-4 text-green-500" /> },
-  { value: 'inativo', label: 'Inativo', icon: <Clock className="w-4 h-4 text-gray-500" /> },
-  { value: 'em_falta', label: 'Em Falta', icon: <Clock className="w-4 h-4 text-orange-500" /> },
+  { value: 'inativo', label: 'Inativo', icon: <XCircle className="w-4 h-4 text-gray-500" /> },
+  { value: 'em_falta', label: 'Em Falta', icon: <AlertTriangle className="w-4 h-4 text-orange-500" /> },
 ];

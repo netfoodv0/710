@@ -25,7 +25,13 @@ export function useFiltrosRelatorios(dados: DadosRelatorios | null) {
   }, []);
 
   const dadosFiltrados = useMemo(() => {
-    if (!dados) return null;
+    console.log('🔍 useFiltrosRelatorios: Processando dados:', dados);
+    console.log('🔍 useFiltrosRelatorios: Filtros ativos:', filtros);
+    
+    if (!dados) {
+      console.log('❌ useFiltrosRelatorios: Nenhum dado disponível');
+      return null;
+    }
 
     // Aplicar filtros aos dados
     let dadosProcessados = { ...dados };

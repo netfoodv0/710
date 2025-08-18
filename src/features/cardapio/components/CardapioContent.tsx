@@ -29,12 +29,12 @@ export function CardapioContent() {
       <CardapioHeader />
 
       {/* Espaço para não sobrepor o conteúdo */}
-      <div className="h-[90px] md:h-[98px]" />
+      <div className="h-0" />
 
       {/* Conteúdo Principal */}
-      <div className="pb-4 px-4">
+      <div className="pt-6 px-6">
         {/* Layout em Flex: Sidebar de Categorias + Conteúdo Principal */}
-        <div className="flex flex-col lg:flex-row gap-4">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar Esquerda - Categorias */}
           <CardapioSidebar />
 

@@ -21,6 +21,7 @@ export interface UseProdutosFirebaseReturn {
   buscarProdutosDestacados: () => Promise<Produto[]>;
   buscarProdutosEmFalta: () => Promise<Produto[]>;
   recarregarProdutos: () => Promise<void>;
+  atualizarPosicoesProdutos: (produtosOrdenados: string[]) => Promise<void>;
   estatisticas: {
     totalProdutos: number;
     produtosAtivos: number;
@@ -89,7 +90,7 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
   }, [recarregarProdutos, showSuccess, showError]);
 
   const editarProduto = useCallback(async (id: string, produto: Partial<Produto>) => {
-    setLoading(true);
+    setLoading(true); // Atualizar loading de edição
     setError(null);
     
     try {
@@ -102,12 +103,12 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
       showError(errorMessage);
       console.error('Erro ao editar produto:', err);
     } finally {
-      setLoading(false);
+      setLoading(false); // Resetar loading de edição
     }
   }, [recarregarProdutos, showSuccess, showError]);
 
   const excluirProduto = useCallback(async (id: string) => {
-    setLoading(true);
+    setLoading(true); // Usar loading de edição
     setError(null);
     
     try {
@@ -120,12 +121,12 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
       showError(errorMessage);
       console.error('Erro ao excluir produto:', err);
     } finally {
-      setLoading(false);
+      setLoading(false); // Resetar loading de edição
     }
   }, [recarregarProdutos, showSuccess, showError]);
 
   const duplicarProduto = useCallback(async (id: string) => {
-    setLoading(true);
+    setLoading(true); // Usar loading de edição
     setError(null);
     
     try {
@@ -138,7 +139,7 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
       showError(errorMessage);
       console.error('Erro ao duplicar produto:', err);
     } finally {
-      setLoading(false);
+      setLoading(false); // Resetar loading de edição
     }
   }, [recarregarProdutos, showSuccess, showError]);
 
@@ -296,6 +297,20 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
     }
   }, []);
 
+  const atualizarPosicoesProdutos = useCallback(async (produtosOrdenados: string[]) => {
+    try {
+      if (!user?.uid) {
+        throw new Error('Usuário não autenticado');
+      }
+      
+      await firebaseCardapioService.atualizarPosicoesProdutos(user.uid, produtosOrdenados);
+      await recarregarProdutos(); // Recarregar para refletir nova ordem
+    } catch (error) {
+      console.error('Erro ao atualizar posições dos produtos:', error);
+      throw error;
+    }
+  }, [user?.uid, recarregarProdutos]);
+
   return {
     produtos,
     loading,
@@ -313,6 +328,7 @@ export const useProdutosFirebase = (): UseProdutosFirebaseReturn => {
     buscarProdutosDestacados,
     buscarProdutosEmFalta,
     recarregarProdutos,
+    atualizarPosicoesProdutos,
     estatisticas
   };
 }; 

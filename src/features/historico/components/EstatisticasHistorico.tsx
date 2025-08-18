@@ -1,113 +1,159 @@
 import React from 'react';
-import { TrendingUp, Package, DollarSign, Users, Calendar, BarChart3 } from 'lucide-react';
-import { EstatisticasHistorico } from '../../services/historicoPedidoService';
+import { HistoryIcon, BagIcon, RevenueIcon, TicketIcon, UsersIcon } from '../../../components/ui';
+import { EstatisticasHistorico as EstatisticasHistoricoType } from '../services/historicoPedidoService';
 import { FormSection } from '../../../components/forms/FormSection';
+import { CardTiposPedidos } from './CardTiposPedidos';
+import { CompletedOrderIcon, RejectedOrderIcon, NewCustomerIcon } from '../../../components/ui';
 
 interface EstatisticasHistoricoProps {
-  estatisticas: EstatisticasHistorico | null;
+  estatisticas: EstatisticasHistoricoType | null;
 }
 
-export function EstatisticasHistoricoComponent({ estatisticas }: EstatisticasHistoricoProps) {
+export const EstatisticasHistorico = ({ estatisticas }: EstatisticasHistoricoProps) => {
+  // Verificação de segurança para evitar erros quando estatisticas for null
   if (!estatisticas) {
     return (
-      <FormSection
-        title="Estatísticas do Histórico"
-        description="Métricas e indicadores dos pedidos"
-        icon={<BarChart3 className="w-5 h-5" />}
-        className="mt-4"
-      >
-
-      </FormSection>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 mb-6">
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
+          <div key={i} className="bg-white border rounded-lg p-4 animate-pulse" style={{ borderColor: '#cfd1d3' }}>
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                <div className="h-8 bg-gray-200 rounded"></div>
+              </div>
+              <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+            </div>
+          </div>
+        ))}
+      </div>
     );
   }
 
-  const formatarValor = (valor: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(valor);
-  };
-
-  const formatarPercentual = (valor: number, total: number) => {
-    if (total === 0) return '0%';
-    return `${Math.round((valor / total) * 100)}%`;
-  };
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4 mb-6">
+        {/* Receita Total */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Receita Total</p>
+              <p className="text-2xl font-bold text-gray-900">R$ {estatisticas.valorTotal.toFixed(2).replace('.', ',')}</p>
+            </div>
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <RevenueIcon size={20} color="#6b7280" />
+            </div>
+          </div>
+        </div>
+
         {/* Total de Pedidos */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total de Pedidos</p>
               <p className="text-2xl font-bold text-gray-900">{estatisticas.totalPedidos}</p>
             </div>
-            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-              <Package className="w-4 h-4 text-gray-600" />
+            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+              <BagIcon size={20} color="#6b7280" />
             </div>
-          </div>
-          <div className="mt-2 flex items-center text-xs">
-            <span className="text-gray-500">
-              {estatisticas.entregues} entregues • {estatisticas.cancelados} cancelados
-            </span>
           </div>
         </div>
 
-        {/* Pedidos Entregues */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
+        {/* Produtos Ativos */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Pedidos Entregues</p>
+              <p className="text-sm text-gray-600 mb-1">Produtos Ativos</p>
+              <p className="text-2xl font-bold text-gray-900">{estatisticas.totalPedidos > 0 ? estatisticas.totalPedidos : 0}</p>
+            </div>
+            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+              <TicketIcon size={20} color="#6b7280" />
+            </div>
+          </div>
+        </div>
+
+        {/* Clientes Ativos */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Clientes Ativos</p>
+              <p className="text-2xl font-bold text-gray-900">{estatisticas.clientesUnicos}</p>
+            </div>
+            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+              <UsersIcon size={20} color="#6b7280" />
+            </div>
+          </div>
+        </div>
+
+        {/* Faturamento Total */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Faturamento Total</p>
+              <p className="text-2xl font-bold text-gray-900">R$ {estatisticas.valorTotal.toFixed(2).replace('.', ',')}</p>
+            </div>
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <RevenueIcon size={20} color="#6b7280" />
+            </div>
+          </div>
+        </div>
+
+        {/* Ticket Médio */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Ticket Médio</p>
+              <p className="text-2xl font-bold text-gray-900">R$ {estatisticas.ticketMedio.toFixed(2).replace('.', ',')}</p>
+            </div>
+            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+              <TicketIcon size={20} color="#6b7280" />
+            </div>
+          </div>
+        </div>
+
+        {/* Pedidos Finalizados */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600 mb-1">Pedidos Finalizados</p>
               <p className="text-2xl font-bold text-gray-900">{estatisticas.entregues}</p>
             </div>
-            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-4 h-4 text-gray-600" />
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <CompletedOrderIcon size={20} color="#16a34a" />
             </div>
-          </div>
-          <div className="mt-2 flex items-center text-xs">
-            <span className="text-gray-500">
-              {formatarPercentual(estatisticas.entregues, estatisticas.totalPedidos)} do total
-            </span>
           </div>
         </div>
 
-        {/* Valor Total */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
+        {/* Pedidos Rejeitados */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Valor Total</p>
-              <p className="text-2xl font-bold text-gray-900">{formatarValor(estatisticas.valorTotal)}</p>
+              <p className="text-sm text-gray-600 mb-1">Pedidos Rejeitados</p>
+            <p className="text-2xl font-bold text-gray-900">{estatisticas.cancelados}</p>
             </div>
-            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-              <DollarSign className="w-4 h-4 text-gray-600" />
+            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+              <RejectedOrderIcon size={20} color="#dc2626" />
             </div>
-          </div>
-          <div className="mt-2 flex items-center text-xs">
-            <span className="text-gray-500">
-              Ticket médio: {formatarValor(estatisticas.ticketMedio)}
-            </span>
           </div>
         </div>
 
-        {/* Top Clientes */}
-        <div className="bg-white border border-gray-200 rounded-lg p-4">
+        {/* Clientes Novos */}
+        <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Top Clientes</p>
-              <p className="text-2xl font-bold text-gray-900">{estatisticas.topClientes.length}</p>
+              <p className="text-sm text-gray-600 mb-1">Clientes Novos</p>
+              <p className="text-2xl font-bold text-gray-900">{estatisticas.clientesUnicos}</p>
             </div>
-            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-              <Users className="w-4 h-4 text-gray-600" />
+            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+              <NewCustomerIcon size={20} color="#6b7280" />
             </div>
-          </div>
-          <div className="mt-2 flex items-center text-xs">
-            <span className="text-gray-500">
-              {estatisticas.topClientes.length > 0 && (
-                <span>Melhor: {estatisticas.topClientes[0].cliente}</span>
-              )}
-            </span>
           </div>
         </div>
       </div>
+
+      {/* Card de Tipos de Pedidos */}
+      <div className="mb-6">
+        <CardTiposPedidos />
+      </div>
+    </>
   );
-} 
+}; 

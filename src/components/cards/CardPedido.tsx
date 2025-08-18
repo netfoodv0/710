@@ -5,12 +5,12 @@ import {
   MapPin, 
   Phone, 
   Eye, 
-  Edit, 
   Printer, 
   MessageCircle,
   CreditCard,
   Calendar
 } from 'lucide-react';
+import { EditIcon } from '../ui';
 import { Pedido } from '../../types';
 import { AcoesStatusPedido } from './AcoesStatusPedido';
 import { formatarEndereco } from '../../utils/pedidoUtils';
@@ -149,6 +149,7 @@ export function CardPedido({
     return (
       <div 
         className="bg-white border border-gray-200 rounded-lg p-3 hover:border-blue-300 hover:shadow-sm transition-all cursor-pointer"
+        style={{ padding: '16px' }}
         onClick={handleClick}
       >
         <div className="flex items-center justify-between mb-2">
@@ -198,7 +199,7 @@ export function CardPedido({
             className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
             title="Editar pedido"
           >
-            <Edit className="w-4 h-4" />
+            <EditIcon size={16} color="#6b7280" />
           </button>
           <button 
             onClick={handleImprimir}

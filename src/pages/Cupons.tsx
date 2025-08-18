@@ -5,7 +5,7 @@ import { NotificationToast } from '../components/NotificationToast';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
 import { ModalCupom } from '../components/modals/ModalCriarEditarCupom';
-import { RelatorioHeader } from '../features/relatorios/components/RelatorioHeader';
+import { PageHeader } from '../components/ui';
 import {
   CupomStats,
   CupomList,
@@ -170,7 +170,7 @@ export function Cupons() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen" style={{ backgroundColor: '#f7f5f3' }}>
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -183,19 +183,23 @@ export function Cupons() {
           />
         ))}
 
-        {/* Cabeçalho fixo reutilizável */}
-        <RelatorioHeader
+        {/* Cabeçalho da página */}
+        <PageHeader
           title="Cupons de Desconto"
           subtitle="Gerencie os cupons de desconto do seu estabelecimento"
-          showNewOrderButton={true}
-          onNewOrder={abrirModalCriacao}
+          actionButton={{
+            label: "Novo Cupom",
+            onClick: abrirModalCriacao,
+            variant: "primary",
+            size: "md"
+          }}
         />
         
         {/* Espaço para não sobrepor o conteúdo */}
-        <div className="h-[82px]" />
+        <div className="h-0" />
 
         {/* Conteúdo Principal */}
-        <div className="px-6 pb-6">
+        <div className="px-6 pt-6">
           {loading ? (
             <CupomLoadingState />
           ) : (

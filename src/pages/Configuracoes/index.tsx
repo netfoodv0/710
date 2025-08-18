@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Settings, Save, AlertCircle, Package, Image as ImageIcon, Info, Tag, Clock, Calendar, BarChart3, Search, Plus, Minus, DollarSign, Trash2, Copy } from 'lucide-react';
+import { AlertCircle, Package, Image as ImageIcon, Info, Tag, Clock, Calendar, BarChart3, Search, Plus, Minus, DollarSign, Trash2, Copy, Loader2 } from 'lucide-react';
+import { SaveIcon, SettingsIcon, PageHeader } from '../../components/ui';
 import { ConfiguracaoLoja } from '../../types';
 import { useNotificationContext } from '../../context/notificationContextUtils';
 import { NotificationToast } from '../../components/NotificationToast';
@@ -62,10 +63,10 @@ export function Configuracoes() {
   const gerarHorariosExemplo = () => {
     if (!config?.agendamentoAtivo) return [];
     
-    const intervalo = config?.agendamentoIntervalo || 30;
-    const janela = config?.agendamentoJanela || 30;
+    const intervalo = config?.agendamentoAntecedencia || 30;
+    const janela = config?.agendamentoLimite || 30;
     
-    console.log('Gerando horários:', { intervalo, janela, agendamentoAtivo: config?.agendamentoAtivo });
+
     
     const horarios = [];
     
@@ -85,7 +86,6 @@ export function Configuracoes() {
     const horaFimStr2 = `${horaFim2.toString().padStart(2, '0')}:${minutoFim2.toString().padStart(2, '0')}`;
     horarios.push(`${horaInicio2} - ${horaFimStr2}`);
     
-    console.log('Horários gerados:', horarios);
     return horarios;
   };
 
@@ -134,43 +134,24 @@ export function Configuracoes() {
           ))}
         </div>
 
-        {/* Cabeçalho fixo */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-10" style={{ height: '73px' }}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Settings className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900">Configurações</h1>
-                <p className="text-sm text-gray-600">Gerencie as configurações do seu restaurante</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleSave}
-                disabled={salvando}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {salvando ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4" />
-                )}
-                Salvar Configurações
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Espaço para não sobrepor o conteúdo */}
-        <div className="h-[0px]" />
+        {/* Cabeçalho da página */}
+        <PageHeader
+          title="Configurações"
+          subtitle="Gerencie as configurações do seu restaurante"
+          actionButton={{
+            label: "Salvar Configurações",
+            onClick: handleSave,
+            loading: salvando,
+            disabled: salvando,
+            variant: "success",
+            size: "md"
+          }}
+        />
 
         {/* Conteúdo principal */}
-        <div className="p-4 space-y-4" style={{ padding: '16px', gap: '16px' }}>
+        <div className="px-6 py-6 space-y-6">
           {/* Grid principal com 2 colunas para os cards */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4" style={{ gap: '16px' }}>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
             
             {/* Configurações Gerais */}
             <FormSection
@@ -410,6 +391,7 @@ export function Configuracoes() {
                         Receber pedidos agendados
                       </label>
                       <FormSwitch
+                        label=""
                         name="agendamentoAtivo"
                         checked={config?.agendamentoAtivo || false}
                         onChange={(checked) => setConfig({ ...config, agendamentoAtivo: checked })}
@@ -425,7 +407,7 @@ export function Configuracoes() {
                           <div className="flex items-center space-x-2">
                             <InputPersonalizadoQuantidade
                               name="agendamentoAntecedencia"
-                              value={config?.agendamentoAntecedencia || 0}
+                              value={String(config?.agendamentoAntecedencia || 0)}
                               onChange={(value) => setConfig({ ...config, agendamentoAntecedencia: parseInt(value) || 0 })}
                               placeholder="0"
                               className="flex-1"
@@ -443,7 +425,7 @@ export function Configuracoes() {
                           <div className="flex items-center space-x-2">
                             <InputPersonalizadoQuantidade
                               name="agendamentoLimite"
-                              value={config?.agendamentoLimite || 8}
+                              value={String(config?.agendamentoLimite || 8)}
                               onChange={(value) => setConfig({ ...config, agendamentoLimite: parseInt(value) || 8 })}
                               placeholder="8"
                               className="flex-1"
@@ -870,169 +852,11 @@ export function Configuracoes() {
                   </div>
                 </div>
               </div>
-            </FormSection>
-
-            {/* Configurações de Horários - Formato Tabela */}
-            <div className="col-span-2">
-              <FormSection
-                title="Horários de funcionamento"
-                description="Configure os horários de funcionamento da sua loja"
-              >
-
-
-                {/* Tabela de horários */}
-                <div className="overflow-x-auto">
-                  <table className="w-full border border-gray-200 rounded-lg">
-                    <thead className="bg-gray-50" style={{ height: '73px' }}>
-                      <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200" style={{ height: '73px' }}>
-                          Dia da Semana
-                        </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200" style={{ height: '73px' }}>
-                          Horários
-                        </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-900 border-b border-gray-200" style={{ height: '73px' }}>
-                          Ações
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'].map((dia, index) => {
-                        const diaKey = dia.toLowerCase().replace('-feira', '');
-                        const horarios = config?.horariosFuncionamento?.[diaKey] || [];
-                        
-                        return (
-                          <tr key={dia} className="hover:bg-gray-50">
-                            <td className="px-4 py-4 text-sm font-medium text-gray-900">
-                              {dia}
-                            </td>
-                            <td className="px-4 py-4">
-                              <div className="space-y-2">
-                                {horarios.map((horario: any, horarioIndex: number) => (
-                                  <div key={horarioIndex} className="flex items-center space-x-2">
-                                                                         <InputPersonalizado
-                                       label=""
-                                       name={`${diaKey}-inicio-${horarioIndex}`}
-                                       value={horario.inicio || ''}
-                                       onChange={(value) => {
-                                         const novosHorarios = [...horarios];
-                                         novosHorarios[horarioIndex] = { ...horario, inicio: value };
-                                         setConfig({
-                                           ...config,
-                                           horariosFuncionamento: {
-                                             ...config?.horariosFuncionamento,
-                                             [diaKey]: novosHorarios
-                                           }
-                                         });
-                                       }}
-                                       placeholder="08:00"
-                                       type="time"
-                                       className="text-sm !h-9"
-                                       style={{ width: '36px', height: '36px', minHeight: '36px', maxHeight: '36px' }}
-                                     />
-                                     <span className="text-xs text-gray-400">-</span>
-                                     <InputPersonalizado
-                                       label=""
-                                       name={`${diaKey}-fim-${horarioIndex}`}
-                                       value={horario.fim || ''}
-                                       onChange={(value) => {
-                                         const novosHorarios = [...horarios];
-                                         novosHorarios[horarioIndex] = { ...horario, fim: value };
-                                         setConfig({
-                                           ...config,
-                                           horariosFuncionamento: {
-                                             ...config?.horariosFuncionamento,
-                                             [diaKey]: novosHorarios
-                                           }
-                                         });
-                                       }}
-                                       placeholder="18:00"
-                                       type="time"
-                                       className="text-sm !h-9"
-                                       style={{ width: '36px', height: '36px', minHeight: '36px', maxHeight: '36px' }}
-                                     />
-              <button
-                type="button"
-                                       onClick={() => {
-                                         const novosHorarios = horarios.filter((_: any, i: number) => i !== horarioIndex);
-                                         setConfig({
-                                           ...config,
-                                           horariosFuncionamento: {
-                                             ...config?.horariosFuncionamento,
-                                             [diaKey]: novosHorarios
-                                           }
-                                         });
-                                       }}
-                                       className="p-1 text-red-400 hover:text-red-600 transition-colors"
-                                       title="Remover período"
-                                     >
-                                       <Trash2 className="w-6 h-6" />
-                                     </button>
-                                  </div>
-                                ))}
-                                                                 {horarios.length === 0 && (
-                                   <span className="text-xs text-gray-400 italic">Fechado</span>
-                                 )}
-                              </div>
-                            </td>
-                                                        <td className="px-4 py-4 text-right">
-                              <div className="flex justify-end space-x-2">
-                                 <button
-                                   type="button"
-                                   onClick={() => {
-                                     if (index > 0) {
-                                       const diaAnterior = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'][index - 1];
-                                       const diaAnteriorKey = diaAnterior.toLowerCase().replace('-feira', '');
-                                       const horariosAnteriores = config?.horariosFuncionamento?.[diaAnteriorKey] || [];
-                                       if (horariosAnteriores.length > 0) {
-                                         setConfig({
-                                           ...config,
-                                           horariosFuncionamento: {
-                                             ...config?.horariosFuncionamento,
-                                             [diaKey]: [...horariosAnteriores]
-                                           }
-                                         });
-                                       }
-                                     }
-                                   }}
-                                   className="px-3 text-xs text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition-colors flex items-center space-x-2"
-                                   title="Copiar horário do dia anterior"
-                                   style={{ height: '40px' }}
-                                 >
-                                   <Copy className="w-4 h-4" />
-                                   <span className="text-xs font-medium">Copiar horário</span>
-                                 </button>
-                                 <button
-                                   type="button"
-                                   onClick={() => {
-                                     const novosHorarios = [...horarios, { inicio: '08:00', fim: '18:00' }];
-                                     setConfig({
-                                       ...config,
-                                       horariosFuncionamento: {
-                                         ...config?.horariosFuncionamento,
-                                         [diaKey]: novosHorarios
-                                       }
-                                     });
-                                   }}
-                                   className="px-3 text-xs text-white bg-green-600 rounded hover:bg-green-700 transition-colors flex items-center space-x-2"
-                                   title="Adicionar período"
-                                   style={{ height: '40px' }}
-                                 >
-                                   <Plus className="w-4 h-4" />
-                                   <span className="text-xs font-medium">Novo período</span>
-              </button>
-                               </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </FormSection>
-            </div>
-
+                        </FormSection>
           </div> {/* Fim do grid principal */}
+          
+          {/* Margem inferior da página */}
+          <div className="h-25"></div>
         </div>
       </div>
     </ErrorBoundary>

@@ -22,14 +22,11 @@ export const useProdutoManager = (id?: string) => {
       const carregarProduto = async () => {
         try {
           setLoading(true);
-          console.log('Tentando carregar produto com ID:', id);
           const produto = await firebaseCardapioService.buscarProduto(id);
-          console.log('Produto carregado:', produto);
           if (produto) {
             setProdutoExistente(produto);
             setStatus(produto.status || 'ativo');
           } else {
-            console.log('Produto não encontrado');
             showError('Produto não encontrado');
           }
         } catch (error) {
@@ -67,7 +64,6 @@ export const useProdutoManager = (id?: string) => {
         // Modo de criação
         const produtoId = await firebaseCardapioService.criarProduto(produtoData);
         showSuccess('Produto cadastrado com sucesso!', 3000);
-        console.log('Produto salvo com ID:', produtoId);
       }
       
       // Aguardar um pouco para mostrar a notificação antes de navegar

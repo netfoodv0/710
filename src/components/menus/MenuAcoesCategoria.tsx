@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MoreVertical, Edit, Copy, Trash2 } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
+import { EditIcon, TrashIcon, DuplicateIcon } from '../ui';
 import { Categoria } from '../../types/categoria';
 
 interface MenuAcoesCategoriaProps {
@@ -61,7 +62,7 @@ export function MenuAcoesCategoria({ categoria, onEdit, onDuplicate, onDelete }:
               onClick={() => handleAction(() => onEdit(categoria))}
               className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              <Edit className="w-4 h-4 text-blue-500" />
+              <EditIcon size={24} color="#3b82f6" />
               Editar categoria
             </button>
             
@@ -69,7 +70,7 @@ export function MenuAcoesCategoria({ categoria, onEdit, onDuplicate, onDelete }:
               onClick={() => handleAction(() => onDuplicate(categoria))}
               className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              <Copy className="w-4 h-4 text-green-500" />
+              <DuplicateIcon size={24} color="#10b981" />
               Duplicar categoria
             </button>
             
@@ -79,7 +80,7 @@ export function MenuAcoesCategoria({ categoria, onEdit, onDuplicate, onDelete }:
               onClick={() => handleAction(() => onDelete(categoria))}
               className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
             >
-              <Trash2 className="w-4 h-4" />
+              <TrashIcon size={24} color="#dc2626" />
               Excluir categoria
             </button>
           </div>

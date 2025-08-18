@@ -218,7 +218,7 @@ export const InputPersonalizadoQuantidade = forwardRef<HTMLInputElement, InputPe
               className="spinner-btn"
               title="Aumentar"
             >
-              <ChevronUp className="w-3 h-3" />
+              <ChevronUp className="w-6 h-6" />
             </button>
             <button
               type="button"
@@ -227,7 +227,7 @@ export const InputPersonalizadoQuantidade = forwardRef<HTMLInputElement, InputPe
               className="spinner-btn"
               title="Diminuir"
             >
-              <ChevronDown className="w-3 h-3" />
+              <ChevronDown className="w-6 h-6" />
             </button>
           </div>
 

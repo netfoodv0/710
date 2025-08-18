@@ -65,7 +65,6 @@ class FirebaseWhatsAppService {
       if (existingData && existingData.isConnected === isConnected) {
         // Se o status não mudou, só atualizar o lastSeen se estiver conectado
         if (!isConnected) {
-          console.log('⚠️ Status não mudou e está desconectado, pulando atualização');
           return;
         }
       }
@@ -87,10 +86,7 @@ class FirebaseWhatsAppService {
       }
 
       await setDoc(statusRef, statusData, { merge: true });
-      
-      console.log('✅ Status do WhatsApp atualizado no Firebase:', { userId, isConnected });
     } catch (error) {
-      console.error('❌ Erro ao atualizar status no Firebase:', error);
       throw error;
     }
   }
@@ -109,7 +105,6 @@ class FirebaseWhatsAppService {
       
       return null;
     } catch (error) {
-      console.error('❌ Erro ao buscar status no Firebase:', error);
       return null;
     }
   }
@@ -128,15 +123,12 @@ class FirebaseWhatsAppService {
       (docSnap) => {
         if (docSnap.exists()) {
           const status = docSnap.data() as WhatsAppStatus;
-          console.log('📡 Status atualizado em tempo real:', status);
           callback(status);
         } else {
-          console.log('📡 Nenhum status encontrado');
           callback(null);
         }
       },
       (error) => {
-        console.error('❌ Erro no listener de status:', error);
         callback(null);
       }
     );
@@ -165,7 +157,6 @@ class FirebaseWhatsAppService {
       
       return diffMinutes <= timeoutMinutes;
     } catch (error) {
-      console.error('❌ Erro ao verificar conexão:', error);
       return false;
     }
   }
@@ -184,10 +175,7 @@ class FirebaseWhatsAppService {
       };
 
       await setDoc(sessionRef, data);
-      
-      console.log('✅ Sessão criada no Firebase:', sessionData.sessionId);
     } catch (error) {
-      console.error('❌ Erro ao criar sessão:', error);
       throw error;
     }
   }
@@ -206,10 +194,7 @@ class FirebaseWhatsAppService {
         ...updates,
         updatedAt: serverTimestamp() as Timestamp,
       }, { merge: true });
-      
-      console.log('✅ Sessão atualizada:', sessionId);
     } catch (error) {
-      console.error('❌ Erro ao atualizar sessão:', error);
       throw error;
     }
   }

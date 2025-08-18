@@ -1,7 +1,8 @@
 import React from 'react';
 import { Produto } from '../../features/cardapio/types/cardapio.types';
 import { StatusBadge } from '../StatusBadge';
-import { Edit, Copy, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
+import { EditIcon, TrashIcon, DuplicateIcon } from '../ui';
 
 interface ListaProdutosRowProps {
   produto: Produto;
@@ -38,7 +39,7 @@ export function ListaProdutosRow({
             <img 
               src={produto.imagem} 
               alt={produto.nome}
-              className="w-10 h-10 rounded object-cover mr-3"
+              className="w-10 h-10 rounded-sm object-cover mr-3"
             />
           )}
           <div>
@@ -83,21 +84,21 @@ export function ListaProdutosRow({
             className="p-1 text-blue-400 hover:text-blue-600 transition-colors"
             title="Editar"
           >
-            <Edit size={16} />
+            <EditIcon size={16} color="#60a5fa" />
           </button>
           <button
             onClick={() => onDuplicate(produto.id)}
             className="p-1 text-green-400 hover:text-green-600 transition-colors"
             title="Duplicar"
           >
-            <Copy size={16} />
+            <DuplicateIcon size={24} color="#10b981" />
           </button>
           <button
             onClick={() => onDelete(produto.id)}
             className="p-1 text-red-400 hover:text-red-600 transition-colors"
             title="Excluir"
           >
-            <Trash2 size={16} />
+            <TrashIcon size={24} color="#ef4444" />
           </button>
         </div>
       </td>

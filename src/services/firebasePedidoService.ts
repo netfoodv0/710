@@ -21,10 +21,10 @@ export class FirebasePedidoService {
   private pedidosCollection = collection(db, 'pedidos');
 
   // Método auxiliar para obter o ID da loja do usuário autenticado
-  public getLojaId(): string {
+  public getLojaId(): string | null {
     const user = auth.currentUser;
     if (!user) {
-      throw new Error('Usuário não autenticado');
+      return null;
     }
     return user.uid;
   }

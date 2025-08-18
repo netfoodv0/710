@@ -10,4 +10,34 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    force: true,
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@heroui/react',
+      '@heroui/date-picker',
+      'firebase',
+      'lucide-react'
+    ]
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@heroui/react', '@heroui/date-picker'],
+          firebase: ['firebase']
+        }
+      }
+    }
+  },
+  server: {
+    hmr: true,
+    watch: {
+      usePolling: true
+    }
+  }
 })

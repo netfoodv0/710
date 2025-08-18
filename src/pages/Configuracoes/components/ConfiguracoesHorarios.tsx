@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Clock, Plus, Trash2, Calendar, Settings, AlertCircle } from 'lucide-react';
+import { Plus, Calendar, AlertCircle } from 'lucide-react';
+import { TrashIcon, SettingsIcon, ClockIcon } from '../../../components/ui';
 import { ConfiguracaoLoja, HorarioPausa } from '../../../types';
 import { diasSemana } from '../data/abasConfig';
 
@@ -145,7 +146,7 @@ export function ConfiguracoesHorarios({
                           onClick={() => removerPausa(dia.key, index)}
                           className="p-1 text-red-600 hover:bg-red-50 rounded"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <TrashIcon size={24} color="#dc2626" />
                         </button>
                       </div>
                     ))}
@@ -349,7 +350,7 @@ export function ConfiguracoesHorarios({
               }`}
             >
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
+                <ClockIcon size={24} color="#6b7280" />
                 Horários Normais
               </div>
             </button>
@@ -382,7 +383,7 @@ export function ConfiguracoesHorarios({
               }`}
             >
               <div className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
+                <SettingsIcon size={24} color="#6b7280" />
                 Configurações Avançadas
               </div>
             </button>

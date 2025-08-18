@@ -19,13 +19,17 @@ export function useRelatorios(period: PeriodType): UseRelatoriosReturn {
 
   const carregarDados = useCallback(async () => {
     try {
+      console.log('🔄 useRelatorios: Iniciando carregamento de dados para período:', period);
       setLoading(true);
       setError(null);
       
       const dadosRelatorios = await relatoriosService.obterDadosCompletos(period);
+      console.log('📊 useRelatorios: Dados obtidos:', dadosRelatorios);
+      
       setDados(dadosRelatorios);
+      console.log('✅ useRelatorios: Dados carregados com sucesso');
     } catch (err) {
-      console.error('Erro ao carregar dados dos relatórios:', err);
+      console.error('❌ useRelatorios: Erro ao carregar dados dos relatórios:', err);
       setError(err instanceof Error ? err.message : 'Erro ao carregar dados');
     } finally {
       setLoading(false);

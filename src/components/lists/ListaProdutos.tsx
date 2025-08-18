@@ -4,7 +4,6 @@ import { ModalProduto } from '../modals/ModalCriarEditarProduto';
 import { useListaProdutos } from '../../hooks/useListaProdutos';
 import { ListaProdutosHeader } from './HeaderListaProdutos';
 import { ProductCard } from '../Card';
-import { GripVertical } from 'lucide-react';
 import { DndContext, DragEndEvent, closestCenter, MeasuringStrategy } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -12,14 +11,14 @@ import { CSS } from '@dnd-kit/utilities';
 export const ListaProdutos: React.FC<ListaProdutosProps> = ({
   produtos,
   categorias,
-  loading,
   onCreate,
   onEdit,
   onDelete,
   onDuplicate,
   onToggleStatus,
   categoriaSelecionada,
-  onShowCategoryToast
+  onShowCategoryToast,
+  onReorderProdutos
 }) => {
   // Hook personalizado para gerenciar estado (apenas para exclusão, duplicação, etc.)
   const {
@@ -52,10 +51,6 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
       isDragging,
     } = useSortable({ 
       id: produto.id,
-      transition: {
-        duration: 150,
-        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-      },
     });
 
     const style = {
@@ -76,7 +71,7 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
           preco={produto.preco}
           imagem={produto.imagem}
           status={produto.status}
-          onToggleStatus={(status) => handleToggleStatus(produto.id, status)}
+          onToggleStatus={(status) => onToggleStatus(produto.id, status)}
           onEditar={() => onEdit(produto)}
           onExcluir={() => handleDelete(produto.id)}
           dragHandleProps={{ attributes, listeners }}
@@ -89,13 +84,9 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
-    console.log('Drag end event:', { active: active.id, over: over?.id });
-    
     if (active.id !== over?.id && over) {
       const oldIndex = produtosOrdenados.findIndex(produto => produto.id === active.id);
       const newIndex = produtosOrdenados.findIndex(produto => produto.id === over.id);
-      
-      console.log('Índices encontrados:', { oldIndex, newIndex });
       
       if (oldIndex !== -1 && newIndex !== -1) {
         // Criar nova lista com produtos reordenados
@@ -103,33 +94,23 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
         const [removed] = newProdutos.splice(oldIndex, 1);
         newProdutos.splice(newIndex, 0, removed);
         
-        console.log('Produto reordenado com sucesso:', { 
-          produto: removed.nome, 
-          de: oldIndex, 
-          para: newIndex,
-          novaOrdem: newProdutos.map(p => p.nome)
-        });
-        
         // Atualizar o estado local com a nova ordem
         setProdutosOrdenados(newProdutos);
         
-        console.log('Estado atualizado:', {
-          produtosAnteriores: produtosOrdenados.map(p => p.nome),
-          produtosNovos: newProdutos.map(p => p.nome)
-        });
-        
         // TODO: Implementar função para salvar nova ordem no backend
         // onReorderProdutos?.(newProdutos);
-      } else {
-        console.warn('Índices inválidos para reordenação:', { oldIndex, newIndex });
+        
+        // ✅ NOVO: Salvar nova ordem no Firebase
+        if (onReorderProdutos) {
+          const nomesOrdenados = newProdutos.map(produto => produto.nome);
+          onReorderProdutos(nomesOrdenados);
+        }
       }
-    } else {
-      console.log('Drag cancelado ou sem mudança de posição');
     }
   };
 
-  // Se não há produtos, mostrar mensagem
-  if (!loading && produtosOrdenados.length === 0) {
+  // Se não há produtos, mostrar mensagem (sem verificar loading)
+  if (produtosOrdenados.length === 0) {
     return (
       <div className="space-y-4">
         <ListaProdutosHeader 
@@ -174,8 +155,8 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
         onShowCategoryToast={onShowCategoryToast}
       />
 
-      {/* Loading state */}
-      {loading && (
+      {/* Loading state - REMOVIDO COMPLETAMENTE */}
+      {/* {loading && !loadingEdicao && (
         <div className="grid grid-cols-1 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="bg-white border border-slate-200 rounded-lg h-[98px] p-4 animate-pulse">
@@ -194,10 +175,10 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
             </div>
           ))}
         </div>
-      )}
+      )} */}
 
-      {/* Produtos com DnD em lista vertical */}
-      {!loading && produtosOrdenados.length > 0 && (
+      {/* Produtos com DnD em lista vertical - Sempre mostrar quando há produtos */}
+      {produtosOrdenados.length > 0 && (
         <DndContext 
           onDragEnd={handleDragEnd}
           collisionDetection={closestCenter}

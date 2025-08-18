@@ -1,5 +1,6 @@
 import React from 'react';
-import { Edit, Printer, MessageCircle, Eye } from 'lucide-react';
+import { Printer, MessageCircle, Eye } from 'lucide-react';
+import { EditIcon } from '../../ui';
 import { Pedido } from '../../../types';
 import { StatusBadge } from '../../StatusBadge';
 
@@ -51,7 +52,7 @@ export function CardPedidoHeader({
           className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
           title="Editar pedido"
         >
-          <Edit className="w-4 h-4" />
+          <EditIcon size={16} color="#6b7280" />
         </button>
         <button 
           onClick={handleImprimir}

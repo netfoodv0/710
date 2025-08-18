@@ -30,4 +30,37 @@ export interface EstatisticasGerais {
   pedidos7Dias: number;
   tempoMedioEntrega: number;
   avaliacaoMedia: number;
+  pedidosPendentes?: number;
+}
+
+// Novos tipos para os componentes do dashboard
+export interface FormaPedida {
+  nome: string;
+  valor: number;
+  icone: string;
+  cor: string;
+}
+
+export interface ProdutoVendido {
+  nome: string;
+  quantidade: number;
+  receita: number;
+}
+
+export interface PedidoEmAndamento {
+  id: string;
+  numero: string;
+  cliente: string;
+  status: string;
+  total: number;
+}
+
+export interface DashboardData {
+  kpis: KPI[];
+  formasPagamento: DadosFormaPagamento[];
+  pedidosRecentes: any[];
+  estatisticas: EstatisticasGerais;
+  formasPedidas?: FormaPedida[];
+  produtosVendidos?: ProdutoVendido[];
+  pedidosEmAndamento?: PedidoEmAndamento[];
 } 

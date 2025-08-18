@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, Tag, Save, AlertCircle } from 'lucide-react';
+import { X, Tag } from 'lucide-react';
+import { SaveIcon } from '../ui';
 import { ModalCategoriaProps, CriarCategoriaData, PeriodoDisponibilidade } from '../../types/categoria';
 import { FormularioDisponibilidade } from '../forms/FormularioDisponibilidade';
+import { FormSwitch } from '../forms/FormSwitch';
 
 export function ModalCategoria({
   isOpen,
@@ -194,15 +196,13 @@ export function ModalCategoria({
                 <h4 className="text-sm font-medium text-gray-900">Agendamento prévio obrigatório</h4>
                 <p className="text-xs text-gray-500">Clientes precisarão agendar antes de pedir</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.agendamentoPrevio}
-                  onChange={(e) => handleInputChange('agendamentoPrevio', e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
-              </label>
+              <FormSwitch
+                name="agendamentoPrevio"
+                label=""
+                checked={formData.agendamentoPrevio}
+                onChange={(checked) => handleInputChange('agendamentoPrevio', checked)}
+                className="mb-0"
+              />
             </div>
 
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -210,15 +210,13 @@ export function ModalCategoria({
                 <h4 className="text-sm font-medium text-gray-900">Ative ou desative tempo extra para produção</h4>
                 <p className="text-xs text-gray-500">Produtos desta categoria terão tempo extra de preparo</p>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.tempoExtraProducao}
-                  onChange={(e) => handleInputChange('tempoExtraProducao', e.target.checked)}
-                  className="sr-only peer"
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
-              </label>
+              <FormSwitch
+                name="tempoExtraProducao"
+                label=""
+                checked={formData.tempoExtraProducao}
+                onChange={(checked) => handleInputChange('tempoExtraProducao', checked)}
+                className="mb-0"
+              />
             </div>
           </div>
 
@@ -250,7 +248,7 @@ export function ModalCategoria({
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4" />
+                  <SaveIcon size={24} color="#ffffff" />
                   {categoria ? 'Salvar alterações' : 'Criar categoria'}
                 </>
               )}

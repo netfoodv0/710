@@ -11,7 +11,8 @@ import {
   ChartTooltip,
   ChartArea
 } from '@progress/kendo-react-charts';
-import { BarChart3, Users, MapPin, Smartphone, TrendingUp } from 'lucide-react';
+import { Users, MapPin, Smartphone, TrendingUp } from 'lucide-react';
+import { ReportIcon } from '../../../components/ui';
 import { DadosRelatorios } from '../types/relatorios.types';
 
 interface GraficosAnalyticsProps {
@@ -70,7 +71,7 @@ export const GraficosAnalytics: React.FC<GraficosAnalyticsProps> = ({ dados }) =
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-blue-600" />
+          <ReportIcon size={24} color="#3b82f6" />
           <h2 className="text-lg font-semibold text-gray-900">Analytics Avançados</h2>
         </div>
         
@@ -108,7 +109,7 @@ export const GraficosAnalytics: React.FC<GraficosAnalyticsProps> = ({ dados }) =
   };
 
   const renderGraficoSatisfacao = () => (
-    <Chart style={{ height: '350px' }}>
+    <Chart style={{ height: '245px' }}>
       <ChartArea background="transparent" />
       <ChartSeries>
         <ChartSeriesItem
@@ -143,7 +144,7 @@ export const GraficosAnalytics: React.FC<GraficosAnalyticsProps> = ({ dados }) =
   );
 
   const renderGraficoCanais = () => (
-    <Chart style={{ height: '350px' }}>
+    <Chart style={{ height: '245px' }}>
       <ChartArea background="transparent" />
       <ChartSeries>
         <ChartSeriesItem
@@ -178,7 +179,7 @@ export const GraficosAnalytics: React.FC<GraficosAnalyticsProps> = ({ dados }) =
   );
 
   const renderGraficoRegioes = () => (
-    <Chart style={{ height: '350px' }}>
+    <Chart style={{ height: '245px' }}>
       <ChartArea background="transparent" />
       <ChartSeries>
         <ChartSeriesItem
@@ -251,7 +252,7 @@ export const GraficosAnalytics: React.FC<GraficosAnalyticsProps> = ({ dados }) =
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <BarChart3 className="w-5 h-5 text-blue-600" />
+          <ReportIcon size={24} color="#3b82f6" />
           <h2 className="text-lg font-semibold text-gray-900">Analytics Avançados</h2>
         </div>
         

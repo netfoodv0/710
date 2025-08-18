@@ -29,6 +29,7 @@ export interface EstatisticasHistorico {
   cancelados: number;
   valorTotal: number;
   ticketMedio: number;
+  clientesUnicos: number;
   pedidosPorDia: {
     data: string;
     quantidade: number;
@@ -54,6 +55,12 @@ class HistoricoPedidoService {
     try {
       // ✅ CORREÇÃO: Usar lojaId para isolamento
       const lojaId = this.getLojaId();
+      
+      // Verificar se lojaId está disponível
+      if (!lojaId) {
+        console.log('LojaId não disponível, aguardando autenticação...');
+        return [];
+      }
       
       // Primeiro, buscar todos os pedidos entregues
       const pedidosEntregues = await this.buscarPedidosPorStatus('entregue', lojaId);
@@ -184,12 +191,20 @@ class HistoricoPedidoService {
       // Top clientes
       const topClientes = this.obterTopClientes(pedidos);
 
+      // Clientes únicos
+      const clientesUnicos = new Set(
+        pedidos
+          .map(p => p.cliente?.nome || p.cliente?.telefone)
+          .filter(Boolean)
+      ).size;
+
       return {
         totalPedidos,
         entregues,
         cancelados,
         valorTotal,
         ticketMedio,
+        clientesUnicos,
         pedidosPorDia,
         topClientes
       };
@@ -201,6 +216,7 @@ class HistoricoPedidoService {
         cancelados: 0,
         valorTotal: 0,
         ticketMedio: 0,
+        clientesUnicos: 0,
         pedidosPorDia: [],
         topClientes: []
       };

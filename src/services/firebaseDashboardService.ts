@@ -33,6 +33,9 @@ export class FirebaseDashboardService {
     kpis: KPI[];
     formasPagamento: DadosFormaPagamento[];
     estatisticas: EstatisticasGerais;
+    formasPedidas: any[];
+    produtosVendidos: any[];
+    pedidosEmAndamento: any[];
   } {
     return {
       kpis: [
@@ -95,8 +98,12 @@ export class FirebaseDashboardService {
         receita7Dias: 0,
         pedidos7Dias: 0,
         tempoMedioEntrega: 0,
-        avaliacaoMedia: 0
-      }
+        avaliacaoMedia: 0,
+        pedidosPendentes: 0
+      },
+      formasPedidas: [],
+      produtosVendidos: [],
+      pedidosEmAndamento: []
     };
   }
 
@@ -511,7 +518,10 @@ export class FirebaseDashboardService {
         kpis,
         formasPagamento,
         pedidosRecentes,
-        estatisticas
+        estatisticas,
+        formasPedidas: [],
+        produtosVendidos: [],
+        pedidosEmAndamento: []
       };
     } catch (error) {
       console.error('Erro ao buscar dados do dashboard:', error);
@@ -557,8 +567,12 @@ export class FirebaseDashboardService {
           receita7Dias: 0,
           pedidos7Dias: 0,
           tempoMedioEntrega: 0,
-          avaliacaoMedia: 0
-        }
+          avaliacaoMedia: 0,
+          pedidosPendentes: 0
+        },
+        formasPedidas: [],
+        produtosVendidos: [],
+        pedidosEmAndamento: []
       };
     }
   }
@@ -719,6 +733,89 @@ export class FirebaseDashboardService {
     } catch (error) {
       console.error('Erro ao calcular dados de performance:', error);
       return this.getDadosPerformanceFallback(periodo);
+    }
+  }
+
+  // Calcular pedidos diários do mês atual com dados reais
+  async calcularPedidosDiariosDoMes(): Promise<{
+    pedidosPorDia: number[];
+    labelsDias: string[];
+  }> {
+    try {
+      const lojaId = this.getLojaId();
+      
+      // Buscar todos os pedidos da loja
+      const q = query(
+        this.pedidosCollection,
+        where('lojaId', '==', lojaId),
+        orderBy('dataHora', 'desc')
+      );
+
+      const snapshot = await getDocs(q);
+      const todosPedidos = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          ...data,
+          id: doc.id,
+          dataHora: data.dataHora?.toDate() || new Date(),
+          dataCriacao: data.dataCriacao?.toDate() || new Date(),
+          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
+        } as Pedido;
+      });
+
+      const hoje = new Date();
+      const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+      const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+      const diasDoMes = fimMes.getDate();
+
+      const pedidosPorDia: number[] = [];
+      const labelsDias: string[] = [];
+
+      // Para cada dia do mês atual
+      for (let dia = 1; dia <= diasDoMes; dia++) {
+        const dataInicio = new Date(hoje.getFullYear(), hoje.getMonth(), dia);
+        const dataFim = new Date(dataInicio);
+        dataFim.setDate(dataFim.getDate() + 1);
+
+        // Filtrar pedidos do dia específico
+        const pedidosDoDia = todosPedidos.filter(pedido => 
+          pedido.dataHora >= dataInicio && pedido.dataHora < dataFim
+        );
+
+        pedidosPorDia.push(pedidosDoDia.length);
+        
+        // Criar label mais indicativo (dd/mm)
+        const diaFormatado = dia.toString().padStart(2, '0');
+        const mesFormatado = (hoje.getMonth() + 1).toString().padStart(2, '0');
+        labelsDias.push(`${diaFormatado}/${mesFormatado}`);
+      }
+
+      return {
+        pedidosPorDia,
+        labelsDias
+      };
+    } catch (error) {
+      console.error('Erro ao calcular pedidos diários do mês:', error);
+      
+      // Fallback: gerar dados para todos os dias do mês atual
+      const hoje = new Date();
+      const diasDoMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
+      const pedidosPorDia: number[] = [];
+      const labelsDias: string[] = [];
+      
+      for (let dia = 1; dia <= diasDoMes; dia++) {
+        // Criar label mais indicativo (dd/mm)
+        const diaFormatado = dia.toString().padStart(2, '0');
+        const mesFormatado = (hoje.getMonth() + 1).toString().padStart(2, '0');
+        labelsDias.push(`${diaFormatado}/${mesFormatado}`);
+        // Dados zerados quando há erro
+        pedidosPorDia.push(0);
+      }
+      
+      return {
+        pedidosPorDia,
+        labelsDias
+      };
     }
   }
 

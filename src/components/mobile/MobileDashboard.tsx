@@ -1,7 +1,6 @@
 import React from 'react';
 import { 
   TrendingUp, 
-  ShoppingBag, 
   DollarSign, 
   Users,
   Clock,
@@ -12,6 +11,7 @@ import {
 import { MobileCard } from './MobileCard';
 import { MobileButton } from './MobileButton';
 import { useDashboard } from '../../hooks/useDashboard';
+import { OrderIcon } from '../ui';
 
 interface MetricCardProps {
   title: string;
@@ -77,7 +77,7 @@ export function MobileDashboard() {
       value: data?.pedidosHoje?.toString() || '0',
       change: '+8.2%',
       isPositive: true,
-      icon: <ShoppingBag className="w-6 h-6 text-white" />,
+      icon: <OrderIcon size={24} color="#ffffff" />,
       color: 'bg-gradient-to-br from-blue-500 to-blue-600',
       trend: 'up' as const
     },

@@ -13,7 +13,7 @@ export function ModalProdutoPreview({ produto }: ModalProdutoPreviewProps) {
         <h3 className="text-lg font-semibold mb-4">Preview do Produto</h3>
         
         {/* Card do produto */}
-        <div className="bg-white rounded-lg shadow-sm border p-4 max-w-md">
+        <div className="bg-white rounded-lg shadow-sm border p-4 max-w-md" style={{ borderColor: 'rgb(207 209 211)' }}>
           {produto.imagem && (
             <img 
               src={produto.imagem} 

@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
-import { Activity, TrendingUp, Clock, Star, Target, BarChart3 } from 'lucide-react';
+import { Activity, TrendingUp, Clock, Star, Target } from 'lucide-react';
+import { ReportIcon } from '../../../components/ui';
 import { DadosRelatorios } from '../types/relatorios.types';
 import { PeriodType } from '../../../components/filters/FiltroPeriodo';
 
@@ -61,7 +62,7 @@ export const GraficosPerformance: React.FC<GraficosPerformanceProps> = ({ dados,
       chart: {
         ...baseOptions.chart,
         type: 'area',
-        height: 350
+        height: 245
       },
       xaxis: {
         categories: dados.metricasComparativas.categorias,
@@ -124,7 +125,7 @@ export const GraficosPerformance: React.FC<GraficosPerformanceProps> = ({ dados,
       chart: {
         ...baseOptions.chart,
         type: 'line',
-        height: 350
+        height: 245
       },
       xaxis: {
         categories: dados.dadosCrescimento.map(item => item.periodo),
@@ -193,7 +194,7 @@ export const GraficosPerformance: React.FC<GraficosPerformanceProps> = ({ dados,
       chart: {
         ...baseOptions.chart,
         type: 'bar', // Corrigido para tipo suportado
-        height: 350
+        height: 245
       },
       xaxis: {
         categories: dados.horariosPico.map(item => item.hora),
@@ -334,7 +335,7 @@ export const GraficosPerformance: React.FC<GraficosPerformanceProps> = ({ dados,
           options={graficoSelecionado.dados.options}
           series={graficoSelecionado.dados.series}
           type={graficoSelecionado.dados.options.chart?.type as any}
-          height={350}
+          height={245}
         />
       </div>
 
@@ -372,7 +373,7 @@ export const GraficosPerformance: React.FC<GraficosPerformanceProps> = ({ dados,
         
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <BarChart3 className="w-4 h-4 text-purple-600" />
+            <ReportIcon size={24} color="#8b5cf6" />
             <span className="text-sm font-medium text-gray-700">Eficiência</span>
           </div>
           <div className="text-xl font-bold text-purple-600">

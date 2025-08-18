@@ -50,7 +50,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
 
   if (loading) {
     return (
-      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: 'rgb(207 209 211)' }}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
         <div className="flex items-center justify-center h-48">
           <div className="text-center">
@@ -64,7 +64,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
 
   if (error) {
     return (
-      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: 'rgb(207 209 211)' }}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
         <div className="flex items-center justify-center h-48 text-red-600">
           <p className="text-sm">{error}</p>
@@ -75,7 +75,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
 
   if (!data) {
     return (
-      <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+      <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: 'rgb(207 209 211)' }}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
         <div className="flex items-center justify-center h-48 text-gray-500">
           Nenhum dado disponível
@@ -86,7 +86,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
 
   const options: ApexOptions = {
     chart: {
-      height: 250,
+      height: 175,
       type: 'area',
       toolbar: {
         show: false
@@ -167,7 +167,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
   ];
 
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg p-4 ${className}`}>
+    <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: 'rgb(207 209 211)' }}>
       <h3 className="text-lg font-semibold text-gray-900 mb-4">{tituloDinamico}</h3>
       
       <div className="w-full">
@@ -175,7 +175,7 @@ export const GraficoArea: React.FC<GraficoAreaProps> = ({
           options={options}
           series={series}
           type="area"
-          height={250}
+          height={175}
         />
       </div>
     </div>

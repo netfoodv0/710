@@ -27,9 +27,8 @@ export const useCache = <T>(options: CacheOptions) => {
       };
       localStorage.setItem(key, JSON.stringify(cacheData));
       setCachedData(data);
-      console.log(`💾 Dados salvos no cache: ${key}`);
     } catch (error) {
-      console.error('Erro ao salvar no cache:', error);
+      // Tratar erro silenciosamente
     }
   }, [key, ttl]);
 
@@ -44,18 +43,15 @@ export const useCache = <T>(options: CacheOptions) => {
 
       // Verificar se o cache ainda é válido
       if (now - cacheData.timestamp < cacheData.ttl) {
-        console.log(`📦 Dados carregados do cache: ${key}`);
         setCachedData(cacheData.data);
         return cacheData.data;
       } else {
         // Cache expirado, remover
-        console.log(`⏰ Cache expirado: ${key}`);
         localStorage.removeItem(key);
         setCachedData(null);
         return null;
       }
     } catch (error) {
-      console.error('Erro ao carregar do cache:', error);
       localStorage.removeItem(key);
       return null;
     }
@@ -66,9 +62,8 @@ export const useCache = <T>(options: CacheOptions) => {
     try {
       localStorage.removeItem(key);
       setCachedData(null);
-      console.log(`🗑️ Cache limpo: ${key}`);
     } catch (error) {
-      console.error('Erro ao limpar cache:', error);
+      // Tratar erro silenciosamente
     }
   }, [key]);
 
@@ -95,9 +90,7 @@ export const useCache = <T>(options: CacheOptions) => {
 
   // Carregar dados do cache na inicialização
   useEffect(() => {
-    console.log(`🔍 useCache - Inicializando para chave: ${key}`);
-    const data = loadFromCache();
-    console.log(`🔍 useCache - Dados carregados:`, data ? 'sim' : 'não');
+    loadFromCache();
   }, [loadFromCache, key]);
 
   return {
