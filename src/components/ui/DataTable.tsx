@@ -298,7 +298,7 @@ export function DataTable<T extends { id: string | number }>({
           )}
           {actions.customActions?.map((action, index) => (
             <button
-              key={index}
+              key={`${item.id}-action-${index}`}
               className="text-gray-500 hover:text-gray-700 transition-colors"
               title={action.label}
               onClick={() => action.onClick(item)}
@@ -505,7 +505,7 @@ export function DataTable<T extends { id: string | number }>({
               <div className="flex items-center gap-1">
                 {getPageNumbers().map((page, index) => (
                   <button
-                    key={index}
+                    key={`page-${page}-${index}`}
                     onClick={() => typeof page === 'number' ? goToPage(page) : null}
                     disabled={page === '...'}
                     className={`px-3 py-1 rounded-md text-small font-medium transition-colors ${

@@ -1,96 +1,61 @@
 import { 
-  collection, 
   doc, 
-  getDocs, 
-  getDoc, 
   addDoc, 
   updateDoc, 
   deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit, 
   startAfter,
   writeBatch,
   serverTimestamp
 } from 'firebase/firestore';
-import { auth, db } from '../../lib/firebase';
 import { Produto } from '../../types';
 import { FiltrosProduto } from '../firebaseCardapioService';
+import { BaseFirestoreService } from './BaseFirestoreService';
 
-export class FirebaseProdutosService {
-  private produtosCollection = collection(db, 'produtos');
+export class FirebaseProdutosService extends BaseFirestoreService {
 
   // Método auxiliar para obter o ID da loja do usuário autenticado
   public getLojaId(): string {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('Usuário não autenticado');
-    }
-    return user.uid;
+    return super.getLojaId();
   }
 
   async buscarProdutos(filtros: FiltrosProduto = {}): Promise<Produto[]> {
     try {
-      const lojaId = this.getLojaId();
+      // Criar constraints base
+      const constraints: any[] = [];
       
-      // Sempre filtrar por loja do usuário
-      let q = query(
-        this.produtosCollection,
-        where('lojaId', '==', lojaId)
-      );
-      
-      const constraints = [];
-
       // Filtros básicos (usando índices compostos)
       if (filtros.status) {
-        constraints.push(where('status', '==', filtros.status));
+        constraints.push(this.createConstraints().where('status', '==', filtros.status));
       }
       
       if (filtros.destacado !== undefined) {
-        constraints.push(where('destacado', '==', filtros.destacado));
+        constraints.push(this.createConstraints().where('destacado', '==', filtros.destacado));
       }
 
       if (filtros.categoriaId) {
-        constraints.push(where('categoriaId', '==', filtros.categoriaId));
+        constraints.push(this.createConstraints().where('categoriaId', '==', filtros.categoriaId));
       }
 
       if (filtros.precoMin !== undefined) {
-        constraints.push(where('preco', '>=', filtros.precoMin));
+        constraints.push(this.createConstraints().where('preco', '>=', filtros.precoMin));
       }
 
       if (filtros.precoMax !== undefined) {
-        constraints.push(where('preco', '<=', filtros.precoMax));
+        constraints.push(this.createConstraints().where('preco', '<=', filtros.precoMax));
       }
-
-      // Sem ordenação no Firebase - será feita client-side para evitar problemas de índices
 
       // Paginação
       if (filtros.limit) {
-        constraints.push(limit(filtros.limit));
+        constraints.push(this.createConstraints().limit(filtros.limit));
       }
 
       if (filtros.startAfter) {
         constraints.push(startAfter(filtros.startAfter));
       }
 
-      // Aplicar constraints
-      constraints.forEach(constraint => {
-        q = query(q, constraint);
-      });
+      const snapshot = await this.executeQuery('produtos', ...constraints);
 
-      const snapshot = await getDocs(q);
-      const produtos: Produto[] = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        produtos.push({
-          ...data,
-          id: doc.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Produto);
-      });
+      const produtos: Produto[] = this.mapDocuments<Produto>(snapshot);
 
       // Ordenação client-side por posição (produtos sem posição vão para o final)
       produtos.sort((a, b) => {
@@ -124,27 +89,10 @@ export class FirebaseProdutosService {
 
   async buscarProduto(id: string): Promise<Produto | null> {
     try {
-      const lojaId = this.getLojaId();
-      
-      const docRef = doc(this.produtosCollection, id);
-      const docSnap = await getDoc(docRef);
+      const documentSnapshot = await this.fetchDocument<Produto>('produtos', id);
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        
-        // Verificar se o produto pertence à loja do usuário
-        if (data.lojaId !== lojaId) {
-          throw new Error('Produto não encontrado');
-        }
-        
-        const produto = {
-          ...data,
-          id: docSnap.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Produto;
-        
-        return produto;
+      if (documentSnapshot && documentSnapshot.exists()) {
+        return this.mapDocument<Produto>(documentSnapshot);
       }
 
       return null;

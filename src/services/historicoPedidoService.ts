@@ -1,16 +1,16 @@
 import { 
-  collection, 
-  query, 
-  where, 
   orderBy, 
-  getDocs, 
   Timestamp,
   startAt,
-  endAt
+  endAt,
+  onSnapshot,
+  query,
+  collection
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
 import { Pedido, StatusPedido } from '../types';
 import { firebasePedidoService } from './firebasePedidoService';
+import { BaseFirestoreService } from './firebase/BaseFirestoreService';
+import { db } from '../lib/firebase';
 
 export interface FiltrosHistorico {
   status?: StatusPedido;
@@ -40,7 +40,7 @@ export interface EstatisticasHistorico {
   }[];
 }
 
-class HistoricoPedidoService {
+class HistoricoPedidoService extends BaseFirestoreService {
   private readonly COLLECTION_PEDIDOS = 'pedidos';
 
   // Obter histórico de pedidos com filtros otimizado
@@ -52,8 +52,17 @@ class HistoricoPedidoService {
       // Depois, buscar todos os pedidos cancelados
       const pedidosCancelados = await this.buscarPedidosPorStatus('cancelado');
       
-      // Combinar os resultados
+      // Combinar os resultados e remover duplicatas baseado no ID
       let todosPedidos = [...pedidosEntregues, ...pedidosCancelados];
+      
+      // Remover duplicatas baseado no ID
+      const pedidosUnicos = new Map<string, Pedido>();
+      todosPedidos.forEach(pedido => {
+        if (pedido.id && !pedidosUnicos.has(pedido.id)) {
+          pedidosUnicos.set(pedido.id, pedido);
+        }
+      });
+      todosPedidos = Array.from(pedidosUnicos.values());
 
       // Aplicar filtros de data no cliente
       if (filtros.dataInicio && filtros.dataFim) {
@@ -90,7 +99,29 @@ class HistoricoPedidoService {
       // Ordenar por data (mais recentes primeiro)
       todosPedidos.sort((a, b) => new Date(b.dataHora).getTime() - new Date(a.dataHora).getTime());
 
-      return todosPedidos;
+      // Debug: verificar IDs únicos
+      const ids = todosPedidos.map(p => p.id);
+      const idsUnicos = new Set(ids);
+      console.log('🔍 HistoricoPedidoService: Verificação de IDs:', {
+        total: todosPedidos.length,
+        idsUnicos: idsUnicos.size,
+        temDuplicatas: ids.length !== idsUnicos.size
+      });
+
+      // Validar que todos os pedidos têm IDs válidos
+      const pedidosValidos = todosPedidos.filter(pedido => {
+        if (!pedido.id || typeof pedido.id !== 'string') {
+          console.warn('⚠️ Pedido sem ID válido:', pedido);
+          return false;
+        }
+        return true;
+      });
+
+      if (pedidosValidos.length !== todosPedidos.length) {
+        console.warn('⚠️ HistoricoPedidoService: Alguns pedidos foram filtrados por ID inválido');
+      }
+
+      return pedidosValidos;
     } catch (error) {
       console.error('Erro ao obter histórico com filtros:', error);
       return [];
@@ -103,15 +134,13 @@ class HistoricoPedidoService {
       // Obter lojaId do usuário autenticado
       const lojaId = firebasePedidoService.getLojaId();
       
-      const q = query(
-        collection(db, this.COLLECTION_PEDIDOS),
-        where('lojaId', '==', lojaId), // Filtrar por loja
-        where('status', '==', status),
-        orderBy('dataHora', 'desc') // Usando dataHora que é o campo correto
+      const snapshot = await this.executeQuery(
+        this.COLLECTION_PEDIDOS,
+        this.createConstraints().where('status', '==', status),
+        this.createConstraints().orderByDesc('dataHora')
       );
       
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => this.converterDocumentoParaPedido(doc));
+      return this.mapDocuments<Pedido>(snapshot);
     } catch (error) {
       console.error(`Erro ao buscar pedidos ${status}:`, error);
       return [];
@@ -310,6 +339,104 @@ class HistoricoPedidoService {
     return this.obterHistoricoComFiltros({
       cliente: nomeCliente
     });
+  }
+
+  // Listener em tempo real para histórico de pedidos
+  onHistoricoChange(callback: (pedidos: Pedido[]) => void, filtros?: FiltrosHistorico) {
+    try {
+      const lojaId = firebasePedidoService.getLojaId();
+      if (!lojaId) {
+        console.warn('⚠️ LojaId não disponível para listener');
+        return () => {};
+      }
+
+      // Criar query base para pedidos entregues e cancelados
+      const q = query(
+        collection(db, this.COLLECTION_PEDIDOS),
+        orderBy('dataHora', 'desc')
+      );
+
+      return onSnapshot(q, async (querySnapshot) => {
+        try {
+          // Filtrar apenas pedidos entregues e cancelados
+          const pedidos = querySnapshot.docs
+            .map(doc => this.converterDocumentoParaPedido(doc))
+            .filter(pedido => 
+              pedido.status === 'entregue' || pedido.status === 'cancelado'
+            );
+
+          // Aplicar filtros se fornecidos
+          let pedidosFiltrados = pedidos;
+          if (filtros) {
+            pedidosFiltrados = await this.aplicarFiltros(pedidos, filtros);
+          }
+
+          // Remover duplicatas e validar IDs
+          const pedidosUnicos = new Map<string, Pedido>();
+          pedidosFiltrados.forEach(pedido => {
+            if (pedido.id && typeof pedido.id === 'string') {
+              pedidosUnicos.set(pedido.id, pedido);
+            }
+          });
+
+          const resultado = Array.from(pedidosUnicos.values());
+          
+          // Ordenar por data (mais recentes primeiro)
+          resultado.sort((a, b) => new Date(b.dataHora).getTime() - new Date(a.dataHora).getTime());
+
+          console.log('🔄 Listener histórico: Dados atualizados em tempo real:', {
+            total: resultado.length,
+            filtros: filtros || 'nenhum'
+          });
+
+          callback(resultado);
+        } catch (error) {
+          console.error('❌ Erro no listener do histórico:', error);
+        }
+      });
+    } catch (error) {
+      console.error('❌ Erro ao configurar listener do histórico:', error);
+      return () => {};
+    }
+  }
+
+  // Método auxiliar para aplicar filtros
+  private async aplicarFiltros(pedidos: Pedido[], filtros: FiltrosHistorico): Promise<Pedido[]> {
+    let resultado = [...pedidos];
+
+    // Aplicar filtros de data
+    if (filtros.dataInicio && filtros.dataFim) {
+      resultado = resultado.filter(pedido => {
+        const dataPedido = new Date(pedido.dataHora);
+        return dataPedido >= filtros.dataInicio! && dataPedido <= filtros.dataFim!;
+      });
+    }
+
+    // Aplicar filtro por forma de pagamento
+    if (filtros.formaPagamento && filtros.formaPagamento !== 'todos') {
+      resultado = resultado.filter(pedido => 
+        pedido.formaPagamento === filtros.formaPagamento
+      );
+    }
+
+    // Aplicar filtro por cliente
+    if (filtros.cliente) {
+      resultado = resultado.filter(pedido => 
+        pedido.cliente?.nome?.toLowerCase().includes(filtros.cliente!.toLowerCase()) ||
+        pedido.cliente?.telefone?.includes(filtros.cliente!)
+      );
+    }
+
+    // Aplicar filtros de valor
+    if (filtros.valorMinimo) {
+      resultado = resultado.filter(pedido => pedido.total >= filtros.valorMinimo!);
+    }
+
+    if (filtros.valorMaximo) {
+      resultado = resultado.filter(pedido => pedido.total <= filtros.valorMaximo!);
+    }
+
+    return resultado;
   }
 }
 

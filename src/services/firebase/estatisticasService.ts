@@ -1,12 +1,14 @@
 import { EstatisticasCardapio } from '../firebaseCardapioService';
 import { FirebaseProdutosService } from './produtosService';
+import { BaseFirestoreService } from './BaseFirestoreService';
 
 
-export class FirebaseEstatisticasService {
+export class FirebaseEstatisticasService extends BaseFirestoreService {
   private produtosService: FirebaseProdutosService;
 
 
   constructor() {
+    super();
     this.produtosService = new FirebaseProdutosService();
 
   }

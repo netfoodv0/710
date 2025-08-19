@@ -20,8 +20,7 @@ const Relatorios = lazy(() => import('../pages/Relatorios').then(module => ({ de
 const RelatoriosClientes = lazy(() => import('../pages/Relatorios/Clientes').then(module => ({ default: module.RelatoriosClientes })));
 const RelatoriosProdutos = lazy(() => import('../pages/Relatorios/Produtos').then(module => ({ default: module.RelatoriosProdutos })));
 const Mapa = lazy(() => import('../pages/Mapa').then(module => ({ default: module.Mapa })));
-const Tabelas = lazy(() => import('../pages/Tabelas').then(module => ({ default: module.Tabelas })));
-const Teste = lazy(() => import('../pages/Teste'));
+
 const Login = lazy(() => import('../pages/Login').then(module => ({ default: module.Login })));
 const Cadastro = lazy(() => import('../pages/Cadastro').then(module => ({ default: module.Cadastro })));
 
@@ -194,25 +193,7 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-      <Route path="/tabelas" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback />}>
-              <Tabelas />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/teste" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback />}>
-              <Teste />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
+
       
       {/* Rota de teste para o sistema de carregamento */}
       <Route path="/loading-test" element={

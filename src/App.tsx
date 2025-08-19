@@ -15,7 +15,6 @@ import { NavigationProvider } from './context/navigationContext';
 import { useNotificationContext } from './context/notificationContextUtils';
 import { NotificationToast } from './components/NotificationToast';
 import { useLoading } from './context/loadingContext';
-import { LoadingDebug } from './components/LoadingDebug';
 
 import { AppRoutes } from './routes';
 import { useAuth } from './hooks/useAuth';
@@ -57,7 +56,6 @@ function AppWithNotifications() {
   return (
     <>
       <LoadingScreen isVisible={isLoading} />
-      <LoadingDebug />
       <AppContent />
       {notifications.map((notification) => (
         <NotificationToast

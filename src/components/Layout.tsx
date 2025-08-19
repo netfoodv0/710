@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import { Sidebar } from './';
 import { useAuth } from '../hooks';
 
@@ -7,16 +7,12 @@ interface LayoutProps {
 }
 
 export const Layout = memo(({ children }: LayoutProps) => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user, loja } = useAuth();
 
   return (
     <div className="flex h-screen bg-slate-50">
       {/* Sidebar */}
-      <Sidebar 
-        isCollapsed={sidebarCollapsed} 
-        onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-      />
+      <Sidebar />
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">

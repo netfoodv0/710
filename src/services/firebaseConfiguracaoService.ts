@@ -1,24 +1,25 @@
 import { 
-  collection, 
+  collection,
   doc, 
   getDoc, 
   setDoc, 
   updateDoc, 
-  query, 
-  where, 
+  query,
+  where,
   getDocs,
   Timestamp,
   serverTimestamp 
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { ConfiguracaoLoja } from '../types';
+import { BaseFirestoreService } from './firebase/BaseFirestoreService';
 
 const COLLECTION_NAME = 'configuracoes';
 
 /**
  * Serviço para gerenciar configurações da loja no Firebase
  */
-export class FirebaseConfiguracaoService {
+export class FirebaseConfiguracaoService extends BaseFirestoreService {
   
   /**
    * Salva ou atualiza as configurações da loja
@@ -42,14 +43,12 @@ export class FirebaseConfiguracaoService {
   }
 
   /**
-   * Carrega as configurações de uma loja específica
+   * Busca as configurações de uma loja específica
+   * Primeiro tenta buscar pelo ID da configuração, depois pelo ID da loja
    */
-  static async carregarConfiguracao(lojaId: string): Promise<ConfiguracaoLoja | null> {
+  static async buscarConfiguracaoPorLoja(lojaId: string): Promise<ConfiguracaoLoja | null> {
     try {
-      // Verificar se a coleção existe primeiro
-      const collectionRef = collection(db, COLLECTION_NAME);
-      
-      // Primeiro tenta buscar por ID direto
+      // Primeiro tenta buscar diretamente pelo ID da configuração (se for igual ao ID da loja)
       const configRef = doc(db, COLLECTION_NAME, lojaId);
       const configSnap = await getDoc(configRef);
       
@@ -65,19 +64,15 @@ export class FirebaseConfiguracaoService {
       }
 
       // Se não encontrar por ID, busca por lojaId (campo usado nas regras)
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('lojaId', '==', lojaId)
-      );
+      const q = query(collection(db, COLLECTION_NAME), where('lojaId', '==', lojaId));
+      const snapshot = await getDocs(q);
       
-      const querySnapshot = await getDocs(q);
-      
-      if (!querySnapshot.empty) {
-        const doc = querySnapshot.docs[0];
-        const data = doc.data();
+      if (!snapshot.empty) {
+        const documentSnapshot = snapshot.docs[0];
+        const data = documentSnapshot.data();
         return {
           ...data,
-          id: doc.id,
+          id: documentSnapshot.id,
           dataCriacao: data.dataCriacao?.toDate?.()?.toISOString() || data.dataCriacao,
           dataAtualizacao: data.dataAtualizacao?.toDate?.()?.toISOString() || data.dataAtualizacao,
         } as ConfiguracaoLoja;
@@ -115,7 +110,7 @@ export class FirebaseConfiguracaoService {
    */
   static async existeConfiguracao(lojaId: string): Promise<boolean> {
     try {
-      const configuracao = await this.carregarConfiguracao(lojaId);
+      const configuracao = await this.buscarConfiguracaoPorLoja(lojaId);
       return configuracao !== null;
     } catch (error) {
       console.error('Erro ao verificar existência da configuração:', error);

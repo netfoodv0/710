@@ -1,0 +1,77 @@
+/* Estilos específicos para a página de pedidos */
+
+/* Barra de pesquisa */
+.search-bar-container {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.search-bar-container:focus-within {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 40px 8px 40px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  width: 320px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+  font-weight: 300;
+}
+
+/* Ícone de pesquisa */
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  transition: color 0.3s ease;
+}
+
+.search-input:focus + .search-icon {
+  color: #3b82f6;
+}
+
+/* Botão de limpar */
+.clear-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.clear-button:hover {
+  opacity: 1;
+  background-color: #f3f4f6;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .search-input {
+    width: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .search-input {
+    width: 240px;
+  }
+}

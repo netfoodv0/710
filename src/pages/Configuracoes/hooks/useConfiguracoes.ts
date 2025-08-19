@@ -104,7 +104,7 @@ export function useConfiguracoes({ configuracaoInicial }: UseConfiguracoesProps 
       }
 
       try {
-        const configuracaoCarregada = await FirebaseConfiguracaoService.carregarConfiguracao(lojaId);
+        const configuracaoCarregada = await FirebaseConfiguracaoService.buscarConfiguracaoPorLoja(lojaId);
         
         if (configuracaoCarregada) {
           setConfig(configuracaoCarregada);

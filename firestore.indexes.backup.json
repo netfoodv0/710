@@ -463,21 +463,7 @@
       ]
     },
     {
-      "collectionGroup": "whatsapp_status",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "isConnected",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "lastSeen",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_status",
+      "collectionGroup": "whatsapp_conversations",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -485,7 +471,35 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "status",
+          "fieldPath": "lastMessageTime",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "whatsapp_messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "whatsapp_messages",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "conversationId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
           "order": "ASCENDING"
         }
       ]
@@ -513,149 +527,29 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "lojaId",
+          "fieldPath": "userId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "status",
+          "fieldPath": "connectionStatus",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "ultimaAtividade",
+          "fieldPath": "updatedAt",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "whatsapp_conversations",
+      "collectionGroup": "whatsapp_status",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "chatId",
+          "fieldPath": "isConnected",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "lastUpdated",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_conversations",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lojaId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "lastMessageTime",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_conversations",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lojaId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "ultimaMensagem",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_messages",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "conversationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "timestamp",
-          "order": "ASCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_messages",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lojaId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "conversationId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "timestamp",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_messages",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lojaId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "timestamp",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_messages_log",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "chatId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "timestamp",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_messages_log",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "lojaId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "timestamp",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "whatsapp_messages_log",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "type",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "timestamp",
+          "fieldPath": "lastSeen",
           "order": "DESCENDING"
         }
       ]
@@ -703,30 +597,44 @@
       ]
     },
     {
-      "collectionGroup": "whatsapp_ai_usage",
+      "collectionGroup": "whatsapp_conversations",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "lojaId",
+          "fieldPath": "chatId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "data",
+          "fieldPath": "lastUpdated",
           "order": "DESCENDING"
         }
       ]
     },
     {
-      "collectionGroup": "whatsapp_bot_status",
+      "collectionGroup": "whatsapp_messages_log",
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "lojaId",
+          "fieldPath": "chatId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "ativo",
+          "fieldPath": "timestamp",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "whatsapp_messages_log",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "type",
           "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "timestamp",
+          "order": "DESCENDING"
         }
       ]
     }

@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { PeriodType } from '../components/filters/FiltroPeriodo';
 import { useRelatorios } from '../features/relatorios/hooks/useRelatorios';
-import { useFiltrosRelatorios } from '../features/relatorios/hooks/useFiltrosRelatorios';
 import { PageHeader, CustomDropdown, DropdownOption } from '../components/ui';
 import { ReportNavigation } from '../components/ui/ReportNavigation';
 import { ReportSkeleton } from '../components/ui/ReportSkeleton';
@@ -27,6 +26,14 @@ export function Relatorios() {
     { value: 'yearly', label: 'Anual' }
   ];
 
+  // Usar o hook de relatórios para buscar dados reais
+  const {
+    dados: dadosRelatorios,
+    loading: loadingRelatorios,
+    error: errorRelatorios,
+    carregarDados: recarregarRelatorios
+  } = useRelatorios(selectedPeriod);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -40,7 +47,7 @@ export function Relatorios() {
 
   const handlePeriodChange = useCallback((period: PeriodType) => {
     setSelectedPeriod(period);
-    // Simular carregamento apenas para filtros
+    // Recarregar dados quando o período mudar
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -60,13 +67,20 @@ export function Relatorios() {
     }
   }, [showSuccess, showError]);
 
-  // Simular carregamento inicial apenas uma vez
+  // Carregar dados quando o período mudar
   useEffect(() => {
-    const timer = setTimeout(() => {
+    if (dadosRelatorios) {
       setDataLoaded(true);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+      setError(null);
+    }
+  }, [dadosRelatorios]);
+
+  // Tratar erros dos relatórios
+  useEffect(() => {
+    if (errorRelatorios) {
+      setError(errorRelatorios);
+    }
+  }, [errorRelatorios]);
 
   return (
     <ErrorBoundary>
@@ -164,10 +178,10 @@ export function Relatorios() {
           )}
 
                     {/* Conteúdo principal com skeleton loading contextual */}
-          {!dataLoaded ? (
+          {!dataLoaded || loadingRelatorios ? (
             <ReportSkeleton type="full" />
           ) : (
-            <RelatoriosContent dadosFiltrados={null} selectedPeriod={selectedPeriod} />
+            <RelatoriosContent dadosFiltrados={dadosRelatorios} selectedPeriod={selectedPeriod} />
           )}
           
           {/* Margem inferior da página */}

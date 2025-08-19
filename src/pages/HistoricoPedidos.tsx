@@ -10,17 +10,22 @@ import { PageHeader, DataTable, DataTableColumn } from '../components/ui';
 import { SkeletonFilters, SkeletonTable } from '../components/ui/SkeletonComponents';
 
 import { Pedido } from '../types';
+import { useHistoricoPedidos } from '../hooks/useHistoricoPedidos';
 
 export function HistoricoPedidos() {
   const navigate = useNavigate();
   const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [dataLoaded, setDataLoaded] = useState(false); // Estado simples como na página de relatórios
-  const [loading, setLoading] = useState(false); // Loading local como na página de relatórios
-  const [error, setError] = useState<string | null>(null); // Error local como na página de relatórios
 
-  // Dados mockados para simular funcionamento como a página de relatórios
-  const [pedidosMock, setPedidosMock] = useState<Pedido[]>([]);
+  // Usar o hook real de histórico
+  const {
+    pedidosHistorico,
+    loading: loadingHistorico,
+    error: errorHistorico,
+    carregarHistorico,
+    carregarEstatisticas,
+    refreshDados
+  } = useHistoricoPedidos();
 
   const {
     notifications,
@@ -29,28 +34,17 @@ export function HistoricoPedidos() {
     removeNotification
   } = useNotificationContext();
 
-  // Simular carregamento inicial apenas uma vez como na página de relatórios
+  // O hook useHistoricoPedidos já gerencia o carregamento e listener em tempo real
+  // Não é necessário chamar carregarHistorico e carregarEstatisticas aqui
+
+  // Debug: verificar dados carregados
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDataLoaded(true);
-      // Simular dados carregados
-      setPedidosMock([
-        {
-          id: '1',
-          numero: '001',
-          cliente: { nome: 'João Silva', telefone: '(11) 99999-9999' },
-          formaPagamento: 'pix',
-          status: 'entregue',
-          dataHora: new Date(),
-          tempoEstimado: '30 min',
-          total: 45.90,
-          itens: [{ nome: 'Hambúrguer', quantidade: 1, preco: 25.90 }],
-          pagamento: { statusPagamento: 'pago' }
-        } as Pedido
-      ]);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+    console.log('📊 HistoricoPedidos: Dados carregados:', {
+      pedidos: pedidosHistorico?.length || 0,
+      loading: loadingHistorico,
+      error: errorHistorico
+    });
+  }, [pedidosHistorico, loadingHistorico, errorHistorico]);
 
   const handleViewPedido = useCallback((pedido: Pedido) => {
     setSelectedPedido(pedido);
@@ -76,14 +70,9 @@ export function HistoricoPedidos() {
   }, [showSuccess, showError]);
 
   const handleRetry = useCallback(() => {
-    setError(null);
-    // Simular nova tentativa
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setDataLoaded(true);
-    }, 500);
-  }, []);
+    // Recarregar dados e reativar listener
+    refreshDados();
+  }, [refreshDados]);
 
   // Funções auxiliares para formatação
   const formatarData = (data: Date) => {
@@ -209,7 +198,7 @@ export function HistoricoPedidos() {
   ];
 
   // Error state
-  if (error) {
+  if (errorHistorico) {
     return (
       <div className="h-full p-4">
         <div className="bg-red-50 border border-red-200 rounded p-4">
@@ -217,7 +206,7 @@ export function HistoricoPedidos() {
             <AlertCircle className="w-6 h-6 text-red-600 mr-3" />
             <h3 className="text-lg font-medium text-red-800">Erro ao carregar dados</h3>
           </div>
-          <p className="text-red-700 mb-4">{error}</p>
+          <p className="text-red-700 mb-4">{errorHistorico}</p>
           <div className="flex gap-3">
             <button
               onClick={handleRetry}
@@ -259,8 +248,8 @@ export function HistoricoPedidos() {
           actionButton={{
             label: "Exportar Histórico",
             onClick: handleExport,
-            loading: loading,
-            disabled: loading,
+            loading: loadingHistorico.exportacao,
+            disabled: loadingHistorico.exportacao,
             variant: "primary",
             size: "md"
           }}
@@ -268,25 +257,17 @@ export function HistoricoPedidos() {
 
         {/* Content */}
         <div className="px-6 pt-6 pb-4">
-          {/* Loading state apenas para operações específicas como na página de relatórios */}
-          {loading && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                <span className="text-sm">Processando...</span>
-              </div>
-            </div>
-          )}
 
-          {/* Renderização condicional simples como na página de relatórios */}
-          {!dataLoaded ? (
+
+          {/* Renderização condicional com skeleton */}
+          {loadingHistorico.data ? (
             <div className="space-y-3">
               <SkeletonFilters />
               <SkeletonTable rows={10} columns={7} showHeader={true} />
             </div>
           ) : (
             <DataTable
-              data={pedidosMock}
+              data={pedidosHistorico || []}
               columns={columns}
               searchPlaceholder="Buscar por número do pedido, cliente, telefone..."
               searchFields={['numero']}

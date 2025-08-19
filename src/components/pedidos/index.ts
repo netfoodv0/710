@@ -1,0 +1,9 @@
+export { PedidoCard } from './PedidoCard';
+export { ColunaHeader } from './ColunaHeader';
+export { CalendarIcon } from './CalendarIcon';
+export { BorderLine } from './BorderLine';
+export { WhatsAppIcon } from './WhatsAppIcon';
+export { PrinterIcon } from './PrinterIcon';
+export { DollarIcon } from './DollarIcon';
+export { PixIcon } from './PixIcon';
+export { CreditCardIcon } from './CreditCardIcon';

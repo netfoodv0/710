@@ -1,32 +1,28 @@
 import { 
-  collection, 
   doc, 
-  getDocs, 
-  getDoc, 
   addDoc, 
   updateDoc, 
   deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit, 
   startAfter,
   writeBatch,
-  serverTimestamp
+  serverTimestamp,
+  collection
 } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
 import { Pedido } from '../types';
+import { BaseFirestoreService } from './firebase/BaseFirestoreService';
+import { db } from '../lib/firebase';
 
-export class FirebasePedidoService {
+export class FirebasePedidoService extends BaseFirestoreService {
+  // Referência para a coleção de pedidos
   private pedidosCollection = collection(db, 'pedidos');
 
   // Método auxiliar para obter o ID da loja do usuário autenticado
   public getLojaId(): string | null {
-    const user = auth.currentUser;
-    if (!user) {
+    try {
+      return super.getLojaId();
+    } catch (error) {
       return null;
     }
-    return user.uid;
   }
 
   async buscarPedidos(filtros: {
@@ -39,55 +35,34 @@ export class FirebasePedidoService {
     try {
       const lojaId = this.getLojaId();
       
-      // Sempre filtrar por loja do usuário
-      let q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      // Criar constraints base
+      const constraints: any[] = [this.createConstraints().orderByDesc('dataHora')];
       
-      const constraints = [];
-
       // Filtros básicos
       if (filtros.status) {
-        constraints.push(where('status', '==', filtros.status));
+        constraints.push(this.createConstraints().where('status', '==', filtros.status));
       }
 
       if (filtros.dataInicio) {
-        constraints.push(where('dataHora', '>=', filtros.dataInicio));
+        constraints.push(this.createConstraints().where('dataHora', '>=', filtros.dataInicio));
       }
 
       if (filtros.dataFim) {
-        constraints.push(where('dataHora', '<=', filtros.dataFim));
+        constraints.push(this.createConstraints().where('dataHora', '<=', filtros.dataFim));
       }
 
       // Paginação
       if (filtros.limit) {
-        constraints.push(limit(filtros.limit));
+        constraints.push(this.createConstraints().limit(filtros.limit));
       }
 
       if (filtros.startAfter) {
         constraints.push(startAfter(filtros.startAfter));
       }
 
-      // Aplicar constraints
-      constraints.forEach(constraint => {
-        q = query(q, constraint);
-      });
+      const snapshot = await this.executeQuery('pedidos', ...constraints);
 
-      const snapshot = await getDocs(q);
-      const pedidos: Pedido[] = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        pedidos.push({
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido);
-      });
+      const pedidos: Pedido[] = this.mapDocuments<Pedido>(snapshot);
 
       return pedidos;
     } catch (error) {
@@ -98,25 +73,10 @@ export class FirebasePedidoService {
 
   async buscarPedido(id: string): Promise<Pedido | null> {
     try {
-      const lojaId = this.getLojaId();
-      const docRef = doc(this.pedidosCollection, id);
-      const docSnap = await getDoc(docRef);
+      const documentSnapshot = await this.fetchDocument<Pedido>('pedidos', id);
 
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        
-        // Verificar se o pedido pertence à loja do usuário
-        if (data.lojaId !== lojaId) {
-          throw new Error('Pedido não encontrado');
-        }
-        
-        return {
-          ...data,
-          id: docSnap.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
+      if (documentSnapshot && documentSnapshot.exists()) {
+        return this.mapDocument<Pedido>(documentSnapshot);
       }
 
       return null;

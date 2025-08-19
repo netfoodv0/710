@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../Sidebar.css';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   X,
   Store,
   LogOut,
-  User
+  User,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react';
-import { SettingsIcon, ClockIcon, ReportIcon, CouponIcon, HistoryIcon, OrderIcon, DashboardIcon, MenuIcon, SupportIcon, MapIcon, TableIcon, TestIcon, UsersIcon, BagIcon } from '../ui';
+import { SettingsIcon, ClockIcon, ReportIcon, CouponIcon, HistoryIcon, OrderIcon, DashboardIcon, MenuIcon, SupportIcon, MapIcon, UsersIcon, BagIcon } from '../ui';
 import { useAuth } from '../../hooks';
 
 interface MobileSidebarProps {
@@ -57,11 +59,6 @@ const menuItems = [
     icon: ClockIcon
   },
   {
-    path: '/mapa',
-    label: 'Mapa',
-    icon: MapIcon
-  },
-  {
     path: '/relatorios',
     label: 'Relatórios',
     icon: ReportIcon,
@@ -84,19 +81,45 @@ const menuItems = [
     ]
   },
   {
-    path: '/tabelas',
-    label: 'Tabelas',
-    icon: TableIcon
-  }
+    path: '/mapa',
+    label: 'Mapa',
+    icon: MapIcon
+  },
 ];
 
 export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
   const location = useLocation();
   const { user, loja, logout } = useAuth();
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  // Expandir automaticamente os subtítulos quando estiver em uma página de relatório
+  useEffect(() => {
+    if (location.pathname.startsWith('/relatorios')) {
+      setExpandedItems(prev => {
+        const newSet = new Set(prev);
+        newSet.add('/relatorios');
+        return newSet;
+      });
+    }
+  }, [location.pathname]);
 
   const handleItemClick = () => {
     onClose();
   };
+
+  const toggleSubItems = (itemPath: string) => {
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(itemPath)) {
+        newSet.delete(itemPath);
+      } else {
+        newSet.add(itemPath);
+      }
+      return newSet;
+    });
+  };
+
+  const isExpanded = (itemPath: string) => expandedItems.has(itemPath);
 
   return (
     <>
@@ -159,27 +182,39 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 const isActive = location.pathname === item.path || 
                                (item.subItems && item.subItems.some(subItem => location.pathname === subItem.path));
                 const hasSubItems = item.subItems && item.subItems.length > 0;
+                const itemExpanded = isExpanded(item.path);
                 
                 return (
                   <li key={item.path}>
-                    <Link
-                      to={item.path}
-                      onClick={handleItemClick}
-                      className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
-                        isActive 
-                          ? 'text-[#8217d5] sidebar-item-active' 
-                          : 'text-[#525866] hover:bg-gray-50 sidebar-item-inactive'
-                      }`}
-                    >
-                      <Icon className="w-6 h-6" color={isActive ? "#8217d5" : "#525866"} />
-                      <span className="font-medium">{item.label}</span>
-                    </Link>
+                    <div className="sidebar-item-container">
+                      <Link
+                        to={hasSubItems ? '#' : item.path}
+                        onClick={(e) => {
+                          if (hasSubItems) {
+                            e.preventDefault();
+                            toggleSubItems(item.path);
+                          } else {
+                            handleItemClick();
+                          }
+                        }}
+                        className={`sidebar-menu-item ${hasSubItems ? 'has-dropdown' : ''} flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
+                          isActive 
+                            ? 'text-[#8217d5] sidebar-item-active' 
+                            : 'text-[#525866] hover:bg-gray-50 sidebar-item-inactive'
+                        }`}
+                      >
+                        <Icon className="w-6 h-6" color={isActive ? "#8217d5" : "#525866"} />
+                        <span>{item.label}</span>
+                        {hasSubItems && (
+                          <ChevronDown className={`w-4 h-4 ml-auto transition-transform duration-200 ${itemExpanded ? 'rotate-180' : ''}`} color={isActive ? "#8217d5" : "#525866"} />
+                        )}
+                      </Link>
+                    </div>
                     
                     {/* Sublinks */}
-                    {hasSubItems && (
-                      <ul className="ml-6 mt-1 space-y-1">
+                    {hasSubItems && itemExpanded && (
+                      <ul className="sidebar-submenu expanded mt-1 space-y-1">
                         {item.subItems.map((subItem) => {
-                          const SubIcon = subItem.icon;
                           const isSubActive = location.pathname === subItem.path;
                           
                           return (
@@ -189,12 +224,12 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                                 onClick={handleItemClick}
                                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                                   isSubActive 
-                                    ? 'text-[#8217d5] bg-purple-50 border-l-2 border-[#8217d5]' 
-                                    : 'text-[#525866] hover:bg-gray-50'
+                                    ? 'text-[#8217d5] sidebar-item-active' 
+                                    : 'text-[#525866] hover:bg-gray-50 sidebar-item-inactive'
                                 }`}
                               >
-                                <SubIcon className="w-4 h-4" color={isSubActive ? "#8217d5" : "#525866"} />
-                                <span className="text-sm font-medium">{subItem.label}</span>
+                                <div className="w-6 h-6 flex-shrink-0"></div>
+                                <span className="text-sm">{subItem.label}</span>
                               </Link>
                             </li>
                           );

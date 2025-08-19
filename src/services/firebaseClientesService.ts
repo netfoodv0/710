@@ -1,13 +1,8 @@
 import { 
-  collection, 
-  query, 
-  where, 
-  orderBy, 
-  getDocs,
   getCountFromServer,
   Timestamp
 } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
+import { BaseFirestoreService } from './firebase/BaseFirestoreService';
 
 export interface ClienteCategoria {
   telefone: string;
@@ -34,17 +29,11 @@ export interface EstatisticasClientes {
   taxaRetencao?: number;
 }
 
-export class FirebaseClientesService {
-  private pedidosCollection = collection(db, 'pedidos');
-  private historicoPedidosCollection = collection(db, 'historicoPedidos');
+export class FirebaseClientesService extends BaseFirestoreService {
 
   // Método auxiliar para obter o ID da loja do usuário autenticado
   private getLojaId(): string {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('Usuário não autenticado');
-    }
-    return user.uid;
+    return super.getLojaId();
   }
 
   /**
@@ -60,18 +49,10 @@ export class FirebaseClientesService {
       const lojaId = this.getLojaId();
       
       // Buscar pedidos ativos
-      const qPedidos = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId)
-      );
-      const pedidosSnapshot = await getDocs(qPedidos);
+      const pedidosSnapshot = await this.executeQuery('pedidos');
       
       // Buscar histórico de pedidos
-      const qHistorico = query(
-        this.historicoPedidosCollection,
-        where('lojaId', '==', lojaId)
-      );
-      const historicoSnapshot = await getDocs(qHistorico);
+      const historicoSnapshot = await this.executeQuery('historicoPedidos');
       
       // Mapear clientes únicos
       const clientesMap = new Map<string, ClienteCategoria>();
@@ -181,7 +162,7 @@ export class FirebaseClientesService {
   /**
    * Obtém estatísticas resumidas dos clientes por categoria
    */
-  async obterEstatisticasClientes(): Promise<EstatisticasClientes> {
+  async calcularEstatisticas(): Promise<EstatisticasClientes> {
     try {
       const clientes = await this.buscarClientesUnicos();
       
@@ -222,15 +203,18 @@ export class FirebaseClientesService {
       
       estatisticas.novosClientes = novosClientes;
       
-      // Calcular taxa de retenção (clientes fiéis + super clientes / total)
-      if (estatisticas.totalClientes > 0) {
-        const clientesRetidos = estatisticas.fieis + estatisticas.super_clientes;
-        estatisticas.taxaRetencao = (clientesRetidos / estatisticas.totalClientes) * 100;
-      }
+      // Calcular taxa de retenção (clientes que fizeram mais de 1 pedido)
+      const clientesRecorrentes = clientes.filter(cliente => 
+        cliente.totalPedidos > 1
+      ).length;
       
+      estatisticas.taxaRetencao = clientes.length > 0 
+        ? Math.round((clientesRecorrentes / clientes.length) * 100)
+        : 0;
+        
       return estatisticas;
     } catch (error) {
-      console.error('Erro ao obter estatísticas dos clientes:', error);
+      console.error('Erro ao calcular estatísticas de clientes:', error);
       throw error;
     }
   }

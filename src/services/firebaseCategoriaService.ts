@@ -1,22 +1,15 @@
 import { 
-  collection, 
   doc, 
   addDoc, 
   updateDoc, 
   deleteDoc, 
-  getDocs, 
-  getDoc,
-  query, 
-  where, 
-  orderBy, 
-  limit,
   startAfter,
   QueryDocumentSnapshot,
   DocumentData,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
 import { Categoria, CriarCategoriaData, PeriodoDisponibilidade } from '../types/categoria';
+import { BaseFirestoreService } from './firebase/BaseFirestoreService';
 
 export interface FiltrosCategoria {
   status?: 'ativo' | 'inativo' | 'em_falta';
@@ -27,61 +20,40 @@ export interface FiltrosCategoria {
   startAfter?: QueryDocumentSnapshot<DocumentData>;
 }
 
-export class FirebaseCategoriaService {
-  private categoriasCollection = collection(db, 'categoriasProdutos');
-  private disponibilidadeCollection = collection(db, 'disponibilidadeCategorias');
+export class FirebaseCategoriaService extends BaseFirestoreService {
 
   // ===== CATEGORIAS =====
   
   async buscarCategorias(lojaId: string, filtros: FiltrosCategoria = {}): Promise<Categoria[]> {
     try {
-      let q = query(this.categoriasCollection);
-      const constraints = [];
-
-      // Filtro obrigatório por loja
-      constraints.push(where('lojaId', '==', lojaId));
-
+      // Criar constraints base
+      const constraints: any[] = [];
+      
       // Filtros opcionais
       if (filtros.status) {
-        constraints.push(where('status', '==', filtros.status));
+        constraints.push(this.createConstraints().where('status', '==', filtros.status));
       }
       
       if (filtros.agendamentoPrevio !== undefined) {
-        constraints.push(where('agendamentoPrevio', '==', filtros.agendamentoPrevio));
+        constraints.push(this.createConstraints().where('agendamentoPrevio', '==', filtros.agendamentoPrevio));
       }
 
       if (filtros.tempoExtraProducao !== undefined) {
-        constraints.push(where('tempoExtraProducao', '==', filtros.tempoExtraProducao));
+        constraints.push(this.createConstraints().where('tempoExtraProducao', '==', filtros.tempoExtraProducao));
       }
-
-      // Sem ordenação no Firebase - será feita client-side para evitar problemas de índices
 
       // Paginação
       if (filtros.limit) {
-        constraints.push(limit(filtros.limit));
+        constraints.push(this.createConstraints().limit(filtros.limit));
       }
 
       if (filtros.startAfter) {
         constraints.push(startAfter(filtros.startAfter));
       }
 
-      // Aplicar constraints
-      constraints.forEach(constraint => {
-        q = query(q, constraint);
-      });
+      const snapshot = await this.executeQuery('categoriasProdutos', ...constraints);
 
-      const snapshot = await getDocs(q);
-      const categorias: Categoria[] = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        categorias.push({
-          ...data,
-          id: doc.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Categoria);
-      });
+      const categorias: Categoria[] = this.mapDocuments<Categoria>(snapshot);
 
       // Ordenação client-side para garantir ordem correta (categorias sem posição vão para o final)
       categorias.sort((a, b) => {
@@ -93,14 +65,14 @@ export class FirebaseCategoriaService {
         }
         
         // Fallback para data de criação se posições forem iguais
-        return a.dataCriacao.getTime() - b.dataCriacao.getTime();
+        return (b.dataCriacao.getTime() || 0) - (a.dataCriacao.getTime() || 0);
       });
 
       // Filtro de texto (client-side para flexibilidade)
       if (filtros.nome) {
-        const nomeFilter = filtros.nome.toLowerCase();
+        const termo = filtros.nome.toLowerCase();
         return categorias.filter(categoria => 
-          categoria.nome.toLowerCase().includes(nomeFilter)
+          categoria.nome.toLowerCase().includes(termo)
         );
       }
 
@@ -113,19 +85,12 @@ export class FirebaseCategoriaService {
 
   async buscarCategoriaPorId(id: string): Promise<Categoria | null> {
     try {
-      const docRef = doc(this.categoriasCollection, id);
-      const docSnap = await getDoc(docRef);
-      
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        return {
-          ...data,
-          id: docSnap.id,
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Categoria;
+      const documentSnapshot = await this.fetchDocument<Categoria>('categoriasProdutos', id);
+
+      if (documentSnapshot && documentSnapshot.exists()) {
+        return this.mapDocument<Categoria>(documentSnapshot);
       }
-      
+
       return null;
     } catch (error) {
       console.error('Erro ao buscar categoria por ID:', error);

@@ -1,4 +1,3 @@
-import { db } from '../lib/firebase';
 import { 
   doc, 
   setDoc, 
@@ -6,13 +5,10 @@ import {
   onSnapshot, 
   serverTimestamp, 
   Timestamp,
-  collection,
-  query,
-  where,
   orderBy,
-  limit,
-  getDocs
+  limit
 } from 'firebase/firestore';
+import { BaseFirestoreService } from './firebase/BaseFirestoreService';
 
 export interface WhatsAppStatus {
   id: string;
@@ -42,7 +38,7 @@ export interface WhatsAppSession {
   updatedAt: Timestamp;
 }
 
-class FirebaseWhatsAppService {
+class FirebaseWhatsAppService extends BaseFirestoreService {
   private readonly COLLECTION_STATUS = 'whatsapp_status';
   private readonly COLLECTION_SESSIONS = 'whatsapp_sessions';
   

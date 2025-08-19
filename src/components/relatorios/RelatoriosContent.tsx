@@ -21,9 +21,11 @@ interface RelatoriosContentProps {
 export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: RelatoriosContentProps) {
   const [chartData, setChartData] = useState<any>(null);
 
-  // Debug: verificar dados recebidos
-  console.log('🔍 RelatoriosContent: dadosFiltrados recebidos:', dadosFiltrados);
-  console.log('🔍 RelatoriosContent: selectedPeriod:', selectedPeriod);
+  // Debug: verificar dados recebidos (apenas quando mudar)
+  useEffect(() => {
+    console.log('🔍 RelatoriosContent: dadosFiltrados recebidos:', dadosFiltrados);
+    console.log('🔍 RelatoriosContent: selectedPeriod:', selectedPeriod);
+  }, [dadosFiltrados, selectedPeriod]);
 
   // Estado para as categorias de clientes
   const [categorias, setCategorias] = useState<CategoriaCliente[]>(() => {
@@ -118,7 +120,7 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
     setErroClientes(null);
     
     try {
-      const estatisticas = await firebaseClientesService.obterEstatisticasClientes();
+              const estatisticas = await firebaseClientesService.calcularEstatisticas();
       
       setEstatisticasClientes(estatisticas);
       

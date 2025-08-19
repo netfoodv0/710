@@ -397,7 +397,7 @@ export function RelatoriosClientes() {
     setError(null);
     
     try {
-      const dados = await firebaseClientesService.obterEstatisticasClientes();
+              const dados = await firebaseClientesService.calcularEstatisticas();
       setEstatisticasClientes(dados);
       
       // Atualizar os valores dos cards com dados reais do Firebase

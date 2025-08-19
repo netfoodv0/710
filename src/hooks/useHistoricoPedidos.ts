@@ -13,7 +13,7 @@ export function useHistoricoPedidos() {
   const { status } = useAuth();
   const [pedidosHistorico, setPedidosHistorico] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState<LoadingStates>({
-    data: false,
+    data: true, // Iniciar como true para mostrar skeleton
     estatisticas: false,
     exportacao: false
   });
@@ -147,13 +147,62 @@ export function useHistoricoPedidos() {
     setError(null);
   }, []);
 
-  // Carregar dados iniciais
+  // Forçar atualização manual dos dados
+  const refreshDados = useCallback(async () => {
+    console.log('🔄 useHistoricoPedidos: Forçando atualização manual');
+    setLoading(prev => ({ ...prev, data: true }));
+    
+    try {
+      await carregarHistorico();
+      await carregarEstatisticas();
+    } catch (error) {
+      console.error('❌ Erro ao atualizar dados manualmente:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, data: false }));
+    }
+  }, [carregarHistorico, carregarEstatisticas]);
+
+  // Carregar dados iniciais e configurar listener em tempo real
   useEffect(() => {
     if (status === 'authenticated') {
-      carregarHistorico();
-      carregarEstatisticas();
+      // Garantir que o skeleton seja exibido por pelo menos 1 segundo
+      const timer = setTimeout(() => {
+        // Carregar dados iniciais
+        carregarHistorico();
+        carregarEstatisticas();
+
+        // Configurar listener em tempo real
+        console.log('🔄 useHistoricoPedidos: Configurando listener em tempo real');
+        const unsubscribe = historicoPedidoService.onHistoricoChange((pedidos) => {
+          console.log('🔄 useHistoricoPedidos: Dados atualizados em tempo real:', pedidos.length);
+          setPedidosHistorico(pedidos);
+          setError(null);
+          
+          // Forçar delay mínimo de 1 segundo para mostrar skeleton
+          setTimeout(() => {
+            setLoading(prev => ({ ...prev, data: false }));
+          }, 1000);
+        });
+
+        // Verificar se o listener foi configurado corretamente
+        if (typeof unsubscribe !== 'function') {
+          console.warn('⚠️ useHistoricoPedidos: Listener não configurado corretamente');
+        }
+
+        // Cleanup do listener
+        return () => {
+          if (unsubscribe) {
+            unsubscribe();
+          }
+        };
+      }, 1000); // Delay inicial de 1 segundo
+
+      // Cleanup do timer
+      return () => {
+        clearTimeout(timer);
+      };
     }
-  }, [status]); // Remover dependências que causam re-renders
+  }, [status]); // Executar apenas quando o status mudar
 
   return {
     pedidosHistorico,
@@ -165,6 +214,7 @@ export function useHistoricoPedidos() {
     buscarPorPeriodo,
     buscarPorCliente,
     exportarHistorico,
-    limparErro
+    limparErro,
+    refreshDados
   };
 } 

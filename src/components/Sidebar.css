@@ -1,11 +1,13 @@
 /* Estilos para os ícones do sidebar */
 .sidebar-icon {
   transition: fill 0.3s ease;
+  opacity: 0.85; /* Reduzindo a opacidade em 15% */
 }
 
 /* Hover para itens inativos - cor mais escura */
 .sidebar-item-inactive:hover .sidebar-icon {
   fill: #374151 !important; /* Cinza mais escuro no hover */
+  opacity: 1; /* Opacidade total no hover */
 }
 
 /* Hover para texto dos itens inativos - cor mais escura */
@@ -16,20 +18,133 @@
 /* Hover para itens ativos - roxo mais forte */
 .sidebar-item-active:hover .sidebar-icon {
   fill: #6b21a8 !important; /* Roxo mais forte no hover */
-}
-
-/* Hover para texto dos itens ativos - roxo mais forte */
-.sidebar-item-active:hover {
-  color: #6b21a8 !important; /* Roxo mais forte no hover */
-  background-color: #f1f5f9 !important; /* Fundo cinza escuro no hover */
-}
-
-/* Hover para texto dos itens ativos - roxo mais forte */
-.sidebar-item-active:hover span {
-  color: #6b21a8 !important; /* Roxo mais forte no hover */
+  opacity: 1; /* Opacidade total no hover */
 }
 
 /* Hover direto no ícone */
 .sidebar-icon:hover {
   fill: #374151 !important; /* Cinza escuro no hover geral */
+  opacity: 1; /* Opacidade total no hover */
+}
+
+/* Estilos para o dropdown */
+.sidebar-submenu {
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-8px);
+  margin-left: 0;
+  padding-left: 0;
+}
+
+/* Animação de empurrar os subtítulos - mais suave */
+.sidebar-submenu.expanded {
+  max-height: 600px; /* Altura máxima aumentada para transição mais suave */
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Transição super suave para a rotação da seta */
+.sidebar-menu-item.has-dropdown svg {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Estilo para o container do item principal com dropdown */
+.sidebar-item-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+/* Estilo para o botão principal quando tem dropdown */
+.sidebar-menu-item.has-dropdown {
+  flex: 1;
+  position: relative;
+}
+
+/* Estilo para a seta do dropdown */
+.sidebar-menu-item.has-dropdown .ml-auto {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Ajuste para o espaçamento dos subtítulos */
+.sidebar-submenu li:first-child {
+  margin-top: 0;
+}
+
+.sidebar-submenu li:last-child {
+  margin-bottom: 0;
+}
+
+/* Estilo específico para subtítulos sem ícones */
+.sidebar-submenu .sidebar-menu-item {
+  padding-left: 1rem; /* Mesma margem lateral dos itens principais */
+  padding-right: 1rem; /* Mesma margem lateral dos itens principais */
+}
+
+/* Remover hover dos subtítulos */
+.sidebar-submenu .sidebar-menu-item:hover {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Hover dos subtítulos - mesmo comportamento dos itens principais */
+.sidebar-submenu .sidebar-menu-item.sidebar-item-inactive:hover {
+  background-color: #e2e8f0 !important; /* Fundo cinza mais escuro no hover */
+  color: #374151 !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.sidebar-submenu .sidebar-menu-item.sidebar-item-active:hover {
+  background-color: #e0e7ff !important; /* Fundo roxo mais escuro no hover */
+  color: #6b21a8 !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hover dos itens principais do sidebar - 100% de largura */
+.sidebar-menu-item:hover {
+  width: 100% !important;
+  background-color: #e2e8f0 !important; /* Fundo cinza mais escuro no hover */
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hover específico para itens inativos */
+.sidebar-item-inactive:hover {
+  background-color: #e2e8f0 !important; /* Fundo cinza mais escuro no hover */
+  width: 100% !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Hover específico para itens ativos */
+.sidebar-item-active:hover {
+  background-color: #e0e7ff !important; /* Fundo roxo mais escuro no hover */
+  width: 100% !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Garantir que os itens do sidebar tenham largura total */
+.sidebar-menu-item {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Ajuste para o container da sidebar */
+.sidebar-content ul li {
+  width: 100% !important;
+}
+
+/* Hover do container inteiro para cobrir toda a largura */
+.sidebar-item-container:hover {
+  background-color: #e2e8f0 !important; /* Fundo cinza mais escuro no hover */
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.sidebar-item-container:hover .sidebar-item-active {
+  background-color: #e0e7ff !important; /* Fundo roxo mais escuro no hover */
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }

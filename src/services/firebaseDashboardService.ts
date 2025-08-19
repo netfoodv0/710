@@ -1,31 +1,21 @@
 import { 
-  collection, 
-  query, 
-  where, 
-  orderBy, 
-  limit, 
-  getDocs,
   getCountFromServer,
-  Timestamp
+  Timestamp,
+  collection,
+  query,
+  where,
+  getDocs
 } from 'firebase/firestore';
-import { auth, db } from '../lib/firebase';
-import { 
-  KPI, 
-  DadosFormaPagamento, 
-  Pedido,
-  EstatisticasGerais 
-} from '../types';
+import { BaseFirestoreService } from './firebase/BaseFirestoreService';
+import { db } from '../lib/firebase';
 
-export class FirebaseDashboardService {
+export class FirebaseDashboardService extends BaseFirestoreService {
+  // Referência para a coleção de pedidos
   private pedidosCollection = collection(db, 'pedidos');
 
   // Método auxiliar para obter o ID da loja do usuário autenticado
   private getLojaId(): string {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error('Usuário não autenticado');
-    }
-    return user.uid;
+    return super.getLojaId();
   }
 
   // Dados de fallback quando não há pedidos
@@ -110,26 +100,10 @@ export class FirebaseDashboardService {
   // Calcular KPIs baseados em dados reais
   async calcularKPIs(periodo: 'daily' | 'weekly' | 'monthly' = 'weekly'): Promise<KPI[]> {
     try {
-      const lojaId = this.getLojaId();
-      
       // Buscar todos os pedidos da loja e filtrar no código
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      const snapshot = await this.executeQuery('pedidos', this.createConstraints().orderByDesc('dataHora'));
 
-      const snapshot = await getDocs(q);
-      const todosPedidos = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
-      });
+      const todosPedidos = this.mapDocuments<Pedido>(snapshot);
 
       // Se não há pedidos, retornar KPIs zerados
       if (todosPedidos.length === 0) {
@@ -170,20 +144,23 @@ export class FirebaseDashboardService {
       let pedidosFiltrados = todosPedidos;
       
       switch (periodo) {
-        case 'daily':
+        case 'daily': {
           const hoje = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate());
           pedidosFiltrados = todosPedidos.filter(p => p.dataHora >= hoje);
           break;
-        case 'weekly':
+        }
+        case 'weekly': {
           const inicioSemana = new Date(agora);
           inicioSemana.setDate(agora.getDate() - agora.getDay());
           const dataInicio = new Date(inicioSemana.getFullYear(), inicioSemana.getMonth(), inicioSemana.getDate());
           pedidosFiltrados = todosPedidos.filter(p => p.dataHora >= dataInicio);
           break;
-        case 'monthly':
+        }
+        case 'monthly': {
           const dataInicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1);
           pedidosFiltrados = todosPedidos.filter(p => p.dataHora >= dataInicioMes);
           break;
+        }
       }
 
       // Se não há pedidos no período, usar todos os pedidos (sem filtro de período)
@@ -277,26 +254,10 @@ export class FirebaseDashboardService {
   // Calcular formas de pagamento baseadas em dados reais
   async calcularFormasPagamento(): Promise<DadosFormaPagamento[]> {
     try {
-      const lojaId = this.getLojaId();
-      
       // Buscar todos os pedidos da loja e filtrar no código
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      const snapshot = await this.executeQuery('pedidos', this.createConstraints().orderByDesc('dataHora'));
 
-      const snapshot = await getDocs(q);
-      const todosPedidos = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
-      });
+      const todosPedidos = this.mapDocuments<Pedido>(snapshot);
 
       // Se não há pedidos, retornar dados zerados
       if (todosPedidos.length === 0) {
@@ -341,7 +302,7 @@ export class FirebaseDashboardService {
         const formaNormalizada = forma.toLowerCase().replace(/[^a-z]/g, '');
         
         // Tentar encontrar a cor
-        let cor = coresMap[forma] || coresMap[formaNormalizada] || '#6B7280';
+        const cor = coresMap[forma] || coresMap[formaNormalizada] || '#6B7280';
         
         return {
           name: forma,
@@ -361,28 +322,13 @@ export class FirebaseDashboardService {
   // Buscar pedidos recentes
   async buscarPedidosRecentes(limite: number = 5): Promise<Pedido[]> {
     try {
-      const lojaId = this.getLojaId();
-      
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc'),
-        limit(limite)
+      const snapshot = await this.executeQuery(
+        'pedidos', 
+        this.createConstraints().orderByDesc('dataHora'),
+        this.createConstraints().limit(limite)
       );
 
-      const snapshot = await getDocs(q);
-      const pedidos: Pedido[] = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        pedidos.push({
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido);
-      });
+      const pedidos: Pedido[] = this.mapDocuments<Pedido>(snapshot);
 
       return pedidos;
     } catch (error) {
@@ -395,26 +341,10 @@ export class FirebaseDashboardService {
   // Calcular estatísticas gerais
   async calcularEstatisticasGerais(): Promise<EstatisticasGerais> {
     try {
-      const lojaId = this.getLojaId();
-      
       // Buscar todos os pedidos da loja e filtrar no código
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      const snapshot = await this.executeQuery('pedidos', this.createConstraints().orderByDesc('dataHora'));
 
-      const snapshot = await getDocs(q);
-      const todosPedidos = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
-      });
+      const todosPedidos = this.mapDocuments<Pedido>(snapshot);
 
       // Se não há pedidos, retornar dados zerados
       if (todosPedidos.length === 0) {
@@ -469,25 +399,9 @@ export class FirebaseDashboardService {
   // Método para verificar dados e debug
   async verificarDados(): Promise<void> {
     try {
-      const lojaId = this.getLojaId();
-      
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      const snapshot = await this.executeQuery('pedidos', this.createConstraints().orderByDesc('dataHora'));
 
-      const snapshot = await getDocs(q);
-      const todosPedidos = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
-      });
+      const todosPedidos = this.mapDocuments<Pedido>(snapshot);
 
       if (todosPedidos.length > 0) {
         const statusCount = todosPedidos.reduce((acc, p) => {
@@ -584,26 +498,10 @@ export class FirebaseDashboardService {
     categorias: string[];
   }> {
     try {
-      const lojaId = this.getLojaId();
-      
       // Buscar todos os pedidos da loja
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      const snapshot = await this.executeQuery('pedidos', this.createConstraints().orderByDesc('dataHora'));
 
-      const snapshot = await getDocs(q);
-      const todosPedidos = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
-      });
+      const todosPedidos = this.mapDocuments<Pedido>(snapshot);
 
       if (todosPedidos.length === 0) {
         // Retornar dados zerados
@@ -742,26 +640,10 @@ export class FirebaseDashboardService {
     labelsDias: string[];
   }> {
     try {
-      const lojaId = this.getLojaId();
-      
       // Buscar todos os pedidos da loja
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      const snapshot = await this.executeQuery('pedidos', this.createConstraints().orderByDesc('dataHora'));
 
-      const snapshot = await getDocs(q);
-      const todosPedidos = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
-      });
+      const todosPedidos = this.mapDocuments<Pedido>(snapshot);
 
       const hoje = new Date();
       const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
@@ -960,26 +842,10 @@ export class FirebaseDashboardService {
     categorias: string[];
   }> {
     try {
-      const lojaId = this.getLojaId();
-      
       // Buscar todos os pedidos da loja
-      const q = query(
-        this.pedidosCollection,
-        where('lojaId', '==', lojaId),
-        orderBy('dataHora', 'desc')
-      );
+      const snapshot = await this.executeQuery('pedidos', this.createConstraints().orderByDesc('dataHora'));
 
-      const snapshot = await getDocs(q);
-      const todosPedidos = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          dataHora: data.dataHora?.toDate() || new Date(),
-          dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
-        } as Pedido;
-      });
+      const todosPedidos = this.mapDocuments<Pedido>(snapshot);
 
       if (todosPedidos.length === 0) {
         // Retornar dados zerados
