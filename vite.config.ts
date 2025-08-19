@@ -18,7 +18,11 @@ export default defineConfig({
       'react-router-dom',
       '@heroui/react',
       '@heroui/date-picker',
-      'firebase',
+      'firebase/app',
+      'firebase/firestore',
+      'firebase/auth',
+      'firebase/storage',
+      'firebase/analytics',
       'lucide-react'
     ]
   },
@@ -29,10 +33,13 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
           ui: ['@heroui/react', '@heroui/date-picker'],
-          firebase: ['firebase']
+          firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage', 'firebase/analytics']
         }
       }
     }
+  },
+  define: {
+    global: 'globalThis',
   },
   server: {
     hmr: true,
