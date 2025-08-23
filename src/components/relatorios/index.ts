@@ -1,6 +1,9 @@
 export { EstatisticasProdutos } from './EstatisticasProdutos';
+export { EstatisticasCupons } from './EstatisticasCupons';
 export { DistribuicaoCategoria } from './DistribuicaoCategoria';
 export { HeaderRelatorioProdutos } from './HeaderRelatorioProdutos';
+export { HeaderRelatorioCupons } from './HeaderRelatorioCupons';
 export { useConfiguracaoTabelaProdutos } from './ConfiguracaoTabelaProdutos';
+export { useConfiguracaoTabelaCupons } from './ConfiguracaoTabelaCupons';
 export { RelatoriosContent } from './RelatoriosContent';
 export { RelatoriosErrorState } from './RelatoriosErrorState';

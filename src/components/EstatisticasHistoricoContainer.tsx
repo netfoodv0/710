@@ -2,7 +2,7 @@ import React from 'react';
 import { EstatisticasCard } from './';
 import { EstatisticasHistorico } from '../features/historico/services/historicoPedidoService';
 import { DadosRelatorios } from '../features/relatorios/types/relatorios.types';
-import { DiscountIcon, RejectedOrderIcon, CompletedOrderIcon, NewCustomerIcon, BagIcon, RevenueIcon, TicketIcon, UsersIcon, CouponIcon } from './ui';
+import { DiscountIcon, RejectedOrderIcon, CompletedOrderIcon, NewCustomerIcon, BagIcon, RevenueIcon, TicketIcon, UsersIcon } from './ui';
 
 interface EstatisticasHistoricoContainerProps {
 	estatisticas: EstatisticasHistorico | null;
@@ -22,9 +22,7 @@ const EstatisticasHistoricoContainer: React.FC<EstatisticasHistoricoContainerPro
 			clientesUnicos: dados.kpis.clientesAtivos,
 			entregues: dados.kpis.pedidosTotal - Math.floor(dados.kpis.pedidosTotal * (dados.kpis.taxaCancelamento / 100)),
 			cancelados: Math.floor(dados.kpis.pedidosTotal * (dados.kpis.taxaCancelamento / 100)),
-			// Novos campos (por enquanto assumem 0 até termos fonte real)
-			cuponsUtilizados: 0,
-			descontosCupons: 0
+			
 		};
 	};
 
@@ -36,9 +34,7 @@ const EstatisticasHistoricoContainer: React.FC<EstatisticasHistoricoContainerPro
 		clientesUnicos: 0,
 		entregues: 0,
 		cancelados: 0,
-		// Novos campos com valores padrão
-		cuponsUtilizados: 0,
-		descontosCupons: 0
+
 	};
 	
 	// Priorizar dados de relatórios se disponíveis, senão usar estatísticas de histórico
@@ -46,11 +42,9 @@ const EstatisticasHistoricoContainer: React.FC<EstatisticasHistoricoContainerPro
 	
 	if (dadosRelatorios) {
 		dadosParaUsar = converterDadosRelatorios(dadosRelatorios);
-	} else if (estatisticas) {
+			} else if (estatisticas) {
 		dadosParaUsar = { 
-			...estatisticas,
-			cuponsUtilizados: 0,
-			descontosCupons: 0
+			...estatisticas
 		};
 	}
 
@@ -117,21 +111,7 @@ const EstatisticasHistoricoContainer: React.FC<EstatisticasHistoricoContainerPro
 					}
 				/>
 
-				<EstatisticasCard
-					titulo="Cupons utilizados"
-					valor={dadosParaUsar.cuponsUtilizados || 0}
-					icone={
-						<CouponIcon size={24} color="#6b7280" />
-					}
-				/>
 
-				<EstatisticasCard
-					titulo="Descontos em cupons"
-					valor={`R$ ${(dadosParaUsar.descontosCupons || 0).toFixed(2).replace('.', ',')}`}
-					icone={
-						<DiscountIcon size={24} color="#6b7280" />
-					}
-				/>
 			</div>
 		</div>
 	);

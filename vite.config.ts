@@ -16,8 +16,7 @@ export default defineConfig({
       'react',
       'react-dom',
       'react-router-dom',
-      '@heroui/react',
-      '@heroui/date-picker',
+
       'firebase/app',
       'firebase/firestore',
       'firebase/auth',
@@ -32,7 +31,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
-          ui: ['@heroui/react', '@heroui/date-picker'],
+
           firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage', 'firebase/analytics']
         }
       }

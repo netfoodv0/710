@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { X, Tag } from 'lucide-react';
+import { Tag } from 'lucide-react';
 import { SaveIcon } from '../ui';
 import { ModalCategoriaProps, CriarCategoriaData, PeriodoDisponibilidade } from '../../types/categoria';
 import { FormularioDisponibilidade } from '../forms/FormularioDisponibilidade';
 import { FormSwitch } from '../forms/FormSwitch';
+import { Modal, ModalHeader, ModalBody, ModalFooter } from './Modal';
 
 export function ModalCategoria({
   isOpen,
   onClose,
   categoria,
   onSave,
-  onEdit,
-  loading = false
+  onEdit
 }: ModalCategoriaProps) {
   const [formData, setFormData] = useState<CriarCategoriaData>({
     nome: '',
@@ -98,36 +98,31 @@ export function ModalCategoria({
     handleInputChange('disponibilidade', periodosSeguros);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-              <Tag className="w-4 h-4 text-red-600" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-900">
-                {categoria ? 'Editar Categoria' : 'Nova Categoria'}
-              </h2>
-              <p className="text-sm text-gray-500">
-                {categoria ? 'Modifique os dados da categoria' : 'Crie uma nova categoria para seus produtos'}
-              </p>
-            </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="xl"
+      showCloseButton={true}
+    >
+      <ModalHeader showCloseButton={true} onClose={onClose}>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+            <Tag className="w-4 h-4 text-red-600" />
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">
+              {categoria ? 'Editar Categoria' : 'Nova Categoria'}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {categoria ? 'Modifique os dados da categoria' : 'Crie uma nova categoria para seus produtos'}
+            </p>
+          </div>
         </div>
+      </ModalHeader>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+      <ModalBody>
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Nome da categoria */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -144,7 +139,6 @@ export function ModalCategoria({
             />
             {errors.nome && (
               <div className="flex items-center gap-1 mt-1">
-                <AlertCircle className="w-3.5 h-3.5 text-red-500" />
                 <span className="text-xs text-red-600">{errors.nome}</span>
               </div>
             )}
@@ -226,36 +220,26 @@ export function ModalCategoria({
             onChange={handleDisponibilidadeChange}
           />
 
-          {/* Botões */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={loading}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              disabled={loading}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50"
-            >
-              {loading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Salvando...
-                </>
-              ) : (
-                <>
-                  <SaveIcon size={24} color="#ffffff" />
-                  {categoria ? 'Salvar alterações' : 'Criar categoria'}
-                </>
-              )}
-            </button>
-          </div>
         </form>
-      </div>
-    </div>
+      </ModalBody>
+
+      <ModalFooter>
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+        >
+          <SaveIcon size={24} color="#ffffff" />
+          {categoria ? 'Salvar alterações' : 'Criar categoria'}
+        </button>
+      </ModalFooter>
+    </Modal>
   );
 }

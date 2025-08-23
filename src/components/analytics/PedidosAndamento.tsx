@@ -132,7 +132,7 @@ export const PedidosAndamento: React.FC<PedidosAndamentoProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 space-y-2 overflow-y-auto max-h-[400px] hide-scrollbar">
+      <div className="flex-1 space-y-2 overflow-y-auto hide-scrollbar min-h-0">
         {pedidosExibir.map((pedido) => (
           <div key={pedido.id} className="flex items-center justify-between p-2 bg-white rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
             <div className="flex items-center space-x-3">
@@ -154,7 +154,7 @@ export const PedidosAndamento: React.FC<PedidosAndamentoProps> = ({
         ))}
       </div>
       
-      <div className="mt-auto pt-2">
+      <div className="mt-auto pt-2 flex-shrink-0">
         <a 
           href="/pedidos" 
           className="inline-flex items-center justify-center space-x-2 w-full px-3 py-2 bg-purple-600 text-white text-sm font-medium rounded-[100px] hover:bg-purple-700 transition-colors"

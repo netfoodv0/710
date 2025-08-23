@@ -21,3 +21,4 @@ export function PrinterIcon({ className = "", size = 16 }: PrinterIconProps) {
     </svg>
   );
 }
+

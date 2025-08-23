@@ -15,41 +15,50 @@ export type StatusPedido =
   | 'entregue'
   | 'cancelado';
 
-export interface Pedido {
-  id: string;
-  numero: string;
-  lojaId: string; // ✅ NOVO: Campo para isolamento por loja
-  status: StatusPedido;
-  dataHora: Date;
-  cliente: ClientePedido;
-  itens: ItemPedido[];
-  total: number;
-  formaPagamento: string;
-  formaEntrega: 'delivery' | 'retirada';
-  origemPedido: 'ifood' | 'rappi' | 'uber' | 'proprio';
-  pagamento: PagamentoPedido;
-  clienteNovo: boolean;
-  tempoEstimado: string;
-  enderecoEntrega?: EnderecoEntrega;
-  observacoes?: string;
-  dataCriacao: Date;
-  dataAtualizacao: Date;
+export interface Adicional {
+  nome: string;
+  quantidade: number;
+  preco: number;
 }
 
 export interface ItemPedido {
-  id?: string;
-  produtoId?: string;
   nome: string;
-  preco: number;
   quantidade: number;
-  observacoes?: string;
-  extras?: Extra[];
+  preco: number;
+  adicionais?: Adicional[];
 }
 
-export interface Extra {
+export interface Pedido {
   id: string;
-  nome: string;
-  preco: number;
+  numero: string;
+  horario: string;
+  cliente: string;
+  endereco: string;
+  itens: string;
+  itensDetalhados: ItemPedido[];
+  valor: string;
+  status: 'analise' | 'preparo' | 'entrega';
+  tipoPagamento: 'dinheiro' | 'pix' | 'cartao';
+  timestampAceito?: number;
+}
+
+export interface PedidosState {
+  pedidos: Pedido[];
+  loading: boolean;
+  searchTerm: string;
+  isCreating: boolean;
+}
+
+export interface PedidosActions {
+  moverPedido: (pedidoId: string, novoStatus: Pedido['status']) => void;
+  handleAceitar: (pedidoId: string) => void;
+  handleAvançar: (pedidoId: string) => void;
+  handleFinalizar: (pedidoId: string) => void;
+  handleRecusar: (pedidoId: string) => void;
+  handleSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleClearSearch: () => void;
+  handleSearchSubmit: (e: React.FormEvent) => void;
+  handleCriarPedidoFicticio: () => Promise<void>;
 }
 
 export interface ClientePedido {

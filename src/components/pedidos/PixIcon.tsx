@@ -29,3 +29,4 @@ export function PixIcon({ className = "", size = 16 }: PixIconProps) {
     </svg>
   );
 }
+

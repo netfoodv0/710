@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
  * - Evita navegação para a mesma rota
  * - Preserva estado entre navegações
  * - Implementa cache inteligente
+ * - Otimiza navegação entre pedidos e relatórios
  */
 export function useOptimizedNavigation() {
   const navigate = useNavigate();
@@ -31,6 +32,17 @@ export function useOptimizedNavigation() {
 
     lastRouteRef.current = location.pathname;
     
+    // Log para debug de navegação otimizada
+    const isOptimizedRoute = 
+      (path.startsWith('/relatorios') && location.pathname.startsWith('/pedidos')) ||
+      (path.startsWith('/pedidos') && location.pathname.startsWith('/relatorios')) ||
+      (path === '/historico' && (location.pathname === '/pedidos' || location.pathname.startsWith('/relatorios'))) ||
+      (location.pathname === '/historico' && (path === '/pedidos' || path.startsWith('/relatorios')));
+    
+    if (isOptimizedRoute) {
+      console.log('🚀 Navegação otimizada entre pedidos/relatórios:', location.pathname, '→', path);
+    }
+    
     navigate(path, options);
   }, [navigate, location.pathname]);
 
@@ -51,13 +63,18 @@ export function useOptimizedNavigation() {
     return [...navigationHistoryRef.current];
   }, []);
 
+  const clearNavigationHistory = useCallback(() => {
+    navigationHistoryRef.current = [];
+  }, []);
+
   return {
     navigateTo,
     goBack,
     canGoBack,
     getNavigationHistory,
-    currentPath: location.pathname,
-    lastPath: lastRouteRef.current
+    clearNavigationHistory,
+    currentRoute: location.pathname,
+    lastRoute: lastRouteRef.current
   };
 }
 

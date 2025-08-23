@@ -17,7 +17,7 @@ const getPageTitle = (path: string): string => {
     '/cardapio': 'Cardápio',
     '/configuracoes': 'Configurações',
   };
-  return titles[path] || 'NetFood';
+  return titles[path] || 'NETFOOD';
 };
 
 export function MobileHeader({ onMenuToggle, currentPath, isScrolled = false }: MobileHeaderProps) {

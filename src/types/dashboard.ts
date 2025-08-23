@@ -56,11 +56,43 @@ export interface PedidoEmAndamento {
 }
 
 export interface DashboardData {
-  kpis: KPI[];
-  formasPagamento: DadosFormaPagamento[];
-  pedidosRecentes: any[];
-  estatisticas: EstatisticasGerais;
-  formasPedidas?: FormaPedida[];
-  produtosVendidos?: ProdutoVendido[];
-  pedidosEmAndamento?: PedidoEmAndamento[];
+  estatisticas: DashboardEstatisticas;
+  formasPedidas: FormaPagamento[];
+  produtosVendidos: ProdutoVendido[];
+  pedidosEmAndamento: PedidoEmAndamento[];
+}
+
+export interface DashboardEstatisticas {
+  totalPedidos: number;
+  faturamentoTotal: number;
+  totalClientes: number;
+  ticketMedio: number;
+  pedidos7Dias: number;
+  receita7Dias: number;
+  pedidosPendentes: number;
+}
+
+export interface FormaPagamento {
+  id: string;
+  nome: string;
+  quantidade: number;
+  valor: number;
+  percentual: number;
+}
+
+export interface ProdutoVendido {
+  id: string;
+  nome: string;
+  quantidade: number;
+  valor: number;
+  categoria: string;
+}
+
+export interface PedidoEmAndamento {
+  id: string;
+  numero: string;
+  cliente: string;
+  status: string;
+  valor: number;
+  horario: string;
 } 

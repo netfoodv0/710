@@ -14,7 +14,7 @@ interface OptimizedRouteProps {
  */
 export const OptimizedRoute = memo(({ 
   component: Component, 
-  fallback = <SkeletonLoading />
+  fallback = <SkeletonLoading type="cards" />
 }: OptimizedRouteProps) => {
   return (
     <Suspense fallback={fallback}>
@@ -30,7 +30,7 @@ export function useLazyRoute(importFn: () => Promise<{ default: ComponentType<an
   const LazyComponent = lazy(importFn);
   
   return React.memo((props: any) => (
-    <Suspense fallback={<SkeletonLoading />}>
+    <Suspense fallback={<SkeletonLoading type="cards" />}>
       <LazyComponent {...props} />
     </Suspense>
   ));

@@ -18,9 +18,9 @@ interface CardapioState {
   };
   searchTerm: string;
   
-  // Estados de loading
-  loadingProdutos: boolean;
-  loadingCategorias: boolean;
+  // Estados de loading REMOVIDOS - não há mais skeleton na página de cardápio
+  // loadingProdutos: boolean;
+  // loadingCategorias: boolean;
   
   // Estados de erro
   errorProdutos: string | null;
@@ -34,8 +34,8 @@ type CardapioAction =
   | { type: 'SET_CATEGORIA_SELECIONADA_EDICAO'; payload: Categoria | undefined }
   | { type: 'SET_FILTROS'; payload: Partial<CardapioState['filtros']> }
   | { type: 'SET_SEARCH_TERM'; payload: string }
-  | { type: 'SET_LOADING_PRODUTOS'; payload: boolean }
-  | { type: 'SET_LOADING_CATEGORIAS'; payload: boolean }
+  // | { type: 'SET_LOADING_PRODUTOS'; payload: boolean }
+  // | { type: 'SET_LOADING_CATEGORIAS'; payload: boolean }
   | { type: 'SET_ERROR_PRODUTOS'; payload: string | null }
   | { type: 'RESET_STATE' };
 
@@ -51,8 +51,8 @@ const initialState: CardapioState = {
     disponibilidade: 'todos'
   },
   searchTerm: '',
-  loadingProdutos: false,
-  loadingCategorias: false,
+  // loadingProdutos: false,
+  // loadingCategorias: false,
   errorProdutos: null
 };
 
@@ -80,11 +80,11 @@ function cardapioReducer(state: CardapioState, action: CardapioAction): Cardapio
     case 'SET_SEARCH_TERM':
       return { ...state, searchTerm: action.payload };
     
-    case 'SET_LOADING_PRODUTOS':
-      return { ...state, loadingProdutos: action.payload };
+    // case 'SET_LOADING_PRODUTOS':
+    //   return { ...state, loadingProdutos: action.payload };
     
-    case 'SET_LOADING_CATEGORIAS':
-      return { ...state, loadingCategorias: action.payload };
+    // case 'SET_LOADING_CATEGORIAS':
+    //   return { ...state, loadingCategorias: action.payload };
     
     case 'SET_ERROR_PRODUTOS':
       return { ...state, errorProdutos: action.payload };
@@ -165,14 +165,14 @@ export function CardapioProvider({ children }: CardapioProviderProps) {
     dispatch({ type: 'SET_SEARCH_TERM', payload: term });
   }, []);
 
-  // Ações para loading
-  const setLoadingProdutos = useCallback((loading: boolean) => {
-    dispatch({ type: 'SET_LOADING_PRODUTOS', payload: loading });
-  }, []);
+  // Ações para loading REMOVIDAS - não há mais skeleton na página de cardápio
+  // const setLoadingProdutos = useCallback((loading: boolean) => {
+  //   dispatch({ type: 'SET_LOADING_PRODUTOS', payload: loading });
+  // }, []);
 
-  const setLoadingCategorias = useCallback((loading: boolean) => {
-    dispatch({ type: 'SET_LOADING_CATEGORIAS', payload: loading });
-  }, []);
+  // const setLoadingCategorias = useCallback((loading: boolean) => {
+  //   dispatch({ type: 'SET_LOADING_CATEGORIAS', payload: loading });
+  // }, [];
 
   // Ações para erros
   const setErrorProdutos = useCallback((error: string | null) => {
@@ -206,8 +206,8 @@ export function CardapioProvider({ children }: CardapioProviderProps) {
     closeModalProduto,
     updateFiltros,
     updateSearchTerm,
-    setLoadingProdutos,
-    setLoadingCategorias,
+    // setLoadingProdutos,
+    // setLoadingCategorias,
     setErrorProdutos,
     setActiveSection,
     selecionarPrimeiraCategoria // ✅ Nova função

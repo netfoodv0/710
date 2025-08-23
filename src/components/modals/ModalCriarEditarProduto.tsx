@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { ModalProdutoProps } from '../../types/produtos';
 import { FormularioProduto } from '../forms/FormularioProduto';
 
@@ -97,28 +96,21 @@ export const ModalProduto: React.FC<ModalProdutoProps> = ({
     );
   }
 
-  // Modal mode - render with overlay and animations
+  // Modal mode - render without animations
   return (
-    <AnimatePresence>
+    <>
       {isOpen && (
         <>
           {/* Overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+          <div
             className="fixed inset-0 bg-black bg-opacity-50 z-50"
             onClick={onClose}
           />
           
           {/* Modal */}
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+          <div
             className="fixed top-0 right-0 h-full w-[600px] bg-white border border-gray-200 shadow-2xl z-50 flex flex-col"
+            style={{ backgroundColor: 'white !important' }}
           >
         <ModalProdutoHeader
           isEditing={isEditing}
@@ -164,9 +156,9 @@ export const ModalProduto: React.FC<ModalProdutoProps> = ({
               onDuplicate={handleDuplicate}
               onFormSubmit={handleFormSubmit}
             />
-          </motion.div>
+          </div>
         </>
       )}
-    </AnimatePresence>
+    </>
   );
 };

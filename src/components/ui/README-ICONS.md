@@ -5,7 +5,7 @@ Este diretório contém componentes de ícones personalizados criados especifica
 ## Ícones Disponíveis
 
 ### 1. DiscountIcon
-Ícone personalizado para representar descontos, cupons e promoções.
+Ícone personalizado para representar descontos e promoções.
 
 **Uso:**
 ```tsx
@@ -53,22 +53,13 @@ import { NewCustomerIcon } from '../ui/NewCustomerIcon';
 <NewCustomerIcon size={20} color="#3B82F6" />
 ```
 
-## Implementação no CupomCard
+## Implementação no Sistema
 
-O `DiscountIcon` já está implementado no componente `CupomCard` para substituir os ícones genéricos de desconto:
+O `DiscountIcon` pode ser usado em qualquer componente que precise representar descontos:
 
 ```tsx
-// Antes (usando Lucide React)
-case 'desconto_percentual':
-  return <Percent className="w-4 h-4" />;
-case 'desconto_fixo':
-  return <DollarSign className="w-4 h-4" />;
-
-// Depois (usando ícone personalizado)
-case 'desconto_percentual':
-  return <DiscountIcon size={16} color="#666666" />;
-case 'desconto_fixo':
-  return <DiscountIcon size={16} color="#666666" />;
+// Exemplo de uso em componentes de desconto
+<DiscountIcon size={16} color="#666666" />
 ```
 
 ## Vantagens dos Ícones Personalizados

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarIcon } from './CalendarIcon';
 import { BorderLine } from './BorderLine';
@@ -7,19 +7,7 @@ import { PrinterIcon } from './PrinterIcon';
 import { DollarIcon } from './DollarIcon';
 import { PixIcon } from './PixIcon';
 import { CreditCardIcon } from './CreditCardIcon';
-
-interface Adicional {
-  nome: string;
-  quantidade: number;
-  preco: number;
-}
-
-interface ItemPedido {
-  nome: string;
-  quantidade: number;
-  preco: number;
-  adicionais?: Adicional[];
-}
+import { Adicional, ItemPedido } from '../../types/pedidos';
 
 interface PedidoCardProps {
   numero: string;
@@ -37,7 +25,7 @@ interface PedidoCardProps {
   onRecusar?: () => void;
 }
 
-export function PedidoCard({ 
+export const PedidoCard = memo(({ 
   numero, 
   horario, 
   cliente, 
@@ -51,7 +39,7 @@ export function PedidoCard({
   onAvançar,
   onFinalizar,
   onRecusar
-}: PedidoCardProps) {
+}: PedidoCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpanded = () => {
@@ -326,4 +314,4 @@ export function PedidoCard({
       </AnimatePresence>
     </motion.div>
   );
-}
+});

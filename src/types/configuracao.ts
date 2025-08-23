@@ -35,10 +35,17 @@ export interface ConfiguracaoLoja {
   email: string;
   endereco: {
     rua: string;
+    numero: string;
     bairro: string;
     cidade: string;
     estado: string;
     cep: string;
+    // Coordenadas para evitar geocodificação repetida
+    coordenadas?: {
+      latitude: number;
+      longitude: number;
+      dataAtualizacao?: string; // ISO string da última atualização
+    };
   };
   horarioFuncionamento: {
     segunda: HorarioDia;

@@ -9,7 +9,7 @@ import {
   ChevronDown,
   ChevronRight
 } from 'lucide-react';
-import { SettingsIcon, ClockIcon, ReportIcon, CouponIcon, HistoryIcon, OrderIcon, DashboardIcon, MenuIcon, SupportIcon, MapIcon, UsersIcon, BagIcon } from '../ui';
+import { SettingsIcon, ClockIcon, ReportIcon, CouponIcon, HistoryIcon, OrderIcon, DashboardIcon, MenuIcon, SupportIcon, MapIcon, UsersIcon, BagIcon, EstoqueIcon, ModalIcon } from '../ui';
 import { useAuth } from '../../hooks';
 
 interface MobileSidebarProps {
@@ -38,15 +38,16 @@ const menuItems = [
     label: 'Cardápio',
     icon: MenuIcon
   },
-  {
-    path: '/cupons',
-    label: 'Cupons',
-    icon: CouponIcon
-  },
+
   {
     path: '/atendimento',
     label: 'Atendimento',
     icon: SupportIcon
+  },
+  {
+    path: '/modal',
+    label: 'Modal',
+    icon: ModalIcon
   },
   {
     path: '/configuracoes',
@@ -54,9 +55,31 @@ const menuItems = [
     icon: SettingsIcon
   },
   {
+    path: '/usuarios',
+    label: 'Usuários',
+    icon: UsersIcon,
+    subItems: [
+      {
+        path: '/usuarios/operadores',
+        label: 'Operadores',
+        icon: UsersIcon
+      },
+      {
+        path: '/usuarios/motoboys',
+        label: 'Motoboys',
+        icon: UsersIcon
+      }
+    ]
+  },
+  {
     path: '/horarios',
     label: 'Horários',
     icon: ClockIcon
+  },
+  {
+    path: '/cupons',
+    label: 'Cupons',
+    icon: CouponIcon
   },
   {
     path: '/relatorios',
@@ -64,7 +87,7 @@ const menuItems = [
     icon: ReportIcon,
     subItems: [
       {
-        path: '/relatorios',
+        path: '/relatorios/geral',
         label: 'Geral',
         icon: ReportIcon
       },
@@ -85,6 +108,28 @@ const menuItems = [
     label: 'Mapa',
     icon: MapIcon
   },
+  {
+    path: '/estoque',
+    label: 'Estoque',
+    icon: EstoqueIcon,
+    subItems: [
+      {
+        path: '/estoque/produtos',
+        label: 'Produtos',
+        icon: EstoqueIcon
+      },
+      {
+        path: '/estoque/insumos',
+        label: 'Insumos',
+        icon: EstoqueIcon
+      },
+      {
+        path: '/estoque/acompanhamentos',
+        label: 'Acompanhamentos',
+        icon: EstoqueIcon
+      }
+    ]
+  }
 ];
 
 export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
@@ -92,7 +137,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
   const { user, loja, logout } = useAuth();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
 
-  // Expandir automaticamente os subtítulos quando estiver em uma página de relatório
+  // Expandir automaticamente os subtítulos quando estiver em uma página de relatório, estoque ou usuários
   useEffect(() => {
     if (location.pathname.startsWith('/relatorios')) {
       setExpandedItems(prev => {
@@ -101,10 +146,30 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
         return newSet;
       });
     }
+    if (location.pathname.startsWith('/estoque')) {
+      setExpandedItems(prev => {
+        const newSet = new Set(prev);
+        newSet.add('/estoque');
+        return newSet;
+      });
+    }
+    if (location.pathname.startsWith('/usuarios')) {
+      setExpandedItems(prev => {
+        const newSet = new Set(prev);
+        newSet.add('/usuarios');
+        return newSet;
+      });
+    }
   }, [location.pathname]);
 
-  const handleItemClick = () => {
-    onClose();
+  const handleItemClick = (item: any) => {
+    if (item.subItems && item.subItems.length > 0) {
+      // Se tem subitens, apenas expande/colapsa
+      toggleSubItems(item.path);
+    } else {
+      // Se não tem subitens, fecha o sidebar e navega
+      onClose();
+    }
   };
 
   const toggleSubItems = (itemPath: string) => {
@@ -120,6 +185,21 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
   };
 
   const isExpanded = (itemPath: string) => expandedItems.has(itemPath);
+
+  const isItemActive = (item: any) => {
+    if (item.subItems && item.subItems.length > 0) {
+      // Para itens com subitens, NUNCA são considerados ativos
+      // Apenas expandem/colapsam
+      return false;
+    } else {
+      // Para itens sem subitens, verifica se a rota atual é igual
+      return location.pathname === item.path;
+    }
+  };
+
+  const isSubItemActive = (subItem: any) => {
+    return location.pathname === subItem.path;
+  };
 
   return (
     <>
@@ -140,7 +220,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold italic text-gray-900">VAULT</h1>
+                <h1 className="text-2xl font-bold italic text-gray-900">VOULT</h1>
               </div>
               <button
                 onClick={onClose}
@@ -179,8 +259,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             <ul className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = location.pathname === item.path || 
-                               (item.subItems && item.subItems.some(subItem => location.pathname === subItem.path));
+                const isActive = isItemActive(item);
                 const hasSubItems = item.subItems && item.subItems.length > 0;
                 const itemExpanded = isExpanded(item.path);
                 
@@ -189,14 +268,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                     <div className="sidebar-item-container">
                       <Link
                         to={hasSubItems ? '#' : item.path}
-                        onClick={(e) => {
-                          if (hasSubItems) {
-                            e.preventDefault();
-                            toggleSubItems(item.path);
-                          } else {
-                            handleItemClick();
-                          }
-                        }}
+                        onClick={() => handleItemClick(item)}
                         className={`sidebar-menu-item ${hasSubItems ? 'has-dropdown' : ''} flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
                           isActive 
                             ? 'text-[#8217d5] sidebar-item-active' 
@@ -215,13 +287,13 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                     {hasSubItems && itemExpanded && (
                       <ul className="sidebar-submenu expanded mt-1 space-y-1">
                         {item.subItems.map((subItem) => {
-                          const isSubActive = location.pathname === subItem.path;
+                          const isSubActive = isSubItemActive(subItem);
                           
                           return (
                             <li key={subItem.path}>
                               <Link
                                 to={subItem.path}
-                                onClick={handleItemClick}
+                                onClick={onClose}
                                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
                                   isSubActive 
                                     ? 'text-[#8217d5] sidebar-item-active' 

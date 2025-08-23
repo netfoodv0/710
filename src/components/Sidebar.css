@@ -29,27 +29,12 @@
 
 /* Estilos para o dropdown */
 .sidebar-submenu {
-  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transform: translateY(-8px);
   margin-left: 0;
   padding-left: 0;
 }
 
-/* Animação de empurrar os subtítulos - mais suave */
-.sidebar-submenu.expanded {
-  max-height: 600px; /* Altura máxima aumentada para transição mais suave */
-  opacity: 1;
-  transform: translateY(0);
-  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Transição super suave para a rotação da seta */
-.sidebar-menu-item.has-dropdown svg {
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+/* Estilo para o container do item principal com dropdown */
 
 /* Estilo para o container do item principal com dropdown */
 .sidebar-item-container {
@@ -124,6 +109,25 @@
   background-color: #e0e7ff !important; /* Fundo roxo mais escuro no hover */
   width: 100% !important;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Estilo específico para itens principais com dropdown - nunca ficam roxos */
+.sidebar-menu-item.has-dropdown.sidebar-item-active {
+  color: #525866 !important; /* Cor cinza padrão */
+  background-color: transparent !important; /* Sem fundo */
+}
+
+.sidebar-menu-item.has-dropdown.sidebar-item-active .sidebar-icon {
+  fill: #525866 !important; /* Ícone cinza */
+}
+
+.sidebar-menu-item.has-dropdown.sidebar-item-active:hover {
+  background-color: #e2e8f0 !important; /* Hover cinza, não roxo */
+  color: #374151 !important;
+}
+
+.sidebar-menu-item.has-dropdown.sidebar-item-active:hover .sidebar-icon {
+  fill: #374151 !important; /* Ícone cinza escuro no hover */
 }
 
 /* Garantir que os itens do sidebar tenham largura total */

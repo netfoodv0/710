@@ -43,6 +43,36 @@
   border: none !important;
 }
 
+/* Marcador de busca personalizado */
+.custom-search-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-search-marker div {
+  transition: transform 0.2s ease;
+}
+
+.custom-search-marker:hover div {
+  transform: scale(1.1);
+}
+
+/* Marcador da loja personalizado */
+.custom-loja-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-loja-marker div {
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
+}
+
+.custom-loja-marker:hover div {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(147, 51, 234, 0.4);
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .leaflet-control-zoom {

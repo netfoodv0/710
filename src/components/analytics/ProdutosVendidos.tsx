@@ -88,7 +88,7 @@ export const ProdutosVendidos: React.FC<ProdutosVendidosProps> = ({ produtos }) 
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-1 space-y-2 overflow-y-auto max-h-[400px] hide-scrollbar">
+      <div className="flex-1 space-y-2 overflow-y-auto hide-scrollbar min-h-0">
         {produtosExibir.map((produto, index) => (
           <div key={index} className="grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 bg-white rounded-lg border h-[62px]" style={{ borderColor: '#cfd1d3' }}>
             <div className="w-[40px] h-[40px] rounded-full overflow-hidden flex-shrink-0">
@@ -117,9 +117,9 @@ export const ProdutosVendidos: React.FC<ProdutosVendidosProps> = ({ produtos }) 
         ))}
       </div>
       
-      <div className="mt-auto pt-2">
+      <div className="mt-auto pt-2 flex-shrink-0">
         <a 
-          href="/relatorios" 
+          href="/relatorios/geral" 
           className="inline-flex items-center justify-center space-x-2 w-full px-3 py-2 bg-purple-600 text-white text-sm font-medium rounded-[100px] hover:bg-purple-700 transition-colors"
         >
           <ReportIcon size={24} color="#FFFFFF" />

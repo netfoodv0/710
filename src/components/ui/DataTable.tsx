@@ -1,7 +1,6 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, Plus, MoreHorizontal } from 'lucide-react';
-import { EditIcon, TrashIcon, ViewIcon, CustomDropdown, DropdownOption, Calendar7DaysIcon } from './index';
-import { parseZonedDateTime } from "@internationalized/date";
+import { EditIcon, TrashIcon, ViewIcon, CustomDropdown, DropdownOption } from './index';
 
 export interface DataTableColumn<T> {
   key: keyof T | 'actions';
@@ -31,6 +30,10 @@ export interface DataTableProps<T> {
     itemsPerPageOptions?: number[];
     defaultItemsPerPage?: number;
   };
+  defaultSort?: {
+    field: keyof T;
+    direction: 'asc' | 'desc';
+  };
   onAdd?: () => void;
   addButtonText?: string;
   className?: string;
@@ -44,6 +47,7 @@ export function DataTable<T extends { id: string | number }>({
   filters = {},
   actions = {},
   pagination = {},
+  defaultSort,
   onAdd,
   addButtonText = "Adicionar",
   className = ""
@@ -51,87 +55,14 @@ export function DataTable<T extends { id: string | number }>({
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('todas');
   const [selectedStatus, setSelectedStatus] = useState('todos');
-  const [sortField, setSortField] = useState<keyof T | 'actions'>('id');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [dateRange, setDateRange] = useState({
-    start: parseZonedDateTime("2024-01-01T00:00[America/Sao_Paulo]"),
-    end: parseZonedDateTime("2024-12-31T23:59[America/Sao_Paulo]"),
-  });
+  const [sortField, setSortField] = useState<keyof T | 'actions'>(defaultSort?.field || 'id');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(defaultSort?.direction || 'asc');
+  const [dateInicio, setDateInicio] = useState('');
+  const [dateFim, setDateFim] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(pagination.defaultItemsPerPage || 8);
-  const dateRangeRef = useRef<HTMLInputElement>(null);
 
   const itemsPerPageOptions = pagination.itemsPerPageOptions || [5, 8, 10, 15, 20];
-
-  useEffect(() => {
-    // Verificar se o jQuery e daterangepicker estão disponíveis
-    if (typeof window !== 'undefined' && (window as any).jQuery && (window as any).jQuery.fn.daterangepicker) {
-      const $ = (window as any).jQuery;
-      
-      if (dateRangeRef.current) {
-        $(dateRangeRef.current).daterangepicker({
-          timePicker: true,
-          timePicker24Hour: false,
-          timePickerIncrement: 30,
-          locale: {
-            format: 'DD/MM/YYYY HH:mm',
-            separator: ' - ',
-            applyLabel: 'Aplicar',
-            cancelLabel: 'Cancelar',
-            fromLabel: 'De',
-            toLabel: 'Até',
-            customRangeLabel: 'Personalizado',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-            firstDay: 1
-          },
-          ranges: {
-            'Hoje': [(window as any).moment(), (window as any).moment()],
-            'Ontem': [(window as any).moment().subtract(1, 'days'), (window as any).moment().subtract(1, 'days')],
-            'Últimos 7 dias': [(window as any).moment().subtract(6, 'days'), (window as any).moment()],
-            'Últimos 30 dias': [(window as any).moment().subtract(29, 'days'), (window as any).moment()],
-            'Este mês': [(window as any).moment().startOf('month'), (window as any).moment().endOf('month')],
-            'Mês passado': [(window as any).moment().subtract(1, 'month').startOf('month'), (window as any).moment().subtract(1, 'month').endOf('month')]
-          },
-          startDate: (window as any).moment().subtract(7, 'days'),
-          endDate: (window as any).moment(),
-          autoApply: true,
-          showDropdowns: true,
-          showWeekNumbers: false,
-          alwaysShowCalendars: true,
-          opens: 'left',
-          drops: 'down',
-          showCustomRangeLabel: true,
-          linkedCalendars: false,
-          parentEl: 'body',
-          buttonClasses: 'btn btn-sm',
-          applyClass: 'btn-success',
-          cancelClass: 'btn-default'
-        }, function(start: any, end: any, label: string) {
-          console.log('Período selecionado:', start.format('DD/MM/YYYY HH:mm'), 'até', end.format('DD/MM/YYYY HH:mm'));
-          console.log('Rótulo:', label);
-          
-          try {
-            // Formatar corretamente a string ISO 8601 com espaço antes do timezone
-            const startISO = start.format('YYYY-MM-DDTHH:mm:ss') + ' [America/Sao_Paulo]';
-            const endISO = end.format('YYYY-MM-DDTHH:mm:ss') + ' [America/Sao_Paulo]';
-            
-            setDateRange({
-              start: parseZonedDateTime(startISO),
-              end: parseZonedDateTime(endISO)
-            });
-          } catch (error) {
-            console.error('Erro ao processar datas:', error);
-            // Fallback: usar datas padrão se houver erro
-            setDateRange({
-              start: parseZonedDateTime("2024-01-01T00:00[America/Sao_Paulo]"),
-              end: parseZonedDateTime("2024-12-31T23:59[America/Sao_Paulo]")
-            });
-          }
-        });
-      }
-    }
-  }, []);
 
   // Filtrar dados
   const filteredData = useMemo(() => {
@@ -208,7 +139,7 @@ export function DataTable<T extends { id: string | number }>({
   // Resetar para primeira página quando filtros mudarem
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedCategory, selectedStatus]);
+  }, [searchTerm, selectedCategory, selectedStatus, dateInicio, dateFim]);
 
   // Funções de paginação
   const goToPage = (page: number) => {
@@ -351,17 +282,20 @@ export function DataTable<T extends { id: string | number }>({
           {/* Date Range Picker */}
           {filters.showDateRange && (
             <div className="lg:w-80">
-              <div className="relative">
+              <div className="flex items-center gap-2">
                 <input
-                  ref={dateRangeRef}
-                  type="text"
-                  placeholder="Selecione o período"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none cursor-pointer bg-white"
-                  readOnly
+                  type="date"
+                  value={dateInicio}
+                  onChange={(e) => setDateInicio(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
                 />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <Calendar7DaysIcon size={16} color="#9ca3af" />
-                </div>
+                <span className="text-gray-400">até</span>
+                <input
+                  type="date"
+                  value={dateFim}
+                  onChange={(e) => setDateFim(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
+                />
               </div>
             </div>
           )}
@@ -402,7 +336,7 @@ export function DataTable<T extends { id: string | number }>({
 
       {/* Tabela */}
       <div className="bg-white rounded-lg overflow-hidden" style={{ border: '1px solid hsl(210deg 4.35% 81.96%)' }}>
-        <div className="overflow-x-auto">
+        <div>
           <table className="w-full">
             <thead className="bg-gray-50 border-b" style={{ borderColor: 'hsl(210deg 4.35% 81.96%)' }}>
               <tr>

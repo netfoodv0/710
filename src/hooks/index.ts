@@ -29,3 +29,6 @@ export { usePagination } from './usePagination';
 
 // Hooks de cardápio
 export * from './cardapio';
+
+// Hooks de configurações
+export { useConfiguracoesSkeleton } from './useConfiguracoesSkeleton';

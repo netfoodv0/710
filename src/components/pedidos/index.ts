@@ -7,3 +7,8 @@ export { PrinterIcon } from './PrinterIcon';
 export { DollarIcon } from './DollarIcon';
 export { PixIcon } from './PixIcon';
 export { CreditCardIcon } from './CreditCardIcon';
+export { PedidosLoading } from './PedidosLoading';
+export { PedidosSearchBar } from './PedidosSearchBar';
+export { PedidosHeader } from './PedidosHeader';
+export { PedidosColumns } from './PedidosColumns';
+export { PedidosContent } from './PedidosContent';

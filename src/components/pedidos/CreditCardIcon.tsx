@@ -20,3 +20,4 @@ export function CreditCardIcon({ className = "", size = 16 }: CreditCardIconProp
     </svg>
   );
 }
+

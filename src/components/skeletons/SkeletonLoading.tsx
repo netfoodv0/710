@@ -1,11 +1,61 @@
 import React from 'react';
 
 interface SkeletonLoadingProps {
-  type?: 'table' | 'cards' | 'stats' | 'historico';
+  type?: 'table' | 'cards' | 'stats' | 'historico' | 'pedidos';
   rows?: number;
 }
 
 export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'historico', rows = 5 }) => {
+  // Fallback específico para pedidos
+  if (type === 'pedidos') {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+        {/* Header skeleton */}
+        <div className="bg-white/10 backdrop-blur-xl border-b border-white/30 h-[73.03px] px-6">
+          <div className="flex items-center justify-between h-full">
+            <div className="flex items-center gap-4">
+              <div className="h-6 bg-gray-200 rounded animate-pulse w-20"></div>
+              <div className="h-10 bg-gray-200 rounded animate-pulse w-80"></div>
+            </div>
+            <div className="h-10 bg-gray-200 rounded animate-pulse w-40"></div>
+          </div>
+        </div>
+        
+        {/* Content skeleton - Cards de sessão */}
+        <div className="px-6 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Card Em Análise */}
+            <div className="bg-white border h-[62px] rounded-t-lg mb-3 animate-pulse" style={{ borderColor: 'rgb(207, 209, 211)' }}>
+              <div className="bg-white px-3 py-2 h-full relative rounded-t-lg">
+                <div className="bg-gray-200 rounded-full w-6 h-6 absolute top-2 right-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-20 mb-1"></div>
+                <div className="h-4 bg-gray-200 rounded w-16"></div>
+              </div>
+            </div>
+
+            {/* Card Em Preparo */}
+            <div className="bg-white border h-[62px] rounded-t-lg mb-3 animate-pulse" style={{ borderColor: 'rgb(207, 209, 211)' }}>
+              <div className="bg-white px-3 py-2 h-full relative rounded-t-lg">
+                <div className="bg-gray-200 rounded-full w-6 h-6 absolute top-2 right-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-20 mb-1"></div>
+                <div className="h-4 bg-gray-200 rounded w-16"></div>
+              </div>
+            </div>
+
+            {/* Card Em Entrega */}
+            <div className="bg-white border h-[62px] rounded-t-lg mb-3 animate-pulse" style={{ borderColor: 'rgb(207, 209, 211)' }}>
+              <div className="bg-white px-3 py-2 h-full relative rounded-t-lg">
+                <div className="bg-gray-200 rounded-full w-6 h-6 absolute top-2 right-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-20 mb-1"></div>
+                <div className="h-4 bg-gray-200 rounded w-16"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // Fallback específico para histórico que não causa piscada
   if (type === 'historico') {
     return (

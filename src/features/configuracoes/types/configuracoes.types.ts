@@ -11,6 +11,7 @@ export interface ConfiguracaoLoja {
   email: string;
   endereco: {
     rua: string;
+    numero: string;
     bairro: string;
     cidade: string;
     estado: string;
@@ -51,6 +52,7 @@ export const configuracaoLojaSchema = z.object({
   email: z.string().email('Email inválido'),
   endereco: z.object({
     rua: z.string().min(1, 'Rua é obrigatória'),
+    numero: z.string().min(1, 'Número é obrigatório'),
     bairro: z.string().min(1, 'Bairro é obrigatório'),
     cidade: z.string().min(1, 'Cidade é obrigatória'),
     estado: z.string().min(2, 'Estado é obrigatório'),

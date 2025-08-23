@@ -19,7 +19,7 @@ export function CardapioModals() {
         categoria={state.categoriaSelecionadaEdicao}
         onSave={handleSalvarCategoria}
         onEdit={handleSalvarEdicaoCategoria}
-        loading={state.loadingCategorias}
+        // loading={state.loadingCategorias} // REMOVIDO
       />
     </>
   );

@@ -58,7 +58,18 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
         pedidosEmAndamento: []
       };
       
+      // Delay mínimo para evitar piscadas e garantir carregamento suave
+      const minDelay = 600; // 600ms para ser consistente com o skeleton
+      const startTime = Date.now();
+      
       setData(dadosCompletos);
+      
+      // Garantir que o loading seja exibido por pelo menos 600ms
+      const elapsedTime = Date.now() - startTime;
+      if (elapsedTime < minDelay) {
+        await new Promise(resolve => setTimeout(resolve, minDelay - elapsedTime));
+      }
+      
     } catch (err) {
       setError('Erro ao carregar dados do dashboard');
       console.error('Erro ao carregar dashboard:', err);

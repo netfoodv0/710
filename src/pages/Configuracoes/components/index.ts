@@ -1,6 +1,11 @@
-export { ConfiguracoesSidebar } from './ConfiguracoesSidebar';
-export { ConfiguracoesGeral } from './ConfiguracoesGeral';
+export { ConfiguracoesGerais } from './ConfiguracoesGerais';
+export { InformacoesLoja } from './InformacoesLoja';
+export { EnderecoLoja } from './EnderecoLoja';
 export { ConfiguracoesEntrega } from './ConfiguracoesEntrega';
-export { ConfiguracoesHorarios } from './ConfiguracoesHorarios';
+export { ModosPedidos } from './ModosPedidos';
+export { ConfiguracoesAgendamento } from './ConfiguracoesAgendamento';
+export { ConfiguracaoNotinha } from './ConfiguracaoNotinha';
+export { ConfiguracoesPagamento } from './ConfiguracoesPagamento';
 export { ConfiguracoesNotificacoes } from './ConfiguracoesNotificacoes';
-export { ConfiguracoesAparencia } from './ConfiguracoesAparencia'; 
+export { ConfiguracoesAparencia } from './ConfiguracoesAparencia';
+export { FusoHorario } from './FusoHorario'; 

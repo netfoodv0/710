@@ -1,0 +1,83 @@
+/* Dashboard Styles */
+.dashboard-container {
+  background-color: rgb(238, 235, 235);
+}
+
+.dashboard-border {
+  border-color: #cfd1d3;
+}
+
+.dashboard-card {
+  background-color: white;
+  border: 1px solid #cfd1d3;
+  border-radius: 0.5rem;
+}
+
+.dashboard-stat-card {
+  background-color: white;
+  border: 1px solid #cfd1d3;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+}
+
+.dashboard-icon-container {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #f3f4f6;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-analytics-card {
+  background-color: white;
+  border: 1px solid #cfd1d3;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+}
+
+.dashboard-analytics-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  flex-shrink: 0;
+}
+
+.dashboard-analytics-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dashboard-status-indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.dashboard-status-green {
+  background-color: #10b981;
+}
+
+.dashboard-status-purple {
+  background-color: #8b5cf6;
+}
+
+.dashboard-status-red {
+  background-color: #ef4444;
+  border-radius: 0.5rem;
+}
+
+.dashboard-info-box {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #f0fdf4;
+  border: 1px solid #cfd1d3;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}

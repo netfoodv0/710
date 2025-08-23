@@ -15,7 +15,7 @@ export const IconExamples: React.FC = () => {
           <h3 className="font-semibold text-gray-700 mb-3">Ícone de Desconto</h3>
           <div className="flex items-center gap-3">
             <DiscountIcon size={24} color="#666666" />
-            <span className="text-sm text-gray-600">Desconto em Cupons</span>
+            <span className="text-sm text-gray-600">Desconto Geral</span>
           </div>
           <div className="mt-3 space-y-2">
             <div className="flex items-center gap-2">

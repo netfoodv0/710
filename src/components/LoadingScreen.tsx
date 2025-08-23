@@ -34,6 +34,12 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ isVisible }) => {
     };
   }, [isVisible]);
 
+  // Não mostrar o loading screen se estiver na página de cardápio ou configurações
+  if (window.location.pathname.startsWith('/cardapio') || window.location.pathname.startsWith('/configuracoes')) {
+    console.log('🚫 LoadingScreen desabilitado para cardápio/configurações');
+    return null;
+  }
+
   if (!shouldShow) return null;
 
   return (

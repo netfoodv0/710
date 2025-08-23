@@ -65,7 +65,7 @@ export function CustomDropdown({
       <button
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`flex items-center gap-2 w-full text-left font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-0.5 focus:ring-purple-400 focus:border-purple-400 transition-colors ${
+        className={`flex items-center gap-2 w-full text-left font-medium text-gray-700 bg-white border border-gray-300 hover:bg-purple-50 hover:border-purple-300 hover:shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200 ${
           disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
         } ${sizeClasses[size]} rounded-md`}
       >
@@ -73,7 +73,11 @@ export function CustomDropdown({
         <span className="flex-1 truncate">
           {selectedOption?.label || placeholder}
         </span>
-        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ease-in-out flex-shrink-0 ${isOpen ? 'rotate-180' : ''} ${dropUp ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform duration-200 ease-in-out flex-shrink-0 ${
+          dropUp 
+            ? (isOpen ? '' : 'rotate-180') 
+            : (isOpen ? 'rotate-180' : '')
+        }`} />
       </button>
 
       <div 
@@ -93,12 +97,12 @@ export function CustomDropdown({
               key={option.value}
               onClick={() => !option.disabled && handleOptionClick(option.value)}
               disabled={option.disabled}
-              className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-2 ${
+              className={`w-full text-left px-3 py-2 text-sm transition-all duration-200 flex items-center gap-2 ${
                 option.disabled
                   ? 'text-gray-400 cursor-not-allowed'
                   : selectedValue === option.value
-                  ? 'bg-blue-50 text-blue-700 font-medium hover:bg-blue-100'
-                  : 'text-gray-700 hover:bg-gray-100'
+                  ? 'bg-purple-100 text-purple-800 font-medium hover:bg-purple-200'
+                  : 'text-gray-700 hover:bg-purple-50 hover:text-purple-700 hover:font-medium'
               }`}
             >
               {option.icon && <span className="flex-shrink-0">{option.icon}</span>}

@@ -1,0 +1,118 @@
+/* Animações para os cards de distribuição por categoria */
+@keyframes ondulacaoSuperficie {
+  0%, 100% {
+    clip-path: polygon(0 0, 5% 0px, 10% 1px, 15% 0px, 20% 1.5px, 25% 1px, 30% 0px, 35% 1px, 40% 0px, 45% 1.5px, 50% 1px, 55% 0px, 60% 1px, 65% 0px, 70% 1.5px, 75% 1px, 80% 0px, 85% 1px, 90% 0px, 95% 1px, 100% 0px, 100% 100%, 0% 100%);
+  }
+  25% {
+    clip-path: polygon(0 0, 5% 2px, 10% 1px, 15% 2.5px, 20% 1px, 25% 2px, 30% 1px, 35% 2.5px, 40% 1px, 45% 2px, 50% 1px, 55% 2.5px, 60% 1px, 65% 2px, 70% 1px, 75% 2.5px, 80% 1px, 85% 2px, 90% 1px, 95% 2.5px, 100% 1px, 100% 100%, 0% 100%);
+  }
+  50% {
+    clip-path: polygon(0 0, 5% -1px, 10% 0px, 15% -1.5px, 20% 0px, 25% -1px, 30% 0px, 35% -1.5px, 40% 0px, 45% -1px, 50% 0px, 55% -1.5px, 60% 0px, 65% -1px, 70% 0px, 75% -1.5px, 80% 0px, 85% -1px, 90% 0px, 95% -1.5px, 100% 0px, 100% 100%, 0% 100%);
+  }
+  75% {
+    clip-path: polygon(0 0, 5% 1px, 10% 2px, 15% 1px, 20% 2.5px, 25% 1px, 30% 2px, 35% 1px, 40% 2.5px, 45% 1px, 50% 2px, 55% 1px, 60% 2.5px, 65% 1px, 70% 2px, 75% 1px, 80% 2.5px, 85% 1px, 90% 2px, 95% 1px, 100% 1.5px, 100% 100%, 0% 100%);
+  }
+}
+
+/* Animações para as bolhas subindo */
+@keyframes bolhaSubindo1 {
+  0% {
+    transform: translateY(100%) scale(0.3);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-20px) scale(0.1);
+    opacity: 0;
+  }
+}
+
+@keyframes bolhaSubindo2 {
+  0% {
+    transform: translateY(100%) scale(0.4);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-25px) scale(0.1);
+    opacity: 0;
+  }
+}
+
+@keyframes bolhaSubindo3 {
+  0% {
+    transform: translateY(100%) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-30px) scale(0.1);
+    opacity: 0;
+  }
+}
+
+@keyframes bolhaSubindo4 {
+  0% {
+    transform: translateY(100%) scale(0.35);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-22px) scale(0.1);
+    opacity: 0;
+  }
+}
+
+@keyframes bolhaSubindo5 {
+  0% {
+    transform: translateY(100%) scale(0.4);
+    opacity: 0;
+  }
+  18% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-28px) scale(0.1);
+    opacity: 0;
+  }
+}
+
+@keyframes bolhaSubindo6 {
+  0% {
+    transform: translateY(100%) scale(0.3);
+    opacity: 0;
+  }
+  14% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-24px) scale(0.1);
+    opacity: 0;
+  }
+}

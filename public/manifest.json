@@ -1,6 +1,6 @@
 {
-  "name": "NetFood Dashboard",
-  "short_name": "NetFood",
+  "name": "NETFOOD Dashboard",
+  "short_name": "NETFOOD",
   "description": "Dashboard de gestão para restaurantes e delivery",
   "start_url": "/",
   "display": "standalone",

@@ -8,5 +8,6 @@ export { FormSelect } from './FormSelect';
 export { FormInput } from './FormInput';
 export { FormSwitch } from './FormSwitch';
 export { FormImageUpload } from './FormImageUpload';
+export { FormSingleImageUpload } from './FormSingleImageUpload';
 
 export { FormSection } from './FormSection'; 

@@ -8,6 +8,7 @@ export const configuracaoMock: ConfiguracaoLoja = {
   email: 'contato@saborarte.com.br',
   endereco: {
     rua: 'Rua das Flores, 123',
+    numero: '123',
     bairro: 'Centro',
     cidade: 'São Paulo',
     estado: 'SP',

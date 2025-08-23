@@ -53,3 +53,4 @@ export function ColunaHeader({ titulo, quantidade, valorTotal, cor }: ColunaHead
     </div>
   );
 }
+

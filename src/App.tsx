@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { HeroUIProvider } from '@heroui/react';
+
 import { Layout, LoadingScreen } from './components';
 import { MobileLayout } from './components/mobile';
 import { AuthProvider } from './context/authContext';
@@ -74,27 +74,25 @@ function AppWithNotifications() {
 
 function App() {
   return (
-    <HeroUIProvider>
-      <BrowserRouter>
-        <CacheProvider>
-          <LoadingProvider>
-            <AuthProvider>
-              <LojaProvider>
-                <NotificationProvider>
-                  <AnalyticsProvider>
-                    <PeriodProvider>
-                      <NavigationProvider>
-                        <AppWithNotifications />
-                      </NavigationProvider>
-                    </PeriodProvider>
-                  </AnalyticsProvider>
-                </NotificationProvider>
-              </LojaProvider>
-            </AuthProvider>
-          </LoadingProvider>
-        </CacheProvider>
-      </BrowserRouter>
-    </HeroUIProvider>
+    <BrowserRouter>
+      <CacheProvider>
+        <LoadingProvider>
+          <AuthProvider>
+            <LojaProvider>
+              <NotificationProvider>
+                <AnalyticsProvider>
+                  <PeriodProvider>
+                    <NavigationProvider>
+                      <AppWithNotifications />
+                    </NavigationProvider>
+                  </PeriodProvider>
+                </AnalyticsProvider>
+              </NotificationProvider>
+            </LojaProvider>
+          </AuthProvider>
+        </LoadingProvider>
+      </CacheProvider>
+    </BrowserRouter>
   );
 }
 

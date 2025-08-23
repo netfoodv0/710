@@ -50,3 +50,6 @@ export { ListaProdutosTable } from './lists/TabelaProdutos';
 
 // Componentes de relatórios
 export * from './relatorios';
+
+// Componentes de formulários
+export { FormInput } from './forms/FormInput';

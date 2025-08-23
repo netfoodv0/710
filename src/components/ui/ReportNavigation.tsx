@@ -14,13 +14,15 @@ export function ReportNavigation({ currentPage }: ReportNavigationProps) {
   // Atualiza o contexto de navegação quando a URL muda
   useEffect(() => {
     if (location.pathname.startsWith('/relatorios')) {
-      if (location.pathname === '/relatorios') {
+      if (location.pathname === '/relatorios/geral') {
         setCurrentPage('relatorios');
-      } else if (location.pathname.includes('/clientes')) {
+      } else if (location.pathname.includes('/relatorios/clientes')) {
         setCurrentPage('clientes');
-      } else if (location.pathname.includes('/produtos')) {
+      } else if (location.pathname.includes('/relatorios/produtos')) {
         setCurrentPage('produtos');
       }
+    } else if (location.pathname === '/cupons') {
+      setCurrentPage('cupons');
     }
   }, [location.pathname, setCurrentPage]);
 
@@ -41,7 +43,7 @@ export function ReportNavigation({ currentPage }: ReportNavigationProps) {
   return (
     <div className="flex items-center gap-2">
       <button
-        onClick={() => handleNavigation('/relatorios')}
+        onClick={() => handleNavigation('/relatorios/geral')}
         className={getButtonStyle('relatorios')}
       >
         Relatórios
@@ -57,6 +59,12 @@ export function ReportNavigation({ currentPage }: ReportNavigationProps) {
         className={getButtonStyle('produtos')}
       >
         Produtos
+      </button>
+      <button
+        onClick={() => handleNavigation('/cupons')}
+        className={getButtonStyle('cupons')}
+      >
+        Cupons
       </button>
     </div>
   );

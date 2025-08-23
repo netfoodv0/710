@@ -19,8 +19,8 @@ export function useCardapioActions() {
     closeModalProduto,
     updateFiltros, 
     updateSearchTerm,
-    setLoadingProdutos,
-    setLoadingCategorias,
+    // setLoadingProdutos, // REMOVIDO
+    // setLoadingCategorias, // REMOVIDO
     setErrorProdutos
   } = useCardapioContext();
 
@@ -45,6 +45,8 @@ export function useCardapioActions() {
   const { getLojaId, user, isAuthenticated } = useAuth();
   const lojaId = getLojaId();
   
+  console.log('🔍 useCardapioActions - lojaId:', lojaId, 'user:', !!user, 'isAuthenticated:', isAuthenticated);
+  
   const {
     categorias: categoriasCompletas,
     loading: loadingCategorias,
@@ -58,18 +60,21 @@ export function useCardapioActions() {
 
 
 
-  // Sincronizar estados de loading
-  useEffect(() => {
-    setLoadingProdutos(loadingProdutos);
-  }, [loadingProdutos, setLoadingProdutos]);
+  // Estados de loading REMOVIDOS - não há mais skeleton na página de cardápio
+  // useEffect(() => {
+  //   console.log('🔄 Sincronizando loadingProdutos:', loadingProdutos);
+  //   setLoadingProdutos(loadingProdutos);
+  // }, [loadingProdutos, setLoadingProdutos]);
 
-  useEffect(() => {
-    setLoadingCategorias(loadingCategorias);
-  }, [loadingCategorias, setLoadingCategorias]);
+  // useEffect(() => {
+  //   console.log('🔄 Sincronizando loadingCategorias:', loadingCategorias);
+  //   setLoadingCategorias(loadingCategorias);
+  // }, [loadingCategorias, setLoadingCategorias]);
 
-  useEffect(() => {
-    setErrorProdutos(errorProdutos);
-  }, [errorProdutos, setErrorProdutos]);
+  // useEffect(() => {
+  //   console.log('🔄 Sincronizando errorProdutos:', errorProdutos);
+  //   setErrorProdutos(errorProdutos);
+  // }, [errorProdutos, setErrorProdutos]);
 
   // Ações de produtos
   const handleToggleStatus = useCallback(async (id: string, status: 'ativo' | 'inativo' | 'em_falta') => {
@@ -90,7 +95,7 @@ export function useCardapioActions() {
       showSuccess('Produto criado com sucesso!');
       
       // Log do evento de analytics
-      analyticsService.logProdutoEvent('produto_criado', produto.nome);
+      analyticsService.logProdutoEvent('criar', produto.nome);
     } catch (error) {
       showError('Erro ao criar produto');
     }
@@ -118,7 +123,7 @@ export function useCardapioActions() {
       showSuccess('Produto excluído com sucesso!');
       
       // Log do evento de analytics
-      analyticsService.logProdutoEvent('produto_excluido', id);
+      analyticsService.logProdutoEvent('excluir', id);
     } catch (error) {
       showError('Erro ao excluir produto');
     }
@@ -130,7 +135,7 @@ export function useCardapioActions() {
       showSuccess('Produto duplicado com sucesso!');
       
       // Log do evento de analytics
-      analyticsService.logProdutoEvent('produto_duplicado', id);
+      analyticsService.logProdutoEvent('duplicar', id);
     } catch (error) {
       showError('Erro ao duplicar produto');
     }
@@ -297,6 +302,8 @@ export function useCardapioActions() {
     produtos,
     categoriasCompletas,
     estatisticas,
+    loadingProdutos,
+    loadingCategorias,
     
     // Ações de produtos
     handleToggleStatus,

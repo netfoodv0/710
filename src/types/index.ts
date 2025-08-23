@@ -18,5 +18,3 @@ export * from './dashboard';
 // Tipos de componentes UI
 export * from './ui';
 
-// Tipos de cupons
-export * from './cupons';

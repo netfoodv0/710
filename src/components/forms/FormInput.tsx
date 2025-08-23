@@ -1,107 +1,169 @@
-import React from 'react';
-import { colors } from '../../styles/designTokens';
+import * as React from 'react';
 
 interface FormInputProps {
   label: string;
-  name: string;
-  type?: 'text' | 'number' | 'email' | 'tel' | 'password' | 'url';
-  value: string | number;
-  onChange: (value: string | number) => void;
+  type?: 'text' | 'email' | 'tel' | 'date' | 'datetime-local' | 'number' | 'select' | 'textarea' | 'password' | 'search';
   placeholder?: string;
+  value?: string | number;
+  onChange?: (value: string | number) => void;
+  onBlur?: () => void;
+  options?: { value: string; label: string }[];
+  rows?: number;
+  className?: string;
+  fontSize?: 'xs' | 'sm' | 'base' | 'lg';
   required?: boolean;
-  error?: string;
   disabled?: boolean;
-  icon?: React.ReactNode;
-  suffix?: string;
-  maxLength?: number;
+  variant?: 'outlined' | 'filled' | 'standard';
+  helperText?: string;
   min?: number;
   max?: number;
   step?: number;
-  className?: string;
+  validationMessage?: string;
 }
 
 export function FormInput({
   label,
-  name,
   type = 'text',
+  placeholder,
   value,
   onChange,
-  placeholder,
+  onBlur,
+  options = [],
+  rows = 4,
+  className = '',
+  fontSize = 'xs',
   required = false,
-  error,
   disabled = false,
-  icon,
-  suffix,
-  maxLength,
+  variant = 'outlined',
+  helperText,
   min,
   max,
   step,
-  className = ''
+  validationMessage
 }: FormInputProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = type === 'number' ? parseFloat(e.target.value) || 0 : e.target.value;
-    onChange(newValue);
+  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    if (onChange) {
+      if (type === 'number') {
+        onChange(parseFloat(e.target.value) || 0);
+      } else {
+        onChange(e.target.value);
+      }
+    }
+  };
+
+  const renderInput = () => {
+    const baseClasses = "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-purple-500 focus:border-purple-500 disabled:bg-gray-100 disabled:cursor-not-allowed";
+
+    switch (type) {
+      case 'select':
+        return (
+          <select
+            value={value || ''}
+            onChange={handleChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            className={`${baseClasses} bg-white`}
+          >
+            <option value="">Selecione</option>
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        );
+      
+      case 'textarea':
+        return (
+          <textarea
+            value={value || ''}
+            onChange={handleChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            rows={rows}
+            className={`${baseClasses} bg-white resize-none`}
+            placeholder={placeholder}
+          />
+        );
+      
+      case 'password':
+        return (
+          <input
+            type="password"
+            value={value || ''}
+            onChange={handleChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            className={`${baseClasses} bg-white`}
+            placeholder={placeholder}
+          />
+        );
+      
+      case 'search':
+        return (
+          <input
+            type="search"
+            value={value || ''}
+            onChange={handleChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            className={`${baseClasses} bg-white`}
+            placeholder={placeholder}
+          />
+        );
+      
+      case 'number':
+        return (
+          <input
+            type="number"
+            value={value || ''}
+            onChange={handleChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            min={min}
+            max={max}
+            step={step}
+            className={`${baseClasses} bg-white`}
+            placeholder={placeholder}
+          />
+        );
+      
+      case 'datetime-local':
+        return (
+          <input
+            type="datetime-local"
+            value={value || ''}
+            onChange={handleChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            className={`${baseClasses} bg-white`}
+          />
+        );
+      
+      default:
+        return (
+          <input
+            type={type}
+            value={value || ''}
+            onChange={handleChange}
+            onBlur={onBlur}
+            disabled={disabled}
+            className={`${baseClasses} bg-white`}
+            placeholder={placeholder}
+          />
+        );
+    }
   };
 
   return (
-    <div className={`flex flex-col space-y-2 ${className}`}>
-      <label
-        htmlFor={name}
-        className="text-sm font-medium text-gray-700 flex items-center gap-1"
-      >
-        {label}
-        {required && <span className="text-red-500">*</span>}
+    <div className={className}>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        {label} {required && <span className="text-red-500">*</span>}
       </label>
-
-      <div className="relative">
-        {icon && (
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-            {icon}
-          </div>
-        )}
-        
-        <input
-          id={name}
-          name={name}
-          type={type}
-          value={value}
-          onChange={handleChange}
-          placeholder={placeholder}
-          disabled={disabled}
-          maxLength={maxLength}
-          min={min}
-          max={max}
-          step={step}
-          className={`
-            w-full h-10 px-4 border rounded-md text-sm transition-all duration-200
-            ${icon ? 'pl-10' : ''}
-            ${suffix ? 'pr-12' : ''}
-            ${error 
-              ? 'border-red-300 focus:border-red-500' 
-              : 'border-gray-300 focus:border-purple-500'
-            }
-            ${disabled 
-              ? 'bg-gray-50 cursor-not-allowed' 
-              : 'bg-white hover:border-gray-400'
-            }
-            focus:outline-none
-          `}
-        />
-
-        {suffix && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">
-            {suffix}
-          </div>
-        )}
-      </div>
-
-      {error && (
-        <span className="text-sm text-red-500 flex items-center gap-1">
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-          </svg>
-          {error}
-        </span>
+      {renderInput()}
+      {helperText && (
+        <p className="form-error-message">{helperText}</p>
       )}
     </div>
   );

@@ -1,0 +1,38 @@
+import React, { useState } from 'react';
+import { ErrorBoundary } from '../components/ErrorBoundary';
+import { PageHeader } from '../components/ui';
+import { FidelidadeProvider, useFidelidade } from '../context/fidelidadeContext';
+import { FidelidadeContent } from '../components/fidelidade/FidelidadeContent';
+
+// Estilos
+import '../styles/dashboard.css';
+
+export default function Fidelidade() {
+  return (
+    <ErrorBoundary>
+      <FidelidadeProvider>
+        <FidelidadePage />
+      </FidelidadeProvider>
+    </ErrorBoundary>
+  );
+}
+
+function FidelidadePage() {
+  return (
+      <div className="min-h-screen flex flex-col dashboard-container">
+        <PageHeader
+          title="Fidelidade"
+          subtitle="Sistema de fidelidade e recompensas"
+        />
+
+        <div className="h-0" />
+
+        <div className="flex-1 overflow-y-auto" style={{ padding: '16px' }}>
+          <div className="max-w-6xl mx-auto space-y-4">
+          <FidelidadeContent />
+            <div className="h-25"></div>
+          </div>
+        </div>
+      </div>
+  );
+}

@@ -27,3 +27,4 @@ export function CalendarIcon({ className = "", size = 16 }: CalendarIconProps) {
     </svg>
   );
 }
+

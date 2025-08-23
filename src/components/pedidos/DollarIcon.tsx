@@ -23,3 +23,4 @@ export function DollarIcon({ className = "", size = 16 }: DollarIconProps) {
     </svg>
   );
 }
+

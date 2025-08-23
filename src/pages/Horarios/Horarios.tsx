@@ -105,15 +105,15 @@ export function Horarios() {
                 {/* Tabela de horários */}
                 <div className="overflow-x-auto rounded-xl border" style={{ borderColor: 'rgb(207 209 211)' }}>
                   <table className="w-full">
-                    <thead className="bg-gray-50" style={{ height: '73px' }}>
+                    <thead className="bg-gray-50" style={{ height: '32.5px' }}>
                       <tr>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b" style={{ height: '73px', borderColor: 'rgb(207 209 211)' }}>
+                        <th className="px-4 text-left text-sm font-medium text-gray-900 border-b" style={{ height: '32.5px', paddingTop: '4px', paddingBottom: '4px', borderColor: 'rgb(207 209 211)' }}>
                           Dia da Semana
                         </th>
-                        <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b" style={{ height: '73px', borderColor: 'rgb(207 209 211)' }}>
+                        <th className="px-4 text-left text-sm font-medium text-gray-900 border-b" style={{ height: '32.5px', paddingTop: '4px', paddingBottom: '4px', borderColor: 'rgb(207 209 211)' }}>
                           Horários
                         </th>
-                        <th className="px-4 py-3 text-center text-sm font-medium text-gray-900 border-b" style={{ height: '73px', borderColor: 'rgb(207 209 211)' }}>
+                        <th className="px-4 text-center text-sm font-medium text-gray-900 border-b" style={{ height: '32.5px', paddingTop: '4px', paddingBottom: '4px', borderColor: 'rgb(207 209 211)' }}>
                           Ações
                         </th>
                       </tr>

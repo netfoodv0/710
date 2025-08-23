@@ -43,8 +43,12 @@ export { DiscountIcon } from './DiscountIcon';
 export { RejectedOrderIcon } from './RejectedOrderIcon';
 export { CompletedOrderIcon } from './CompletedOrderIcon';
 export { NewCustomerIcon } from './NewCustomerIcon';
+export { EstoqueIcon } from './EstoqueIcon';
+export { FidelidadeIcon } from './FidelidadeIcon';
+export { ModalIcon } from './ModalIcon';
 export { IconExamples } from './IconExamples';
 export { ReportNavigation } from './ReportNavigation';
+export { EstoqueNavigation } from './EstoqueNavigation';
 export { ReportSkeleton } from './ReportSkeleton';
 export { 
   SkeletonFilters, 
@@ -57,6 +61,16 @@ export {
 } from './SkeletonComponents';
 
 export { TransitionWrapper } from './TransitionWrapper';
+
+// Animate UI Components
+export {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContents,
+  TabsContent,
+  useTabs,
+} from '../animate-ui';
 
 // Radix UI Dropdown Menu (for advanced use cases)
 export {
