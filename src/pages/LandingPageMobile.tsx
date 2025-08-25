@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import MenuIcon from '../components/icons/MenuIcon';
-import AutoCarousel from '../components/carousel/AutoCarousel';
-import { IconCloudDemo } from '../components/ui/IconCloudDemo';
-import { SegmentMarquee } from '../components/ui/SegmentMarquee';
-import { AnimatedBeamMultipleOutputDemo } from '../components/ui/AnimatedBeamMultipleOutputs';
+import { usePerformanceOptimization } from '../hooks/usePerformanceOptimization';
+
+// Lazy loading dos componentes pesados
+const AutoCarousel = lazy(() => import('../components/carousel/AutoCarousel'));
+const IconCloudDemo = lazy(() => import('../components/ui/IconCloudDemo').then(module => ({ default: module.IconCloudDemo })));
+const SegmentMarquee = lazy(() => import('../components/ui/SegmentMarquee').then(module => ({ default: module.SegmentMarquee })));
+
+// Componente de loading otimizado
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center p-8">
+    <div className="w-8 h-8 border-2 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+  </div>
+);
+
+// Componente de fallback para componentes pesados
+const ComponentFallback = ({ children, fallback = <LoadingSpinner /> }: { children: React.ReactNode; fallback?: React.ReactNode }) => (
+  <Suspense fallback={fallback}>
+    {children}
+  </Suspense>
+);
 
 export default function LandingPageMobile() {
+  const [isVisible, setIsVisible] = useState(false);
+
   // Itens do carrossel com todos os segmentos
   const carouselItems = [
     { id: 1, image: '/emojis/hamburguer.png', text: 'Hamburgueria' },
@@ -20,16 +38,22 @@ export default function LandingPageMobile() {
     { id: 10, image: '/emojis/Pizzaria.png', text: 'Pizzaria' },
   ];
 
+  // Otimização: carregar componentes apenas quando visíveis
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div className="h-[3000px] bg-[rgb(245,239,242)]">
+    <div className="min-h-screen bg-[rgb(245,239,242)] landing-mobile-optimized">
       {/* Header Fixo Flutuante */}
-      <header className="fixed top-6 left-6 right-6 h-[70px] bg-white/95 backdrop-blur-md rounded-2xl shadow-lg z-50">
-        <div className="h-full px-[10px] flex items-center justify-between">
+      <header className="fixed top-6 left-6 right-6 h-[70px] bg-white/95 backdrop-blur-optimized rounded-2xl shadow-optimized z-50">
+        <div className="h-full px-[10px] flex items-center justify-center">
           <div className="w-[38px] h-[48px] bg-[#e7e6ec] rounded-[6px] flex items-center justify-center">
             <MenuIcon size={24} color="#666666" />
           </div>
-          <div className="w-[230px] bg-[#fae9fd] hover:bg-purple-600 rounded-[6px] px-5 py-0 transition-all duration-500 ease-in-out cursor-pointer group hover:shadow-[0_12px_35px_rgba(147,51,234,0.7)]">
-            <span className="text-[14px] font-bold text-purple-600 group-hover:text-white transition-all duration-500 ease-in-out">Experimente gratuitamente agora</span>
+          <div className="w-[230px] bg-[#fae9fd] hover:bg-purple-600 rounded-[6px] px-5 py-0 transition-optimized cursor-pointer group hover:shadow-hover-optimized">
+            <span className="text-[14px] font-bold text-purple-600 group-hover:text-white transition-optimized">Experimente gratuitamente agora</span>
           </div>
           <div className="w-[38px] h-[48px] bg-[#e7e6ec] rounded-[6px] flex items-center justify-center">
             <MenuIcon size={24} color="#666666" />
@@ -41,70 +65,66 @@ export default function LandingPageMobile() {
       <div className="h-[94px]"></div>
       
       {/* Título Principal */}
-      <div className="mt-[150px] px-[12px] text-center">
-        <h1 className="text-[37px] font-bold text-gray-900 leading-tight">
+      <div className="mt-[150px] px-[12px] text-center fade-in-mobile">
+        <h1 className="text-[37px] font-bold text-gray-900 leading-tight text-optimized">
           Seu Delivery Vendendo Mais em Poucas Semanas
         </h1>
       </div>
       
       {/* Subtítulo */}
-      <div className="mt-[30px] px-[12px] text-center">
-        <p className="text-[15px] text-gray-700 leading-relaxed">
+      <div className="mt-[30px] px-[12px] text-center slide-up-mobile">
+        <p className="text-[15px] text-gray-700 leading-relaxed text-optimized">
           Com nossa plataforma, seus pedidos aumentam e sua operação fica mais simples – sem contratar mais equipe.
         </p>
       </div>
       
       {/* Botão Principal */}
       <div className="mt-[30px] flex justify-center">
-        <button className="w-[357px] h-[60px] bg-purple-600 text-white font-bold text-[16px] rounded-[16px] hover:bg-purple-700 transition-colors duration-300 cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_35px_rgba(147,51,234,0.7)]">
+        <button className="w-[357px] h-[60px] bg-purple-600 text-white font-bold text-[16px] rounded-[16px] hover:bg-purple-700 transition-optimized cursor-pointer shadow-optimized hover:shadow-hover-optimized">
           Experimente gratuitamente agora
         </button>
       </div>
       
       {/* Segundo Subtítulo */}
-      <div className="mt-[50px] px-[12px] text-center">
-        <p className="text-[15px] text-gray-700 leading-relaxed">
+      <div className="mt-[50px] px-[12px] text-center slide-up-mobile">
+        <p className="text-[15px] text-gray-700 leading-relaxed text-optimized">
           Uma plataforma nova, feita para revolucionar a experiência de delivery. Atendemos diversos segmentos:
         </p>
       </div>
       
-      {/* Carrossel de Segmentos - Temporariamente oculto */}
-      {/* <div className="mt-[20px]">
-        <AutoCarousel 
-          items={carouselItems}
-          height={30}
-          speed={46}
-        />
-      </div> */}
-      
-      {/* IconCloud Demo - Temporariamente oculto */}
-      {/* <div className="mt-[40px] px-[12px] flex justify-center">
-        <div className="w-full max-w-lg">
-          <IconCloudDemo />
+      {/* Marquee 3D dos Segmentos - Otimizado com lazy loading */}
+      {isVisible && (
+        <div className="mt-0.5">
+          <ComponentFallback>
+            <SegmentMarquee />
+          </ComponentFallback>
         </div>
-      </div> */}
-      
-      {/* Marquee 3D dos Segmentos */}
-      <div className="mt-0.5">
-        <SegmentMarquee />
-      </div>
+      )}
       
       {/* Nova Seção - Plataforma Tudo-em-um */}
-      <div className="mt-[40px] px-[12px] text-center">
-        <h2 className="text-[28px] font-bold text-gray-900 leading-tight mb-[20px]">
+      <div className="mt-[40px] px-[12px] text-center slide-up-mobile">
+        <h2 className="text-[28px] font-bold text-gray-900 leading-tight mb-[20px] text-optimized">
           Sua Plataforma de Delivery Tudo-em-um
         </h2>
-        <p className="text-[15px] text-gray-700 leading-relaxed">
+        <p className="text-[15px] text-gray-700 leading-relaxed text-optimized">
           Gerencie pedidos, cardápio e entregas em um só lugar. Acompanhe desempenho, receba relatórios automáticos e otimize seu atendimento sem complicação – tudo em uma plataforma simples e poderosa.
         </p>
       </div>
       
-      {/* Componente AnimatedBeam */}
+      {/* Componente AnimatedBeam - Temporariamente removido para otimização */}
       <div className="mt-[40px] px-[12px] flex justify-center">
         <div className="w-full max-w-lg">
-          <AnimatedBeamMultipleOutputDemo />
+          <div className="bg-gradient-to-b from-white to-[#f5eff2] rounded-2xl p-8 shadow-optimized text-center border-radius-optimized">
+            <h3 className="text-xl font-bold text-gray-900 mb-4 text-optimized">Plataforma Integrada</h3>
+            <p className="text-gray-700 text-optimized">
+              Gerencie pedidos, cardápio e entregas em um só lugar com nossa plataforma completa.
+            </p>
+          </div>
         </div>
       </div>
+
+      {/* Espaçamento final */}
+      <div className="h-20"></div>
     </div>
   );
 }

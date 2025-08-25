@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Submodules and external repositories
+react-sidebar-with-dropdown/
+whatsapp-web.js/
+whatsapp-backend/

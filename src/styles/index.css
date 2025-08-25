@@ -17,3 +17,6 @@
 
 /* Import dos estilos do modal refatorado */
 @import './modal.css';
+
+/* Import das otimizações para landing page mobile */
+@import './landing-mobile-optimized.css';
