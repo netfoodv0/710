@@ -3,11 +3,6 @@
   "outputDirectory": "dist",
   "installCommand": "npm ci --prefer-offline --no-audit",
   "framework": "vite",
-  "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "env": {
     "NODE_ENV": "production",
     "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
