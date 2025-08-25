@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 console.log('🚀 Removendo Rollup para evitar erros de dependências nativas...');
 
@@ -22,7 +22,7 @@ try {
     // Cria um arquivo de stub para evitar erros
     const stubContent = `
       // Stub para evitar carregamento do Rollup
-      module.exports = {
+      export default {
         rollup: () => {
           throw new Error('Rollup foi desabilitado para este build');
         }
