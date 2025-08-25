@@ -13,7 +13,8 @@ import {
   ReportIcon, 
   MapIcon, 
   BagIcon,
-  OrganogramaIcon
+  OrganogramaIcon,
+  TableIcon
 } from '../ui';
 
 export const sidebarRoutes: RouteType[] = [
@@ -60,6 +61,15 @@ export const sidebarRoutes: RouteType[] = [
     sidebarProps: {
       displayText: "Atendimento",
       icon: <SupportIcon />
+    }
+  },
+  {
+    path: "/mesas",
+    element: null,
+    state: "mesas",
+    sidebarProps: {
+      displayText: "Mesas",
+      icon: <TableIcon />
     }
   },
   {

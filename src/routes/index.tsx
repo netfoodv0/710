@@ -1,6 +1,13 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, LojaProtectedRoute } from '../components/auth';
+import { 
+  RouteFallback, 
+  DashboardFallback, 
+  ChartsFallback, 
+  TableFallback, 
+  FormFallback 
+} from '../components/ui/RouteFallback';
 
 // Importação estática para OrganogramaPage para resolver problema de 404
 import OrganogramaPage from '../pages/OrganogramaPage';
@@ -30,6 +37,9 @@ const Estoque = lazy(() => import('../pages/Estoque/Estoque'));
 const Insumos = lazy(() => import('../pages/Estoque/Insumos'));
 const Acompanhamentos = lazy(() => import('../pages/Estoque/Acompanhamentos'));
 
+// Nova página de mesas
+const Mesas = lazy(() => import('../pages/Mesas'));
+
 const Login = lazy(() => import('../pages/Login'));
 const Cadastro = lazy(() => import('../pages/Cadastro'));
 
@@ -46,7 +56,9 @@ export function AppRoutes() {
       <Route path="/dashboard" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Dashboard />
+            <Suspense fallback={<DashboardFallback />}>
+              <Dashboard />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -54,7 +66,9 @@ export function AppRoutes() {
       <Route path="/pedidos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Pedidos />
+            <Suspense fallback={<TableFallback />}>
+              <Pedidos />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -62,7 +76,9 @@ export function AppRoutes() {
       <Route path="/historico" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <HistoricoPedidos />
+            <Suspense fallback={<TableFallback />}>
+              <HistoricoPedidos />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -70,7 +86,9 @@ export function AppRoutes() {
       <Route path="/cardapio/novo-produto" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <CadastroProduto />
+            <Suspense fallback={<FormFallback />}>
+              <CadastroProduto />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -78,7 +96,9 @@ export function AppRoutes() {
       <Route path="/cardapio/editar-produto/:id" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <CadastroProduto />
+            <Suspense fallback={<FormFallback />}>
+              <CadastroProduto />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -86,7 +106,9 @@ export function AppRoutes() {
       <Route path="/cardapio" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Cardapio />
+            <Suspense fallback={<TableFallback />}>
+              <Cardapio />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -94,7 +116,19 @@ export function AppRoutes() {
       <Route path="/atendimento" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Atendimento />
+            <Suspense fallback={<TableFallback />}>
+              <Atendimento />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/mesas" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<TableFallback />}>
+              <Mesas />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -102,7 +136,9 @@ export function AppRoutes() {
       <Route path="/configuracoes" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Configuracoes />
+            <Suspense fallback={<FormFallback />}>
+              <Configuracoes />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -110,7 +146,9 @@ export function AppRoutes() {
       <Route path="/horarios" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Horarios />
+            <Suspense fallback={<FormFallback />}>
+              <Horarios />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -118,7 +156,9 @@ export function AppRoutes() {
       <Route path="/relatorios/geral" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Relatorios />
+            <Suspense fallback={<ChartsFallback />}>
+              <Relatorios />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -126,7 +166,9 @@ export function AppRoutes() {
       <Route path="/relatorios/clientes" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <RelatoriosClientes />
+            <Suspense fallback={<ChartsFallback />}>
+              <RelatoriosClientes />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -134,7 +176,9 @@ export function AppRoutes() {
       <Route path="/relatorios/produtos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <RelatoriosProdutos />
+            <Suspense fallback={<ChartsFallback />}>
+              <RelatoriosProdutos />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -142,7 +186,9 @@ export function AppRoutes() {
       <Route path="/cupons" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <RelatoriosCupons />
+            <Suspense fallback={<TableFallback />}>
+              <RelatoriosCupons />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -150,7 +196,9 @@ export function AppRoutes() {
       <Route path="/fidelidade" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Fidelidade />
+            <Suspense fallback={<ChartsFallback />}>
+              <Fidelidade />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -158,7 +206,9 @@ export function AppRoutes() {
       <Route path="/usuarios" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Usuarios />
+            <Suspense fallback={<TableFallback />}>
+              <Usuarios />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -166,7 +216,9 @@ export function AppRoutes() {
       <Route path="/usuarios/operadores" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Operadores />
+            <Suspense fallback={<TableFallback />}>
+              <Operadores />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -174,7 +226,9 @@ export function AppRoutes() {
       <Route path="/usuarios/motoboys" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Motoboys />
+            <Suspense fallback={<TableFallback />}>
+              <Motoboys />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -185,7 +239,9 @@ export function AppRoutes() {
        <Route path="/mapa" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Mapa />
+            <Suspense fallback={<RouteFallback message="Carregando mapa..." />}>
+              <Mapa />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -201,7 +257,9 @@ export function AppRoutes() {
       <Route path="/estoque/produtos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Estoque />
+            <Suspense fallback={<TableFallback />}>
+              <Estoque />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -209,7 +267,9 @@ export function AppRoutes() {
       <Route path="/estoque/insumos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Insumos />
+            <Suspense fallback={<TableFallback />}>
+              <Insumos />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -217,7 +277,9 @@ export function AppRoutes() {
       <Route path="/estoque/acompanhamentos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Acompanhamentos />
+            <Suspense fallback={<TableFallback />}>
+              <Acompanhamentos />
+            </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />

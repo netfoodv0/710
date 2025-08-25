@@ -4,15 +4,12 @@ import React, { forwardRef, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedBeam } from "@/components/magicui/animated-beam.tsx";
 import { AnimatedListDemo } from "@/components/ui/AnimatedList";
-import { 
-  DashboardIcon, 
-  OrderIcon, 
-  MenuIcon, 
-  SupportIcon, 
-  UsersIcon,
-  ReportIcon,
-  SettingsIcon
-} from "./index";
+import { OrderIcon } from "./OrderIcon";
+import { MenuIcon } from "./MenuIcon";
+import { SupportIcon } from "./SupportIcon";
+import { UsersIcon } from "./UsersIcon";
+import { ReportIcon } from "./ReportIcon";
+import { SettingsIcon } from "./SettingsIcon";
 
 const Circle = forwardRef<
   HTMLDivElement,

@@ -1,6 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, Plus, MoreHorizontal } from 'lucide-react';
-import { EditIcon, TrashIcon, ViewIcon, CustomDropdown, DropdownOption } from './index';
+import { EditIcon } from './EditIcon';
+import { TrashIcon } from './TrashIcon';
+import { ViewIcon } from './ViewIcon';
+import { CustomDropdown, type DropdownOption } from './CustomDropdown';
 
 export interface DataTableColumn<T> {
   key: keyof T | 'actions';

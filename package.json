@@ -6,24 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:vercel": "VITE_FORCE_ESBUILD=true VITE_SKIP_OPTIONAL_DEPS=true npx vite build --config vite.config.esbuild.ts",
-    "build:vercel:clean": "rm -rf node_modules package-lock.json && npm install --omit=optional && VITE_FORCE_ESBUILD=true vite build",
-    "build:vercel:script": "node scripts/build-vercel.js",
-    "build:prod": "cross-env VITE_NODE_ENV=production VITE_APP_ENVIRONMENT=production VITE_USE_EMULATORS=false vite build",
-    "build:dev": "cross-env VITE_NODE_ENV=development VITE_APP_ENVIRONMENT=development VITE_USE_EMULATORS=true vite build",
     "preview": "vite preview",
-    "start:prod": "cross-env VITE_NODE_ENV=production VITE_APP_ENVIRONMENT=production VITE_USE_EMULATORS=false vite preview",
-    "clean:deps": "rm -rf node_modules/.cache && rm -rf node_modules/.vite",
-    "deploy:indexes": "node deploy-indexes.js",
-    "deploy:indexes-auto": "node deploy-all-indexes.js",
-    "deploy:indexes-ps": "powershell -ExecutionPolicy Bypass -File deploy-indexes.ps1",
-    "clean:indexes": "node clean-indexes.js",
-    "firebase:login": "firebase login",
-    "firebase:deploy": "firebase deploy",
-    "firebase:deploy-indexes": "firebase deploy --only firestore:indexes",
-    "firebase:deploy-rules": "firebase deploy --only firestore:rules",
-    "firebase:indexes-list": "firebase firestore:indexes",
-    "firebase:status": "firebase projects:list"
+    "analyze": "node scripts/analyze-bundle.js",
+    "analyze:advanced": "node scripts/advanced-bundle-analyzer.js",
+    "build:analyze": "npm run build && npm run analyze",
+    "build:analyze:advanced": "npm run build && npm run analyze:advanced",
+    "build:prod": "NODE_ENV=production vite build",
+    "clean": "rimraf dist",
+    "bundle:check": "npm run build && npm run analyze",
+    "bundle:check:advanced": "npm run build && npm run analyze:advanced",
+    "open:analyzer": "node scripts/open-bundle-analyzer.js",
+    "analyze:full": "npm run build && npm run analyze:advanced && npm run open:analyzer"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.13.5",
@@ -122,10 +115,14 @@
     "lint-staged": "^16.1.2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
+    "rollup-plugin-visualizer": "^6.0.3",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
+    "terser": "^5.43.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "^5.4.8"
+    "vite": "^5.4.8",
+    "vite-bundle-analyzer": "^1.2.1",
+    "webpack-bundle-analyzer": "^4.10.2"
   }
 }

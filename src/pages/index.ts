@@ -17,6 +17,10 @@ export { default as Fidelidade } from './Fidelidade';
 export { Usuarios } from './Usuarios';
 export { Operadores } from './Usuarios/Operadores';
 export { Motoboys } from './Usuarios/Motoboys';
+
+// Página de mesas
+export { Mesas } from './Mesas';
+
 // Páginas de autenticação
 export { Login } from './Login';
 export { Cadastro } from './Cadastro';

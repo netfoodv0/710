@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Package, 
   Image as ImageIcon, 
@@ -13,17 +13,15 @@ import {
   Minus,
   DollarSign
 } from 'lucide-react';
-import { 
-  FormSection,
-  InputPersonalizado,
-  InputPersonalizadoPreco,
-  InputNumericoComSpinner,
-  UnidadeSelect,
-  FormTextarea,
-  FormSelect,
-  FormSwitch,
-  FormImageUpload
-} from './index';
+import { InputPersonalizado } from './InputPersonalizado';
+import { InputPersonalizadoPreco } from './InputPersonalizadoPreco';
+import { InputNumericoComSpinner } from './InputNumericoComSpinner';
+import { UnidadeSelect } from './UnidadeSelect';
+import { FormTextarea } from './FormTextarea';
+import { FormSelect } from './FormSelect';
+import { FormSwitch } from './FormSwitch';
+import { FormImageUpload } from './FormImageUpload';
+import { FormSection } from './FormSection';
 import { useNovoProdutoForm, FormData } from '../../hooks/useNovoProdutoForm';
 import { ComplementosProduto } from '../produtos-especificos/ComplementosProduto';
 
