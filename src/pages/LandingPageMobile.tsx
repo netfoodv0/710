@@ -22,7 +22,18 @@ const ComponentFallback = ({ children, fallback = <LoadingSpinner /> }: { childr
 );
 
 export default function LandingPageMobile() {
-  const [isVisible, setIsVisible] = useState(false);
+  const {
+    isVisible,
+    isIntersecting,
+    isLowPerformance,
+    getOptimizedAnimationClass,
+    getOptimizedTransitionClass
+  } = usePerformanceOptimization({
+    delay: 100,
+    threshold: 0.1,
+    rootMargin: '100px',
+    enableAnimations: true
+  });
 
   // Itens do carrossel com todos os segmentos
   const carouselItems = [
@@ -38,12 +49,6 @@ export default function LandingPageMobile() {
     { id: 10, image: '/emojis/Pizzaria.png', text: 'Pizzaria' },
   ];
 
-  // Otimização: carregar componentes apenas quando visíveis
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <div className="min-h-screen bg-[rgb(245,239,242)] landing-mobile-optimized">
       {/* Header Fixo Flutuante */}
@@ -52,8 +57,8 @@ export default function LandingPageMobile() {
           <div className="w-[38px] h-[48px] bg-[#e7e6ec] rounded-[6px] flex items-center justify-center">
             <MenuIcon size={24} color="#666666" />
           </div>
-          <div className="w-[230px] bg-[#fae9fd] hover:bg-purple-600 rounded-[6px] px-5 py-0 transition-optimized cursor-pointer group hover:shadow-hover-optimized">
-            <span className="text-[14px] font-bold text-purple-600 group-hover:text-white transition-optimized">Experimente gratuitamente agora</span>
+          <div className={`w-[230px] bg-[#fae9fd] hover:bg-purple-600 rounded-[6px] px-5 py-0 ${getOptimizedTransitionClass()} cursor-pointer group hover:shadow-hover-optimized`}>
+            <span className={`text-[14px] font-bold text-purple-600 group-hover:text-white ${getOptimizedTransitionClass()}`}>Experimente gratuitamente agora</span>
           </div>
           <div className="w-[38px] h-[48px] bg-[#e7e6ec] rounded-[6px] flex items-center justify-center">
             <MenuIcon size={24} color="#666666" />
@@ -65,14 +70,14 @@ export default function LandingPageMobile() {
       <div className="h-[94px]"></div>
       
       {/* Título Principal */}
-      <div className="mt-[150px] px-[12px] text-center fade-in-mobile">
+      <div className={`mt-[150px] px-[12px] text-center ${getOptimizedAnimationClass('fade-in-mobile')}`}>
         <h1 className="text-[37px] font-bold text-gray-900 leading-tight text-optimized">
           Seu Delivery Vendendo Mais em Poucas Semanas
         </h1>
       </div>
       
       {/* Subtítulo */}
-      <div className="mt-[30px] px-[12px] text-center slide-up-mobile">
+      <div className={`mt-[30px] px-[12px] text-center ${getOptimizedAnimationClass('slide-up-mobile')}`}>
         <p className="text-[15px] text-gray-700 leading-relaxed text-optimized">
           Com nossa plataforma, seus pedidos aumentam e sua operação fica mais simples – sem contratar mais equipe.
         </p>
@@ -80,13 +85,13 @@ export default function LandingPageMobile() {
       
       {/* Botão Principal */}
       <div className="mt-[30px] flex justify-center">
-        <button className="w-[357px] h-[60px] bg-purple-600 text-white font-bold text-[16px] rounded-[16px] hover:bg-purple-700 transition-optimized cursor-pointer shadow-optimized hover:shadow-hover-optimized">
+        <button className={`w-[357px] h-[60px] bg-purple-600 text-white font-bold text-[16px] rounded-[16px] hover:bg-purple-700 ${getOptimizedTransitionClass()} cursor-pointer shadow-optimized hover:shadow-hover-optimized`}>
           Experimente gratuitamente agora
         </button>
       </div>
       
       {/* Segundo Subtítulo */}
-      <div className="mt-[50px] px-[12px] text-center slide-up-mobile">
+      <div className={`mt-[50px] px-[12px] text-center ${getOptimizedAnimationClass('slide-up-mobile')}`}>
         <p className="text-[15px] text-gray-700 leading-relaxed text-optimized">
           Uma plataforma nova, feita para revolucionar a experiência de delivery. Atendemos diversos segmentos:
         </p>
@@ -102,7 +107,7 @@ export default function LandingPageMobile() {
       )}
       
       {/* Nova Seção - Plataforma Tudo-em-um */}
-      <div className="mt-[40px] px-[12px] text-center slide-up-mobile">
+      <div className={`mt-[40px] px-[12px] text-center ${getOptimizedAnimationClass('slide-up-mobile')}`}>
         <h2 className="text-[28px] font-bold text-gray-900 leading-tight mb-[20px] text-optimized">
           Sua Plataforma de Delivery Tudo-em-um
         </h2>
