@@ -1,10 +1,29 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
 
-// https://vitejs.dev/config/
+// Configuração específica para desenvolvimento com análise de bundle
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    visualizer({
+      filename: 'dist/stats.html',
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+      template: 'treemap',
+      title: 'Bundle Analysis - iFood Dashboard',
+      projectRoot: resolve(__dirname),
+      metadata: {
+        buildTime: new Date().toISOString(),
+        version: '1.0.0',
+        environment: 'development'
+      },
+      detailed: true,
+      includeNodeModules: true,
+    }),
+  ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
@@ -13,7 +32,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false,
+    sourcemap: true,
     minify: 'esbuild',
     target: 'es2015',
     chunkSizeWarningLimit: 800,
@@ -60,7 +79,7 @@ export default defineConfig({
       'firebase/storage',
     ],
     exclude: ['@vite/client', '@vite/env'],
-    force: false,
+    force: true,
   },
   esbuild: {
     treeShaking: true,
