@@ -35,7 +35,10 @@ export default defineConfig({
           firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage', 'firebase/analytics']
         }
       }
-    }
+    },
+    target: 'es2020',
+    minify: 'terser',
+    sourcemap: false
   },
   define: {
     global: 'globalThis',
