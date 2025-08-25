@@ -45,3 +45,15 @@ whatsapp-backend/
 
 # Backups
 backups/
+
+# Arquivos de configuração que podem causar conflitos
+.npmrc.local
+.yarnrc
+.yarnrc.yml
+pnpm-lock.yaml
+yarn.lock
+
+# Arquivos de cache
+.cache/
+.parcel-cache/
+.vite/

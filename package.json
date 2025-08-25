@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:vercel": "npm run clean:deps && VITE_FORCE_ESBUILD=true vite build",
+    "build:vercel": "VITE_FORCE_ESBUILD=true VITE_SKIP_OPTIONAL_DEPS=true npx vite build --config vite.config.vercel.ts",
+    "build:vercel:clean": "rm -rf node_modules package-lock.json && npm install --omit=optional && VITE_FORCE_ESBUILD=true vite build",
+    "build:vercel:script": "node scripts/build-vercel.js",
     "build:prod": "cross-env VITE_NODE_ENV=production VITE_APP_ENVIRONMENT=production VITE_USE_EMULATORS=false vite build",
     "build:dev": "cross-env VITE_NODE_ENV=development VITE_APP_ENVIRONMENT=development VITE_USE_EMULATORS=true vite build",
     "preview": "vite preview",
