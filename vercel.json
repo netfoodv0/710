@@ -3,11 +3,6 @@
   "installCommand": "npm install --omit=optional --no-optional",
   "framework": "vite",
   "outputDirectory": "dist",
-  "functions": {
-    "app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "env": {
     "VITE_FORCE_ESBUILD": "true",
     "VITE_SKIP_OPTIONAL_DEPS": "true"
