@@ -16,7 +16,6 @@ export default defineConfig({
       'react',
       'react-dom',
       'react-router-dom',
-
       'firebase/app',
       'firebase/firestore',
       'firebase/auth',
@@ -26,19 +25,18 @@ export default defineConfig({
     ]
   },
   build: {
+    target: 'es2020',
+    minify: 'esbuild',
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
-
           firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage', 'firebase/analytics']
         }
       }
-    },
-    target: 'es2020',
-    minify: 'terser',
-    sourcemap: false
+    }
   },
   define: {
     global: 'globalThis',
