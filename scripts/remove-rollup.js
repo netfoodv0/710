@@ -50,11 +50,35 @@ try {
       export default function parseAst() {
         throw new Error('Rollup parseAst foi desabilitado para este build');
       }
+      
+      export function parseAstAsync() {
+        throw new Error('Rollup parseAstAsync foi desabilitado para este build');
+      }
+      
+      export const parseAst = parseAstAsync;
     `;
     
     fs.mkdirSync(path.join(rollupDistPath, 'es'), { recursive: true });
     fs.writeFileSync(path.join(rollupDistPath, 'es', 'parseAst.js'), parseAstStub);
     console.log('✅ Stub para parseAst.js criado');
+    
+    // Cria stub para rollup/parseAst (import direto)
+    const parseAstDirectStub = `
+      // Stub para rollup/parseAst (import direto)
+      export function parseAstAsync() {
+        throw new Error('Rollup parseAstAsync foi desabilitado para este build');
+      }
+      
+      export const parseAst = parseAstAsync;
+      
+      export default {
+        parseAstAsync,
+        parseAst
+      };
+    `;
+    
+    fs.writeFileSync(path.join(rollupPath, 'parseAst.js'), parseAstDirectStub);
+    console.log('✅ Stub para rollup/parseAst criado');
     
     // Cria stub para outros arquivos comuns
     const commonStubs = [
