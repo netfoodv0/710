@@ -71,8 +71,11 @@ function PedidoCard({ pedido, onStatusChange }: PedidoCardProps) {
           <p className="text-sm text-gray-600">{pedido.horario}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 border ${getStatusColor(pedido.status)}`}>
-            {getStatusIcon(pedido.status)}
+          <span className={`text-xs px-2 py-1 rounded-full ${
+            pedido.status === 'Pendente' ? 'bg-gray-100 text-gray-800' :
+            pedido.status === 'Preparando' ? 'bg-purple-100 text-purple-800' :
+            'bg-purple-100 text-purple-800'
+          }`}>
             {pedido.status}
           </span>
           <button

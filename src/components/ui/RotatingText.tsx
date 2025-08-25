@@ -8,10 +8,10 @@ import {
   useMemo,
   useState,
 } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import type { HTMLMotionProps, MotionProps } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
+import type { HTMLMotionProps, MotionProps } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Card } from "./card";
+import { Card } from "../Card";
 
 type AnimatePresenceMode = "wait" | "sync" | "popLayout";
 

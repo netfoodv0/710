@@ -133,7 +133,7 @@ export function ModalCategoria({
               value={formData.nome}
               onChange={(e) => handleInputChange('nome', e.target.value)}
               placeholder="Ex: Smashelândia burguer"
-              className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
+              className={`w-full px-3 py-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${
                 errors.nome ? 'border-red-300 bg-red-50' : 'border-gray-300'
               }`}
             />
@@ -227,14 +227,14 @@ export function ModalCategoria({
         <button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50 transition-colors"
         >
           Cancelar
         </button>
         <button
           type="submit"
           onClick={handleSubmit}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 transition-colors"
         >
           <SaveIcon size={24} color="#ffffff" />
           {categoria ? 'Salvar alterações' : 'Criar categoria'}

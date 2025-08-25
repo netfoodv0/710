@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFidelidade } from '../../context/fidelidadeContext';
 import { FormSwitch } from '../forms/FormSwitch';
-import { TextField } from '@mui/material';
 
 export function SistemaCashback() {
   const {
@@ -45,63 +44,33 @@ export function SistemaCashback() {
       {/* Configuração */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         <div>
-          <TextField
-            label="Taxa de Cashback (%)"
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Taxa de Cashback (%)
+          </label>
+          <input
             type="number"
-            inputProps={{ min: 0, max: 100 }}
+            min="0"
+            max="100"
             value={taxaCashback}
             onChange={(e) => setTaxaCashback(Number(e.target.value))}
-            fullWidth
-            size="small"
-            helperText="Entre 0 e 100%"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#ffffff',
-                '& input': {
-                  color: '#8b5cf6'
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderWidth: '1px',
-                  borderColor: '#8b5cf6'
-                }
-              },
-              '& .MuiInputLabel-root': {
-                color: '#8b5cf6',
-                '&.Mui-focused': {
-                  color: '#8b5cf6'
-                }
-              }
-            }}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            placeholder="Entre 0 e 100%"
           />
+          <p className="text-xs text-gray-500 mt-1">Entre 0 e 100%</p>
         </div>
         
         <div>
-          <TextField
-            label="Validade do Saldo (dias)"
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Validade do Saldo (dias)
+          </label>
+          <input
             type="number"
-            inputProps={{ min: 1, max: 365 }}
+            min="1"
+            max="365"
             value={validadeCashback}
             onChange={(e) => setValidadeCashback(Number(e.target.value))}
-            fullWidth
-            size="small"
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#ffffff',
-                '& input': {
-                  color: '#8b5cf6'
-                },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderWidth: '1px',
-                  borderColor: '#8b5cf6'
-                }
-              },
-              '& .MuiInputLabel-root': {
-                color: '#8b5cf6',
-                '&.Mui-focused': {
-                  color: '#8b5cf6'
-                }
-              }
-            }}
+            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            placeholder="Entre 1 e 365 dias"
           />
         </div>
       </div>

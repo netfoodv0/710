@@ -5,19 +5,20 @@ import {
   DadosFormaPagamento, 
   Pedido,
   EstatisticasGerais,
-  DashboardData as DashboardDataType
+  DashboardData
 } from '../types';
 import { PeriodType } from '../components/PeriodFilter';
+import { getMockFormas, getMockProdutos, getMockPedidos } from '../services/mockDataService';
 
 interface UseDashboardReturn {
-  data: DashboardDataType;
+  data: DashboardData;
   loading: boolean;
   error: string | null;
   refreshData: () => Promise<void>;
 }
 
 export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn => {
-  const [data, setData] = useState<DashboardDataType>({
+  const [data, setData] = useState<DashboardData>({
     kpis: [],
     formasPagamento: [],
     pedidosRecentes: [],
@@ -32,9 +33,9 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
       avaliacaoMedia: 0,
       pedidosPendentes: 0
     },
-    formasPedidas: [],
-    produtosVendidos: [],
-    pedidosEmAndamento: []
+    formasPedidas: getMockFormas(),
+    produtosVendidos: getMockProdutos(),
+    pedidosEmAndamento: getMockPedidos()
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -50,12 +51,12 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
       // Buscar dados reais do Firebase
       const dadosReais = await firebaseDashboardService.buscarDadosDashboard(periodo);
       
-      // Adicionar dados padrão para os novos componentes
-      const dadosCompletos: DashboardDataType = {
+      // Adicionar dados mock para os novos componentes quando não houver dados reais
+      const dadosCompletos: DashboardData = {
         ...dadosReais,
-        formasPedidas: [],
-        produtosVendidos: [],
-        pedidosEmAndamento: []
+        formasPedidas: dadosReais.formasPedidas?.length > 0 ? dadosReais.formasPedidas : getMockFormas(),
+        produtosVendidos: dadosReais.produtosVendidos?.length > 0 ? dadosReais.produtosVendidos : getMockProdutos(),
+        pedidosEmAndamento: dadosReais.pedidosEmAndamento?.length > 0 ? dadosReais.pedidosEmAndamento : getMockPedidos()
       };
       
       // Delay mínimo para evitar piscadas e garantir carregamento suave
@@ -73,6 +74,14 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
     } catch (err) {
       setError('Erro ao carregar dados do dashboard');
       console.error('Erro ao carregar dashboard:', err);
+      
+      // Em caso de erro, usar dados mock
+      setData(prevData => ({
+        ...prevData,
+        formasPedidas: getMockFormas(),
+        produtosVendidos: getMockProdutos(),
+        pedidosEmAndamento: getMockPedidos()
+      }));
     } finally {
       setLoading(false);
     }

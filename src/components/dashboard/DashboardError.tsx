@@ -18,13 +18,13 @@ export const DashboardError: React.FC<DashboardErrorProps> = ({ error, onRetry }
         <div className="flex gap-3">
           <button
             onClick={onRetry}
-            className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+            className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors"
           >
             Tentar Novamente
           </button>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 border text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors dashboard-border"
+            className="px-4 py-2 border text-gray-700 text-sm font-medium rounded hover:bg-gray-50 transition-colors dashboard-border"
           >
             Recarregar Página
           </button>

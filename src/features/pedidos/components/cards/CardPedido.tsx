@@ -100,17 +100,15 @@ export function CardPedido({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'novo':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'bg-purple-100 text-purple-700 border-purple-200';
       case 'confirmado':
-        return 'bg-blue-100 text-blue-700 border-blue-200';
+        return 'bg-purple-100 text-purple-700 border-purple-200';
       case 'preparando':
         return 'bg-purple-100 text-purple-700 border-purple-200';
-      case 'saiu_entrega':
-        return 'bg-green-100 text-green-700 border-green-200';
       case 'entregue':
         return 'bg-gray-100 text-gray-700 border-gray-200';
       case 'cancelado':
-        return 'bg-red-100 text-red-700 border-red-200';
+        return 'bg-gray-100 text-gray-700 border-gray-200';
       default:
         return 'bg-gray-100 text-gray-700 border-gray-200';
     }

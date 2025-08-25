@@ -3,6 +3,7 @@ import { useDashboard } from '../hooks/useDashboard';
 import { useNotificationContext } from '../context/notificationContextUtils';
 import { useSkeletonDelay } from '../hooks/useSkeletonDelay';
 import { useDashboardActions } from '../hooks/useDashboardActions';
+import { useDashboardTranslation } from '../hooks/useTranslation';
 
 // Componentes refatorados
 import { 
@@ -28,6 +29,7 @@ export default function Dashboard() {
   const { notifications, removeNotification } = useNotificationContext();
   const { handleRefresh, handleRetry } = useDashboardActions(refreshData);
   const showSkeleton = useSkeletonDelay({ delay: 600 });
+  const { dashboard } = useDashboardTranslation();
 
   // Memoizar dados para evitar re-renders desnecessários
   const memoizedData = useMemo(() => data, [data]);
@@ -39,7 +41,7 @@ export default function Dashboard() {
 
   return (
     <ErrorBoundary>
-      <div className="h-screen flex flex-col overflow-hidden dashboard-container">
+      <main className="h-screen flex flex-col overflow-hidden dashboard-container" role="main">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -54,10 +56,10 @@ export default function Dashboard() {
 
         {/* Cabeçalho da página */}
         <PageHeader
-          title="Dashboard"
-          subtitle="Visão geral do desempenho do restaurante"
+          title={dashboard.dashboard}
+          subtitle={dashboard.dashboardSubtitle}
           actionButton={{
-            label: "Atualizar Dados",
+            label: dashboard.atualizarDados,
             onClick: handleRefresh,
             loading: loading,
             disabled: loading,
@@ -74,10 +76,14 @@ export default function Dashboard() {
               <CardsGridSkeleton />
             </div>
           ) : (
-            <DashboardLayout data={memoizedData} selectedPeriod={selectedPeriod} />
+            <DashboardLayout 
+              data={memoizedData} 
+              selectedPeriod={selectedPeriod}
+              loading={loading}
+            />
           )}
         </div>
-      </div>
+      </main>
     </ErrorBoundary>
   );
 }

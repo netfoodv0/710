@@ -4,8 +4,6 @@ import { useNotificationContext } from '../../context/notificationContextUtils';
 import { NotificationToast } from '../../components/NotificationToast';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { PageHeader } from '../../components/ui';
-import { ConfiguracoesSkeleton } from '../../components/skeletons/ConfiguracoesSkeleton';
-import { useConfiguracoesSkeleton } from '../../hooks/useConfiguracoesSkeleton';
 
 // Hooks customizados
 import { useConfiguracoes } from './hooks/useConfiguracoes';
@@ -27,7 +25,7 @@ import {
   FusoHorario
 } from './components';
 
-export function Configuracoes() {
+export default function Configuracoes() {
   const { 
     config, 
     setConfig, 
@@ -36,8 +34,6 @@ export function Configuracoes() {
     error, 
     limparErro
   } = useConfiguracoes();
-  
-  const showSkeleton = useConfiguracoesSkeleton();
   
   const {
     notifications,
@@ -53,19 +49,6 @@ export function Configuracoes() {
     handleSalvar,
     limparErro
   );
-
-  // Loading state - mostrar skeleton
-  if (showSkeleton) {
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
-        <PageHeader
-          title="Configurações"
-          subtitle="Gerencie as configurações do seu restaurante"
-        />
-        <ConfiguracoesSkeleton />
-      </div>
-    );
-  }
 
   // Error state
   if (error) {
@@ -98,7 +81,7 @@ export function Configuracoes() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen bg-dashboard">
         {/* Notificações */}
         <div className="fixed top-4 right-4 z-50 space-y-2">
           {notifications.map((notification) => (

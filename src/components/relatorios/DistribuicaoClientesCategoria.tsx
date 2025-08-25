@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ActionButton } from '../ui';
 
 // Tipos para o componente
 export interface CategoriaCliente {
@@ -315,78 +316,18 @@ const ColoredBox: React.FC<ColoredBoxProps> = ({
               : 'none'
           }}
         >
-          {/* Bolhas flutuando na água */}
-          {aguaBalançando && mostrarAnimacoes && carregamentoCompleto && categoria.quantidade > 0 && !estaRestaurando && (
-            <>
-              {/* Bolhas principais */}
-              <div 
-                className="absolute rounded-full border-2 border-white"
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  left: '20%',
-                  bottom: '30%',
-                  zIndex: 8,
-                  animation: mostrarAnimacoes ? 'bolhaSubindo1 4s ease-in-out infinite' : 'none'
-                }}
-              />
-              <div 
-                className="absolute rounded-full border-2 border-white"
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  left: '60%',
-                  bottom: '20%',
-                  zIndex: 8,
-                  animation: mostrarAnimacoes ? 'bolhaSubindo2 5s ease-in-out infinite' : 'none'
-                }}
-              />
-              <div 
-                className="absolute rounded-full border-2 border-white"
-                style={{
-                  width: '14px',
-                  height: '14px',
-                  left: '80%',
-                  bottom: '40%',
-                  zIndex: 8,
-                  animation: mostrarAnimacoes ? 'bolhaSubindo3 6s ease-in-out infinite' : 'none'
-                }}
-              />
-              <div 
-                className="absolute rounded-full border-2 border-white"
-                style={{
-                  width: '12px',
-                  height: '12px',
-                  left: '40%',
-                  bottom: '60%',
-                  zIndex: 8,
-                  animation: mostrarAnimacoes ? 'bolhaSubindo4 7s ease-in-out infinite' : 'none'
-                }}
-              />
-              <div 
-                className="absolute rounded-full border-2 border-white"
-                style={{
-                  width: '10px',
-                  height: '10px',
-                  left: '70%',
-                  bottom: '70%',
-                  zIndex: 8,
-                  animation: mostrarAnimacoes ? 'bolhaSubindo5 8s ease-in-out infinite' : 'none'
-                }}
-              />
-              <div 
-                className="absolute rounded-full border-2 border-white"
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  left: '30%',
-                  bottom: '80%',
-                  zIndex: 8,
-                  animation: mostrarAnimacoes ? 'bolhaSubindo6 9s ease-in-out infinite' : 'none'
-                }}
-              />
-            </>
-          )}
+          {/* Caixa de água com animação */}
+          <div 
+            className="absolute bottom-0 left-0 right-0 rounded-b-lg transition-all duration-1000 ease-out"
+            style={{
+              backgroundColor: '#1ac136',
+              height: `${alturaAnimada}px`,
+              minHeight: '10px',
+              animation: mostrarAnimacoes && carregamentoCompleto && categoria.quantidade > 0 && !estaRestaurando
+                ? `ondulacaoSuperficie ${2 + index * 0.2}s ease-in-out infinite`
+                : 'none'
+            }}
+          />
           
           {/* Indicador de porcentagem no canto inferior esquerdo */}
           <div 
@@ -567,12 +508,12 @@ export const DistribuicaoClientesCategoria: React.FC<DistribuicaoClientesCategor
             <div className="text-red-500 text-4xl mb-4">⚠️</div>
             <p className="text-red-600 font-medium mb-2">Erro ao carregar dados</p>
             <p className="text-gray-600 text-sm">{erro}</p>
-            <button 
-              onClick={onRecarregar || (() => window.location.reload())} 
-              className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-            >
-              Tentar Novamente
-            </button>
+            <ActionButton
+              label="Tentar Novamente"
+              onClick={onRecarregar || (() => window.location.reload())}
+              variant="primary"
+              size="md"
+            />
           </div>
         </div>
       </div>

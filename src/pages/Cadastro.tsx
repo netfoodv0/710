@@ -5,7 +5,7 @@ import { CadastroForm } from '../components/auth/CadastroForm';
 import type { CadastroLojaFormData } from '../types/auth';
 import { DarkVeil } from '@/components/ui';
 
-export const Cadastro: React.FC = () => {
+export default function Cadastro() {
   const { cadastrarLoja, status, error, user } = useAuth();
   const navigate = useNavigate();
 

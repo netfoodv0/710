@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { PeriodType } from '../filters/FiltroPeriodo';
 
 import { GraficosVendas } from '../../features/relatorios/components/GraficosVendas';
-import { EstatisticasHistoricoContainer } from '../';
 import { CardTiposPedidos } from '../../features/historico/components/CardTiposPedidos';
 import { GraficoFormasPagamento } from '../../features/relatorios/components/GraficoFormasPagamento';
 import { GraficoPerformance } from '../../features/relatorios/components/GraficoPerformance';
@@ -10,58 +9,138 @@ import { GraficoFrequenciaPedidos } from '../../features/relatorios/components/G
 
 import { BarChart } from '../charts';
 import { firebaseDashboardService } from '../../services/firebaseDashboardService';
-import { firebaseClientesService, EstatisticasClientes } from '../../services/firebaseClientesService';
 import { DistribuicaoClientesCategoria, CategoriaCliente } from './DistribuicaoClientesCategoria';
+import { useEstatisticas } from '../../context/estatisticasContext';
+import { useEstatisticasPadrao } from '../../components/shared';
+
+import { DadosFiltrados, DadosRelatorioGeral } from '../../types/relatorios';
 
 interface RelatoriosContentProps {
-  dadosFiltrados: any;
+  dadosFiltrados: DadosFiltrados | null;
   selectedPeriod: PeriodType;
 }
 
 export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: RelatoriosContentProps) {
-  const [chartData, setChartData] = useState<any>(null);
+  const [chartData, setChartData] = useState<{
+    labels: string[];
+    datasets: Array<{
+      label: string;
+      data: number[];
+      backgroundColor: string;
+      borderColor: string;
+      borderWidth: number;
+    }>;
+  } | null>(null);
+  const { estatisticasGerais } = useEstatisticas();
+  const { estatisticasGerais: estatisticasPadrao } = useEstatisticasPadrao();
 
-  // Debug: verificar dados recebidos (apenas quando mudar)
-  useEffect(() => {
-    console.log('🔍 RelatoriosContent: dadosFiltrados recebidos:', dadosFiltrados);
-    console.log('🔍 RelatoriosContent: selectedPeriod:', selectedPeriod);
-  }, [dadosFiltrados, selectedPeriod]);
+  // Dados das estatísticas gerais
+  const estatisticasGeraisData = useMemo(() => ({
+    totalPedidos: 1247,
+    faturamentoTotal: 45678.90,
+    clientesAtivos: 342,
+    ticketMedio: 36.63
+  }), []);
 
-  // Estado para as categorias de clientes
-  const [categorias, setCategorias] = useState<CategoriaCliente[]>(() => {
-    // Sempre começar com as alturas corretas (não zeradas)
-    return [
+  // Componente de estatísticas gerais similar ao EstatisticasProdutos
+  const EstatisticasGerais = () => {
+    const estatisticasItems = [
       {
-        nome: 'Curiosos',
-        quantidade: 18,
-        altura: 260,
-        cor: 'rgba(124, 58, 237, 0.9)'
+        label: 'Total de Pedidos',
+        value: estatisticasGeraisData.totalPedidos,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
+          </svg>
+        )
       },
       {
-        nome: 'Novatos',
-        quantidade: 8,
-        altura: 210,
-        cor: 'rgba(139, 92, 246, 0.8)'
+        label: 'Faturamento Total',
+        value: `R$ ${estatisticasGeraisData.faturamentoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+          </svg>
+        )
       },
       {
-        nome: 'Fiéis',
-        quantidade: 0,
-        altura: 50, // Altura mínima para quantidade 0
-        cor: 'rgba(168, 85, 247, 0.7)'
+        label: 'Clientes Ativos',
+        value: estatisticasGeraisData.clientesAtivos,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+          </svg>
+        )
       },
       {
-        nome: 'Super Clientes',
-        quantidade: 0,
-        altura: 50, // Altura mínima para quantidade 0
-        cor: 'rgba(192, 132, 252, 0.6)'
+        label: 'Ticket Médio',
+        value: `R$ ${estatisticasGeraisData.ticketMedio.toFixed(2)}`,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        )
       }
     ];
-  });
 
-  // Estado para estatísticas reais dos clientes
-  const [estatisticasClientes, setEstatisticasClientes] = useState<EstatisticasClientes | null>(null);
+    return (
+      <div className="bg-white rounded-lg p-4 mb-6" style={{ border: '1px solid #cfd1d3' }}>
+        <div className="flex flex-wrap gap-6">
+          {estatisticasItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex-1 bg-white rounded-lg p-4 relative"
+              style={{ border: '1px solid #cfd1d3', height: '71px' }}
+            >
+              <div className="text-left h-full flex flex-col justify-between">
+                <p className="text-xs font-normal text-gray-600">{item.label}</p>
+                <p className="text-lg font-bold text-gray-900">{item.value}</p>
+              </div>
+              
+              <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+                <div className="p-2 bg-gray-100 rounded-full">
+                  <div className="w-6 h-6 text-gray-600">
+                    {item.icon}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
-  // Estado para controlar o efeito de água balançando
+
+  // Memoizar categorias estáticas para evitar recriação
+  const categorias = useMemo(() => [
+    {
+      nome: 'Curiosos',
+      quantidade: 18,
+      altura: 260,
+      cor: 'rgba(124, 58, 237, 0.9)'
+    },
+    {
+      nome: 'Novatos',
+      quantidade: 8,
+      altura: 210,
+      cor: 'rgba(139, 92, 246, 0.8)'
+    },
+    {
+      nome: 'Fiéis',
+      quantidade: 0,
+      altura: 50,
+      cor: 'rgba(168, 85, 247, 0.7)'
+    },
+    {
+      nome: 'Super Clientes',
+      quantidade: 0,
+      altura: 50,
+      cor: 'rgba(192, 132, 252, 0.6)'
+    }
+  ], []);
+
+    // Estado para controlar o efeito de água balançando
   const [mostrarAnimacoes, setMostrarAnimacoes] = useState(false);
   const [carregamentoCompleto, setCarregamentoCompleto] = useState(false);
   const [erroClientes, setErroClientes] = useState<string | null>(null);
@@ -69,28 +148,26 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
   const maxTentativas = 3;
 
   // Função para calcular alturas baseado nas quantidades de clientes
-  const calcularAlturasPorQuantidade = (quantidades: number[]) => {
-    const alturaMaxima = 260; // Altura máxima para o card
-    const limitesMinimos = [50, 50, 50, 50]; // Altura mínima para cada categoria
+  const calcularAlturasPorQuantidade = useCallback((quantidades: number[]) => {
+    const alturaMaxima = 260;
+    const limitesMinimos = [50, 50, 50, 50];
     
     return quantidades.map((quantidade, index) => {
       if (quantidade === 0) {
         return limitesMinimos[index];
       }
       
-      // Calcular altura proporcional baseada na quantidade
-      // Usar uma escala mais realista para as quantidades
-      const maxQuantidade = Math.max(...quantidades); // Usar a maior quantidade como referência
+      const maxQuantidade = Math.max(...quantidades);
       const proporcao = quantidade / maxQuantidade;
       const rangeDisponivel = alturaMaxima - limitesMinimos[index];
       const alturaCalculada = limitesMinimos[index] + (rangeDisponivel * proporcao);
       
       return Math.round(alturaCalculada);
     });
-  };
+  }, []);
 
   // Função para atualizar categorias com novas quantidades e alturas
-  const atualizarCategorias = (novasQuantidades: number[]) => {
+  const atualizarCategorias = useCallback((novasQuantidades: number[]) => {
     const novasAlturas = calcularAlturasPorQuantidade(novasQuantidades);
     
     const novasCategorias = categorias.map((cat, index) => ({
@@ -100,85 +177,18 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
     }));
     
     setCategorias(novasCategorias);
-  };
+  }, [categorias, calcularAlturasPorQuantidade]);
 
   // Função para recarregar dados (retry mechanism)
-  const recarregarDados = () => {
+  const recarregarDados = useCallback(() => {
     setTentativas(0);
     setErroClientes(null);
     setCarregamentoCompleto(false);
-    // Não desabilitar animações aqui para evitar travamento
-    
-    // Recarregar após um pequeno delay
-    setTimeout(() => {
-      carregarEstatisticasClientes();
-    }, 1000);
-  };
-
-  // Carregar estatísticas reais dos clientes do Firebase
-  const carregarEstatisticasClientes = async () => {
-    setErroClientes(null);
-    
-    try {
-              const estatisticas = await firebaseClientesService.calcularEstatisticas();
-      
-      setEstatisticasClientes(estatisticas);
-      
-      // Manter Curiosos e Novatos como dados fictícios
-      // Apenas Fiéis e Super Clientes vêm do Firebase
-      const novasQuantidades = [
-        18, // Curiosos: sempre 18 (fictício)
-        8, // Novatos: sempre 8 (fictício)
-        estatisticas.fieis || 0, // Fiéis: dados reais do Firebase
-        estatisticas.super_clientes || 0 // Super Clientes: dados reais do Firebase
-      ];
-      
-      // Atualizar diretamente para as alturas reais (sem zerar)
-      
-      // Atualizar diretamente para as alturas reais (sem zerar)
-      atualizarCategorias(novasQuantidades);
-      
-      // Marcar carregamento como completo
-      setCarregamentoCompleto(true);
-      
-      // Ativar animações imediatamente após carregar os dados
-      setMostrarAnimacoes(true);
-      
-    } catch (error) {
-      console.error(`❌ Tentativa ${tentativas + 1}/${maxTentativas}: Erro ao carregar estatísticas dos clientes:`, error);
-      
-      if (tentativas < maxTentativas - 1) {
-        // Tentar novamente
-        setTentativas(prev => prev + 1);
-        
-        setTimeout(() => {
-          carregarEstatisticasClientes();
-        }, 2000);
-        return;
-      }
-      
-      // Em caso de erro, usar valores padrão mas marcar como carregado
-      const quantidadesPadrao = [18, 8, 0, 0];
-      
-      // Atualizar diretamente para as alturas padrão (sem zerar)
-      atualizarCategorias(quantidadesPadrao);
-      
-      // Marcar carregamento como completo mesmo com erro
-      setCarregamentoCompleto(true);
-      
-      // Ativar animações imediatamente mesmo com erro
-      setMostrarAnimacoes(true);
-    }
-  };
-
-  useEffect(() => {
-    // Adicionar um pequeno delay para garantir que o Firebase esteja inicializado
-    const timer = setTimeout(() => {
-      carregarEstatisticasClientes();
-    }, 1000); // Aumentado para 1 segundo
-
-    return () => clearTimeout(timer);
   }, []);
+
+  // Função carregarEstatisticasClientes removida
+
+
 
   useEffect(() => {
     const carregarDadosGrafico = async () => {
@@ -299,12 +309,8 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
   return (
     <div className="space-y-6 mt-4">
 
-
-      {/* Estatísticas Detalhadas */}
-      <EstatisticasHistoricoContainer 
-        estatisticas={dadosFiltrados?.estatisticas || null}
-        dadosRelatorios={dadosFiltrados}
-      />
+      {/* Container de Estatísticas Gerais */}
+      <EstatisticasGerais />
 
       {/* Primeira linha: 3 gráficos lado a lado */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

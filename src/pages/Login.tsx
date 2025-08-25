@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { LoginForm } from '../components/auth/LoginForm';
 import { RotatingText, DarkVeil } from '@/components/ui';
 
-export const Login: React.FC = () => {
+export default function Login() {
   const { login, status, error, user } = useAuth();
   const navigate = useNavigate();
 

@@ -1,50 +1,120 @@
-/* Dashboard Styles */
+/* Dashboard Styles - Refatorado e Otimizado */
+@import './utilities.css';
+@import './animations.css';
+@import './components.css';
+
+:root {
+  /* Cores do Dashboard */
+  --dashboard-bg: rgb(238, 235, 235);
+  --dashboard-border: #cfd1d3;
+  --dashboard-white: #ffffff;
+  --dashboard-gray-light: #f3f4f6;
+  --dashboard-gray-dark: #374151;
+  
+  /* Espaçamentos */
+  --dashboard-radius: 0.5rem;
+  --dashboard-radius-full: 9999px;
+  --dashboard-padding-sm: 0.75rem;
+  --dashboard-padding-md: 1rem;
+  
+  /* Cores de Status */
+  --dashboard-status-green: #10b981;
+  --dashboard-status-purple: #8b5cf6;
+  --dashboard-status-red: #ef4444;
+  
+  /* Sombras - Removidas */
+  --dashboard-shadow: none;
+  --dashboard-shadow-hover: none;
+  
+  /* Transições - Removidas */
+  --dashboard-transition: none;
+}
+
+/* Container Principal */
 .dashboard-container {
-  background-color: rgb(238, 235, 235);
+  background-color: var(--dashboard-bg);
 }
 
-.dashboard-border {
-  border-color: #cfd1d3;
+/* Classe Base para Cards */
+.dashboard-base-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
 }
 
+/* Classes Utilitárias - Adicionadas conforme sugestões */
+.dashboard-card-border {
+  border: 1px solid var(--dashboard-border);
+}
+
+.dashboard-section-spacing {
+  padding: var(--dashboard-padding-md);
+}
+
+.dashboard-text-xs {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.dashboard-text-sm {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/* Cards Específicos */
 .dashboard-card {
-  background-color: white;
-  border: 1px solid #cfd1d3;
-  border-radius: 0.5rem;
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
 }
 
 .dashboard-stat-card {
-  background-color: white;
-  border: 1px solid #cfd1d3;
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-}
-
-.dashboard-icon-container {
-  width: 2.5rem;
-  height: 2.5rem;
-  background-color: #f3f4f6;
-  border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
+  padding: var(--dashboard-padding-sm);
 }
 
 .dashboard-analytics-card {
-  background-color: white;
-  border: 1px solid #cfd1d3;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
+  padding: var(--dashboard-padding-md);
   display: flex;
   flex-direction: column;
   max-height: 500px;
 }
 
+.dashboard-info-box {
+  margin-top: 1rem;
+  padding: var(--dashboard-padding-sm);
+  background-color: #f0fdf4;
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  flex-shrink: 0;
+}
+
+/* Container de Ícones */
+.dashboard-icon-container {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--dashboard-gray-light);
+  border-radius: var(--dashboard-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Cabeçalho de Analytics */
 .dashboard-analytics-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--dashboard-padding-sm);
   flex-shrink: 0;
 }
 
@@ -54,30 +124,171 @@
   overflow: hidden;
 }
 
+/* Indicadores de Status */
 .dashboard-status-indicator {
   width: 0.5rem;
   height: 0.5rem;
-  border-radius: 9999px;
+  border-radius: var(--dashboard-radius-full);
 }
 
 .dashboard-status-green {
-  background-color: #10b981;
+  background-color: var(--dashboard-status-green);
 }
 
 .dashboard-status-purple {
-  background-color: #8b5cf6;
+  background-color: var(--dashboard-status-purple);
 }
 
 .dashboard-status-red {
-  background-color: #ef4444;
-  border-radius: 0.5rem;
+  background-color: var(--dashboard-status-red);
 }
 
-.dashboard-info-box {
-  margin-top: 1rem;
-  padding: 0.75rem;
-  background-color: #f0fdf4;
-  border: 1px solid #cfd1d3;
-  border-radius: 0.5rem;
-  flex-shrink: 0;
+/* Bordas Utilitárias */
+.dashboard-border {
+  border-color: var(--dashboard-border);
+}
+
+/* Estilos para cards customizados - Consolidados */
+.custom-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
+}
+
+.custom-card:hover {
+  box-shadow: var(--dashboard-shadow-hover);
+}
+
+/* Estilo específico para aba geral */
+.aba-geral-card {
+  background-color: var(--dashboard-white);
+  border: 2px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: none;
+}
+
+/* Botões padronizados - Consolidados */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  font-weight: 500;
+  outline: none;
+  height: 40px;
+  border-radius: 2px;
+}
+
+.btn-primary {
+  color: #ef4444;
+  padding: var(--dashboard-padding-sm) 1rem;
+  border-radius: 0.125rem;
+  width: 100%;
+}
+
+.btn-secondary {
+  color: var(--dashboard-gray-dark);
+  padding: var(--dashboard-padding-sm) 1rem;
+  border-radius: 0.125rem;
+  width: 100%;
+}
+
+.btn-secondary:hover {
+  background-color: var(--dashboard-gray-light);
+}
+
+/* Scrollbar minimalista */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  border: 1px solid #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #64748b;
+}
+
+/* Para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+/* Classe para sempre mostrar scrollbar no container principal */
+.scrollbar-visible {
+  overflow-y: scroll;
+}
+
+/* Estilos de modais movidos para components.css */
+
+/* Estados de foco movidos para components.css */
+
+/* Animações movidas para animations.css */
+
+/* Melhorias de Responsividade - Adicionadas conforme sugestões */
+@media (max-width: 768px) {
+  .dashboard-analytics-card {
+    max-height: none;
+    min-height: auto;
+  }
+  
+  .dashboard-grid-mobile {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard-icon-container {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .custom-card {
+    border-radius: calc(var(--dashboard-radius) - 0.125rem);
+  }
+  
+  .btn {
+    height: 36px;
+    padding: 0 0.75rem;
+  }
+}
+
+/* Otimizações de Performance CSS - Seletores simplificados */
+.dashboard-modal-button:hover .dashboard-modal-icon {
+  opacity: 0.8;
+}
+
+.dashboard-card-hover:hover {
+  border-color: var(--dashboard-status-purple);
+}
+
+/* Classes de acessibilidade */
+.dashboard-focus-visible:focus-visible {
+  outline: 2px solid var(--dashboard-status-purple);
+  outline-offset: 2px;
+}
+
+.dashboard-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

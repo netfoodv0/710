@@ -4,16 +4,10 @@ import {
   KPI, 
   DadosFormaPagamento, 
   Pedido,
-  EstatisticasGerais 
+  EstatisticasGerais,
+  DashboardData
 } from '../types';
 import { PeriodType } from '../components/PeriodFilter';
-
-interface DashboardData {
-  kpis: KPI[];
-  formasPagamento: DadosFormaPagamento[];
-  pedidosRecentes: Pedido[];
-  estatisticas: EstatisticasGerais;
-}
 
 interface UseDashboardOptimizedReturn {
   data: DashboardData;
@@ -40,8 +34,12 @@ export const useDashboardOptimized = (period: PeriodType = 'weekly'): UseDashboa
       receita7Dias: 0,
       pedidos7Dias: 0,
       tempoMedioEntrega: 0,
-      avaliacaoMedia: 0
-    }
+      avaliacaoMedia: 0,
+      pedidosPendentes: 0
+    },
+    formasPedidas: [],
+    produtosVendidos: [],
+    pedidosEmAndamento: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

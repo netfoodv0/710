@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../../components/Sidebar.css';
 import { abas } from '../data/abasConfig';
 
 interface ConfiguracoesSidebarProps {
@@ -19,8 +18,8 @@ export function ConfiguracoesSidebar({ abaSelecionada, onAbaChange }: Configurac
               onClick={() => onAbaChange(aba.key)}
               className={`w-full flex items-center gap-4 text-left transition-colors ${
                 abaSelecionada === aba.key
-                  ? 'sidebar-item-active'
-                  : 'sidebar-item-inactive'
+                  ? 'bg-purple-50 text-[#8217d5]'
+                  : 'text-[#525866] hover:bg-gray-50'
               }`}
             >
               <Icon className="w-6 h-6" color={abaSelecionada === aba.key ? "#8217d5" : "#525866"} />

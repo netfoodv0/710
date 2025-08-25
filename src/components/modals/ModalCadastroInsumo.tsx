@@ -356,7 +356,7 @@ export function ModalCadastroInsumo({ isOpen, onClose, onSave, insumoEditando }:
         </div>
 
         {/* Botões de ação */}
-        <div className="flex justify-end space-x-3 p-6 border-t border-gray-200">
+        <div className="flex justify-end space-x-3 p-6">
           <button
             onClick={handleCancel}
             className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"

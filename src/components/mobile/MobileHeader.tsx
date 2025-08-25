@@ -17,7 +17,7 @@ const getPageTitle = (path: string): string => {
     '/cardapio': 'Cardápio',
     '/configuracoes': 'Configurações',
   };
-  return titles[path] || 'NETFOOD';
+      return titles[path] || 'Sistema Voult';
 };
 
 export function MobileHeader({ onMenuToggle, currentPath, isScrolled = false }: MobileHeaderProps) {

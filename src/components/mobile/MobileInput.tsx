@@ -168,7 +168,7 @@ export const MobileInput = forwardRef<HTMLInputElement, MobileInputProps>(({
       
       {success && !error && (
         <p className="text-sm text-green-600 flex items-center gap-1">
-          <span className="w-1 h-1 bg-green-500 rounded-full"></span>
+          <span className="w-1 h-1 bg-purple-500 rounded-full"></span>
           Campo válido
         </p>
       )}

@@ -287,14 +287,14 @@ export function DataTable<T extends { id: string | number }>({
                   type="date"
                   value={dateInicio}
                   onChange={(e) => setDateInicio(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
                 />
                 <span className="text-gray-400">até</span>
                 <input
                   type="date"
                   value={dateFim}
                   onChange={(e) => setDateFim(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
                 />
               </div>
             </div>

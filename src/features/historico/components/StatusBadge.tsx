@@ -14,22 +14,22 @@ export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
         return {
           label: 'Entregue',
           icon: CheckCircle,
-          textColor: 'text-green-600',
-          iconColor: 'text-green-500'
+          textColor: 'text-purple-600',
+          iconColor: 'text-purple-500'
         };
       case 'cancelado':
         return {
           label: 'Cancelado',
           icon: XCircle,
-          textColor: 'text-red-600',
-          iconColor: 'text-red-500'
+          textColor: 'text-gray-600',
+          iconColor: 'text-gray-500'
         };
       case 'novo':
         return {
           label: 'Novo',
           icon: AlertCircle,
-          textColor: 'text-orange-600',
-          iconColor: 'text-orange-500'
+          textColor: 'text-purple-600',
+          iconColor: 'text-purple-500'
         };
       case 'preparando':
         return {
@@ -42,8 +42,8 @@ export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
         return {
           label: 'Em Entrega',
           icon: Truck,
-          textColor: 'text-blue-600',
-          iconColor: 'text-blue-500'
+          textColor: 'text-purple-600',
+          iconColor: 'text-purple-500'
         };
       default:
         return {

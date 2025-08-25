@@ -1,0 +1,1 @@
+export { HeaderEstoqueCompartilhado } from './HeaderEstoqueCompartilhado';

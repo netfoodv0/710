@@ -5,12 +5,14 @@ import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { useNavigate } from 'react-router-dom';
 import { PeriodType } from '../../components/filters/FiltroPeriodo';
 import { PageHeader, CustomDropdown, DropdownOption } from '../../components/ui';
-import { EstatisticasContainer } from '../../components';
+import NavigationToggle from '../../components/ui/NavigationToggle';
 import { DataTable, DataTableColumn } from '../../components/ui';
-import { ReportNavigation } from '../../components/ui/ReportNavigation';
-import { ReportSkeleton } from '../../components/ui/ReportSkeleton';
+import { useEstatisticasPadrao } from '../../components/shared';
+// ReportNavigation removido
 
-import { firebaseClientesService, EstatisticasClientes } from '../../services/firebaseClientesService';
+
+
+// firebaseClientesService removido
 
 // Dados fictícios de clientes para a tabela
 const clientesFicticios = [
@@ -112,10 +114,91 @@ const clientesFicticios = [
   }
 ];
 
-export function RelatoriosClientes() {
+export default function RelatoriosClientes() {
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
+  const [selectedReportType, setSelectedReportType] = useState<string>('clientes');
   
+  // Usar estatísticas padronizadas
+  const { estatisticasClientes } = useEstatisticasPadrao();
+  
+  // Dados das estatísticas de clientes
+  const estatisticasClientesData = {
+    totalClientes: 456,
+    novosClientes: 28,
+    clientesAtivos: 342,
+    taxaRetencao: 75.2
+  };
+
+  // Componente de estatísticas de clientes similar ao EstatisticasProdutos
+  const EstatisticasClientes = () => {
+    const estatisticasItems = [
+      {
+        label: 'Total de Clientes',
+        value: estatisticasClientesData.totalClientes,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+          </svg>
+        )
+      },
+      {
+        label: 'Novos Clientes',
+        value: estatisticasClientesData.novosClientes,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+          </svg>
+        )
+      },
+      {
+        label: 'Clientes Ativos',
+        value: estatisticasClientesData.clientesAtivos,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        )
+      },
+      {
+        label: 'Taxa de Retenção',
+        value: `${estatisticasClientesData.taxaRetencao.toFixed(1)}%`,
+        icon: (
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.118 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+          </svg>
+        )
+      }
+    ];
+
+    return (
+      <div className="bg-white rounded-lg p-4 mb-6" style={{ border: '1px solid #cfd1d3' }}>
+        <div className="flex flex-wrap gap-6">
+          {estatisticasItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex-1 bg-white rounded-lg p-4 relative"
+              style={{ border: '1px solid #cfd1d3', height: '71px' }}
+            >
+              <div className="text-left h-full flex flex-col justify-between">
+                <p className="text-xs font-normal text-gray-600">{item.label}</p>
+                <p className="text-lg font-bold text-gray-900">{item.value}</p>
+              </div>
+              
+              <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+                <div className="p-2 bg-gray-100 rounded-full">
+                  <div className="w-6 h-6 text-gray-600">
+                    {item.icon}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   // Opções do dropdown de período
   const periodOptions: DropdownOption[] = [
     { value: 'weekly', label: 'Semanal' },
@@ -123,9 +206,16 @@ export function RelatoriosClientes() {
     { value: 'quarterly', label: 'Trimestral' },
     { value: 'yearly', label: 'Anual' }
   ];
+
+  // Opções para o componente Radio (tipos de relatório)
+  const reportTypeOptions = [
+    { id: 'geral', label: 'Geral' },
+    { id: 'clientes', label: 'Clientes' },
+    { id: 'produtos', label: 'Produtos' }
+  ];
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [estatisticasClientes, setEstatisticasClientes] = useState<EstatisticasClientes | null>(null);
+  // Estado para estatísticas de clientes removido
   
   // Estado para os valores absolutos dos cards (números reais)
   const [cardValues, setCardValues] = useState([0, 0, 0, 0]);
@@ -290,7 +380,24 @@ export function RelatoriosClientes() {
     }
   }, [showSuccess, showError]);
 
-
+  const handleReportTypeChange = useCallback((reportType: string) => {
+    setSelectedReportType(reportType);
+    
+    // Navegar para a página correspondente
+    switch (reportType) {
+      case 'geral':
+        navigate('/relatorios/geral');
+        break;
+      case 'clientes':
+        navigate('/relatorios/clientes');
+        break;
+      case 'produtos':
+        navigate('/relatorios/produtos');
+        break;
+      default:
+        navigate('/relatorios/geral');
+    }
+  }, [navigate]);
 
   // Função para animar o carregamento dos cards
   const animarCarregamento = useCallback(() => {
@@ -397,15 +504,20 @@ export function RelatoriosClientes() {
     setError(null);
     
     try {
-              const dados = await firebaseClientesService.calcularEstatisticas();
-      setEstatisticasClientes(dados);
+              // Dados de exemplo para os cards
+      const dados = {
+        curiosos: 25,
+        novatos: 20,
+        fieis: 15,
+        super_clientes: 10
+      };
       
-      // Atualizar os valores dos cards com dados reais do Firebase
+      // Atualizar os valores dos cards com dados de exemplo
       const valoresReais = [
-        dados.curiosos || 0,        // Card 1: Clientes que nunca pediram
-        dados.novatos || 0,         // Card 2: Clientes com 1+ pedidos
-        dados.fieis || 0,           // Card 3: Clientes com 2+ pedidos
-        dados.super_clientes || 0   // Card 4: Clientes com 3+ pedidos
+        dados.curiosos,        // Card 1: Clientes que nunca pediram
+        dados.novatos,         // Card 2: Clientes com 1+ pedidos
+        dados.fieis,           // Card 3: Clientes com 2+ pedidos
+        dados.super_clientes   // Card 4: Clientes com 3+ pedidos
       ];
       
       setCardValues(valoresReais);
@@ -499,7 +611,7 @@ export function RelatoriosClientes() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={handleRetry}
-            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
           >
             Tentar novamente
           </button>
@@ -647,10 +759,20 @@ export function RelatoriosClientes() {
 
         {/* Cabeçalho da página */}
         <PageHeader
-          title="Relatório de Clientes por Frequência"
-          subtitle="Análise da distribuição de clientes baseada no número de pedidos realizados"
+          title=""
+          subtitle=""
           leftContent={
-            <ReportNavigation currentPage="clientes" />
+            <div className="flex items-center gap-2">
+              <NavigationToggle
+                options={reportTypeOptions}
+                name="reportType"
+                defaultValue={selectedReportType}
+                onChange={handleReportTypeChange}
+                size="small"
+                color="#8b5cf6"
+                backgroundColor="#f3f4f6"
+              />
+            </div>
           }
           rightContent={
             <div className="flex items-center gap-4">
@@ -671,7 +793,7 @@ export function RelatoriosClientes() {
                 <button
                   onClick={handleExport}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -681,7 +803,7 @@ export function RelatoriosClientes() {
                 <button
                   onClick={handleExport}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -700,451 +822,163 @@ export function RelatoriosClientes() {
         <div className="px-6 pt-2 pb-12" style={{ padding: '24px 24px 50px 24px' }}>
 
 
-          {/* Conteúdo principal com skeleton loading contextual */}
-          {!carregamentoCompleto ? (
-            <ReportSkeleton type="clientes" />
-          ) : (
-            <>
-              <div className="space-y-6">
-                {/* Resumo estatístico */}
-                {estatisticasClientes && (
-                  <EstatisticasContainer estatisticasClientes={estatisticasClientes} />
-                )}
+          
+                      <>
+            {/* Container de Estatísticas de Clientes */}
+            <EstatisticasClientes />
+              
+            <div className="space-y-6">
+              {/* Resumo estatístico - REMOVIDO */}
 
-                {/* Card pai dos cards de distribuição */}
-                <div className="bg-white rounded-lg p-4" style={{ border: '1px solid #cfd1d3' }}>
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900" style={{ fontSize: '12px' }}>Funil de Fidelidade</h3>
-                  </div>
-                  
-                  {/* Cards internos com dimensões específicas */}
-                  <div className="mt-6 flex justify-between gap-6 flex-wrap w-full">
-                     {/* Card 1 */}
+              {/* Card pai dos cards de distribuição */}
+              <div className="bg-white rounded-lg p-4 mb-6" style={{ border: '1px solid #cfd1d3' }}>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900" style={{ fontSize: '12px' }}>Funil de Fidelidade</h3>
+                </div>
+                
+                {/* Cards internos com dimensões específicas */}
+                <div className="mt-6 flex justify-between gap-6 flex-wrap w-full">
+                   {/* Card 1 */}
+                   <div 
+                     className="bg-white rounded-lg relative flex-1 overflow-hidden"
+                     style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
+                   >
+                     {/* Linha verde dinâmica baseada no percentual com efeito de água */}
                      <div 
-                       className="bg-white rounded-lg relative flex-1 overflow-hidden"
-                       style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
-                     >
-                       {/* Linha verde dinâmica baseada no percentual com efeito de água */}
-                       <div 
-                         className="absolute bottom-0 left-0 right-0 bg-green-500 rounded-b-lg transition-all duration-2000 ease-out"
-                         style={{ 
-                           height: `${Math.max(alturasAnimadas[0], 5)}%`,
-                           minHeight: '10px',
-                           animation: mostrarAnimacoes && alturasAnimadas[0] > 0
-                             ? `ondulacaoSuperficie ${3 + 0 * 0.3}s ease-in-out infinite`
-                             : 'none',
-                           transform: `translateY(${alturasAnimadas[0] > 0 ? 0 : 100}%)`,
-                           transition: 'transform 0.8s ease-out'
-                         }}
-                       >
-                         {/* Bolhas flutuando na água */}
-                         {mostrarAnimacoes && alturasAnimadas[0] > 0 && (
-                           <>
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '18px',
-                                 height: '18px',
-                                 left: '20%',
-                                 bottom: '30%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo1 4s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '16px',
-                                 height: '16px',
-                                 left: '60%',
-                                 bottom: '20%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo2 5s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '14px',
-                                 height: '14px',
-                                 left: '80%',
-                                 bottom: '40%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo3 6s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '12px',
-                                 height: '12px',
-                                 left: '40%',
-                                 bottom: '60%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo4 7s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '10px',
-                                 height: '10px',
-                                 left: '70%',
-                                 bottom: '70%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo5 8s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '8px',
-                                 height: '8px',
-                                 left: '30%',
-                                 bottom: '80%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo6 9s ease-in-out infinite'
-                               }}
-                             />
-                           </>
-                         )}
-                       </div>
-                                                
-                       {/* Número 1 */}
-                       <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">Curiosos</div>
-                         
-                       {/* Percentual */}
-                       <div className="absolute bottom-2 left-2 text-xs font-bold">
-                         <div className="text-black">{Math.round(alturasAnimadas[0])}%</div>
-                       </div>
+                       className="absolute bottom-0 left-0 right-0 rounded-b-lg transition-all duration-2000 ease-out"
+                       style={{ 
+                         backgroundColor: '#1ac136',
+                         height: `${Math.max(alturasAnimadas[0], 5)}%`,
+                         minHeight: '10px',
+                         animation: mostrarAnimacoes && alturasAnimadas[0] > 0
+                           ? `ondulacaoSuperficie ${3 + 0 * 0.3}s ease-in-out infinite`
+                           : 'none',
+                         transform: `translateY(${alturasAnimadas[0] > 0 ? 0 : 100}%)`,
+                         transition: 'transform 0.8s ease-out'
+                       }}
+                     />
+                                              
+                     {/* Número 1 */}
+                     <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">Curiosos</div>
+                       
+                     {/* Percentual */}
+                     <div className="absolute bottom-2 left-2 text-xs font-bold">
+                       <div className="text-black">{Math.round(alturasAnimadas[0])}%</div>
                      </div>
+                   </div>
 
-                     {/* Card 2 */}
+                   {/* Card 2 */}
+                   <div 
+                     className="bg-white rounded-lg relative flex-1 overflow-hidden"
+                     style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
+                   >
+                     {/* Linha verde dinâmica baseada no percentual com efeito de água */}
                      <div 
-                       className="bg-white rounded-lg relative flex-1 overflow-hidden"
-                       style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
-                     >
-                       {/* Linha verde dinâmica baseada no percentual com efeito de água */}
-                       <div 
-                         className="absolute bottom-0 left-0 right-0 bg-green-500 rounded-b-lg transition-all duration-2000 ease-out"
-                         style={{ 
-                           height: `${Math.max(alturasAnimadas[1], 5)}%`,
-                           minHeight: '10px',
-                           animation: mostrarAnimacoes && alturasAnimadas[1] > 0
-                             ? `ondulacaoSuperficie ${3 + 1 * 0.3}s ease-in-out infinite`
-                             : 'none',
-                           transform: `translateY(${alturasAnimadas[1] > 0 ? 0 : 100}%)`,
-                           transition: 'transform 0.8s ease-out'
-                         }}
-                       >
-                         {/* Bolhas flutuando na água */}
-                         {mostrarAnimacoes && alturasAnimadas[1] > 0 && (
-                           <>
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '18px',
-                                 height: '18px',
-                                 left: '20%',
-                                 bottom: '30%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo1 4s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '16px',
-                                 height: '16px',
-                                 left: '60%',
-                                 bottom: '20%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo2 5s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '14px',
-                                 height: '14px',
-                                 left: '80%',
-                                 bottom: '40%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo3 6s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '12px',
-                                 height: '12px',
-                                 left: '40%',
-                                 bottom: '60%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo4 7s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '10px',
-                                 height: '10px',
-                                 left: '70%',
-                                 bottom: '70%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo5 8s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '8px',
-                                 height: '8px',
-                                 left: '30%',
-                                 bottom: '80%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo6 9s ease-in-out infinite'
-                               }}
-                             />
-                           </>
-                         )}
-                       </div>
-                                                
-                       {/* Número 2 */}
-                       <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">Novatos</div>
-                         
-                       {/* Percentual */}
-                       <div className="absolute bottom-2 left-2 text-xs font-bold">
-                         <div className="text-black">{Math.round(alturasAnimadas[1])}%</div>
-                       </div>
+                       className="absolute bottom-0 left-0 right-0 rounded-b-lg transition-all duration-2000 ease-out"
+                       style={{ 
+                         backgroundColor: '#1ac136',
+                         height: `${Math.max(alturasAnimadas[1], 5)}%`,
+                         minHeight: '10px',
+                         animation: mostrarAnimacoes && alturasAnimadas[1] > 0
+                           ? `ondulacaoSuperficie ${3 + 1 * 0.3}s ease-in-out infinite`
+                           : 'none',
+                         transform: `translateY(${alturasAnimadas[1] > 0 ? 0 : 100}%)`,
+                         transition: 'transform 0.8s ease-out'
+                       }}
+                     />
+                                              
+                     {/* Número 2 */}
+                     <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">Novatos</div>
+                       
+                     {/* Percentual */}
+                     <div className="absolute bottom-2 left-2 text-xs font-bold">
+                       <div className="text-black">{Math.round(alturasAnimadas[1])}%</div>
                      </div>
+                   </div>
 
-                     {/* Card 3 */}
+                   {/* Card 3 */}
+                   <div 
+                     className="bg-white rounded-lg relative flex-1 overflow-hidden"
+                     style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
+                   >
+                     {/* Linha verde dinâmica baseada no percentual com efeito de água */}
                      <div 
-                       className="bg-white rounded-lg relative flex-1 overflow-hidden"
-                       style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
-                     >
-                       {/* Linha verde dinâmica baseada no percentual com efeito de água */}
-                       <div 
-                         className="absolute bottom-0 left-0 right-0 bg-green-500 rounded-b-lg transition-all duration-2000 ease-out"
-                         style={{ 
-                           height: `${Math.max(alturasAnimadas[2], 5)}%`,
-                           minHeight: '10px',
-                           animation: mostrarAnimacoes && alturasAnimadas[2] > 0
-                             ? `ondulacaoSuperficie ${3 + 2 * 0.3}s ease-in-out infinite`
-                             : 'none',
-                           transform: `translateY(${alturasAnimadas[2] > 0 ? 0 : 100}%)`,
-                           transition: 'transform 0.8s ease-out'
-                         }}
-                       >
-                         {/* Bolhas flutuando na água */}
-                         {mostrarAnimacoes && alturasAnimadas[2] > 0 && (
-                           <>
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '18px',
-                                 height: '18px',
-                                 left: '20%',
-                                 bottom: '20%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo1 4s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '16px',
-                                 height: '16px',
-                                 left: '60%',
-                                 bottom: '30%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo2 5s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '14px',
-                                 height: '14px',
-                                 left: '80%',
-                                 bottom: '40%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo3 6s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '12px',
-                                 height: '12px',
-                                 left: '40%',
-                                 bottom: '50%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo4 7s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '10px',
-                                 height: '10px',
-                                 left: '70%',
-                                 bottom: '60%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo5 8s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '8px',
-                                 height: '8px',
-                                 left: '30%',
-                                 bottom: '70%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo6 9s ease-in-out infinite'
-                               }}
-                             />
-                           </>
-                         )}
-                       </div>
-                                                
-                       {/* Número 3 */}
-                       <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">Fiéis</div>
-                         
-                       {/* Percentual */}
-                       <div className="absolute bottom-2 left-2 text-xs font-bold">
-                         <div className="text-black">{Math.round(alturasAnimadas[2])}%</div>
-                       </div>
+                       className="absolute bottom-0 left-0 right-0 rounded-b-lg transition-all duration-2000 ease-out"
+                       style={{ 
+                         backgroundColor: '#1ac136',
+                         height: `${Math.max(alturasAnimadas[2], 5)}%`,
+                         minHeight: '10px',
+                         animation: mostrarAnimacoes && alturasAnimadas[2] > 0
+                           ? `ondulacaoSuperficie ${3 + 2 * 0.3}s ease-in-out infinite`
+                           : 'none',
+                         transform: `translateY(${alturasAnimadas[2] > 0 ? 0 : 100}%)`,
+                         transition: 'transform 0.8s ease-out'
+                       }}
+                     />
+                                              
+                     {/* Número 3 */}
+                     <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">Fiéis</div>
+                       
+                     {/* Percentual */}
+                     <div className="absolute bottom-2 left-2 text-xs font-bold">
+                       <div className="text-black">{Math.round(alturasAnimadas[2])}%</div>
                      </div>
+                   </div>
 
-                     {/* Card 4 */}
+                   {/* Card 4 */}
+                   <div 
+                     className="bg-white rounded-lg relative flex-1 overflow-hidden"
+                     style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
+                   >
+                     {/* Linha verde dinâmica baseada no percentual com efeito de água */}
                      <div 
-                       className="bg-white rounded-lg relative flex-1 overflow-hidden"
-                       style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
-                     >
-                       {/* Linha verde dinâmica baseada no percentual com efeito de água */}
-                       <div 
-                         className="absolute bottom-0 left-0 right-0 bg-green-500 rounded-b-lg transition-all duration-2000 ease-out"
-                         style={{ 
-                           height: `${Math.max(alturasAnimadas[3], 5)}%`,
-                           minHeight: '10px',
-                           animation: mostrarAnimacoes && alturasAnimadas[3] > 0
-                             ? `ondulacaoSuperficie ${3 + 3 * 0.3}s ease-in-out infinite`
-                             : 'none',
-                           transform: `translateY(${alturasAnimadas[3] > 0 ? 0 : 100}%)`,
-                           transition: 'transform 0.8s ease-out'
-                         }}
-                       >
-                         {/* Bolhas flutuando na água */}
-                         {mostrarAnimacoes && alturasAnimadas[3] > 0 && (
-                           <>
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '18px',
-                                 height: '18px',
-                                 left: '20%',
-                                 bottom: '30%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo1 4s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '16px',
-                                 height: '16px',
-                                 left: '60%',
-                                 bottom: '20%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo2 5s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '14px',
-                                 height: '14px',
-                                 left: '80%',
-                                 bottom: '40%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo3 6s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '12px',
-                                 height: '12px',
-                                 left: '40%',
-                                 bottom: '60%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo4 7s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '10px',
-                                 height: '10px',
-                                 left: '70%',
-                                 bottom: '70%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo5 8s ease-in-out infinite'
-                               }}
-                             />
-                             <div 
-                               className="absolute rounded-full border-2 border-white"
-                               style={{
-                                 width: '8px',
-                                 height: '8px',
-                                 left: '30%',
-                                 bottom: '80%',
-                                 zIndex: 8,
-                                 animation: 'bolhaSubindo6 9s ease-in-out infinite'
-                               }}
-                             />
-                           </>
-                         )}
-                       </div>
-                                                
-                       {/* Número 4 */}
-                       <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">Super Clientes</div>
-                         
-                       {/* Percentual */}
-                       <div className="absolute bottom-2 left-2 text-xs font-bold">
-                         <div className="text-black">{Math.round(alturasAnimadas[3])}%</div>
-                       </div>
+                       className="absolute bottom-0 left-0 right-0 rounded-b-lg transition-all duration-2000 ease-out"
+                       style={{ 
+                         backgroundColor: '#1ac136',
+                         height: `${Math.max(alturasAnimadas[3], 5)}%`,
+                         minHeight: '10px',
+                         animation: mostrarAnimacoes && alturasAnimadas[3] > 0
+                           ? `ondulacaoSuperficie ${3 + 3 * 0.3}s ease-in-out infinite`
+                           : 'none',
+                         transform: `translateY(${alturasAnimadas[3] > 0 ? 0 : 100}%)`,
+                         transition: 'transform 0.8s ease-out'
+                       }}
+                     />
+                                              
+                     {/* Número 4 */}
+                     <div className="absolute top-2 left-4 text-xs font-medium">Super Clientes</div>
+                       
+                     {/* Percentual */}
+                     <div className="absolute bottom-2 left-2 text-xs font-bold">
+                       <div className="text-black">{Math.round(alturasAnimadas[3])}%</div>
                      </div>
-                  </div>
+                   </div>
                 </div>
               </div>
+            </div>
 
-                {/* Tabela de Clientes */}
-                <DataTable
-                  data={clientesFicticios}
-                  columns={columns}
-                  searchPlaceholder="Buscar clientes..."
-                  searchFields={['nome', 'telefone', 'endereco']}
-                  filters={{
-                    categories: categorias,
-                    statuses: statusOptions,
-                    showDateRange: true
-                  }}
-                  actions={{
-                    onView: (cliente) => console.log('Visualizar:', cliente)
-                  }}
-                  pagination={{
-                    itemsPerPageOptions: [5, 8, 10, 15, 20],
-                    defaultItemsPerPage: 8
-                  }}
-                  onAdd={() => console.log('Adicionar novo cliente')}
-                  addButtonText="Novo Cliente"
-                />
-            </>
-          )}
+            {/* Tabela de Clientes */}
+            <DataTable
+              data={clientesFicticios}
+              columns={columns}
+              searchPlaceholder="Buscar clientes..."
+              searchFields={['nome', 'telefone', 'endereco']}
+              filters={{
+                categories: categorias,
+                statuses: statusOptions,
+                showDateRange: true
+              }}
+              actions={{
+                onView: (cliente) => console.log('Visualizar:', cliente)
+              }}
+              pagination={{
+                itemsPerPageOptions: [5, 8, 10, 15, 20],
+                defaultItemsPerPage: 8
+              }}
+              onAdd={() => console.log('Adicionar novo cliente')}
+              addButtonText="Novo Cliente"
+            />
+          </>
           
           {/* Margem inferior da página */}
           <div className="h-25"></div>

@@ -74,14 +74,14 @@ export const LocationMessage: React.FC<LocationMessageProps> = ({ location, body
           <div className="flex gap-2 mt-3">
             <button
               onClick={openInGoogleMaps}
-              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-xs"
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-xs"
             >
               <ExternalLink className="w-3 h-3" />
               Google Maps
             </button>
             <button
               onClick={openInWaze}
-              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors text-xs"
+              className="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 rounded transition-colors text-xs"
             >
               <Navigation className="w-3 h-3" />
               Waze
@@ -90,7 +90,7 @@ export const LocationMessage: React.FC<LocationMessageProps> = ({ location, body
 
           <button
             onClick={copyCoordinates}
-            className="w-full mt-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-xs text-gray-300"
+            className="w-full mt-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-xs text-gray-300"
           >
             Copiar coordenadas
           </button>

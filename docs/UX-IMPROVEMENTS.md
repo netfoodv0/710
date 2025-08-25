@@ -132,7 +132,7 @@ const [loading, setLoading] = useState(false);
 - [Nielsen Norman Group - UX Guidelines](https://www.nngroup.com/articles/)
 - [Web.dev - Loading UX](https://web.dev/loading-ux/)
 
-# Melhorias de UX - Dashboard iFood
+# Melhorias de UX - Dashboard Sistema Voult
 
 ## 🎯 Problema da Piscada na Página de Histórico
 

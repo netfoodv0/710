@@ -4,7 +4,7 @@ import { CardapioContent } from '../features/cardapio/components/CardapioContent
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
 
-export function Cardapio() {
+export default function Cardapio() {
 
 
 

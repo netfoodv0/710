@@ -1,4 +1,4 @@
-# 🔥 Configuração do Firebase - iFood Dashboard
+# 🔥 Configuração do Firebase - Sistema Voult
 
 ## 📋 Visão Geral
 
@@ -26,7 +26,7 @@ VITE_FIREBASE_MEASUREMENT_ID=G-ZELND5C5HC
 VITE_USE_EMULATORS=false
 
 # Configurações do App
-VITE_APP_NAME=iFood Dashboard
+VITE_APP_NAME=Sistema Voult
 VITE_APP_VERSION=1.0.0
 VITE_DEBUG=false
 ```
@@ -70,7 +70,7 @@ VITE_FIREBASE_MEASUREMENT_ID=G-ZELND5C5HC
 VITE_USE_EMULATORS=true
 
 # Configurações do App
-VITE_APP_NAME=iFood Dashboard
+VITE_APP_NAME=Sistema Voult
 VITE_APP_VERSION=1.0.0
 VITE_DEBUG=true
 ```
@@ -170,7 +170,7 @@ console.log(import.meta.env.VITE_APP_ENVIRONMENT);
 ## 📁 Estrutura de Arquivos
 
 ```
-ifood-dashboard/
+sistema-voult/
 ├── .env                    # Configuração de ambiente (criar)
 ├── .env.example           # Exemplo de configuração
 ├── src/

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { PageHeader, DataTable, DataTableColumn, EstoqueNavigation } from '@/components/ui';
-import { ModalEditarAcompanhamento } from '@/components/modals/ModalEditarAcompanhamento';
-import { ShoppingBag, Package, AlertTriangle, TrendingUp } from 'lucide-react';
+import { PageHeader, DataTable, DataTableColumn } from '@/components/ui';
+import { AlertTriangle, TrendingUp, Package, ShoppingBag } from 'lucide-react';
+import { ModalEditarEstoque, ModalCadastroAcompanhamento } from '../../components/modals';
+import { HeaderEstoqueCompartilhado } from '../../components/estoque';
 
 interface ProdutoAcompanhamento {
   id: number;
@@ -115,21 +116,41 @@ export default function Acompanhamentos() {
   };
 
   const getStatusBadge = (status: string) => {
-    const statusMap: { [key: string]: { text: string; color: string } } = {
-      'em_estoque': { text: 'Ativo', color: 'bg-green-100 text-green-800' },
-      'estoque_baixo': { text: 'Ativo', color: 'bg-green-100 text-green-800' },
-      'sem_estoque': { text: 'Ativo', color: 'bg-green-100 text-green-800' }
+    const statusMap = {
+      'em_estoque': { text: 'Ativo', color: 'bg-purple-100 text-purple-800' },
+      'estoque_baixo': { text: 'Ativo', color: 'bg-purple-100 text-purple-800' },
+      'sem_estoque': { text: 'Ativo', color: 'bg-purple-100 text-purple-800' }
     };
     
-    const statusInfo = statusMap[status] || { text: 'Inativo', color: 'bg-red-100 text-red-800' };
+    const statusInfo = statusMap[status] || { text: 'Inativo', color: 'bg-gray-100 text-gray-800' };
     
     return (
-      <div className="text-center">
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.color}`}>
-          {statusInfo.text}
-        </span>
-      </div>
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.color}`}>
+        {statusInfo.text}
+      </span>
     );
+  };
+
+  const getQuantidadeBadge = (quantidade: number, quantidadeMinima: number) => {
+    if (quantidade === 0) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          {quantidade}
+        </span>
+      );
+    } else if (quantidade <= quantidadeMinima) {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          {quantidade}
+        </span>
+      );
+    } else {
+      return (
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+          {quantidade}
+        </span>
+      );
+    }
   };
 
   const columns: DataTableColumn<ProdutoAcompanhamento>[] = [
@@ -314,14 +335,9 @@ export default function Acompanhamentos() {
   }, [produtos]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'rgb(238, 235, 235)' }}>
+    <div className="min-h-screen flex flex-col bg-dashboard-rgb">
       {/* Cabeçalho da página */}
-      <PageHeader
-        title="Acompanhamentos"
-        subtitle="Gerenciamento dos acompanhamentos do restaurante"
-        leftContent={
-          <EstoqueNavigation currentPage="acompanhamento" />
-        }
+      <HeaderEstoqueCompartilhado
         actionButton={{
           label: "Atualizar Acompanhamentos",
           onClick: () => {},
@@ -335,9 +351,9 @@ export default function Acompanhamentos() {
       {/* Conteúdo Principal */}
       <div className="px-6 pt-6 flex-1">
         {/* Estatísticas dos Acompanhamentos */}
-        <div className="bg-white border rounded-lg p-4 flex-shrink-0 mb-6" style={{ borderColor: '#cfd1d3' }}>
+        <div className="bg-white border rounded-lg p-4 flex-shrink-0 mb-6 border-dashboard">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div className="text-left">
                   <p className="text-xs font-medium text-gray-600">Total de Acompanhamentos</p>
@@ -349,7 +365,7 @@ export default function Acompanhamentos() {
               </div>
             </div>
             
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div className="text-left">
                   <p className="text-xs font-medium text-gray-600">Em Estoque</p>
@@ -363,7 +379,7 @@ export default function Acompanhamentos() {
               </div>
             </div>
             
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div className="text-left">
                   <p className="text-xs font-medium text-gray-600">Estoque Baixo</p>
@@ -377,7 +393,7 @@ export default function Acompanhamentos() {
               </div>
             </div>
             
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div className="text-left">
                   <p className="text-xs font-medium text-gray-600">Sem Estoque</p>
@@ -425,7 +441,7 @@ export default function Acompanhamentos() {
 
       {/* Modal de edição */}
       {isModalOpen && produtoSelecionado && (
-        <ModalEditarAcompanhamento
+        <ModalEditarEstoque
           isOpen={isModalOpen}
           produto={produtoSelecionado}
           onSave={handleSave}

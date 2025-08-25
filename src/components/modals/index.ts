@@ -5,4 +5,8 @@ export { ModalDetalhesProduto } from './ModalDetalhesProduto';
 export { ModalCadastroInsumo } from './ModalCadastroInsumo';
 export { ModalCriarCupom } from './ModalCriarCupom';
 export { ModalCriarUsuario } from './ModalCriarUsuario';
+export { ModalSelecaoAvatar } from './ModalSelecaoAvatar';
+export { AvatarItem } from './AvatarItem';
+export { AvatarList } from './AvatarList';
+export { avataresDisponiveis, type Avatar } from './avatarData';
 export { CustomModal, CustomModalHeader, CustomModalBody, CustomModalFooter } from './CustomModal'; 

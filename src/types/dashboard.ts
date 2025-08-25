@@ -1,3 +1,5 @@
+import { FormaPedidaIconType } from './icons';
+
 export interface KPI {
   titulo: string;
   valor: string;
@@ -33,18 +35,19 @@ export interface EstatisticasGerais {
   pedidosPendentes?: number;
 }
 
-// Novos tipos para os componentes do dashboard
+// Tipos unificados para o dashboard
 export interface FormaPedida {
   nome: string;
   valor: number;
-  icone: string;
-  cor: string;
+  icone: FormaPedidaIconType;
+  cor?: string;
 }
 
 export interface ProdutoVendido {
   nome: string;
   quantidade: number;
   receita: number;
+  posicao?: number;
 }
 
 export interface PedidoEmAndamento {
@@ -53,11 +56,12 @@ export interface PedidoEmAndamento {
   cliente: string;
   status: string;
   total: number;
+  horario?: string;
 }
 
 export interface DashboardData {
   estatisticas: DashboardEstatisticas;
-  formasPedidas: FormaPagamento[];
+  formasPedidas: FormaPedida[];
   produtosVendidos: ProdutoVendido[];
   pedidosEmAndamento: PedidoEmAndamento[];
 }
@@ -78,21 +82,4 @@ export interface FormaPagamento {
   quantidade: number;
   valor: number;
   percentual: number;
-}
-
-export interface ProdutoVendido {
-  id: string;
-  nome: string;
-  quantidade: number;
-  valor: number;
-  categoria: string;
-}
-
-export interface PedidoEmAndamento {
-  id: string;
-  numero: string;
-  cliente: string;
-  status: string;
-  valor: number;
-  horario: string;
 } 

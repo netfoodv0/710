@@ -1,10 +1,10 @@
 /* Estilos específicos para a página de Atendimento - sem margens */
 .atendimento-page {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  height: 100vh !important;
-  overflow: hidden !important;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .atendimento-page * {
@@ -13,27 +13,27 @@
 
 /* Garantir que o body e html não tenham margens */
 body.atendimento-body {
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 /* Remover margens de todos os elementos filhos */
 .atendimento-page .whatsapp-interface {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Prevenir scroll horizontal */
 html, body {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Garantir que a página de atendimento não cause overflow */
 #root {
-  overflow-x: hidden !important;
-  max-width: 100vw !important;
+  overflow-x: hidden;
+  max-width: 100vw;
 }

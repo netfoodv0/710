@@ -8,9 +8,9 @@ interface ModalProdutoScoreProps {
 
 export function ModalProdutoScore({ scoreQualidade }: ModalProdutoScoreProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 80) return 'text-purple-600';
+    if (score >= 60) return 'text-gray-600';
+    return 'text-gray-500';
   };
 
   return (
@@ -30,8 +30,8 @@ export function ModalProdutoScore({ scoreQualidade }: ModalProdutoScoreProps) {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
                 className={`h-2 rounded-full ${
-                  (scoreQualidade?.total || 0) >= 80 ? 'bg-green-500' :
-                  (scoreQualidade?.total || 0) >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                  (scoreQualidade?.total || 0) >= 80 ? 'bg-purple-500' :
+                  (scoreQualidade?.total || 0) >= 60 ? 'bg-gray-500' : 'bg-gray-400'
                 }`}
                 style={{ width: `${scoreQualidade?.total || 0}%` }}
               ></div>
@@ -69,7 +69,7 @@ export function ModalProdutoScore({ scoreQualidade }: ModalProdutoScoreProps) {
             <div className="space-y-2">
               {scoreQualidade.sugestoes.map((sugestao, index) => (
                 <div key={index} className="flex items-center text-sm text-gray-600">
-                  <AlertTriangle size={16} className="mr-2 text-yellow-500" />
+                  <AlertTriangle size={16} className="mr-2 text-gray-500" />
                   {sugestao}
                 </div>
               ))}

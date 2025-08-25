@@ -20,3 +20,6 @@ export { Motoboys } from './Usuarios/Motoboys';
 // Páginas de autenticação
 export { Login } from './Login';
 export { Cadastro } from './Cadastro';
+export { default as LandingPage } from './LandingPage';
+export { default as LandingPageMobile } from './LandingPageMobile';
+export { default as LandingPageDesktop } from './LandingPageDesktop';

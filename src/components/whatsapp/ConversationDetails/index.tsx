@@ -147,14 +147,14 @@ export default function ConversationDetails() {
               </div>
               <div className="flex items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${
-                  formatLastSeen() === 'online' ? 'bg-green-500' : 'bg-gray-500'
+                  formatLastSeen() === 'online' ? 'bg-purple-500' : 'bg-gray-500'
                 }`}></div>
                 <span className="text-[#aebac1] text-xs">
                   {formatLastSeen()}
                 </span>
                 {autoUpdating && (
                   <div className="flex items-center gap-1 ml-2">
-                    <div className="w-1 h-1 bg-blue-500 rounded-full animate-pulse"></div>
+                    <div className="w-1 h-1 bg-purple-500 rounded-full animate-pulse"></div>
                     <span className="text-blue-400 text-xs">atualizando</span>
                   </div>
                 )}
@@ -324,7 +324,7 @@ export default function ConversationDetails() {
             <button 
               onClick={handleSendMessage}
               disabled={!hasSelectedConversation}
-              className="p-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-500 rounded-full text-white transition-colors"
+              className="p-2 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-500 rounded-full text-white transition-colors"
             >
               <Send className="w-5 h-5" />
             </button>

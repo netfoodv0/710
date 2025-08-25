@@ -66,24 +66,26 @@ export const WhatsAppConnection: React.FC<WhatsAppConnectionProps> = ({ onConnec
         </div>
         
         {/* Status Indicator */}
-        <div className={`w-3 h-3 rounded-full ${
-          connectionState.isConnected ? 'bg-green-500' : 
-          connectionState.isConnecting ? 'bg-yellow-500' : 'bg-red-500'
-        }`} />
+        <div className="flex items-center gap-2">
+          <div className={`w-3 h-3 rounded-full ${
+            connectionState.isConnected ? 'bg-purple-500' :
+            connectionState.isConnecting ? 'bg-gray-500' : 'bg-gray-400'
+          }`} />
+          <span className="text-sm text-gray-600">
+            {connectionState.isConnected ? 'Conectado' :
+             connectionState.isConnecting ? 'Conectando...' : 'Desconectado'}
+          </span>
+        </div>
       </div>
 
       {/* Backend Connection Status */}
       <div className="mb-4">
-        <div className={`flex items-center gap-2 p-2 rounded-lg text-xs ${
-          isBackendConnected 
-            ? 'text-green-600 bg-green-50' 
-            : 'text-red-600 bg-red-50'
-        }`}>
-          <div className={`w-2 h-2 rounded-full ${
-            isBackendConnected ? 'bg-green-500' : 'bg-red-500'
+        <div className="flex items-center gap-2">
+          <div className={`w-3 h-3 rounded-full ${
+            isBackendConnected ? 'bg-purple-500' : 'bg-gray-400'
           }`} />
-          <span>
-            Backend: {isBackendConnected ? 'Conectado' : 'Desconectado'}
+          <span className="text-sm text-gray-600">
+            {isBackendConnected ? 'Backend OK' : 'Backend Offline'}
           </span>
         </div>
       </div>
@@ -187,7 +189,7 @@ export const WhatsAppConnection: React.FC<WhatsAppConnectionProps> = ({ onConnec
               placeholder="Número (ex: 5511999999999)"
               value={testNumber}
               onChange={(e) => setTestNumber(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
             
             <textarea
@@ -195,7 +197,7 @@ export const WhatsAppConnection: React.FC<WhatsAppConnectionProps> = ({ onConnec
               value={testMessage}
               onChange={(e) => setTestMessage(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
             />
             
             <button

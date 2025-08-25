@@ -1,6 +1,6 @@
 # Ícones Personalizados
 
-Este diretório contém componentes de ícones personalizados criados especificamente para o projeto iFood Dashboard.
+Este diretório contém componentes de ícones personalizados criados especificamente para o projeto Sistema Voult.
 
 ## Ícones Disponíveis
 

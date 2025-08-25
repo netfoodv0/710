@@ -141,8 +141,8 @@ export const GraficoPerformance: React.FC<GraficoPerformanceProps> = ({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-blue-600"></div>
-            <span className="text-xs text-blue-600 lowercase">
+            <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+            <span className="text-xs text-gray-600 lowercase">
               {period === 'monthly' ? 'mês anterior' : 'semana anterior'}
             </span>
           </div>

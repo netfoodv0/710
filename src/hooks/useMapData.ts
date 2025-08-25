@@ -28,7 +28,7 @@ const generateMockData = (): MapMarker[] => {
   markers.push({
     id: 'loja-1',
     position: basePosition,
-    title: 'NetFood - Loja Principal',
+            title: 'Sistema Voult - Loja Principal',
     type: 'loja'
   });
 

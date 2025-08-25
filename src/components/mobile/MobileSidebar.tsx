@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../Sidebar.css';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   X,
@@ -9,7 +8,7 @@ import {
   ChevronDown,
   ChevronRight
 } from 'lucide-react';
-import { SettingsIcon, ClockIcon, ReportIcon, CouponIcon, HistoryIcon, OrderIcon, DashboardIcon, MenuIcon, SupportIcon, MapIcon, UsersIcon, BagIcon, EstoqueIcon, ModalIcon } from '../ui';
+import { SettingsIcon, ClockIcon, ReportIcon, CouponIcon, HistoryIcon, OrderIcon, DashboardIcon, MenuIcon, SupportIcon, MapIcon, UsersIcon, BagIcon, EstoqueIcon, ModalIcon, OrganogramaIcon } from '../ui';
 import { useAuth } from '../../hooks';
 
 interface MobileSidebarProps {
@@ -70,6 +69,11 @@ const menuItems = [
         icon: UsersIcon
       }
     ]
+  },
+  {
+    path: '/organograma',
+    label: 'Organograma',
+    icon: OrganogramaIcon
   },
   {
     path: '/horarios',
@@ -265,14 +269,14 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                 
                 return (
                   <li key={item.path}>
-                    <div className="sidebar-item-container">
+                    <div className="w-full">
                       <Link
                         to={hasSubItems ? '#' : item.path}
                         onClick={() => handleItemClick(item)}
-                        className={`sidebar-menu-item ${hasSubItems ? 'has-dropdown' : ''} flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 ${
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded transition-all duration-200 ${
                           isActive 
-                            ? 'text-[#8217d5] sidebar-item-active' 
-                            : 'text-[#525866] hover:bg-gray-50 sidebar-item-inactive'
+                            ? 'text-[#8217d5] bg-purple-50' 
+                            : 'text-[#525866] hover:bg-gray-50'
                         }`}
                       >
                         <Icon className="w-6 h-6" color={isActive ? "#8217d5" : "#525866"} />
@@ -285,7 +289,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                     
                     {/* Sublinks */}
                     {hasSubItems && itemExpanded && (
-                      <ul className="sidebar-submenu expanded mt-1 space-y-1">
+                      <ul className="mt-1 space-y-1">
                         {item.subItems.map((subItem) => {
                           const isSubActive = isSubItemActive(subItem);
                           
@@ -294,10 +298,10 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                               <Link
                                 to={subItem.path}
                                 onClick={onClose}
-                                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${
+                                className={`flex items-center gap-3 px-3 py-2 rounded transition-all duration-200 ${
                                   isSubActive 
-                                    ? 'text-[#8217d5] sidebar-item-active' 
-                                    : 'text-[#525866] hover:bg-gray-50 sidebar-item-inactive'
+                                    ? 'text-[#8217d5] bg-purple-50' 
+                                    : 'text-[#525866] hover:bg-gray-50'
                                 }`}
                               >
                                 <div className="w-6 h-6 flex-shrink-0"></div>
@@ -318,7 +322,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           <div className="p-4 border-t border-gray-200">
             <div className="bg-green-50 rounded-lg p-3 mb-4">
               <div className="flex items-center gap-2 mb-1">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
                 <span className="text-sm font-medium text-[#525866]">Sistema Online</span>
               </div>
               <p className="text-xs text-[#525866]">Última sincronização: agora</p>
@@ -326,7 +330,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             
             <button
               onClick={logout}
-              className="flex items-center gap-3 w-full px-3 py-3 text-[#525866] hover:bg-red-50 rounded-lg transition-colors"
+              className="flex items-center gap-3 w-full px-3 py-3 text-[#525866] hover:bg-red-50 rounded transition-colors"
             >
                               <LogOut className="w-6 h-6 text-[#525866]" />
               <span className="font-medium">Sair</span>

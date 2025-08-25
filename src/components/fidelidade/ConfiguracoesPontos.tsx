@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFidelidade } from '../../context/fidelidadeContext';
-import { TextField } from '@mui/material';
-import { motion } from 'motion/react';
+// TextField component removed - using HTML input instead
+import { motion } from 'framer-motion';
 import { BagIcon, UsersIcon, RevenueIcon } from '../ui';
 
 export function ConfiguracoesPontos() {
@@ -31,51 +31,44 @@ export function ConfiguracoesPontos() {
 
         {/* Taxa de Conversão */}
         <motion.div 
-          className={`border rounded-lg border-gray-300 min-h-[330px] p-6 ${sistemaPontosAtivo ? 'bg-purple-50' : 'bg-gray-100'}`}
+          className={`border rounded-lg border-gray-300 min-h-[330px] p-6 flex flex-col justify-between ${sistemaPontosAtivo ? 'bg-purple-50' : 'bg-gray-100'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <h4 className="font-semibold text-gray-800 mb-3">Taxa de Conversão</h4>
-          <p className="text-sm text-gray-600 mb-4">
-            Defina quantos pontos seus clientes ganham a cada R$ 1,00 gasto na sua loja.
-          </p>
-          <p className="text-sm text-gray-500 mb-4 leading-relaxed">
-            A taxa de conversão é o coração do seu sistema de fidelidade. Quanto maior a taxa, 
-            mais atrativo será para seus clientes. Uma taxa de 1:1 significa que para cada real 
-            gasto, o cliente ganha 1 ponto. Considere o valor médio dos seus produtos para 
-            definir uma taxa que seja atrativa e sustentável para o seu negócio.
-          </p>
-          <div className="flex space-x-4">
+          <div>
+            <h4 className="font-semibold text-gray-800 mb-3">Taxa de Conversão</h4>
+            <p className="text-sm text-gray-600 mb-4">
+              Defina quantos pontos seus clientes ganham a cada R$ 1,00 gasto na sua loja.
+            </p>
+            <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+              A taxa de conversão é o coração do seu sistema de fidelidade. Quanto maior a taxa, 
+              mais atrativo será para seus clientes. Uma taxa de 1:1 significa que para cada real 
+              gasto, o cliente ganha 1 ponto. Considere o valor médio dos seus produtos para 
+              definir uma taxa que seja atrativa e sustentável para o seu negócio.
+            </p>
+          </div>
+          <div className="flex space-x-4 mb-4">
             <div className="flex-1">
-              <TextField
-                label="Pontos por R$1,00"
-                type="number"
-                inputProps={{ min: 1, max: 100 }}
-                value={pontosPorReal}
-                onChange={(e) => setPontosPorReal(Number(e.target.value))}
-                fullWidth
-                size="small"
-                disabled={!sistemaPontosAtivo}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: '#ffffff',
-                    '& input': {
-                      color: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af'
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderWidth: '1px',
-                      borderColor: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af'
-                    }
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af',
-                    '&.Mui-focused': {
-                      color: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af'
-                    }
-                  }
-                }}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Pontos por R$1,00
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={pontosPorReal}
+                  onChange={(e) => setPontosPorReal(Number(e.target.value))}
+                  disabled={!sistemaPontosAtivo}
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    sistemaPontosAtivo 
+                      ? 'border-gray-300 text-purple-600' 
+                      : 'border-gray-200 text-gray-400 bg-gray-100'
+                  }`}
+                  placeholder="Ex: 1"
+                />
+              </div>
             </div>
             <div className="flex items-center">
               <button
@@ -151,51 +144,44 @@ export function ConfiguracoesPontos() {
 
         {/* Pontos de Boas-vindas */}
         <motion.div 
-          className={`border rounded-lg border-gray-300 min-h-[330px] p-6 ${sistemaPontosAtivo ? 'bg-purple-50' : 'bg-gray-100'}`}
+          className={`border rounded-lg border-gray-300 min-h-[330px] p-6 flex flex-col justify-between ${sistemaPontosAtivo ? 'bg-purple-50' : 'bg-gray-100'}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <h4 className="font-semibold text-gray-800 mb-3">Pontos de Boas-vindas</h4>
-          <p className="text-sm text-gray-600 mb-4">
-            Defina quantos pontos seus clientes recebem ao se cadastrarem na sua loja.
-          </p>
-          <p className="text-sm text-gray-500 mb-4 leading-relaxed">
-            Os pontos de boas-vindas são uma estratégia poderosa para atrair novos clientes. 
-            Ao oferecer pontos logo no cadastro, você cria um incentivo imediato para que 
-            façam a primeira compra. É uma forma de mostrar que valoriza novos clientes 
-            e os convida a experimentar seus produtos desde o início.
-          </p>
-          <div className="flex items-center space-x-3">
+          <div>
+            <h4 className="font-semibold text-gray-800 mb-3">Pontos de Boas-vindas</h4>
+            <p className="text-sm text-gray-600 mb-4">
+              Defina quantos pontos seus clientes recebem ao se cadastrarem na sua loja.
+            </p>
+            <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+              Os pontos de boas-vindas são uma estratégia poderosa para atrair novos clientes. 
+              Ao oferecer pontos logo no cadastro, você cria um incentivo imediato para que 
+              façam a primeira compra. É uma forma de mostrar que valoriza novos clientes 
+              e os convida a experimentar seus produtos desde o início.
+            </p>
+          </div>
+          <div className="flex items-center space-x-3 mb-4">
             <div className="flex-1">
-              <TextField
-                label="Pontos ao se cadastrar"
-                type="number"
-                inputProps={{ min: 0, max: 1000 }}
-                value={pontosBoasVindas}
-                onChange={(e) => setPontosBoasVindas(Number(e.target.value))}
-                fullWidth
-                size="small"
-                disabled={!sistemaPontosAtivo}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: '#ffffff',
-                    '& input': {
-                      color: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af'
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderWidth: '1px',
-                      borderColor: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af'
-                    }
-                  },
-                  '& .MuiInputLabel-root': {
-                    color: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af',
-                    '&.Mui-focused': {
-                      color: sistemaPontosAtivo ? '#8b5cf6' : '#9ca3af'
-                    }
-                  }
-                }}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Pontos ao se cadastrar
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="1000"
+                  value={pontosBoasVindas}
+                  onChange={(e) => setPontosBoasVindas(Number(e.target.value))}
+                  disabled={!sistemaPontosAtivo}
+                  className={`w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent ${
+                    sistemaPontosAtivo 
+                      ? 'border-gray-300 text-purple-600' 
+                      : 'border-gray-200 text-gray-400 bg-gray-100'
+                  }`}
+                  placeholder="Ex: 100"
+                />
+              </div>
             </div>
             <button
               onClick={() => console.log('Salvando pontos de boas-vindas:', pontosBoasVindas)}

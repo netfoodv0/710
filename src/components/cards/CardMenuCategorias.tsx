@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tag, Package, Coffee, Pizza, Cake, Wine, Utensils, Plus } from 'lucide-react';
-import { DragIcon } from '../ui';
+import { DragIcon, ActionButton } from '../ui';
 import { MenuAcoesCategoria } from '../menus/MenuAcoesCategoria';
 import { Categoria } from '../../types/categoria';
 import { DndContext, DragEndEvent, closestCenter, MeasuringStrategy } from '@dnd-kit/core';
@@ -106,11 +106,11 @@ const SortableItem = React.memo(function SortableItem({
       style={style}
       className={`sortable-categoria ${isDragging ? 'dragging' : ''}`}
     >
-      <div className={`flex-shrink-0 lg:w-full w-auto flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 relative hover:bg-gray-50 ${
+      <div className={`flex-shrink-0 lg:w-full w-auto flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 relative hover:bg-gray-50 border-dashboard ${
         categoriaCompleta?.status === 'inativo' 
           ? 'bg-gray-50 opacity-75' 
           : ''
-      }`} style={{ borderColor: '#cfd1d3' }}>
+      }`}>
         {/* Ícone de arrasto */}
         <div 
           {...attributes} 
@@ -145,39 +145,15 @@ const SortableItem = React.memo(function SortableItem({
             onMouseDown={(e) => e.stopPropagation()} // ✅ CRÍTICO: Bloquear drag no toggle
             onTouchStart={(e) => e.stopPropagation()} // ✅ CRÍTICO: Bloquear drag no mobile
           >
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault(); // Evitar comportamento padrão
-                e.stopPropagation(); // Evitar propagação para elementos pais
+            <FormSwitch
+              name={`status-${categoria}`}
+              label=""
+              checked={categoriaCompleta.status === 'ativo'}
+              onChange={(checked) => {
                 onToggleStatus(categoriaCompleta);
               }}
-              onMouseDown={(e) => {
-                e.preventDefault(); // ✅ CRÍTICO: Evitar que o mouseDown inicie o drag
-                e.stopPropagation();
-              }}
-              onTouchStart={(e) => {
-                e.preventDefault(); // ✅ CRÍTICO: Evitar que o touch inicie o drag
-                e.stopPropagation();
-              }}
-              className={`
-                relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 flex-shrink-0
-                ${categoriaCompleta.status === 'ativo'
-                  ? 'bg-purple-600 hover:bg-purple-700' 
-                  : 'bg-gray-300 hover:bg-gray-400'
-                }
-                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2
-                cursor-pointer z-10
-              `}
-              title={categoriaCompleta.status === 'ativo' ? 'Clique para desativar categoria' : 'Clique para ativar categoria'}
-            >
-              <span
-                className={`
-                  inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 shadow-lg
-                  ${categoriaCompleta.status === 'ativo' ? 'translate-x-6' : 'translate-x-1'}
-                `}
-              />
-            </button>
+              className="mb-0"
+            />
             <span className="text-xs text-gray-600 font-medium w-12 text-center">
               {categoriaCompleta.status === 'ativo' ? 'Ativo' : 'Inativo'}
             </span>
@@ -243,20 +219,20 @@ export function CardMenuCategorias({
   };
 
   return (
-    <div className="bg-white border rounded-lg p-4" style={{ borderColor: 'rgb(207 209 211)' }}>
-      <div className="bg-white border rounded-lg p-4 mb-4" style={{ borderColor: 'rgb(207 209 211)' }}>
+    <div className={`bg-white border rounded-lg p-4 border-dashboard`}>
+      <div className="bg-white border rounded-lg p-4 mb-4 border-dashboard">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold text-gray-900">Categorias</h3>
           </div>
           {onNovaCategoria && (
-            <button
+            <ActionButton
+              label="Nova categoria"
               onClick={onNovaCategoria}
-              className="inline-flex items-center gap-1.5 px-3 h-9 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors duration-200"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Nova categoria
-            </button>
+              variant="primary"
+              size="sm"
+              icon={<Plus className="w-3.5 h-3.5" />}
+            />
           )}
         </div>
       </div>

@@ -7,12 +7,12 @@ import { HistoricoModal } from '../features/historico/components';
 import { NotificationToast } from '../components/NotificationToast';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { PageHeader, DataTable, DataTableColumn } from '../components/ui';
-import { SkeletonFilters, SkeletonTable } from '../components/ui/SkeletonComponents';
+
 
 import { Pedido } from '../types';
 import { useHistoricoPedidos } from '../hooks/useHistoricoPedidos';
 
-export function HistoricoPedidos() {
+export default function HistoricoPedidos() {
   const navigate = useNavigate();
   const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -58,14 +58,14 @@ export function HistoricoPedidos() {
 
   const handleExport = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true); // This line was removed as per the new_code
       // Simular exportação como na página de relatórios
       await new Promise(resolve => setTimeout(resolve, 1000));
       showSuccess('Histórico exportado com sucesso!');
     } catch (err) {
       showError('Erro ao exportar histórico');
     } finally {
-      setLoading(false);
+      // setLoading(false); // This line was removed as per the new_code
     }
   }, [showSuccess, showError]);
 
@@ -146,9 +146,9 @@ export function HistoricoPedidos() {
       label: 'Status',
       sortable: true,
       render: (produto) => {
-        const statusColor = produto.status === 'entregue' ? 'bg-green-100 text-green-800' : 
-                           produto.status === 'cancelado' ? 'bg-red-100 text-red-800' : 
-                           'bg-blue-100 text-blue-800';
+        const statusColor = produto.status === 'entregue' ? 'bg-purple-100 text-purple-800' :
+        produto.status === 'cancelado' ? 'bg-gray-100 text-gray-800' :
+        'bg-purple-100 text-purple-800';
         
         return (
           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
@@ -228,7 +228,7 @@ export function HistoricoPedidos() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen bg-dashboard">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -259,11 +259,11 @@ export function HistoricoPedidos() {
         <div className="px-6 pt-6 pb-4">
 
 
-          {/* Renderização condicional com skeleton */}
+          {/* Renderização condicional com loading */}
           {loadingHistorico.data ? (
-            <div className="space-y-3">
-              <SkeletonFilters />
-              <SkeletonTable rows={10} columns={7} showHeader={true} />
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
+              <p className="mt-3 text-sm text-gray-600">Carregando...</p>
             </div>
           ) : (
             <DataTable

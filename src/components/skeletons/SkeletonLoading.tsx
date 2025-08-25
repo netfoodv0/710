@@ -6,50 +6,43 @@ interface SkeletonLoadingProps {
 }
 
 export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'historico', rows = 5 }) => {
+  // Componente base para skeleton items
+  const SkeletonItem = ({ className = "h-4 bg-gray-200 rounded w-20" }: { className?: string }) => (
+    <div className={className}></div>
+  );
+
+  // Componente para cards de sessão
+  const SessionCard = () => (
+    <div className="bg-white border border-gray-300 h-[62px] rounded-t-lg mb-3">
+      <div className="bg-white px-3 py-2 h-full relative rounded-t-lg">
+        <div className="bg-gray-200 rounded-full w-6 h-6 absolute top-2 right-2"></div>
+        <SkeletonItem className="h-4 bg-gray-200 rounded w-20 mb-1" />
+        <SkeletonItem className="h-4 bg-gray-200 rounded w-16" />
+      </div>
+    </div>
+  );
+
   // Fallback específico para pedidos
   if (type === 'pedidos') {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen bg-gray-100">
         {/* Header skeleton */}
-        <div className="bg-white/10 backdrop-blur-xl border-b border-white/30 h-[73.03px] px-6">
+        <div className="bg-white/10 backdrop-blur-xl border-b border-white/30 h-[73px] px-6">
           <div className="flex items-center justify-between h-full">
             <div className="flex items-center gap-4">
-              <div className="h-6 bg-gray-200 rounded animate-pulse w-20"></div>
-              <div className="h-10 bg-gray-200 rounded animate-pulse w-80"></div>
+              <SkeletonItem className="h-6 bg-gray-200 rounded w-20" />
+              <SkeletonItem className="h-10 bg-gray-200 rounded w-80" />
             </div>
-            <div className="h-10 bg-gray-200 rounded animate-pulse w-40"></div>
+            <SkeletonItem className="h-10 bg-gray-200 rounded w-40" />
           </div>
         </div>
         
         {/* Content skeleton - Cards de sessão */}
         <div className="px-6 pt-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card Em Análise */}
-            <div className="bg-white border h-[62px] rounded-t-lg mb-3 animate-pulse" style={{ borderColor: 'rgb(207, 209, 211)' }}>
-              <div className="bg-white px-3 py-2 h-full relative rounded-t-lg">
-                <div className="bg-gray-200 rounded-full w-6 h-6 absolute top-2 right-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-20 mb-1"></div>
-                <div className="h-4 bg-gray-200 rounded w-16"></div>
-              </div>
-            </div>
-
-            {/* Card Em Preparo */}
-            <div className="bg-white border h-[62px] rounded-t-lg mb-3 animate-pulse" style={{ borderColor: 'rgb(207, 209, 211)' }}>
-              <div className="bg-white px-3 py-2 h-full relative rounded-t-lg">
-                <div className="bg-gray-200 rounded-full w-6 h-6 absolute top-2 right-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-20 mb-1"></div>
-                <div className="h-4 bg-gray-200 rounded w-16"></div>
-              </div>
-            </div>
-
-            {/* Card Em Entrega */}
-            <div className="bg-white border h-[62px] rounded-t-lg mb-3 animate-pulse" style={{ borderColor: 'rgb(207, 209, 211)' }}>
-              <div className="bg-white px-3 py-2 h-full relative rounded-t-lg">
-                <div className="bg-gray-200 rounded-full w-6 h-6 absolute top-2 right-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-20 mb-1"></div>
-                <div className="h-4 bg-gray-200 rounded w-16"></div>
-              </div>
-            </div>
+            <SessionCard />
+            <SessionCard />
+            <SessionCard />
           </div>
         </div>
       </div>
@@ -64,10 +57,10 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
         <div className="bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <div className="h-8 bg-gray-200 rounded animate-pulse w-64 mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded animate-pulse w-96"></div>
+              <SkeletonItem className="h-8 bg-gray-200 rounded w-64 mb-2" />
+              <SkeletonItem className="h-4 bg-gray-200 rounded w-96" />
             </div>
-            <div className="h-10 bg-gray-200 rounded animate-pulse w-40"></div>
+            <SkeletonItem className="h-10 bg-gray-200 rounded w-40" />
           </div>
         </div>
         
@@ -77,16 +70,16 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
           <div className="bg-white rounded-lg p-6 mb-6 border border-gray-200">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="flex-1 lg:w-80">
-                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                <SkeletonItem className="h-10 bg-gray-200 rounded-lg" />
               </div>
               <div className="lg:w-80">
-                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                <SkeletonItem className="h-10 bg-gray-200 rounded-lg" />
               </div>
               <div className="lg:w-40">
-                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                <SkeletonItem className="h-10 bg-gray-200 rounded-lg" />
               </div>
               <div className="lg:w-40">
-                <div className="h-10 bg-gray-200 rounded-lg animate-pulse"></div>
+                <SkeletonItem className="h-10 bg-gray-200 rounded-lg" />
               </div>
             </div>
           </div>
@@ -98,7 +91,7 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
               <div className="bg-gray-50 border-b border-gray-200 px-4 py-3">
                 <div className="grid grid-cols-7 gap-4">
                   {['Pedido', 'Cliente', 'Pagamento', 'Status', 'Data/Hora', 'Total', 'Ações'].map((header) => (
-                    <div key={header} className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                    <SkeletonItem key={header} className="h-4 bg-gray-200 rounded w-20" />
                   ))}
                 </div>
               </div>
@@ -109,7 +102,7 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
                   <div key={rowIndex} className="px-4 py-3">
                     <div className="grid grid-cols-7 gap-4 items-center">
                       {Array.from({ length: 7 }).map((_, colIndex) => (
-                        <div key={colIndex} className="h-4 bg-gray-200 rounded w-20 animate-pulse"></div>
+                        <SkeletonItem key={colIndex} className="h-4 bg-gray-200 rounded w-20" />
                       ))}
                     </div>
                   </div>
@@ -121,12 +114,12 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
             <div className="bg-gray-50 px-4 py-4 border-t border-gray-200">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className="h-4 bg-gray-200 rounded w-48 animate-pulse"></div>
-                  <div className="h-10 bg-gray-200 rounded w-32 animate-pulse"></div>
+                  <SkeletonItem className="h-4 bg-gray-200 rounded w-48" />
+                  <SkeletonItem className="h-10 bg-gray-200 rounded w-32" />
                 </div>
                 <div className="flex items-center gap-2">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="h-8 bg-gray-200 rounded w-8 animate-pulse"></div>
+                    <SkeletonItem key={i} className="h-8 bg-gray-200 rounded w-8" />
                   ))}
                 </div>
               </div>
@@ -142,11 +135,11 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
       <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50" style={{ height: '73px' }}>
+            <thead className="bg-gray-50 h-[73px]">
               <tr>
                 {['Produto', 'Categoria', 'Preço', 'Status', 'Vendas', 'Criado em', 'Ações'].map((header) => (
-                  <th key={header} className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style={{ height: '73px' }}>
-                    <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <th key={header} className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <SkeletonItem className="h-4 bg-gray-200 rounded" />
                   </th>
                 ))}
               </tr>
@@ -156,30 +149,30 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="h-8 w-8 bg-gray-200 rounded animate-pulse mr-3"></div>
+                      <div className="h-8 w-8 bg-gray-200 rounded mr-3"></div>
                       <div>
-                        <div className="h-4 bg-gray-200 rounded animate-pulse w-32 mb-2"></div>
-                        <div className="h-3 bg-gray-200 rounded animate-pulse w-48"></div>
+                        <SkeletonItem className="h-4 bg-gray-200 rounded w-32 mb-2" />
+                        <SkeletonItem className="h-3 bg-gray-200 rounded w-48" />
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse w-20"></div>
+                    <SkeletonItem className="h-4 bg-gray-200 rounded w-20" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse w-16"></div>
+                    <SkeletonItem className="h-4 bg-gray-200 rounded w-16" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-6 bg-gray-200 rounded animate-pulse w-16"></div>
+                    <SkeletonItem className="h-6 bg-gray-200 rounded w-16" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse w-12"></div>
+                    <SkeletonItem className="h-4 bg-gray-200 rounded w-12" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse w-24"></div>
+                    <SkeletonItem className="h-4 bg-gray-200 rounded w-24" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse w-8 ml-auto"></div>
+                    <SkeletonItem className="h-4 bg-gray-200 rounded w-8 ml-auto" />
                   </td>
                 </tr>
               ))}
@@ -196,13 +189,13 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
         {Array.from({ length: rows }).map((_, index) => (
           <div key={index} className="bg-white border border-slate-200 rounded-lg p-4">
             <div className="flex items-center justify-between mb-4">
-              <div className="h-6 bg-gray-200 rounded animate-pulse w-32"></div>
-              <div className="h-8 w-8 bg-gray-200 rounded animate-pulse"></div>
+              <SkeletonItem className="h-6 bg-gray-200 rounded w-32" />
+              <div className="h-8 w-8 bg-gray-200 rounded"></div>
             </div>
             <div className="space-y-2">
-              <div className="h-4 bg-gray-200 rounded animate-pulse w-full"></div>
-              <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2"></div>
+              <SkeletonItem className="h-4 bg-gray-200 rounded w-full" />
+              <SkeletonItem className="h-4 bg-gray-200 rounded w-3/4" />
+              <SkeletonItem className="h-4 bg-gray-200 rounded w-1/2" />
             </div>
           </div>
         ))}
@@ -217,13 +210,13 @@ export const SkeletonLoading: React.FC<SkeletonLoadingProps> = ({ type = 'histor
           <div key={index} className="bg-white border border-slate-200 rounded-lg p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="h-4 bg-gray-200 rounded animate-pulse w-24 mb-2"></div>
-                <div className="h-8 bg-gray-200 rounded animate-pulse w-16"></div>
+                <SkeletonItem className="h-4 bg-gray-200 rounded w-24 mb-2" />
+                <SkeletonItem className="h-8 bg-gray-200 rounded w-16" />
               </div>
-              <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+              <div className="w-8 h-8 bg-gray-200 rounded"></div>
             </div>
             <div className="mt-2">
-              <div className="h-3 bg-gray-200 rounded animate-pulse w-20"></div>
+              <SkeletonItem className="h-3 bg-gray-200 rounded w-20" />
             </div>
           </div>
         ))}

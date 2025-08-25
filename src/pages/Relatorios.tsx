@@ -7,16 +7,18 @@ import { useNavigate } from 'react-router-dom';
 import { PeriodType } from '../components/filters/FiltroPeriodo';
 import { useRelatorios } from '../features/relatorios/hooks/useRelatorios';
 import { PageHeader, CustomDropdown, DropdownOption } from '../components/ui';
-import { ReportNavigation } from '../components/ui/ReportNavigation';
-import { ReportSkeleton } from '../components/ui/ReportSkeleton';
+import Toggle from '../components/ui/Toggle';
+// ReportNavigation removido
+
 import {
   RelatoriosErrorState,
   RelatoriosContent
 } from '../components/relatorios';
 
-export function Relatorios() {
+export default function Relatorios() {
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
+  const [selectedReportType, setSelectedReportType] = useState<string>('geral');
   
   // Opções do dropdown de período
   const periodOptions: DropdownOption[] = [
@@ -24,6 +26,13 @@ export function Relatorios() {
     { value: 'monthly', label: 'Mensal' },
     { value: 'quarterly', label: 'Trimestral' },
     { value: 'yearly', label: 'Anual' }
+  ];
+
+  // Opções para o componente Radio (tipos de relatório)
+  const reportTypeOptions = [
+    { id: 'geral', label: 'Geral' },
+    { id: 'clientes', label: 'Clientes' },
+    { id: 'produtos', label: 'Produtos' }
   ];
 
   // Usar o hook de relatórios para buscar dados reais
@@ -53,6 +62,25 @@ export function Relatorios() {
       setLoading(false);
     }, 500);
   }, []);
+
+  const handleReportTypeChange = useCallback((reportType: string) => {
+    setSelectedReportType(reportType);
+    
+    // Navegar para a página correspondente
+    switch (reportType) {
+      case 'geral':
+        navigate('/relatorios/geral');
+        break;
+      case 'clientes':
+        navigate('/relatorios/clientes');
+        break;
+      case 'produtos':
+        navigate('/relatorios/produtos');
+        break;
+      default:
+        navigate('/relatorios/geral');
+    }
+  }, [navigate]);
 
   const handleExport = useCallback(async () => {
     try {
@@ -99,10 +127,23 @@ export function Relatorios() {
 
         {/* Cabeçalho da página */}
         <PageHeader
-          title="Relatórios Gerais"
-          subtitle="Análise completa do desempenho do restaurante"
+          title=""
+          subtitle=""
           leftContent={
-            <ReportNavigation currentPage="relatorios" />
+            <div className="flex items-center gap-2">
+              {/* Componente Toggle para tipos de relatório */}
+              <div className="flex items-center gap-2">
+                <Toggle
+                  options={reportTypeOptions}
+                  name="reportType"
+                  defaultValue={selectedReportType}
+                  onChange={handleReportTypeChange}
+                  size="small"
+                  color="#8b5cf6"
+                  backgroundColor="#f3f4f6"
+                />
+              </div>
+            </div>
           }
           rightContent={
             <div className="flex items-center gap-4">
@@ -123,7 +164,7 @@ export function Relatorios() {
                 <button
                   onClick={handleExport}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -133,7 +174,7 @@ export function Relatorios() {
                 <button
                   onClick={handleExport}
                   disabled={loading}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -149,13 +190,13 @@ export function Relatorios() {
         <div className="h-0" />
 
         {/* Content */}
-        <div className="px-6 pt-2 pb-12" style={{ padding: '8px 24px 50px 24px' }}>
+        <div className="px-6 pt-2 pb-12 p-8-24-50-24">
           {/* Loading state apenas para operações específicas */}
           {loading && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                <span className="text-sm">Processando...</span>
+            <div className="space-y-6 mt-4">
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Carregando relatórios...</p>
               </div>
             </div>
           )}
@@ -177,9 +218,14 @@ export function Relatorios() {
             </div>
           )}
 
-                    {/* Conteúdo principal com skeleton loading contextual */}
+          {/* Conteúdo principal com loading */}
           {!dataLoaded || loadingRelatorios ? (
-            <ReportSkeleton type="full" />
+            <div className="space-y-6 mt-4">
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Carregando dados dos relatórios...</p>
+              </div>
+            </div>
           ) : (
             <RelatoriosContent dadosFiltrados={dadosRelatorios} selectedPeriod={selectedPeriod} />
           )}

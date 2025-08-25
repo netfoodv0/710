@@ -6,7 +6,7 @@ import { PedidosHeader, PedidosContent } from '../components/pedidos';
 import { PedidosSessaoSkeleton } from '../components/skeletons/PedidosSkeleton';
 import './Pedidos.css';
 
-export function Pedidos() {
+export default function Pedidos() {
   const [state, actions] = usePedidosActions();
   const { pedidos, loading, searchTerm, isCreating } = state;
   const {
@@ -24,7 +24,7 @@ export function Pedidos() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen bg-dashboard">
         {/* Cabeçalho da página */}
         <PedidosHeader
           searchTerm={searchTerm}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, Loader2, FileDown, Plus, ArrowLeft, CheckCircle, Clock, XCircle, AlertTriangle } from 'lucide-react';
+import { Download, Loader2, FileDown, Plus, ArrowLeft, CheckCircle, Clock, XCircle, AlertTriangle, RefreshCw, Printer } from 'lucide-react';
 import { SaveIcon } from '../../../components/ui';
 import { PeriodFilter, PeriodType } from '../../../components/filters/FiltroPeriodo';
 import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';

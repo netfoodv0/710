@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card } from '../../../components/ui/card';
+import { Card } from '../../../components/Card';
 import { Calendar } from 'lucide-react';
 import { CustomDropdown, DropdownOption } from '../../../components/forms/CustomDropdown';
 import { FormSwitch } from '../../../components/forms/FormSwitch';

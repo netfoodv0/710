@@ -1,72 +1,52 @@
 import React, { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { SkeletonLoading } from '../components/skeletons/SkeletonLoading';
-import { ProtectedRoute } from '../components/auth/ProtectedRoute';
-import { LojaProtectedRoute } from '../components/auth/LojaProtectedRoute';
-import { LoadingTest } from '../components/LoadingTest';
+import { ProtectedRoute, LojaProtectedRoute } from '../components/auth';
+
+// Importação estática para OrganogramaPage para resolver problema de 404
+import OrganogramaPage from '../pages/OrganogramaPage';
+import LandingPage from '../pages/LandingPage';
 
 // Lazy loading das páginas para melhor performance
 const Dashboard = lazy(() => import('../pages/Dashboard'));
-const Pedidos = lazy(() => import('../pages/Pedidos').then(module => ({ default: module.Pedidos })));
-const HistoricoPedidos = lazy(() => import('../pages/HistoricoPedidos').then(module => ({ default: module.HistoricoPedidos })));
-const Cardapio = lazy(() => import('../pages/Cardapio').then(module => ({ default: module.Cardapio })));
-const CadastroProduto = lazy(() => import('../pages/CadastroProduto').then(module => ({ default: module.CadastroProduto })));
+const Pedidos = lazy(() => import('../pages/Pedidos'));
+const HistoricoPedidos = lazy(() => import('../pages/HistoricoPedidos'));
+const Cardapio = lazy(() => import('../pages/Cardapio'));
+const CadastroProduto = lazy(() => import('../pages/CadastroProduto'));
 
-const Atendimento = lazy(() => import('../pages/Atendimento').then(module => ({ default: module.Atendimento })));
-const Configuracoes = lazy(() => import('../pages/Configuracoes').then(module => ({ default: module.Configuracoes })));
-const Horarios = lazy(() => import('../pages/Horarios/Horarios').then(module => ({ default: module.Horarios })));
+const Atendimento = lazy(() => import('../pages/Atendimento'));
+const Configuracoes = lazy(() => import('../pages/Configuracoes'));
+const Horarios = lazy(() => import('../pages/Horarios/Horarios'));
 
-const Relatorios = lazy(() => import('../pages/Relatorios').then(module => ({ default: module.Relatorios })));
-const RelatoriosClientes = lazy(() => import('../pages/Relatorios/Clientes').then(module => ({ default: module.RelatoriosClientes })));
-const RelatoriosProdutos = lazy(() => import('../pages/Relatorios/Produtos').then(module => ({ default: module.RelatoriosProdutos })));
-const RelatoriosCupons = lazy(() => import('../pages/Relatorios/Cupons').then(module => ({ default: module.RelatoriosCupons })));
+const Relatorios = lazy(() => import('../pages/Relatorios'));
+const RelatoriosClientes = lazy(() => import('../pages/Relatorios/Clientes'));
+const RelatoriosProdutos = lazy(() => import('../pages/Relatorios/Produtos'));
+const RelatoriosCupons = lazy(() => import('../pages/Relatorios/Cupons'));
 const Fidelidade = lazy(() => import('../pages/Fidelidade'));
-const Usuarios = lazy(() => import('../pages/Usuarios').then(module => ({ default: module.Usuarios })));
-const Operadores = lazy(() => import('../pages/Usuarios/Operadores').then(module => ({ default: module.Operadores })));
-const Motoboys = lazy(() => import('../pages/Usuarios/Motoboys').then(module => ({ default: module.Motoboys })));
-const Mapa = lazy(() => import('../pages/Mapa').then(module => ({ default: module.Mapa })));
-const Estoque = lazy(() => import('../pages/Estoque/Estoque').then(module => ({ default: module.Estoque })));
-const Insumos = lazy(() => import('../pages/Estoque/Insumos').then(module => ({ default: module.Insumos })));
+const Usuarios = lazy(() => import('../pages/Usuarios'));
+const Operadores = lazy(() => import('../pages/Usuarios/Operadores'));
+const Motoboys = lazy(() => import('../pages/Usuarios/Motoboys'));
+const Mapa = lazy(() => import('../pages/Mapa'));
+const Estoque = lazy(() => import('../pages/Estoque/Estoque'));
+const Insumos = lazy(() => import('../pages/Estoque/Insumos'));
 const Acompanhamentos = lazy(() => import('../pages/Estoque/Acompanhamentos'));
 
-const Login = lazy(() => import('../pages/Login').then(module => ({ default: module.Login })));
-const Cadastro = lazy(() => import('../pages/Cadastro').then(module => ({ default: module.Cadastro })));
-
-// Componente de fallback otimizado
-const RouteFallback = ({ type = 'cards' }: { type?: string }) => <SkeletonLoading type={type as any} />;
+const Login = lazy(() => import('../pages/Login'));
+const Cadastro = lazy(() => import('../pages/Cadastro'));
 
 export function AppRoutes() {
   return (
     <Routes>
       {/* Rotas públicas */}
-      <Route path="/login" element={
-        <Suspense fallback={<RouteFallback type="cards" />}>
-          <Login />
-        </Suspense>
-      } />
-      <Route path="/cadastro" element={
-        <Suspense fallback={<RouteFallback type="cards" />}>
-          <Cadastro />
-        </Suspense>
-      } />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/cadastro" element={<Cadastro />} />
       
       {/* Rotas protegidas */}
-      <Route path="/" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="stats" />}>
-              <Dashboard />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
       
       <Route path="/dashboard" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="stats" />}>
-              <Dashboard />
-            </Suspense>
+            <Dashboard />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -74,9 +54,7 @@ export function AppRoutes() {
       <Route path="/pedidos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="pedidos" />}>
-              <Pedidos />
-            </Suspense>
+            <Pedidos />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -84,9 +62,7 @@ export function AppRoutes() {
       <Route path="/historico" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="historico" />}>
-              <HistoricoPedidos />
-            </Suspense>
+            <HistoricoPedidos />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -115,14 +91,10 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-
-      
       <Route path="/atendimento" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Atendimento />
-            </Suspense>
+            <Atendimento />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -130,9 +102,7 @@ export function AppRoutes() {
       <Route path="/configuracoes" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Configuracoes />
-            </Suspense>
+            <Configuracoes />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -140,9 +110,7 @@ export function AppRoutes() {
       <Route path="/horarios" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Horarios />
-            </Suspense>
+            <Horarios />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -150,39 +118,31 @@ export function AppRoutes() {
       <Route path="/relatorios/geral" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="stats" />}>
-              <Relatorios />
-            </Suspense>
+            <Relatorios />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
-
+      
       <Route path="/relatorios/clientes" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="stats" />}>
-              <RelatoriosClientes />
-            </Suspense>
+            <RelatoriosClientes />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
-
+      
       <Route path="/relatorios/produtos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="stats" />}>
-              <RelatoriosProdutos />
-            </Suspense>
+            <RelatoriosProdutos />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
-
+      
       <Route path="/cupons" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="stats" />}>
-              <RelatoriosCupons />
-            </Suspense>
+            <RelatoriosCupons />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -190,9 +150,7 @@ export function AppRoutes() {
       <Route path="/fidelidade" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Fidelidade />
-            </Suspense>
+            <Fidelidade />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -200,9 +158,7 @@ export function AppRoutes() {
       <Route path="/usuarios" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Usuarios />
-            </Suspense>
+            <Usuarios />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -210,9 +166,7 @@ export function AppRoutes() {
       <Route path="/usuarios/operadores" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Operadores />
-            </Suspense>
+            <Operadores />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -220,9 +174,7 @@ export function AppRoutes() {
       <Route path="/usuarios/motoboys" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Motoboys />
-            </Suspense>
+            <Motoboys />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -233,9 +185,15 @@ export function AppRoutes() {
        <Route path="/mapa" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Mapa />
-            </Suspense>
+            <Mapa />
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/organograma" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <OrganogramaPage />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -243,9 +201,7 @@ export function AppRoutes() {
       <Route path="/estoque/produtos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Estoque />
-            </Suspense>
+            <Estoque />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -253,9 +209,7 @@ export function AppRoutes() {
       <Route path="/estoque/insumos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Insumos />
-            </Suspense>
+            <Insumos />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -263,9 +217,7 @@ export function AppRoutes() {
       <Route path="/estoque/acompanhamentos" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
-            <Suspense fallback={<RouteFallback type="cards" />}>
-              <Acompanhamentos />
-            </Suspense>
+            <Acompanhamentos />
           </LojaProtectedRoute>
         </ProtectedRoute>
       } />
@@ -273,17 +225,6 @@ export function AppRoutes() {
       {/* Redirecionamento da rota antiga */}
       <Route path="/estoque" element={<Navigate to="/estoque/produtos" replace />} />
       <Route path="/acompanhamentos" element={<Navigate to="/estoque/acompanhamentos" replace />} />
-      
-
-      
-      {/* Rota de teste para o sistema de carregamento */}
-      <Route path="/loading-test" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <LoadingTest />
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
       
       {/* Rota 404 - redireciona para dashboard */}
       <Route path="*" element={<Navigate to="/" replace />} />

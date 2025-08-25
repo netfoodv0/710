@@ -2,7 +2,7 @@
 
 ## 📋 Visão Geral
 
-Este documento descreve as melhorias implementadas na configuração e arquitetura do Firebase do projeto iFood Dashboard.
+Este documento descreve as melhorias implementadas na configuração e arquitetura do Firebase do projeto Sistema Voult.
 
 ## ✨ Melhorias Implementadas
 

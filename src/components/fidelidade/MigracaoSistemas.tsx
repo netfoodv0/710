@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFidelidade } from '../../context/fidelidadeContext';
-import { Button } from '@mui/material';
+// Button component removed - using HTML button instead
 
 export function MigracaoSistemas() {
   const { handleMigracao } = useFidelidade();
@@ -17,21 +17,12 @@ export function MigracaoSistemas() {
           <p className="text-sm text-gray-600 mb-3">
             Transfira o saldo de cashback de todos os clientes para pontos
           </p>
-          <Button 
-            variant="outlined" 
-            size="medium"
+          <button 
             onClick={() => handleMigracao('cashback-para-pontos')}
-            sx={{
-              color: '#8b5cf6',
-              borderColor: '#8b5cf6',
-              '&:hover': {
-                borderColor: '#7c3aed',
-                backgroundColor: 'rgba(139, 92, 246, 0.04)'
-              }
-            }}
+            className="px-4 py-2 border border-purple-500 text-purple-500 rounded hover:bg-purple-50 hover:border-purple-600 transition-colors"
           >
             Iniciar Migração
-          </Button>
+          </button>
         </div>
         
         <div className="border border-gray-200 rounded-lg p-4">
@@ -39,21 +30,12 @@ export function MigracaoSistemas() {
           <p className="text-sm text-gray-600 mb-3">
             Transfira o saldo de pontos de todos os clientes para cashback
           </p>
-          <Button 
-            variant="outlined" 
-            size="medium"
+          <button 
             onClick={() => handleMigracao('pontos-para-cashback')}
-            sx={{
-              color: '#8b5cf6',
-              borderColor: '#8b5cf6',
-              '&:hover': {
-                borderColor: '#7c3aed',
-                backgroundColor: 'rgba(139, 92, 246, 0.04)'
-              }
-            }}
+            className="px-4 py-2 border border-purple-500 text-purple-500 rounded hover:bg-purple-50 hover:border-purple-600 transition-colors"
           >
             Iniciar Migração
-          </Button>
+          </button>
         </div>
       </div>
     </div>

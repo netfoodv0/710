@@ -40,8 +40,8 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="max-w-md w-full bg-white rounded shadow-lg p-6 text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded bg-red-100 mb-4">
-              <AlertTriangle className="h-6 w-6 text-red-600" />
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded bg-gray-100 mb-4">
+              <AlertTriangle className="h-6 w-6 text-gray-600" />
             </div>
             
             <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -76,7 +76,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3 justify-center">
               <button
                 onClick={this.handleRetry}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
     

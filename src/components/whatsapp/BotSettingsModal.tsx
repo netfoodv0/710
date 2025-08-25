@@ -67,7 +67,7 @@ export default function BotSettingsModal({ isOpen, onClose }: BotSettingsModalPr
               <div className="space-y-1">
                 {Array.from(activeChats).map((chatId) => (
                   <div key={chatId} className="flex items-center gap-2 text-green-400 text-xs">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
                     <span>Chat ID: {chatId}</span>
                   </div>
                 ))}
@@ -138,13 +138,13 @@ export default function BotSettingsModal({ isOpen, onClose }: BotSettingsModalPr
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors"
+            className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded transition-colors"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors"
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded transition-colors"
           >
             Salvar
           </button>

@@ -100,7 +100,7 @@ export function MobilePWAInstalled() {
           <div>
             <h3 className="font-semibold text-sm">App Instalado!</h3>
             <p className="text-xs text-green-100">
-              O NetFood foi instalado com sucesso
+              O Sistema Voult foi instalado com sucesso
             </p>
           </div>
         </div>

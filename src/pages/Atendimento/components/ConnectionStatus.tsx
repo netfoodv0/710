@@ -12,18 +12,17 @@ export const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
   return (
     <div className="absolute top-4 right-4 flex flex-col gap-2">
       {/* Indicador de status */}
-      <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-        isConnected 
-          ? 'bg-green-600 text-white' 
-          : 'bg-red-600 text-white'
+      <div className={`px-4 py-2 rounded text-white text-sm font-medium ${
+        isConnected ? 'bg-purple-600 text-white'
+        : 'bg-gray-600 text-white'
       }`}>
-        {isConnected ? '🟢 Conectado' : '🔴 Desconectado'}
+        {isConnected ? 'Conectado' : 'Desconectado'}
       </div>
       
       {/* Botão para reconectar */}
       <button
         onClick={onReconnect}
-        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+        className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded transition-colors"
       >
         Reconectar WhatsApp
       </button>

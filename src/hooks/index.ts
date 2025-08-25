@@ -4,7 +4,10 @@ export { useDashboard } from './useDashboard';
 export { useAnalytics } from './useAnalytics';
 export { useNotifications } from './useNotifications';
 export { usePeriodFilter } from './usePeriodFilter';
-export { usePageLoading } from './usePageLoading';
+
+export { useEstatisticasOptimized } from './useEstatisticasOptimized';
+export { useAnimationOptimized, useFadeAnimation, useSlideAnimation } from './useAnimationOptimized';
+export { useFilterOptimized, useTableFilterOptimized } from './useFilterOptimized';
 
 
 // Hooks de produtos
@@ -31,4 +34,4 @@ export { usePagination } from './usePagination';
 export * from './cardapio';
 
 // Hooks de configurações
-export { useConfiguracoesSkeleton } from './useConfiguracoesSkeleton';
+export { useConfiguracoesLoja } from './useConfiguracoesLoja';

@@ -160,7 +160,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   type="email"
                   id="email"
                   className="block w-full pl-10 pr-3 h-10 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
-                  placeholder="suportenetfood@gmail.com"
+                  placeholder="suporte@sistema-voult.com"
                   disabled={isLoading}
                 />
               </div>
@@ -398,7 +398,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
           <button
             type="submit"
             disabled={isLoading || !aceiteTermos}
-            className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full bg-gray-900 text-white py-3 px-4 rounded font-medium hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {isLoading ? (
               <>

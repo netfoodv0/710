@@ -128,7 +128,7 @@ export const SecuritySettings: React.FC = () => {
                 <button
                   onClick={handleCheckMigration}
                   disabled={isMigrating}
-                  className="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 disabled:opacity-50"
                 >
                   Verificar Migração
                 </button>
@@ -136,7 +136,7 @@ export const SecuritySettings: React.FC = () => {
                 <button
                   onClick={handleRunMigration}
                   disabled={isMigrating}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
                 >
                   {isMigrating ? 'Migrando...' : 'Executar Migração'}
                 </button>

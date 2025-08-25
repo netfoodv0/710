@@ -13,7 +13,7 @@ export function AcompanhamentosIcon({ size = 24, color = "#666666", className = 
       height={`${size}px`}
       viewBox="0 -960 960 960"
       width={`${size}px`}
-      className={`sidebar-icon ${className}`}
+      className={`w-6 h-6 ${className}`}
       style={{ fill: color }}
     >
       <path d="M240-120q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM240-600q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Zm480 0q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z"/>

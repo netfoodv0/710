@@ -4,7 +4,7 @@
 
 ## 📖 Visão Geral
 
-Este documento descreve a solução implementada para eliminar a "piscada" na tela durante o carregamento da página de histórico (`/historico`) do dashboard iFood.
+Este documento descreve a solução implementada para eliminar a "piscada" na tela durante o carregamento da página de histórico (`/historico`) do dashboard Sistema Voult.
 
 ## 🎯 Problema Resolvido
 

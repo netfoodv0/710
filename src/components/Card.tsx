@@ -1,29 +1,48 @@
 import React from 'react';
-import { Card as CardBase } from './ui/card';
 import clsx from 'clsx';
 import { FormSwitch } from './forms/FormSwitch';
 import { EditIcon, TrashIcon, DragIcon } from './ui';
 
-export function Card({ title, children, className, actions, noPadding = false }: CardProps) {
-  return (
-    <div className={clsx('card', className)} style={{ borderColor: '#cfd1d3' }}>
-      {(title || actions) && (
-        <div className="flex items-center justify-between p-0 border-b" style={{ borderColor: '#cfd1d3' }}>
-          {title && (
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-          )}
-          {actions && (
-            <div className="flex items-center gap-2">
-              {actions}
-            </div>
-          )}
+export function Card({ 
+  children, 
+  className = '',
+  header,
+  footer,
+  onClick,
+  href
+}: CardProps) {
+  const handleClick = () => {
+    if (onClick) onClick();
+    if (href) window.open(href, '_blank');
+  };
+
+  const cardContent = (
+    <div className={clsx('custom-card', className)}>
+      {header && (
+        <div className="flex items-center justify-between p-0 border-b border-dashboard">
+          {header}
         </div>
       )}
-      <div className={noPadding ? 'p-0' : 'p-0'}>
+      <div className="p-4">
         {children}
       </div>
+      {footer && (
+        <div className="p-4 border-t border-dashboard">
+          {footer}
+        </div>
+      )}
     </div>
   );
+
+  if (onClick || href) {
+    return (
+      <div onClick={handleClick} className="cursor-pointer">
+        {cardContent}
+      </div>
+    );
+  }
+
+  return cardContent;
 }
 
 // Variações específicas do Card
@@ -90,7 +109,7 @@ export function QuickActionCard({
   className?: string;
 }) {
   return (
-    <Card className={clsx('cursor-pointer hover:shadow-md transition-shadow', className)}>
+    <Card className={clsx('cursor-pointer', className)}>
       <button 
         onClick={onClick}
         className="w-full p-0 text-left"
@@ -136,14 +155,14 @@ export function ProductCard({
 }) {
   // Mapear status para boolean ativo
   const ativo = status === 'ativo';
-  
+
   const handleToggleStatus = () => {
     const novoStatus = ativo ? 'inativo' : 'ativo';
     onToggleStatus(novoStatus);
   };
 
   return (
-    <div className={clsx('bg-white border rounded-lg h-[98px] p-3', className)} style={{ borderColor: '#cfd1d3' }}>
+    <div className={clsx('bg-white border rounded-lg h-98 p-3 border-dashboard', className)}>
       <div className="flex items-center gap-3 h-full">
         {/* Toggle de Status e Ícone de Arrastar - Mesma linha */}
         <div className="flex items-center gap-2 flex-shrink-0">
@@ -187,43 +206,40 @@ export function ProductCard({
               />
             ) : (
               <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+                <span className="text-gray-400 text-xs">Sem foto</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* Informações do produto - Centralizadas verticalmente */}
-        <div className="flex-1 min-w-0 flex flex-col justify-center">
-          <h3 className="font-medium text-gray-900 truncate text-sm mb-1">{nome}</h3>
-          <p className="text-sm text-gray-600 font-semibold">R$ {preco.toFixed(2)}</p>
-          {status === 'em_falta' && (
-            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 mt-1">
-              Em falta
-            </span>
-          )}
+        {/* ✅ CORREÇÃO: Informações do produto com layout estável */}
+        <div className="flex-1 min-w-0">
+          <h3 className="text-sm font-medium text-gray-900 truncate mb-1">
+            {nome}
+          </h3>
+          <p className="text-lg font-bold text-gray-900">
+            {new Intl.NumberFormat('pt-BR', {
+              style: 'currency',
+              currency: 'BRL'
+            }).format(preco)}
+          </p>
         </div>
 
-        {/* Ações - Centralizadas verticalmente */}
-        <div className="flex flex-col items-center justify-center gap-1 flex-shrink-0">
-          {/* Ícone editar */}
+        {/* ✅ CORREÇÃO: Botões de ação com layout estável */}
+        <div className="flex items-center gap-2 flex-shrink-0">
           <button
             onClick={onEditar}
-            className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-2 text-gray-400 hover:text-blue-600 transition-colors rounded-lg hover:bg-blue-50"
             title="Editar produto"
           >
-            <EditIcon size={24} color="#6b7280" />
+            <EditIcon size={20} />
           </button>
-
-          {/* Ícone excluir */}
           <button
             onClick={onExcluir}
-            className="p-1 text-gray-400 hover:text-red-600 transition-colors"
+            className="p-2 text-gray-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
             title="Excluir produto"
           >
-            <TrashIcon size={24} color="#6b7280" />
+            <TrashIcon size={20} />
           </button>
         </div>
       </div>

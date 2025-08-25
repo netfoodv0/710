@@ -1,27 +1,55 @@
 import React from 'react';
 import clsx from 'clsx';
-import { CardProps } from '../types';
 
-export function Card({ title, children, className, actions, noPadding = false }: CardProps) {
-  return (
-    <div className={clsx('card', className)} style={{ borderColor: '#cfd1d3' }}>
-      {(title || actions) && (
-        <div className="flex items-center justify-between p-0 border-b" style={{ borderColor: '#cfd1d3' }}>
-          {title && (
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-          )}
-          {actions && (
-            <div className="flex items-center gap-2">
-              {actions}
-            </div>
-          )}
+interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
+  onClick?: () => void;
+  href?: string;
+}
+
+export function Card({ 
+  children, 
+  className = '',
+  header,
+  footer,
+  onClick,
+  href
+}: CardProps) {
+  const handleClick = () => {
+    if (onClick) onClick();
+    if (href) window.open(href, '_blank');
+  };
+
+  const cardContent = (
+    <div className={clsx('custom-card', className)}>
+      {header && (
+        <div className="flex items-center justify-between p-0 border-b border-dashboard">
+          {header}
         </div>
       )}
-      <div className={noPadding ? 'p-0' : 'p-0'}>
+      <div className="p-4">
         {children}
       </div>
+      {footer && (
+        <div className="p-4 border-t border-dashboard">
+          {footer}
+        </div>
+      )}
     </div>
   );
+
+  if (onClick || href) {
+    return (
+      <div onClick={handleClick} className="cursor-pointer">
+        {cardContent}
+      </div>
+    );
+  }
+
+  return cardContent;
 }
 
 // Variações específicas do Card
@@ -88,7 +116,7 @@ export function QuickActionCard({
   className?: string;
 }) {
   return (
-    <Card className={clsx('cursor-pointer hover:shadow-md transition-shadow', className)}>
+    <Card className={clsx('cursor-pointer', className)}>
       <button 
         onClick={onClick}
         className="w-full p-0 text-left"

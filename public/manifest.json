@@ -1,7 +1,7 @@
 {
-  "name": "NETFOOD Dashboard",
-  "short_name": "NETFOOD",
-  "description": "Dashboard de gestão para restaurantes e delivery",
+  "name": "Sistema Voult",
+      "short_name": "Sistema Voult",
+      "description": "Sistema de gestão para restaurantes e delivery",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -20,7 +20,7 @@
   "categories": ["business", "productivity", "food"],
   "shortcuts": [
     {
-      "name": "Dashboard",
+      "name": "Sistema",
       "short_name": "Dashboard",
       "description": "Acessar dashboard principal",
       "url": "/",

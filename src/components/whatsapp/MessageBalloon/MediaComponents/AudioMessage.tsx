@@ -140,7 +140,7 @@ export const AudioMessage: React.FC<AudioMessageProps> = ({ media, body, mediaEr
         <button
           onClick={togglePlayPause}
           disabled={loading}
-          className="flex-shrink-0 w-12 h-12 bg-green-500 hover:bg-green-600 disabled:bg-gray-500 rounded-full flex items-center justify-center transition-colors shadow-lg"
+          className="flex-shrink-0 w-12 h-12 bg-purple-500 hover:bg-purple-600 disabled:bg-gray-500 rounded-full flex items-center justify-center transition-colors shadow-lg"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -178,7 +178,7 @@ export const AudioMessage: React.FC<AudioMessageProps> = ({ media, body, mediaEr
             onClick={handleSeek}
           >
             <div 
-              className="h-full bg-green-500 rounded-full transition-all duration-100 relative"
+              className="h-full bg-purple-500 rounded-full transition-all duration-100 relative"
               style={{ width: `${progress}%` }}
             >
               {/* Indicador de progresso */}

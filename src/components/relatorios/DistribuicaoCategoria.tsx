@@ -30,8 +30,9 @@ export const DistribuicaoCategoria: React.FC<DistribuicaoCategoriaProps> = ({
           >
             {/* Linha verde dinâmica baseada no percentual com efeito de água */}
             <div 
-              className="absolute bottom-0 left-0 right-0 bg-green-500 rounded-b-lg transition-all duration-2000 ease-out"
+              className="absolute bottom-0 left-0 right-0 rounded-b-lg transition-all duration-2000 ease-out"
               style={{ 
+                backgroundColor: '#1ac136',
                 height: `${Math.max(alturasAnimadas[index] || 0, 5)}%`,
                 minHeight: '10px',
                 animation: mostrarAnimacoes && alturasAnimadas[index] > 0
@@ -40,27 +41,7 @@ export const DistribuicaoCategoria: React.FC<DistribuicaoCategoriaProps> = ({
                 transform: `translateY(${alturasAnimadas[index] > 0 ? 0 : 100}%)`,
                 transition: 'transform 0.8s ease-out'
               }}
-            >
-              {/* Bolhas flutuando na água */}
-              {mostrarAnimacoes && alturasAnimadas[index] > 0 && (
-                <>
-                  {[1, 2, 3, 4, 5, 6].map((bolhaIndex) => (
-                    <div 
-                      key={bolhaIndex}
-                      className="absolute rounded-full border-2 border-white"
-                      style={{
-                        width: `${20 - bolhaIndex * 2}px`,
-                        height: `${20 - bolhaIndex * 2}px`,
-                        left: `${20 + bolhaIndex * 10}%`,
-                        bottom: `${20 + bolhaIndex * 10}%`,
-                        zIndex: 8,
-                        animation: `bolhaSubindo${bolhaIndex} ${4 + bolhaIndex}s ease-in-out infinite`
-                      }}
-                    />
-                  ))}
-                </>
-              )}
-            </div>
+            />
                                           
             {/* Nome da categoria */}
             <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">

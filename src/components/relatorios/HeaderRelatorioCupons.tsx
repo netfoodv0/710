@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PeriodType } from '../../components/filters/FiltroPeriodo';
-import { PageHeader } from '../../components/ui';
+import { PageHeader, ActionButton } from '../../components/ui';
 import { ModalCriarCupom } from '../modals/ModalCriarCupom';
 
 interface HeaderRelatorioCuponsProps {
@@ -38,15 +38,17 @@ export const HeaderRelatorioCupons: React.FC<HeaderRelatorioCuponsProps> = ({
         title="Relatório de Cupons"
         subtitle="Análise completa dos cupons, descontos e promoções da sua loja"
         rightContent={
-          <button
+          <ActionButton
+            label="Novo Cupom"
             onClick={handleOpenModal}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Novo Cupom
-          </button>
+            variant="primary"
+            size="md"
+            icon={
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+            }
+          />
         }
       />
       

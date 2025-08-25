@@ -59,7 +59,7 @@ export const ConnectionStatus = memo(({
   }, [isConnected, isConnecting, error, statusMessage]);
 
   return (
-    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${statusInfo.bgColor} ${statusInfo.borderColor}`}>
+    <div className={`flex items-center gap-2 px-3 py-2 rounded border ${statusInfo.bgColor} ${statusInfo.borderColor}`}>
       <div className={statusInfo.color}>
         {statusInfo.icon}
       </div>

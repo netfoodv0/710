@@ -26,40 +26,67 @@ const colorMap: Record<string, string> = {
   red: 'bg-red-50 text-red-600 border-red-200',
 };
 
-export const CardMetrica: React.FC<CardMetricaProps> = ({
-  titulo,
-  valor,
-  variacao,
-  icone,
-  cor,
+export const CardMetrica: React.FC<CardMetricaProps> = ({ 
+  titulo, 
+  valor, 
+  variacao, 
+  icone, 
+  cor = 'bg-blue-100',
+  descricao,
+  onClick,
+  href,
   className = ''
 }) => {
-  const IconComponent = iconMap[icone] || (() => <div className="w-6 h-6" />);
-  const colorClasses = colorMap[cor] || colorMap.green;
+  const isPositive = variacao >= 0;
+  const TrendIcon = isPositive ? TrendingUp : TrendingDown;
+  const trendColor = isPositive ? 'text-green-600' : 'text-red-600';
+  const bgTrendColor = isPositive ? 'bg-green-50' : 'bg-red-50';
 
-  return (
-    <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ padding: '16px', borderColor: 'rgb(207 209 211)' }}>
-      <div className="flex items-center justify-between">
-        <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 mb-1">{titulo}</p>
-          <p className="text-2xl font-bold text-gray-900">{valor}</p>
-          {variacao !== undefined && (
-            <div className="flex items-center mt-2">
-              {variacao >= 0 ? (
-                <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
-              ) : (
-                <TrendingDown className="w-4 h-4 text-red-500 mr-1" />
-              )}
-              <span className={`text-sm font-medium ${variacao >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {variacao >= 0 ? '+' : ''}{variacao.toFixed(1)}%
-              </span>
-            </div>
-          )}
-        </div>
-        <div className={`p-3 rounded-lg border ${colorClasses}`}>
-          <IconComponent />
+  if (!titulo || valor === undefined) {
+    return (
+      <div className={`bg-white border rounded-lg p-4 ${className}`}>
+        <div className="animate-pulse">
+          <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+          <div className="h-8 bg-gray-200 rounded w-1/2"></div>
         </div>
       </div>
+    );
+  }
+
+  const cardContent = (
+    <div className={`bg-white border rounded-lg p-4 ${className} ${onClick || href ? 'cursor-pointer' : ''} card-padding-16 border-dashboard`}>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm text-gray-600 mb-1">{titulo}</p>
+          <p className="text-2xl font-bold text-gray-900">{valor}</p>
+        </div>
+        {icone && (
+          <div className={`w-8 h-8 ${cor} rounded-lg flex items-center justify-center`}>
+            {icone}
+          </div>
+        )}
+      </div>
+      {descricao && (
+        <div className="mt-2 flex items-center text-xs">
+          <span className={`px-2 py-1 rounded text-xs font-medium ${bgTrendColor} ${trendColor}`}>
+            <TrendIcon className="w-3 h-3 inline mr-1" />
+            {descricao}
+          </span>
+        </div>
+      )}
     </div>
   );
+
+  const handleClick = () => {
+    if (onClick) onClick();
+    if (href) window.open(href, '_blank');
+  };
+
+  const cardWithInteraction = onClick || href ? (
+    <div onClick={handleClick}>
+      {cardContent}
+    </div>
+  ) : cardContent;
+
+  return cardWithInteraction;
 };

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'netfood-v1';
+const CACHE_NAME = 'sistema-voult-v1';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -102,7 +102,7 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('NetFood Dashboard', options)
+    self.registration.showNotification('Sistema Voult', options)
   );
 });
 

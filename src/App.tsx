@@ -1,7 +1,6 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-
-import { Layout, LoadingScreen } from './components';
+import { BrowserRouter, useLocation } from 'react-router-dom';
+import { Layout } from './components';
 import { MobileLayout } from './components/mobile';
 import { AuthProvider } from './context/authContext';
 import { LojaProvider } from './context/lojaContext';
@@ -9,24 +8,25 @@ import { PeriodProvider } from './context/periodContext';
 import { NotificationProvider } from './context/notificationContext';
 import { AnalyticsProvider } from './context/analyticsContext';
 import { CacheProvider } from './context/cacheContext';
-import { LoadingProvider } from './context/loadingContext';
 import { NavigationProvider } from './context/navigationContext';
+import { EstatisticasProvider } from './context/estatisticasContext';
 
 import { useNotificationContext } from './context/notificationContextUtils';
 import { NotificationToast } from './components/NotificationToast';
-import { useLoading } from './context/loadingContext';
 
 import { AppRoutes } from './routes';
 import { useAuth } from './hooks/useAuth';
 import { useIsMobile } from './hooks/useMediaQuery';
-import { usePageLoading } from './hooks/usePageLoading';
 
-function AppContent() {
+function AppContentInner() {
   const { status, user } = useAuth();
   const isMobile = useIsMobile();
-  
-  // Hook para controlar o carregamento da página
-  usePageLoading();
+  const location = useLocation();
+
+  // Se estiver na rota raiz (LandingPage), sempre renderizar sem layout
+  if (location.pathname === '/') {
+    return <AppRoutes />;
+  }
 
   // Se estiver carregando ou não autenticado, renderizar apenas as rotas sem layout
   if (status === 'idle' || status === 'loading' || status === 'unauthenticated') {
@@ -49,13 +49,15 @@ function AppContent() {
   );
 }
 
+function AppContent() {
+  return <AppContentInner />;
+}
+
 function AppWithNotifications() {
   const { notifications, removeNotification } = useNotificationContext();
-  const { isLoading } = useLoading();
 
   return (
     <>
-      <LoadingScreen isVisible={isLoading} />
       <AppContent />
       {notifications.map((notification) => (
         <NotificationToast
@@ -76,21 +78,21 @@ function App() {
   return (
     <BrowserRouter>
       <CacheProvider>
-        <LoadingProvider>
-          <AuthProvider>
-            <LojaProvider>
-              <NotificationProvider>
-                <AnalyticsProvider>
-                  <PeriodProvider>
+        <AuthProvider>
+          <LojaProvider>
+            <NotificationProvider>
+              <AnalyticsProvider>
+                <PeriodProvider>
+                  <EstatisticasProvider>
                     <NavigationProvider>
                       <AppWithNotifications />
                     </NavigationProvider>
-                  </PeriodProvider>
-                </AnalyticsProvider>
-              </NotificationProvider>
-            </LojaProvider>
-          </AuthProvider>
-        </LoadingProvider>
+                  </EstatisticasProvider>
+                </PeriodProvider>
+              </AnalyticsProvider>
+            </NotificationProvider>
+          </LojaProvider>
+        </AuthProvider>
       </CacheProvider>
     </BrowserRouter>
   );

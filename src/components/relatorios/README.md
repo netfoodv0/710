@@ -274,4 +274,4 @@ console.log('Mostrar animações:', mostrarAnimacoes);
 
 ## 📄 Licença
 
-Este componente faz parte do projeto iFood Dashboard e segue as mesmas diretrizes de licenciamento.
+Este componente faz parte do projeto Sistema Voult e segue as mesmas diretrizes de licenciamento.

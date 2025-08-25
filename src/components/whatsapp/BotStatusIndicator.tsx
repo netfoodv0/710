@@ -19,7 +19,7 @@ export default function BotStatusIndicator({ chatId }: BotStatusIndicatorProps) 
 
   return (
     <div className="flex items-center gap-1">
-      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+      <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
       <span className="text-green-400 text-xs font-medium">
         Robô
       </span>

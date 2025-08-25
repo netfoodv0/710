@@ -5,13 +5,10 @@ import { CardapioMain } from './CardapioMain';
 import { CardapioModals } from './CardapioModals';
 import { CardapioNotifications } from './CardapioNotifications';
 import { CardapioError } from './CardapioError';
-import { CardapioSkeleton } from '../../../components/skeletons/CardapioSkeleton';
 import { useCardapioContext } from '../../../context/CardapioContext';
-import { useCardapioSkeleton } from '../../../hooks/useCardapioSkeleton';
 
 export function CardapioContent() {
   const { state } = useCardapioContext();
-  const showSkeleton = useCardapioSkeleton();
 
   // Se houver erro, mostrar componente de erro
   if (state.errorProdutos) {
@@ -20,19 +17,6 @@ export function CardapioContent() {
         error={state.errorProdutos} 
         onRetry={() => window.location.reload()} 
       />
-    );
-  }
-
-  // Se estiver carregando, mostrar skeleton
-  if (showSkeleton) {
-    return (
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
-        {/* Cabeçalho */}
-        <CardapioHeader />
-        
-        {/* Skeleton */}
-        <CardapioSkeleton />
-      </div>
     );
   }
 

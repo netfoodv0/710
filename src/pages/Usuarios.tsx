@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
-export function Usuarios() {
+export default function Usuarios() {
   return (
     <ErrorBoundary>
       <div className="p-6">

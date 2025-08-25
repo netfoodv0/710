@@ -1,23 +1,28 @@
-export type ModalSize = 'small' | 'medium' | 'large';
+export type ModalSize = 'sm' | 'md' | 'lg' | 'xl';
 
-export type ModalTab = 'pessoal' | 'endereco' | 'adicional' | 'observacoes';
-
-export interface ModalState {
-  showModal: boolean;
-  showFormModal: boolean;
-  modalSize: ModalSize;
-  activeTab: ModalTab;
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  size?: ModalSize;
+  showCloseButton?: boolean;
+  className?: string;
 }
 
-export interface ModalActions {
-  setShowModal: (show: boolean) => void;
-  setShowFormModal: (show: boolean) => void;
-  setModalSize: (size: ModalSize) => void;
-  setActiveTab: (tab: ModalTab) => void;
+export interface ModalHeaderProps {
+  children: React.ReactNode;
+  className?: string;
+  showCloseButton?: boolean;
+  onClose?: () => void;
 }
 
-export interface ModalStats {
-  totalModais: number;
-  modaisAtivos: number;
-  modaisInativos: number;
+export interface ModalBodyProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export interface ModalFooterProps {
+  children: React.ReactNode;
+  className?: string;
 }

@@ -57,7 +57,7 @@ const motoboysFicticios = [
   }
 ];
 
-export function Motoboys() {
+export default function Motoboys() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Funções auxiliares para a tabela
@@ -66,17 +66,19 @@ export function Motoboys() {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  const getStatusBadge = (status: string) => {
-    const isActive = status === 'ativo';
-    return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-        isActive 
-          ? 'bg-green-100 text-green-800' 
-          : 'bg-red-100 text-red-800'
-      }`}>
-        {isActive ? 'Ativo' : 'Inativo'}
-      </span>
-    );
+  const getStatusColor = (status: string) => {
+    return status === 'ativo' 
+      ? 'bg-purple-100 text-purple-800'
+      : 'bg-gray-100 text-gray-800';
+  };
+
+  const getAvaliacaoColor = (avaliacao: number) => {
+    let color = 'bg-gray-100 text-gray-800';
+    if (avaliacao >= 4.5) color = 'bg-purple-100 text-purple-800';
+    else if (avaliacao >= 4.0) color = 'bg-purple-100 text-purple-800';
+    else if (avaliacao >= 3.5) color = 'bg-gray-100 text-gray-800';
+    else color = 'bg-gray-100 text-gray-800';
+    return color;
   };
 
   const getAvaliacaoBadge = (avaliacao: number) => {
@@ -122,7 +124,11 @@ export function Motoboys() {
       key: 'status',
       label: 'Status',
       sortable: true,
-      render: (motoboy) => getStatusBadge(motoboy.status)
+      render: (motoboy) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(motoboy.status)}`}>
+          {motoboy.status === 'ativo' ? 'Ativo' : 'Inativo'}
+        </span>
+      )
     },
     {
       key: 'avaliacao',
@@ -182,7 +188,7 @@ export function Motoboys() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen bg-dashboard">
         {/* Cabeçalho da página */}
         <PageHeader
           title="Motoboys"

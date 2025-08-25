@@ -41,7 +41,16 @@ export default defineConfig({
     global: 'globalThis',
   },
   server: {
+    host: '0.0.0.0',
+    port: 5173,
     hmr: true,
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      '0.0.0.0',
+      '.ngrok-free.app',
+      '238908da5360.ngrok-free.app'
+    ],
     watch: {
       usePolling: true
     }

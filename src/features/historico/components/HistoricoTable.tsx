@@ -1,29 +1,15 @@
 import type {SVGProps} from "react";
-import type {Selection, ChipProps, SortDescriptor} from "@heroui/react";
 
 import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
-  Button,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  DropdownItem,
-  Chip,
-  User,
-  Pagination,
-} from "@heroui/react";
 import { Eye, Calendar, User as UserIcon, CreditCard, DollarSign, List } from 'lucide-react';
 import { Pedido } from '../../../types';
 import { StatusBadge } from './StatusBadge';
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../../../components/ui/table';
+import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
+import { Input } from '../../../components/ui/input';
+import { Button } from '../../../components/ui/button';
 
-export type IconSvgProps = SVGProps<SVGSVGElement> & {
+export type IconSvgProps = SVGProps<HTMLSVGElement> & {
   size?: number;
 };
 
@@ -107,29 +93,27 @@ export const SearchIcon = (props: IconSvgProps) => {
   );
 };
 
-export const ChevronDownIcon = ({strokeWidth = 1.5, ...otherProps}: IconSvgProps) => {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      focusable="false"
-      height="1em"
-      role="presentation"
-      viewBox="0 0 24 24"
-      width="1em"
-      {...otherProps}
-    >
-      <path
-        d="m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeMiterlimit={10}
-        strokeWidth={strokeWidth}
-      />
-    </svg>
-  );
-};
+export const ChevronDownIcon = (props: IconSvgProps) => (
+  <svg
+    aria-hidden="true"
+    fill="none"
+    focusable="false"
+    height="1em"
+    role="presentation"
+    viewBox="0 0 24 24"
+    width="1em"
+    {...props}
+  >
+    <path
+      d="m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeMiterlimit={10}
+      strokeWidth={1.5}
+    />
+  </svg>
+);
 
 interface HistoricoTableProps {
   pedidos: Pedido[];
@@ -139,11 +123,10 @@ interface HistoricoTableProps {
 export const columns = [
   {name: "PEDIDO", uid: "pedido", sortable: true},
   {name: "CLIENTE", uid: "cliente", sortable: true},
-  {name: "PAGAMENTO", uid: "pagamento", sortable: true},
   {name: "STATUS", uid: "status", sortable: true},
-  {name: "DATA/HORA", uid: "dataHora", sortable: true},
   {name: "TOTAL", uid: "total", sortable: true},
-  {name: "AÇÕES", uid: "actions"},
+  {name: "DATA", uid: "dataHora", sortable: true},
+  {name: "AÇÕES", uid: "actions", sortable: false},
 ];
 
 export const statusOptions = [
@@ -152,7 +135,7 @@ export const statusOptions = [
   {name: "Finalizado", uid: "finalizado"},
 ];
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
+const statusColorMap: Record<string, "success" | "danger" | "primary"> = {
   entregue: "success",
   cancelado: "danger",
   finalizado: "primary",
@@ -162,13 +145,16 @@ const INITIAL_VISIBLE_COLUMNS = ["pedido", "cliente", "status", "total", "action
 
 export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onViewPedido }: HistoricoTableProps) {
   const [filterValue, setFilterValue] = React.useState("");
-  const [selectedKeys, setSelectedKeys] = React.useState<Selection>(new Set([]));
-  const [visibleColumns, setVisibleColumns] = React.useState<Selection>(
+  const [selectedKeys, setSelectedKeys] = React.useState<Set<string>>(new Set([]));
+  const [visibleColumns, setVisibleColumns] = React.useState<Set<string>>(
     new Set(INITIAL_VISIBLE_COLUMNS),
   );
-  const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
+  const [statusFilter, setStatusFilter] = React.useState<string>("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
+  const [sortDescriptor, setSortDescriptor] = React.useState<{
+    column: string;
+    direction: "ascending" | "descending";
+  }>({
     column: "dataHora",
     direction: "descending",
   });
@@ -178,9 +164,8 @@ export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onVi
   const hasSearchFilter = Boolean(filterValue);
 
   const headerColumns = React.useMemo(() => {
-    if (visibleColumns === "all") return columns;
-
-    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+    if (visibleColumns.size === 0) return columns;
+    return columns.filter((column) => visibleColumns.has(column.uid));
   }, [visibleColumns]);
 
   const filteredItems = React.useMemo(() => {
@@ -192,9 +177,9 @@ export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onVi
         pedido.numero?.toString().includes(filterValue)
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+    if (statusFilter !== "all") {
       filteredPedidos = filteredPedidos.filter((pedido) =>
-        Array.from(statusFilter).includes(pedido.status),
+        pedido.status === statusFilter,
       );
     }
 
@@ -211,134 +196,66 @@ export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onVi
   }, [page, filteredItems, rowsPerPage]);
 
   const sortedItems = React.useMemo(() => {
-    return [...items].sort((a: Pedido, b: Pedido) => {
-      let first: any;
-      let second: any;
-
-      switch (sortDescriptor.column) {
-        case "dataHora":
-          first = new Date(a.dataHora).getTime();
-          second = new Date(b.dataHora).getTime();
-          break;
-        case "total":
-          first = a.total;
-          second = b.total;
-          break;
-        case "pedido":
-          first = a.numero;
-          second = b.numero;
-          break;
-        default:
-          first = a[sortDescriptor.column as keyof Pedido];
-          second = b[sortDescriptor.column as keyof Pedido];
-      }
-
+    return [...items].sort((a, b) => {
+      const first = a[sortDescriptor.column as keyof Pedido];
+      const second = b[sortDescriptor.column as keyof Pedido];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
+
       return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
-  }, [sortDescriptor, items]);
+  }, [items, sortDescriptor]);
 
-  const formatarData = (data: Date) => {
-    return new Intl.DateTimeFormat('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(data);
-  };
-
-  const formatarValor = (valor: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(valor);
-  };
-
-  const formatarFormaPagamento = (forma: string) => {
-    const formas = {
-      dinheiro: 'Dinheiro',
-      pix: 'PIX',
-      cartao_credito: 'Cartão de Crédito',
-      cartao_debito: 'Cartão de Débito',
-      vale_refeicao: 'Vale Refeição',
-      vale_alimentacao: 'Vale Alimentação'
-    };
-    return formas[forma as keyof typeof formas] || forma;
-  };
-
-  const renderCell = React.useCallback((pedido: Pedido, columnKey: React.Key) => {
+  const renderCell = React.useCallback((pedido: Pedido, columnKey: string) => {
     const cellValue = pedido[columnKey as keyof Pedido];
 
     switch (columnKey) {
       case "pedido":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">#{pedido.numero}</p>
-            <p className="text-bold text-tiny capitalize text-default-400">{pedido.itens.length} itens</p>
+            <p className="text-bold text-small capitalize">{pedido.numero}</p>
           </div>
         );
       case "cliente":
         return (
-          <User
-            avatarProps={{radius: "lg", src: "https://i.pravatar.cc/150?u=a042581f4e29026024d"}}
-            description={pedido.cliente?.telefone || 'N/A'}
-            name={pedido.cliente?.nome || 'Cliente não identificado'}
-          >
-            {pedido.cliente?.telefone || 'N/A'}
-          </User>
-        );
-      case "pagamento":
-        return (
           <div className="flex flex-col">
-            <p className="text-bold text-small capitalize">{formatarFormaPagamento(pedido.formaPagamento)}</p>
-            <p className="text-bold text-tiny capitalize text-default-400">
-              {pedido.pagamento?.statusPagamento === 'pago' ? 'Pago' : 'Pendente'}
-            </p>
+            <p className="text-bold text-small capitalize">{pedido.cliente?.nome}</p>
+            <p className="text-bold text-tiny capitalize text-default-400">{pedido.cliente?.telefone}</p>
           </div>
         );
       case "status":
         return (
-          <Chip className="capitalize" color={statusColorMap[pedido.status]} size="sm" variant="flat">
-            {pedido.status}
-          </Chip>
-        );
-      case "dataHora":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-small">{formatarData(pedido.dataHora)}</p>
-            <p className="text-bold text-tiny capitalize text-default-400">{pedido.tempoEstimado}</p>
-          </div>
+          <StatusBadge status={pedido.status} />
         );
       case "total":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-small">{formatarValor(pedido.total)}</p>
+            <p className="text-bold text-small capitalize">
+              R$ {pedido.total?.toFixed(2)}
+            </p>
+          </div>
+        );
+      case "dataHora":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-small capitalize">
+              {new Date(pedido.dataHora).toLocaleDateString('pt-BR')}
+            </p>
+            <p className="text-bold text-tiny capitalize text-default-400">
+              {new Date(pedido.dataHora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+            </p>
           </div>
         );
       case "actions":
         return (
-          <div className="relative flex justify-end items-center gap-2">
-            <Button
-              isIconOnly
-              size="sm"
-              variant="light"
-              onPress={() => onViewPedido(pedido)}
-            >
-              <Eye className="w-4 h-4" />
-            </Button>
-            <Dropdown>
-              <DropdownTrigger>
-                <Button isIconOnly size="sm" variant="light">
-                  <VerticalDotsIcon className="text-default-300" />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu>
-                <DropdownItem key="view" onPress={() => onViewPedido(pedido)}>Ver</DropdownItem>
-                <DropdownItem key="edit">Editar</DropdownItem>
-                <DropdownItem key="delete">Excluir</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+          <div className="flex gap-2">
+                      <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onViewPedido(pedido)}
+            className="p-2"
+          >
+            <Eye className="w-4 h-4" />
+          </Button>
           </div>
         );
       default:
@@ -381,70 +298,57 @@ export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onVi
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3 items-end">
-          <Input
-            isClearable
-            className="w-full sm:max-w-[44%]"
-            placeholder="Buscar por cliente ou número..."
-            startContent={<SearchIcon />}
-            value={filterValue}
-            onClear={() => onClear()}
-            onValueChange={onSearchChange}
-          />
+          <div className="relative w-full sm:max-w-[44%]">
+            <Input
+              className="w-full pr-10"
+              placeholder="Buscar por cliente ou pedido..."
+              value={filterValue}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+            {filterValue && (
+              <button
+                onClick={onClear}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            )}
+            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          </div>
           <div className="flex gap-3">
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                  Status
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={statusFilter}
-                selectionMode="multiple"
-                onSelectionChange={setStatusFilter}
-              >
-                {statusOptions.map((status) => (
-                  <DropdownItem key={status.uid} className="capitalize">
-                    {capitalize(status.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Dropdown>
-              <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
-                  Colunas
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu
-                disallowEmptySelection
-                aria-label="Table Columns"
-                closeOnSelect={false}
-                selectedKeys={visibleColumns}
-                selectionMode="multiple"
-                onSelectionChange={setVisibleColumns}
-              >
-                {columns.map((column) => (
-                  <DropdownItem key={column.uid} className="capitalize">
-                    {capitalize(column.name)}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </Dropdown>
-            <Button color="primary" endContent={<PlusIcon />}>
-              Novo Pedido
-            </Button>
+            <CustomDropdown
+              options={statusOptions}
+              selectedValue={statusFilter}
+              onValueChange={(value) => setStatusFilter(value)}
+              placeholder="Filtrar por status"
+            />
+            <CustomDropdown
+              options={[
+                { value: "all", label: "Todas as colunas" },
+                ...columns.map(col => ({ value: col.uid, label: col.name }))
+              ]}
+              selectedValue={Array.from(visibleColumns).join(',')}
+              onValueChange={(value) => {
+                if (value === "all") {
+                  setVisibleColumns(new Set(columns.map(col => col.uid)));
+                } else {
+                  setVisibleColumns(new Set([value]));
+                }
+              }}
+              placeholder="Colunas visíveis"
+            />
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {pedidos.length} pedidos</span>
+          <span className="text-default-400 text-small">
+            Total {pedidos.length} pedidos
+          </span>
           <label className="flex items-center text-default-400 text-small">
             Linhas por página:
             <select
-              className="bg-transparent outline-solid outline-transparent text-default-400 text-small"
+              className="bg-transparent outline-none text-default-400 text-small"
               onChange={onRowsPerPageChange}
+              value={rowsPerPage}
             >
               <option value="5">5</option>
               <option value="10">10</option>
@@ -459,89 +363,107 @@ export const HistoricoTable = React.memo(function HistoricoTable({ pedidos, onVi
     statusFilter,
     visibleColumns,
     onSearchChange,
+    onClear,
     onRowsPerPageChange,
+    rowsPerPage,
     pedidos.length,
-    hasSearchFilter,
   ]);
 
   const bottomContent = React.useMemo(() => {
     return (
       <div className="py-2 px-2 flex justify-between items-center">
-        <span className="w-[30%] text-small text-default-400">
-          {selectedKeys === "all"
-            ? "Todos os itens selecionados"
-            : `${selectedKeys.size} de ${filteredItems.length} selecionados`}
-        </span>
-        <Pagination
-          isCompact
-          showControls
-          showShadow
-          color="primary"
-          page={page}
-          total={pages}
-          onChange={setPage}
-        />
-        <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+        <div className="flex w-[30%] justify-start gap-2">
+          <Button
+            disabled={selectedKeys.size === 0}
+            variant="destructive"
+            onClick={() => setSelectedKeys(new Set())}
+          >
+            Limpar seleção
+          </Button>
+        </div>
+        <div className="flex w-[1/3] justify-center items-center gap-2">
+          <Button
+            disabled={page === 1}
+            size="sm"
+            variant="outline"
+            onClick={onPreviousPage}
+          >
             Anterior
           </Button>
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+          <div className="flex items-center gap-1">
+            {Array.from({ length: pages }, (_, i) => i + 1).map((pageNum) => (
+              <Button
+                key={pageNum}
+                size="sm"
+                variant={pageNum === page ? "default" : "outline"}
+                onClick={() => setPage(pageNum)}
+              >
+                {pageNum}
+              </Button>
+            ))}
+          </div>
+          <Button
+            disabled={page === pages}
+            size="sm"
+            variant="outline"
+            onClick={onNextPage}
+          >
             Próximo
           </Button>
         </div>
-      </div>
-    );
-  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
-
-  if (pedidos.length === 0) {
-    return (
-      <div className="p-8 text-center">
-        <div className="text-gray-400 mb-4">
-          <Calendar className="w-12 h-12 mx-auto mb-4" />
+        <div className="flex w-[30%] justify-end gap-2">
+          <span className="text-default-400 text-small">
+            {`${(page - 1) * rowsPerPage + 1} a ${Math.min(page * rowsPerPage, filteredItems.length)} de ${filteredItems.length} resultados`}
+          </span>
         </div>
-        <h3 className="text-sm font-medium text-gray-900 mb-2">Nenhum pedido encontrado</h3>
-        <p className="text-gray-500 text-xs">
-          Não há pedidos entregues ou cancelados no período selecionado.
-        </p>
       </div>
     );
-  }
+  }, [
+    selectedKeys.size,
+    page,
+    pages,
+    onPreviousPage,
+    onNextPage,
+    rowsPerPage,
+    filteredItems.length,
+  ]);
 
   return (
-    <Table
-      isHeaderSticky
-      aria-label="Tabela de histórico de pedidos com células customizadas, paginação e ordenação"
-      bottomContent={bottomContent}
-      bottomContentPlacement="outside"
-      classNames={{
-        wrapper: "max-h-[600px]",
-      }}
-      selectedKeys={selectedKeys}
-      selectionMode="multiple"
-      sortDescriptor={sortDescriptor}
-      topContent={topContent}
-      topContentPlacement="outside"
-      onSelectionChange={setSelectedKeys}
-      onSortChange={setSortDescriptor}
-    >
-      <TableHeader columns={headerColumns}>
-        {(column) => (
-          <TableColumn
-            key={column.uid}
-            align={column.uid === "actions" ? "center" : "start"}
-            allowsSorting={column.sortable}
-          >
-            {column.name}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody emptyContent={"Nenhum pedido encontrado"} items={sortedItems}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <div className="w-full">
+      {topContent}
+      <div className="max-h-[600px] overflow-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {headerColumns.map((column) => (
+                <TableHead key={column.uid}>
+                  {column.name}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedItems.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={headerColumns.length} className="text-center py-12">
+                  Nenhum pedido encontrado
+                </TableCell>
+              </TableRow>
+            ) : (
+              sortedItems.map((item) => (
+                <TableRow key={item.id}>
+                  {headerColumns.map((column) => (
+                    <TableCell key={column.uid}>
+                      {renderCell(item, column.uid)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      {bottomContent}
+    </div>
   );
 }); 

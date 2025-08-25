@@ -22,7 +22,7 @@ import { useProdutoManager } from './CadastroProduto/hooks';
 // Types
 import { FormData } from '../hooks/useNovoProdutoForm';
 
-export function CadastroProduto() {
+export default function CadastroProduto() {
   const [searchParams] = useSearchParams();
   const { id } = useParams<{ id: string }>();
   const { notifications, removeNotification } = useNotificationContext();
@@ -63,7 +63,7 @@ export function CadastroProduto() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#f7f5f3' }}>
+      <div className="min-h-screen bg-[#f7f5f3]">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast

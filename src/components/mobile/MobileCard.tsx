@@ -18,13 +18,13 @@ export function MobileCard({
   padding = 'md',
   loading = false
 }: MobileCardProps) {
-  const baseClasses = 'rounded-sm transition-all duration-200';
+  const baseClasses = 'rounded-sm';
   
   const variantClasses = {
-    default: 'bg-white shadow-sm border',
-    elevated: 'bg-white shadow-lg border',
+    default: 'bg-white border',
+    elevated: 'bg-white border',
     outlined: 'bg-white border-2',
-    interactive: 'bg-white shadow-sm border hover:shadow-md active:shadow-lg'
+    interactive: 'bg-white border'
   };
   
   const paddingClasses = {
@@ -34,7 +34,7 @@ export function MobileCard({
   };
   
   const interactiveClasses = onClick 
-    ? 'active:scale-[0.98] hover:shadow-md cursor-pointer touch-manipulation' 
+    ? 'cursor-pointer touch-manipulation' 
     : '';
 
   if (loading) {

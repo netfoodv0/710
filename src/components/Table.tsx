@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import clsx from 'clsx';
 import { ChevronUp, ChevronDown, MoreHorizontal } from 'lucide-react';
 import { TableColumn } from '../types';
@@ -12,6 +12,11 @@ interface TableProps<T = any> {
   emptyMessage?: string;
 }
 
+interface SortConfig {
+  key: string;
+  direction: 'asc' | 'desc';
+}
+
 export function Table<T = any>({
   data,
   columns,
@@ -20,68 +25,75 @@ export function Table<T = any>({
   loading = false,
   emptyMessage = "Nenhum item encontrado"
 }: TableProps<T>) {
-  const [sortColumn, setSortColumn] = React.useState<keyof T | null>(null);
-  const [sortDirection, setSortDirection] = React.useState<'asc' | 'desc'>('asc');
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
 
-  const handleSort = (column: TableColumn<T>) => {
-    if (!column.sortable) return;
-
-    if (sortColumn === column.key) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortColumn(column.key);
-      setSortDirection('asc');
-    }
-  };
-
-  const sortedData = React.useMemo(() => {
-    if (!sortColumn) return data;
+  const sortedData = useMemo(() => {
+    if (!sortConfig) return data;
 
     return [...data].sort((a, b) => {
-      const aValue = a[sortColumn];
-      const bValue = b[sortColumn];
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
 
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
       return 0;
     });
-  }, [data, sortColumn, sortDirection]);
+  }, [data, sortConfig]);
+
+  const requestSort = (key: string) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  if (loading) {
+    return (
+      <div className="animate-pulse">
+        <div className="bg-gray-200 h-10 rounded mb-4"></div>
+        <div className="space-y-3">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="bg-gray-200 h-16 rounded"></div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={clsx('bg-white rounded-lg border border-gray-200 overflow-hidden', className)}>
+    <div className={`bg-white border border-gray-200 rounded-lg overflow-hidden ${className}`}>
       <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-50 border-b border-gray-200" style={{ height: '73px' }}>
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50 border-b border-gray-200 table-header-73">
             <tr>
               {columns.map((column) => (
                 <th
                   key={String(column.key)}
-                  className={clsx(
-                    'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
-                    column.sortable && 'cursor-pointer hover:bg-gray-100 select-none'
-                  )}
-                  style={{ height: '73px' }}
-                  onClick={() => handleSort(column)}
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors"
+                  onClick={() => column.sortable !== false && requestSort(String(column.key))}
                 >
-                  <div className="flex items-center gap-1">
-                    <span>{column.label}</span>
-                    {column.sortable && (
+                  <div className="flex items-center gap-2">
+                    {column.header}
+                    {column.sortable !== false && (
                       <div className="flex flex-col">
                         <ChevronUp 
-                          className={clsx(
-                            'w-3 h-3 -mb-1',
-                            sortColumn === column.key && sortDirection === 'asc'
-                              ? 'text-gray-900'
+                          className={`w-3 h-3 ${
+                            sortConfig?.key === column.key && sortConfig.direction === 'asc' 
+                              ? 'text-gray-900' 
                               : 'text-gray-400'
-                          )} 
+                          }`} 
                         />
                         <ChevronDown 
-                          className={clsx(
-                            'w-3 h-3',
-                            sortColumn === column.key && sortDirection === 'desc'
-                              ? 'text-gray-900'
+                          className={`w-3 h-3 -mt-1 ${
+                            sortConfig?.key === column.key && sortConfig.direction === 'desc' 
+                              ? 'text-gray-900' 
                               : 'text-gray-400'
-                          )} 
+                          }`} 
                         />
                       </div>
                     )}

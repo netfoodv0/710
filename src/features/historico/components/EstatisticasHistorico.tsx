@@ -117,8 +117,8 @@ export const EstatisticasHistorico = ({ estatisticas }: EstatisticasHistoricoPro
               <p className="text-sm text-gray-600 mb-1">Pedidos Finalizados</p>
               <p className="text-2xl font-bold text-gray-900">{estatisticas.entregues}</p>
             </div>
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-              <CompletedOrderIcon size={20} color="#16a34a" />
+            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+              <CompletedOrderIcon size={20} color="#8B5CF6" />
             </div>
           </div>
         </div>
@@ -128,10 +128,10 @@ export const EstatisticasHistorico = ({ estatisticas }: EstatisticasHistoricoPro
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Pedidos Rejeitados</p>
-            <p className="text-2xl font-bold text-gray-900">{estatisticas.cancelados}</p>
+              <p className="text-2xl font-bold text-gray-900">{estatisticas.cancelados}</p>
             </div>
-            <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-              <RejectedOrderIcon size={20} color="#dc2626" />
+            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+              <RejectedOrderIcon size={20} color="#6B7280" />
             </div>
           </div>
         </div>
@@ -143,8 +143,8 @@ export const EstatisticasHistorico = ({ estatisticas }: EstatisticasHistoricoPro
               <p className="text-sm text-gray-600 mb-1">Clientes Novos</p>
               <p className="text-2xl font-bold text-gray-900">{estatisticas.clientesUnicos}</p>
             </div>
-            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-              <NewCustomerIcon size={20} color="#6b7280" />
+            <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+              <NewCustomerIcon size={20} color="#8B5CF6" />
             </div>
           </div>
         </div>

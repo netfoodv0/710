@@ -1,6 +1,6 @@
 import React from 'react';
-import { Plus, Loader2 } from 'lucide-react';
-import { PageHeader } from '../ui';
+import { Plus } from 'lucide-react';
+import { PageHeader, ActionButton } from '../ui';
 import { PedidosSearchBar } from './PedidosSearchBar';
 
 interface PedidosHeaderProps {
@@ -34,18 +34,15 @@ export const PedidosHeader: React.FC<PedidosHeaderProps> = ({
       rightContent={
         <div className="flex items-center gap-4">
           {/* Botão Novo Pedido */}
-          <button
+          <ActionButton
+            label="Novo Pedido"
             onClick={onCreatePedido}
+            loading={isCreating}
             disabled={isCreating}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isCreating ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Plus className="w-4 h-4" />
-            )}
-            Novo Pedido
-          </button>
+            variant="primary"
+            size="md"
+            icon={<Plus className="w-4 h-4" />}
+          />
         </div>
       }
     />

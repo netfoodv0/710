@@ -16,9 +16,9 @@ interface CustomModalProps {
 }
 
 const sizeClasses: Record<CustomModalSize, string> = {
-  small: 'w-[300px]',
-  medium: 'w-[800px]',
-  large: 'w-[80%]'
+  small: 'w-[95%] max-w-[500px]',
+  medium: 'w-[95%] max-w-[900px]',
+  large: 'w-[95%] max-w-[1200px]'
 };
 
 export function CustomModal({
@@ -33,24 +33,19 @@ export function CustomModal({
   className = '',
   contentClassName = ''
 }: CustomModalProps) {
-  const [isVisible, setIsVisible] = React.useState(false);
-
-  React.useEffect(() => {
-    if (isOpen) {
-      // Pequeno delay para garantir que a animação funcione
-      setTimeout(() => setIsVisible(true), 10);
-    } else {
-      setIsVisible(false);
-    }
-  }, [isOpen]);
-
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-60 opacity-100 backdrop-blur-sm transition-opacity duration-300">
+      {/* Backdrop clicável */}
       <div 
-        className={`bg-white rounded-lg overflow-hidden mx-4 ${sizeClasses[size]} ${className} ${isVisible ? 'modal-open' : 'modal-closed'}`}
+        className="absolute inset-0 cursor-pointer"
+        onClick={onClose}
+      />
+      <div 
+        className={`relative m-0 p-0 ${sizeClasses[size]} ${className} bg-white shadow-sm pointer-events-auto`}
         style={{ border: '1px solid rgb(207 209 211)' }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         {title && (
@@ -79,27 +74,7 @@ export function CustomModal({
           {children}
         </div>
         
-        {/* Footer */}
-        {showFooter && (
-          <div className="px-6 py-4 border-t bg-slate-50" style={{ borderColor: 'rgb(207 209 211)' }}>
-            {footerContent || (
-              <div className="flex justify-end space-x-3">
-                <button
-                  onClick={onClose}
-                  className="px-4 py-2 text-slate-600 hover:text-slate-800 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={onClose}
-                  className="px-4 py-2 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
-                >
-                  Confirmar
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+
       </div>
     </div>
   );

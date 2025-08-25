@@ -163,7 +163,7 @@ export function FormInput({
       </label>
       {renderInput()}
       {helperText && (
-        <p className="form-error-message">{helperText}</p>
+        <p className="modal-error-message">{helperText}</p>
       )}
     </div>
   );

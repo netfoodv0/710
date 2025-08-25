@@ -59,10 +59,120 @@ const operadoresFicticios = [
     dataAdmissao: '2022-11-10',
     ultimoAcesso: '2024-01-21',
     permissoes: ['pedidos', 'estoque', 'relatorios', 'usuarios']
+  },
+  {
+    id: 6,
+    nome: 'Fernanda Lima',
+    email: 'fernanda.lima@restaurante.com',
+    telefone: '(11) 44444-6666',
+    cargo: 'Atendente',
+    status: 'ativo',
+    dataAdmissao: '2023-09-12',
+    ultimoAcesso: '2024-01-22',
+    permissoes: ['pedidos', 'atendimento', 'cupons']
+  },
+  {
+    id: 7,
+    nome: 'Roberto Almeida',
+    email: 'roberto.almeida@restaurante.com',
+    telefone: '(11) 33333-7777',
+    cargo: 'Cozinheiro',
+    status: 'ativo',
+    dataAdmissao: '2023-04-18',
+    ultimoAcesso: '2024-01-21',
+    permissoes: ['cardapio', 'estoque', 'pedidos']
+  },
+  {
+    id: 8,
+    nome: 'Juliana Pereira',
+    email: 'juliana.pereira@restaurante.com',
+    telefone: '(11) 22222-8888',
+    cargo: 'Supervisor',
+    status: 'ativo',
+    dataAdmissao: '2022-07-25',
+    ultimoAcesso: '2024-01-20',
+    permissoes: ['pedidos', 'estoque', 'relatorios', 'usuarios', 'configuracoes']
+  },
+  {
+    id: 9,
+    nome: 'Lucas Mendes',
+    email: 'lucas.mendes@restaurante.com',
+    telefone: '(11) 11111-9999',
+    cargo: 'Atendente',
+    status: 'inativo',
+    dataAdmissao: '2023-02-14',
+    ultimoAcesso: '2023-11-30',
+    permissoes: ['pedidos']
+  },
+  {
+    id: 10,
+    nome: 'Camila Rocha',
+    email: 'camila.rocha@restaurante.com',
+    telefone: '(11) 00000-0000',
+    cargo: 'Gerente',
+    status: 'ativo',
+    dataAdmissao: '2021-12-01',
+    ultimoAcesso: '2024-01-22',
+    permissoes: ['pedidos', 'estoque', 'relatorios', 'usuarios', 'configuracoes', 'financeiro']
+  },
+  {
+    id: 11,
+    nome: 'Diego Souza',
+    email: 'diego.souza@restaurante.com',
+    telefone: '(11) 12345-6789',
+    cargo: 'Cozinheiro',
+    status: 'ativo',
+    dataAdmissao: '2023-10-05',
+    ultimoAcesso: '2024-01-19',
+    permissoes: ['cardapio', 'estoque', 'pedidos']
+  },
+  {
+    id: 12,
+    nome: 'Patrícia Costa',
+    email: 'patricia.costa@restaurante.com',
+    telefone: '(11) 98765-4321',
+    cargo: 'Atendente',
+    status: 'ativo',
+    dataAdmissao: '2023-05-20',
+    ultimoAcesso: '2024-01-21',
+    permissoes: ['pedidos', 'atendimento', 'cupons', 'fidelidade']
+  },
+  {
+    id: 13,
+    nome: 'Rafael Santos',
+    email: 'rafael.santos@restaurante.com',
+    telefone: '(11) 55555-1234',
+    cargo: 'Supervisor',
+    status: 'ativo',
+    dataAdmissao: '2022-09-15',
+    ultimoAcesso: '2024-01-18',
+    permissoes: ['pedidos', 'estoque', 'relatorios', 'usuarios']
+  },
+  {
+    id: 14,
+    nome: 'Amanda Silva',
+    email: 'amanda.silva@restaurante.com',
+    telefone: '(11) 44444-5678',
+    cargo: 'Atendente',
+    status: 'inativo',
+    dataAdmissao: '2023-07-08',
+    ultimoAcesso: '2023-10-25',
+    permissoes: ['pedidos', 'atendimento']
+  },
+  {
+    id: 15,
+    nome: 'Thiago Oliveira',
+    email: 'thiago.oliveira@restaurante.com',
+    telefone: '(11) 33333-9012',
+    cargo: 'Cozinheiro',
+    status: 'ativo',
+    dataAdmissao: '2023-01-30',
+    ultimoAcesso: '2024-01-22',
+    permissoes: ['cardapio', 'estoque', 'pedidos']
   }
 ];
 
-export function Operadores() {
+export default function Operadores() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Funções auxiliares para a tabela
@@ -71,34 +181,21 @@ export function Operadores() {
     return new Date(dateString).toLocaleDateString('pt-BR');
   };
 
-  const getStatusBadge = (status: string) => {
-    const isActive = status === 'ativo';
-    return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-        isActive 
-          ? 'bg-green-100 text-green-800' 
-          : 'bg-red-100 text-red-800'
-      }`}>
-        {isActive ? 'Ativo' : 'Inativo'}
-      </span>
-    );
+  const getStatusColor = (status: string) => {
+    return status === 'ativo' 
+      ? 'bg-purple-100 text-purple-800'
+      : 'bg-gray-100 text-gray-800';
   };
 
-  const getCargoBadge = (cargo: string) => {
-    const cargoConfig = {
-      'Gerente': { color: 'bg-purple-100 text-purple-800' },
-      'Supervisor': { color: 'bg-blue-100 text-blue-800' },
-      'Atendente': { color: 'bg-green-100 text-green-800' },
-      'Cozinheiro': { color: 'bg-orange-100 text-orange-800' }
+  const getCargoColor = (cargo: string) => {
+    const cargoColors: { [key: string]: string } = {
+      'Administrador': { color: 'bg-purple-100 text-purple-800' },
+      'Supervisor': { color: 'bg-purple-100 text-purple-800' },
+      'Atendente': { color: 'bg-purple-100 text-purple-800' },
+      'Cozinheiro': { color: 'bg-purple-100 text-purple-800' }
     };
     
-    const config = cargoConfig[cargo as keyof typeof cargoConfig] || cargoConfig['Atendente'];
-    
-    return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
-        {cargo}
-      </span>
-    );
+    return cargoColors[cargo] || { color: 'bg-gray-100 text-gray-800' };
   };
 
   const getPermissoesBadge = (permissoes: string[]) => {
@@ -137,7 +234,11 @@ export function Operadores() {
       key: 'cargo',
       label: 'Cargo',
       sortable: true,
-      render: (operador) => getCargoBadge(operador.cargo)
+      render: (operador) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getCargoColor(operador.cargo).color}`}>
+          {operador.cargo}
+        </span>
+      )
     },
     {
       key: 'telefone',
@@ -151,7 +252,11 @@ export function Operadores() {
       key: 'status',
       label: 'Status',
       sortable: true,
-      render: (operador) => getStatusBadge(operador.status)
+      render: (operador) => (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(operador.status)}`}>
+          {operador.status === 'ativo' ? 'Ativo' : 'Inativo'}
+        </span>
+      )
     },
     {
       key: 'dataAdmissao',
@@ -197,7 +302,7 @@ export function Operadores() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen bg-dashboard">
         {/* Cabeçalho da página */}
         <PageHeader
           title="Operadores"

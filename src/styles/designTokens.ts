@@ -39,6 +39,23 @@ export const colors = {
     700: '#374151',
     800: '#1f2937',
     900: '#111827',
+  },
+  // Cores específicas do dashboard
+  dashboard: {
+    background: '#eeebeb',
+    backgroundRgb: 'rgb(238, 235, 235)',
+    border: '#cfd1d3',
+    borderRgb: 'rgb(207, 209, 211)',
+    white: '#ffffff',
+    grayLight: '#f3f4f6',
+    grayDark: '#374151',
+  },
+  // Cores de status específicas
+  status: {
+    green: '#10b981',
+    purple: '#8b5cf6',
+    red: '#ef4444',
+    blue: '#3b82f6',
   }
 } as const;
 
@@ -50,6 +67,22 @@ export const spacing = {
   xl: '2rem',       // 32px
   '2xl': '3rem',    // 48px
   '3xl': '4rem',    // 64px
+  // Valores específicos encontrados no projeto
+  '32.5': '32.5px',
+  '36': '36px',
+  '40': '40px',
+  '62': '62px',
+  '71': '71px',
+  '73': '73px',
+  '98': '98px',
+  '99': '99px',
+  '120': '120px',
+  '160': '160px',
+  '200': '200px',
+  '265': '265px',
+  '290': '290px',
+  '400': '400px',
+  '500': '500px',
 } as const;
 
 export const borderRadius = {
@@ -105,4 +138,37 @@ export const statusColors = {
     text: colors.error[700],
     border: colors.error[200],
   },
+} as const;
+
+// Classes utilitárias para o dashboard
+export const dashboardClasses = {
+  container: 'dashboard-container',
+  baseCard: 'dashboard-base-card',
+  card: 'dashboard-card',
+  statCard: 'dashboard-stat-card',
+  analyticsCard: 'dashboard-analytics-card',
+  infoBox: 'dashboard-info-box',
+  iconContainer: 'dashboard-icon-container',
+  analyticsHeader: 'dashboard-analytics-header',
+  analyticsContent: 'dashboard-analytics-content',
+  statusIndicator: 'dashboard-status-indicator',
+  border: 'dashboard-border',
+  customCard: 'custom-card',
+  abaGeralCard: 'aba-geral-card',
+} as const;
+
+// Classes para botões
+export const buttonClasses = {
+  base: 'btn',
+  primary: 'btn-primary',
+  secondary: 'btn-secondary',
+} as const;
+
+// Classes para modais
+export const modalClasses = {
+  backdrop: 'modal-backdrop',
+  content: 'modal-content',
+  header: 'modal-header',
+  body: 'modal-body',
+  footer: 'modal-footer',
 } as const; 

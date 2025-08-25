@@ -8,7 +8,7 @@ import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { FormSection, InputPersonalizado } from '../../components/forms';
 import { useConfiguracoes } from '../Configuracoes/hooks/useConfiguracoes';
 
-export function Horarios() {
+export default function Horarios() {
   const { 
     config, 
     setConfig, 
@@ -80,7 +80,7 @@ export function Horarios() {
 
   return (
     <ErrorBoundary>
-             <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+             <div className="min-h-screen bg-dashboard">
                 {/* Cabeçalho da página */}
         <PageHeader
           title="Horários de Funcionamento"
@@ -101,24 +101,24 @@ export function Horarios() {
           <div className="w-full">
             {/* Configurações de Horários - Formato Tabela */}
             <div className="w-full">
-              <div className="bg-white border rounded-lg p-6" style={{ borderColor: 'rgb(207 209 211)' }}>
+              <div className="bg-white border rounded-lg p-6 border-dashboard">
                 {/* Tabela de horários */}
-                <div className="overflow-x-auto rounded-xl border" style={{ borderColor: 'rgb(207 209 211)' }}>
-                  <table className="w-full">
-                    <thead className="bg-gray-50" style={{ height: '32.5px' }}>
+                <div className="overflow-x-auto rounded-xl border border-dashboard">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50 table-header-32-5">
                       <tr>
-                        <th className="px-4 text-left text-sm font-medium text-gray-900 border-b" style={{ height: '32.5px', paddingTop: '4px', paddingBottom: '4px', borderColor: 'rgb(207 209 211)' }}>
+                        <th className="px-4 text-left text-sm font-medium text-gray-900 border-b border-dashboard pt-4 pb-4">
                           Dia da Semana
                         </th>
-                        <th className="px-4 text-left text-sm font-medium text-gray-900 border-b" style={{ height: '32.5px', paddingTop: '4px', paddingBottom: '4px', borderColor: 'rgb(207 209 211)' }}>
+                        <th className="px-4 text-left text-sm font-medium text-gray-900 border-b border-dashboard pt-4 pb-4">
                           Horários
                         </th>
-                        <th className="px-4 text-center text-sm font-medium text-gray-900 border-b" style={{ height: '32.5px', paddingTop: '4px', paddingBottom: '4px', borderColor: 'rgb(207 209 211)' }}>
+                        <th className="px-4 text-center text-sm font-medium text-gray-900 border-b border-dashboard pt-4 pb-4">
                           Ações
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y" style={{ borderColor: 'rgb(207 209 211)' }}>
+                    <tbody className="divide-y divide-gray-200 border-dashboard">
                       {['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'].map((dia, index) => {
                         const diaKey = dia.toLowerCase().replace('-feira', '');
                         const horarios = config?.horariosFuncionamento?.[diaKey] || [];

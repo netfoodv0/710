@@ -69,7 +69,7 @@ export function MobileDashboard() {
       change: '+12.5%',
       isPositive: true,
       icon: <DollarSign className="w-6 h-6 text-white" />,
-      color: 'bg-gradient-to-br from-green-500 to-green-600',
+      color: 'bg-gradient-to-br from-purple-500 to-purple-600',
       trend: 'up' as const
     },
     {
@@ -78,7 +78,7 @@ export function MobileDashboard() {
       change: '+8.2%',
       isPositive: true,
       icon: <OrderIcon size={24} color="#ffffff" />,
-      color: 'bg-gradient-to-br from-blue-500 to-blue-600',
+      color: 'bg-gradient-to-br from-gray-500 to-gray-600',
       trend: 'up' as const
     },
     {
@@ -96,7 +96,7 @@ export function MobileDashboard() {
       change: '+0.3',
       isPositive: true,
       icon: <Star className="w-6 h-6 text-white" />,
-      color: 'bg-gradient-to-br from-yellow-500 to-yellow-600',
+      color: 'bg-gradient-to-br from-gray-500 to-gray-600',
       trend: 'up' as const
     }
   ];

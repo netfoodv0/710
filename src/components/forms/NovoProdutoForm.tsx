@@ -667,7 +667,7 @@ export function NovoProdutoForm({ onSubmit, status, onStatusChange, categorias =
                 <button
                   type="button"
                   onClick={addVariacao}
-                  className="flex items-center gap-2 px-3 py-2 border border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors text-sm"
+                  className="flex items-center gap-2 px-3 py-2 border border-dashed border-gray-300 rounded text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors text-sm"
                 >
                   <Plus className="w-4 h-4" />
                   Adicionar Variação

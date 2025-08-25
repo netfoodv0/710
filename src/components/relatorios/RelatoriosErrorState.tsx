@@ -16,7 +16,7 @@ export const RelatoriosErrorState = ({ error, onRetry }: RelatoriosErrorStatePro
       <p className="text-red-700 mb-4">{error}</p>
       <button
         onClick={onRetry}
-        className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
+        className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors"
       >
         Tentar Novamente
       </button>

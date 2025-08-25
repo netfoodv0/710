@@ -18,20 +18,20 @@ const statusConfig: Record<StatusPedido, {
 }> = {
   novo: {
     label: 'Novo',
-    color: 'text-blue-800',
-    bgColor: 'bg-blue-100 border-blue-200',
+    color: 'text-purple-800',
+    bgColor: 'bg-purple-100 border-purple-200',
     icon: Clock
   },
   confirmado: {
     label: 'Confirmado',
-    color: 'text-yellow-800',
-    bgColor: 'bg-yellow-100 border-yellow-200',
+    color: 'text-gray-800',
+    bgColor: 'bg-gray-100 border-gray-200',
     icon: CheckCircle
   },
   preparando: {
     label: 'Preparando',
-    color: 'text-orange-800',
-    bgColor: 'bg-orange-100 border-orange-200',
+    color: 'text-purple-800',
+    bgColor: 'bg-purple-100 border-purple-200',
     icon: ChefHat
   },
   saiu_entrega: {
@@ -42,14 +42,14 @@ const statusConfig: Record<StatusPedido, {
   },
   entregue: {
     label: 'Entregue',
-    color: 'text-green-800',
-    bgColor: 'bg-green-100 border-green-200',
+    color: 'text-gray-800',
+    bgColor: 'bg-gray-100 border-gray-200',
     icon: CheckCircle
   },
   cancelado: {
     label: 'Cancelado',
-    color: 'text-red-800',
-    bgColor: 'bg-red-100 border-red-200',
+    color: 'text-gray-800',
+    bgColor: 'bg-gray-100 border-gray-200',
     icon: XCircle
   }
 };

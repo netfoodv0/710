@@ -17,7 +17,7 @@ export const environment = {
 
   // App Configuration
   app: {
-    name: import.meta.env.VITE_APP_NAME || "iFood Dashboard",
+    name: import.meta.env.VITE_APP_NAME || "Sistema Voult",
     version: import.meta.env.VITE_APP_VERSION || "1.0.0",
     environment: import.meta.env.VITE_NODE_ENV || import.meta.env.MODE || "development",
     debug: import.meta.env.VITE_DEBUG === "true" || import.meta.env.DEV

@@ -12,21 +12,21 @@ export function ColunaHeader({ titulo, quantidade, valorTotal, cor }: ColunaHead
     switch (cor) {
       case 'red':
         return {
-          badge: 'bg-red-500',
-          titulo: 'text-red-800',
-          valor: 'text-red-700'
+          badge: 'bg-[#fb6d2c]',
+          titulo: 'text-gray-800',
+          valor: 'text-gray-700'
         };
       case 'orange':
         return {
-          badge: 'bg-orange-500',
-          titulo: 'text-orange-800',
-          valor: 'text-orange-700'
+          badge: 'bg-[#fc9e2e]',
+          titulo: 'text-gray-800',
+          valor: 'text-gray-700'
         };
       case 'green':
         return {
-          badge: 'bg-green-500',
-          titulo: 'text-green-800',
-          valor: 'text-green-700'
+          badge: 'bg-[#279348]',
+          titulo: 'text-gray-800',
+          valor: 'text-gray-700'
         };
       default:
         return {

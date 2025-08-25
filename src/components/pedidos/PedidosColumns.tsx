@@ -33,7 +33,7 @@ export const PedidosColumns: React.FC<PedidosColumnsProps> = ({
   return (
     <>
       {/* Cards de Sessão - Posicionados abaixo do cabeçalho */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-6 mt-4">
         <ColunaHeader 
           titulo="Em Análise"
           quantidade={pedidosAnalise.length}

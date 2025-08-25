@@ -1,0 +1,252 @@
+/* Estilos para remover margens das subpáginas da sidebar */
+
+/* Remove a margem padrão do Material-UI para listas */
+.MuiList-root.MuiList-padding {
+  padding: 0 !important;
+}
+
+/* Remove margens das subpáginas */
+.MuiCollapse-root .MuiList-root {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Remove margens dos itens das subpáginas */
+.MuiCollapse-root .MuiListItemButton-root {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove margens específicas das subpáginas */
+.MuiCollapse-root .MuiList-root .MuiListItemButton-root {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Garante que não há espaçamento extra */
+.MuiCollapse-root .MuiList-root .MuiListItemButton-root:first-child {
+  margin-top: 0 !important;
+}
+
+.MuiCollapse-root .MuiList-root .MuiListItemButton-root:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Estilos específicos para sobrescrever completamente o Material-UI */
+.MuiCollapse-root .MuiList-root.MuiList-padding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Remove margens de todos os elementos da lista */
+.MuiCollapse-root .MuiList-root * {
+  margin: 0 !important;
+}
+
+/* Remove padding de todos os elementos da lista */
+.MuiCollapse-root .MuiList-root * {
+  padding: 0 !important;
+}
+
+/* Restaura padding específico para os botões */
+.MuiCollapse-root .MuiList-root .MuiListItemButton-root {
+  padding: 12px 0px !important;
+  margin: 0 !important;
+}
+
+/* Estilos específicos para a sidebar */
+.MuiDrawer-root .MuiCollapse-root .MuiList-root {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.MuiDrawer-root .MuiCollapse-root .MuiList-root .MuiListItemButton-root {
+  padding: 12px 0px !important;
+  margin: 0 !important;
+}
+
+/* Remove margens de todos os elementos da sidebar */
+.MuiDrawer-root .MuiCollapse-root .MuiList-root * {
+  margin: 0 !important;
+}
+
+/* Remove padding de todos os elementos da sidebar */
+.MuiDrawer-root .MuiCollapse-root .MuiList-root * {
+  padding: 0 !important;
+}
+
+/* Estilos específicos para as subpáginas */
+.MuiCollapse-root .MuiList-root.MuiList-padding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Remove margens de todos os elementos das subpáginas */
+.MuiCollapse-root .MuiList-root.MuiList-padding * {
+  margin: 0 !important;
+}
+
+/* Remove padding de todos os elementos das subpáginas */
+.MuiCollapse-root .MuiList-root.MuiList-padding * {
+  padding: 0 !important;
+}
+
+/* Restaura padding específico para os botões das subpáginas */
+.MuiCollapse-root .MuiList-root.MuiList-padding .MuiListItemButton-root {
+  padding: 12px 0px !important;
+  margin: 0 !important;
+}
+
+/* Estilos para deixar os ícones cinzas com 70% de opacidade */
+.MuiListItemIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* Ícones das subpáginas também cinzas com 70% de opacidade */
+.MuiCollapse-root .MuiListItemIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* Ícones da sidebar principal também cinzas com 70% de opacidade */
+.MuiDrawer-root .MuiListItemIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* Hover dos ícones - mantém cinza com 70% de opacidade */
+.MuiListItemButton-root:hover .MuiListItemIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* Ícones ativos - mantém cinza com 70% de opacidade */
+.MuiListItemButton-root.Mui-selected .MuiListItemIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* Ícones de expansão (setas) também cinzas com 70% de opacidade */
+.MuiListItemButton-root .MuiSvgIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* Ícones de expansão no hover - mantém cinza com 70% de opacidade */
+.MuiListItemButton-root:hover .MuiSvgIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* Todos os ícones SVG da sidebar - cinzas com 70% de opacidade */
+.MuiDrawer-root .MuiSvgIcon-root {
+  color: #6b7280 !important; /* Cinza médio */
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+/* ===== ESTILOS CUSTOMIZADOS PARA O SCROLLBAR ===== */
+
+/* SOLUÇÃO UNIVERSAL: Remove o scrollbar padrão em TODOS os navegadores */
+.MuiDrawer-root .MuiDrawer-paper {
+  /* Firefox */
+  scrollbar-width: none;
+  
+  /* Internet Explorer 10+ */
+  -ms-overflow-style: none;
+  
+  /* Webkit (Chrome, Safari, Edge) */
+  scrollbar-width: none;
+  
+  /* Garante que não há scrollbar visível */
+  overflow: -moz-scrollbars-none;
+}
+
+/* Remove o scrollbar padrão do Webkit (Chrome, Safari, Edge) */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Remove COMPLETAMENTE as setas de cima e baixo - abordagem mais robusta */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove especificamente cada tipo de botão com maior especificidade */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:start,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:end,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:single-button:start,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:single-button:end,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:double-button:start,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:double-button:end,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:decrement,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:increment,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:vertical:start,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:vertical:end,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:horizontal:start,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:horizontal:end {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  min-width: 0 !important;
+  max-height: 0 !important;
+  max-width: 0 !important;
+}
+
+/* Remove o track do scrollbar */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-track {
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+}
+
+/* Remove o thumb do scrollbar */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-thumb {
+  background: transparent;
+  border: none;
+}
+
+/* Remove qualquer borda ou outline do scrollbar */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-corner {
+  background: transparent;
+  border: none;
+}
+
+/* CSS adicional para garantir que as setas não apareçam em nenhum navegador */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:before,
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Força a remoção das setas em todos os navegadores Webkit */
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Garante que o scrollbar não interfira com o layout */
+.MuiDrawer-root .MuiDrawer-paper {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Remove qualquer padding ou margin que possa causar scroll horizontal */
+.MuiDrawer-root .MuiDrawer-paper * {
+  max-width: 100%;
+  box-sizing: border-box;
+}

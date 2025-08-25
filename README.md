@@ -1,6 +1,6 @@
-# NetFood Dashboard - Mobile First
+# Sistema Voult - Mobile First
 
-Dashboard de gestão para restaurantes e delivery com foco em experiência mobile otimizada.
+Sistema de gestão para restaurantes e delivery com foco em experiência mobile otimizada.
 
 ## 🚀 Características
 
@@ -69,7 +69,7 @@ src/
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/netfood-dashboard.git
+git clone https://github.com/seu-usuario/sistema-voult.git
 
 # Instale as dependências
 pnpm install
@@ -115,22 +115,22 @@ pnpm preview
 - `MobileSkeleton`: Loading states
 
 ### Páginas
-- `MobileDashboard`: Dashboard otimizado
+- `MobileDashboard`: Sistema otimizado
 - `MobilePedidos`: Gestão de pedidos
 
 ## 🔧 Configuração
 
 ### Environment Variables
 ```env
-VITE_API_URL=https://api.netfood.com
+VITE_API_URL=https://api.sistema-voult.com
 VITE_FIREBASE_CONFIG=your_firebase_config
 ```
 
 ### PWA Configuration
 ```json
 {
-  "name": "NetFood Dashboard",
-  "short_name": "NetFood",
+  "name": "Sistema Voult",
+      "short_name": "Sistema Voult",
   "theme_color": "#3b82f6",
   "background_color": "#ffffff"
 }
@@ -194,9 +194,9 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 🆘 Suporte
 
-- 📧 Email: suporte@netfood.com
-- 💬 Discord: [NetFood Community](https://discord.gg/netfood)
-- 📖 Documentação: [docs.netfood.com](https://docs.netfood.com)
+- 📧 Email: suporte@sistema-voult.com
+- 💬 Discord: [Sistema Voult Community](https://discord.gg/sistema-voult)
+- 📖 Documentação: [docs.sistema-voult.com](https://docs.sistema-voult.com)
 
 ## 🚀 Roadmap
 
@@ -211,7 +211,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ---
 
-**NetFood Dashboard** - Transformando a gestão de restaurantes com tecnologia mobile-first! 🍕📱
+**Sistema Voult** - Transformando a gestão de restaurantes com tecnologia mobile-first! 🍕📱
 
 
 cd "whatsapp-backend\whatsapp-backend"

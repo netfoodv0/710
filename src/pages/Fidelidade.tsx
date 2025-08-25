@@ -25,12 +25,10 @@ function FidelidadePage() {
           subtitle="Sistema de fidelidade e recompensas"
         />
 
-        <div className="h-0" />
-
-        <div className="flex-1 overflow-y-auto" style={{ padding: '16px' }}>
+        <div className="flex-1 px-4 py-4">
           <div className="max-w-6xl mx-auto space-y-4">
-          <FidelidadeContent />
-            <div className="h-25"></div>
+            <FidelidadeContent />
+            <div className="h-6"></div>
           </div>
         </div>
       </div>

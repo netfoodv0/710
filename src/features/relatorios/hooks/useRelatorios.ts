@@ -2,13 +2,14 @@ import { useState, useEffect, useCallback } from 'react';
 import { DadosRelatorios, ExportOptions } from '../types/relatorios.types';
 import { relatoriosService } from '../services/relatoriosService';
 import { PeriodType } from '../../../components/filters/FiltroPeriodo';
+import { DadosFiltrados, ConfigRelatorio } from '../../../types/relatorios';
 
 interface UseRelatoriosReturn {
   dados: DadosRelatorios | null;
   loading: boolean;
   error: string | null;
   carregarDados: () => Promise<void>;
-  exportarRelatorio: (filtros: any, periodo: PeriodType, options?: ExportOptions) => Promise<void>;
+  exportarRelatorio: (filtros: ConfigRelatorio['filtros'], periodo: PeriodType, options?: ExportOptions) => Promise<void>;
   limparErro: () => void;
 }
 
@@ -37,7 +38,7 @@ export function useRelatorios(period: PeriodType): UseRelatoriosReturn {
   }, [period]);
 
   const exportarRelatorio = useCallback(async (
-    filtros: any, 
+    filtros: ConfigRelatorio['filtros'], 
     periodo: PeriodType, 
     options: ExportOptions = {
       format: 'pdf',

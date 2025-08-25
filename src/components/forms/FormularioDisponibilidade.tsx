@@ -70,7 +70,7 @@ export function FormularioDisponibilidade({ periodos, onChange }: FormularioDisp
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded transition-colors"
         >
           <Plus className="w-3.5 h-3.5" />
           Adicionar período

@@ -54,7 +54,7 @@ export function ConfiguracoesGerais({ form }: ConfiguracoesGeraisProps) {
           name="linkPersonalizado"
           value={config?.linkPersonalizado || ''}
           onChange={(value) => updateStringField('linkPersonalizado', value)}
-          placeholder="Ex: netfood-marechal-castelo-branco"
+          placeholder="Ex: sistema-voult-marechal-castelo-branco"
         />
 
         {config?.linkPersonalizado && (

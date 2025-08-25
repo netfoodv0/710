@@ -9,5 +9,6 @@ export { FormInput } from './FormInput';
 export { FormSwitch } from './FormSwitch';
 export { FormImageUpload } from './FormImageUpload';
 export { FormSingleImageUpload } from './FormSingleImageUpload';
+export { FormAvatarUpload } from './FormAvatarUpload';
 
 export { FormSection } from './FormSection'; 

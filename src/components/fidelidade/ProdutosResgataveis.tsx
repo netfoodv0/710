@@ -1,8 +1,8 @@
 import React from 'react';
 import { useFidelidade } from '../../context/fidelidadeContext';
 import { DataTable, DataTableColumn } from '../ui';
-import { Button } from '@mui/material';
-import { motion } from 'motion/react';
+// Button component removed - using HTML button instead
+import { motion } from 'framer-motion';
 import { ProdutoResgatavel } from '../../context/fidelidadeContext';
 
 export function ProdutosResgataveis() {
@@ -83,21 +83,12 @@ export function ProdutosResgataveis() {
     >
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-semibold text-gray-800" style={{ fontSize: '16px' }}>Produtos Resgatáveis</h3>
-        <Button 
-          variant="outlined" 
-          size="medium"
+        <button 
           onClick={handleAdicionarProduto}
-          sx={{
-            color: '#8b5cf6',
-            borderColor: '#8b5cf6',
-            '&:hover': {
-              borderColor: '#7c3aed',
-              backgroundColor: 'rgba(139, 92, 246, 0.04)'
-            }
-          }}
+          className="px-4 py-2 border border-purple-500 text-purple-500 rounded hover:bg-purple-50 hover:border-purple-600 transition-colors"
         >
           Adicionar Produto
-        </Button>
+        </button>
       </div>
 
       <DataTable

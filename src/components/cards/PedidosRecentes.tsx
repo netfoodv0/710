@@ -47,7 +47,7 @@ export const PedidosRecentes: React.FC<PedidosRecentesProps> = ({
 }) => {
   if (!pedidos || pedidos.length === 0) {
     return (
-      <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: '#cfd1d3' }}>
+      <div className={`bg-white border rounded-lg p-4 border-dashboard ${className}`}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Pedidos Recentes</h3>
         <div className="flex items-center justify-center h-48 text-gray-500">
           Nenhum pedido recente
@@ -57,12 +57,12 @@ export const PedidosRecentes: React.FC<PedidosRecentesProps> = ({
   }
 
   return (
-    <div className={`bg-white border rounded-lg p-4 ${className}`} style={{ borderColor: '#cfd1d3' }}>
+    <div className={`bg-white border rounded-lg p-4 border-dashboard ${className}`}>
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Pedidos Recentes</h3>
       
       <div className="space-y-4">
         {pedidos.map((pedido) => (
-          <div key={pedido.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors flex flex-col justify-between" style={{ borderColor: '#cfd1d3', height: '99px' }}>
+          <div key={pedido.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors flex flex-col justify-between border-dashboard card-height-99">
             {/* Cabeçalho com número, status e valor */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -81,8 +81,11 @@ export const PedidosRecentes: React.FC<PedidosRecentesProps> = ({
             
             {/* Informações do cliente distribuídas horizontalmente */}
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">{pedido.cliente}</span>
-              <span className="text-sm text-gray-500">{pedido.horario}</span>
+              <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <span>{pedido.cliente}</span>
+                <span>•</span>
+                <span>{pedido.horario}</span>
+              </div>
             </div>
           </div>
         ))}

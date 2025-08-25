@@ -4,14 +4,7 @@ import { NotificationToast } from '../../components/NotificationToast';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { useNavigate } from 'react-router-dom';
 import { PeriodType } from '../../components/filters/FiltroPeriodo';
-import { 
-  SkeletonStatsCards, 
-  SkeletonBarCharts, 
-  SkeletonTable,
-  SkeletonFilters,
-  SkeletonDistribuicaoCategoria,
-  SkeletonFunilFidelidade
-} from '../../components/ui/SkeletonComponents';
+
 import { DataTable } from '../../components/ui';
 
 // Componentes refatorados
@@ -34,7 +27,7 @@ import { useAnimacaoCards } from '../../hooks/useAnimacaoCards';
 // Estilos
 import './Cupons.css';
 
-export function RelatoriosCupons() {
+export default function RelatoriosCupons() {
   const navigate = useNavigate();
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
   const [loading, setLoading] = useState(false);
@@ -134,35 +127,32 @@ export function RelatoriosCupons() {
 
           {/* Error state */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <div className="flex">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+              <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">Erro ao carregar dados</h3>
-                  <div className="mt-2 text-sm text-red-700">{error}</div>
+                  <h3 className="text-sm font-medium text-gray-800">
+                    Erro ao carregar relatório
+                  </h3>
+                  <div className="mt-2 text-sm text-gray-700">
+                    <p>{error}</p>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Conteúdo principal com skeleton loading contextual */}
+          {/* Conteúdo principal com loading */}
           {!carregamentoCompleto ? (
             <div className="space-y-6">
-              {/* Container de estatísticas com skeleton interno */}
-              <SkeletonStatsCards count={4} />
-              
-              {/* Container de gráficos com skeleton interno */}
-              <SkeletonDistribuicaoCategoria />
-              
-              {/* Container de filtros com skeleton interno */}
-              <SkeletonFilters />
-              
-              {/* Container de tabela com skeleton interno */}
-              <SkeletonTable rows={8} columns={8} showHeader={true} />
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+                <p className="mt-4 text-gray-600">Carregando relatório de cupons...</p>
+              </div>
             </div>
           ) : (
             <>

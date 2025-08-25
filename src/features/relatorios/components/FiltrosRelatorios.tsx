@@ -189,7 +189,7 @@ export const FiltrosRelatorios = React.memo(function FiltrosRelatorios({
             )}
             
             {filtros.status !== 'todos' && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">
+              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-700">
                 Status: {statusOptions.find(opt => opt.value === filtros.status)?.label}
               </span>
             )}
@@ -207,7 +207,7 @@ export const FiltrosRelatorios = React.memo(function FiltrosRelatorios({
             )}
             
             {(filtros.valorMinimo || filtros.valorMaximo) && (
-              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-700">
+              <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
                 Valor: R$ {filtros.valorMinimo || 0} - R$ {filtros.valorMaximo || '∞'}
               </span>
             )}

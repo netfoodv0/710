@@ -58,16 +58,16 @@ class DashboardService {
 
       // Mapear cores para categorias
       const coresMap: { [key: string]: string } = {
-        'Pizza': '#10B981',
-        'Hambúrguer': '#F59E0B',
-        'Lasanha': '#3B82F6',
+        'Pizza': '#8B5CF6',
+        'Hambúrguer': '#6B7280',
+        'Lasanha': '#7C3AED',
         'Salmão': '#8B5CF6',
-        'Risotto': '#EF4444',
-        'Bebida': '#06B6D4',
-        'Sobremesa': '#EC4899',
-        'Acompanhamento': '#84CC16',
-        'Salada': '#22C55E',
-        'Sanduíche': '#F97316',
+        'Risotto': '#6B7280',
+        'Bebida': '#7C3AED',
+        'Sobremesa': '#8B5CF6',
+        'Acompanhamento': '#6B7280',
+        'Salada': '#7C3AED',
+        'Sanduíche': '#8B5CF6',
         'Outros': '#6B7280'
       };
 

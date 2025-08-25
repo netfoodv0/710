@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { PageHeader, BagIcon, DataTable, DataTableColumn, EstoqueNavigation } from '@/components/ui';
+import { PageHeader, BagIcon, DataTable, DataTableColumn } from '@/components/ui';
 import { AlertTriangle, TrendingUp, Package } from 'lucide-react';
 import { ModalEditarEstoque, ModalCadastroInsumo } from '../../components/modals';
+import { HeaderEstoqueCompartilhado } from '../../components/estoque';
 
 // Dados fictícios de produtos em estoque
 const produtosEstoque = [
@@ -119,7 +120,7 @@ const produtosEstoque = [
   }
 ];
 
-export function Insumos() {
+export default function Insumos() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalCadastroOpen, setIsModalCadastroOpen] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState<typeof produtosEstoque[0] | null>(null);
@@ -181,9 +182,9 @@ export function Insumos() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      em_estoque: { label: 'Em Estoque', color: 'bg-green-100 text-green-800' },
-      estoque_baixo: { label: 'Estoque Baixo', color: 'bg-yellow-100 text-yellow-800' },
-      sem_estoque: { label: 'Sem Estoque', color: 'bg-red-100 text-red-800' }
+      em_estoque: { label: 'Em Estoque', color: 'bg-purple-100 text-purple-800' },
+      estoque_baixo: { label: 'Estoque Baixo', color: 'bg-gray-100 text-gray-800' },
+      sem_estoque: { label: 'Sem Estoque', color: 'bg-gray-100 text-gray-800' }
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.em_estoque;
@@ -198,19 +199,19 @@ export function Insumos() {
   const getQuantidadeBadge = (quantidade: number, quantidadeMinima: number) => {
     if (quantidade === 0) {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
           {quantidade}
         </span>
       );
     } else if (quantidade <= quantidadeMinima) {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
           {quantidade}
         </span>
       );
     } else {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
           {quantidade}
         </span>
       );
@@ -400,14 +401,9 @@ export function Insumos() {
   }, [produtos]);
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'rgb(238, 235, 235)' }}>
+    <div className="min-h-screen flex flex-col bg-dashboard-rgb">
       {/* Cabeçalho da página */}
-      <PageHeader
-        title="Insumos"
-        subtitle="Gerenciamento completo dos insumos do restaurante"
-        leftContent={
-          <EstoqueNavigation currentPage="insumos" />
-        }
+      <HeaderEstoqueCompartilhado
         actionButton={{
           label: "Atualizar Insumos",
           onClick: () => {},
@@ -421,9 +417,9 @@ export function Insumos() {
       {/* Conteúdo Principal */}
       <div className="px-6 pt-6 flex-1">
         {/* Estatísticas do Estoque */}
-        <div className="bg-white border rounded-lg p-4 flex-shrink-0 mb-6" style={{ borderColor: '#cfd1d3' }}>
+        <div className="bg-white border rounded-lg p-4 flex-shrink-0 mb-6 border-dashboard">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-gray-600">Total de Produtos</p>
@@ -435,7 +431,7 @@ export function Insumos() {
               </div>
             </div>
             
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-gray-600">Em Estoque</p>
@@ -449,7 +445,7 @@ export function Insumos() {
               </div>
             </div>
             
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-gray-600">Estoque Baixo</p>
@@ -463,7 +459,7 @@ export function Insumos() {
               </div>
             </div>
             
-            <div className="bg-white p-3 rounded-lg border" style={{ borderColor: '#cfd1d3' }}>
+            <div className="bg-white p-3 rounded-lg border border-dashboard">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs font-medium text-gray-600">Sem Estoque</p>

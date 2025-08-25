@@ -10,8 +10,8 @@ export function SidebarToggleButton({ isOpen, onClick, position }: SidebarToggle
   const isLeft = position === 'left';
   
   const buttonClasses = isLeft
-    ? "absolute -left-12 top-6 z-10 bg-white hover:bg-gray-100 text-gray-800 p-3 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-gray-300"
-    : "fixed top-6 right-6 z-10 bg-white hover:bg-gray-100 text-gray-800 p-3 rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300";
+    ? "absolute -left-12 top-6 z-10 bg-white hover:bg-gray-100 text-gray-800 p-3 rounded-l focus:outline-none focus:ring-2 focus:ring-gray-300"
+    : "fixed top-6 right-6 z-10 bg-white hover:bg-gray-100 text-gray-800 p-3 rounded shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300";
 
   const icon = isOpen ? (
     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

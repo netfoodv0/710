@@ -13,7 +13,7 @@ export function ReportIcon({ size = 24, color = "#1f1f1f", className = "" }: Rep
       height={`${size}px`} 
       viewBox="0 -960 960 960" 
       width={`${size}px`} 
-      className={`sidebar-icon ${className}`}
+      className={`w-6 h-6 ${className}`}
       style={{ fill: color }}
     >
       <path d="M640-160v-280h160v280H640Zm-240 0v-640h160v640H400Zm-240 0v-440h160v440H160Z"/>

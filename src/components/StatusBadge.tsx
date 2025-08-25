@@ -86,11 +86,16 @@ const statusProdutoConfig: Record<string, {
 
 export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
   // Configuração padrão para produtos
-  const config = {
+  const config: Record<string, {
+    label: string;
+    color: string;
+    bgColor: string;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  }> = {
     ativo: {
       label: 'Ativo',
-      color: 'text-green-800',
-      bgColor: 'bg-green-100 border-green-200',
+      color: 'text-purple-800',
+      bgColor: 'bg-purple-100 border-purple-200',
       icon: CheckCircle
     },
     inativo: {
@@ -101,8 +106,8 @@ export function StatusBadge({ status, size = 'md' }: StatusBadgeProps) {
     },
     em_falta: {
       label: 'Em Falta',
-      color: 'text-red-800',
-      bgColor: 'bg-red-100 border-red-200',
+      color: 'text-gray-800',
+      bgColor: 'bg-gray-100 border-gray-200',
       icon: AlertCircle
     }
   };

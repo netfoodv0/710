@@ -5,7 +5,7 @@ import { MapLoadingState } from '../components/maps/MapLoadingState';
 import { useMapState } from '../hooks/useMapState';
 import { useConfiguracoesLoja } from '../hooks/useConfiguracoesLoja';
 
-export function Mapa(): JSX.Element {
+export default function Mapa(): JSX.Element {
   const {
     isSidebarOpen,
     showHeatmap,

@@ -26,6 +26,19 @@ export const RelatoriosKPIs: React.FC<RelatoriosKPIsProps> = ({ dados, period })
     return new Intl.NumberFormat('pt-BR').format(value);
   };
 
+  const getKpiColor = (tipo: string) => {
+    switch (tipo) {
+      case 'vendas':
+        return 'bg-purple-100';
+      case 'pedidos':
+        return 'bg-gray-100';
+      case 'clientes':
+        return 'bg-purple-100';
+      default:
+        return 'bg-gray-100';
+    }
+  };
+
   const kpis = [
     {
       titulo: 'Receita Total',

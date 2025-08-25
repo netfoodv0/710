@@ -8,7 +8,7 @@ import SideBar from '../components/whatsapp/SideBar';
 import ConversationDetails from '../components/whatsapp/ConversationDetails';
 
 // Componentes locais
-import { LoadingScreen, HomeIcon, ConnectionStatus } from './Atendimento/components';
+import { HomeIcon, ConnectionStatus } from './Atendimento/components';
 
 // Hooks
 import { useAuthLogic } from './Atendimento/hooks';
@@ -23,7 +23,7 @@ import { BotProvider } from '../context/botContext';
 import './Atendimento.css';
 
 
-export function Atendimento() {
+export default function Atendimento() {
   return (
     <div className="w-full h-screen m-0 p-0 overflow-hidden" style={{ margin: 0, padding: 0 }}>
       {/* Interface do WhatsApp ocupando 100% da tela */}

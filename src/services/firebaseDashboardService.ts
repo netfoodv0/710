@@ -828,7 +828,25 @@ export class FirebaseDashboardService extends BaseFirestoreService {
         return [];
       }
       
-      return resultado;
+      // Mapear cores para categorias
+      const coresMap: { [key: string]: string } = {
+        'Pizza': '#8B5CF6',
+        'Hambúrguer': '#6B7280',
+        'Lasanha': '#7C3AED',
+        'Salmão': '#8B5CF6',
+        'Risotto': '#6B7280',
+        'Bebida': '#7C3AED',
+        'Sobremesa': '#8B5CF6',
+        'Acompanhamento': '#6B7280',
+        'Salada': '#7C3AED',
+        'Sanduíche': '#8B5CF6',
+        'Outros': '#6B7280'
+      };
+
+      return resultado.map(item => ({
+        ...item,
+        color: coresMap[item.categoria] || '#6B7280' // Cor padrão
+      }));
     } catch (error) {
       console.error('Erro ao calcular vendas por categoria:', error);
       // Retornar array vazio em caso de erro

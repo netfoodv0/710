@@ -1,13 +1,8 @@
 // Layout e componentes principais
 export { Layout } from './Layout';
-export { Sidebar } from './Sidebar';
 export { ErrorBoundary } from './ErrorBoundary';
 export { NotificationToast } from './NotificationToast';
 export { PeriodFilter } from './filters/FiltroPeriodo';
-
-// Componentes de carregamento
-export { LoadingScreen } from './LoadingScreen';
-export { LoadingTest } from './LoadingTest';
 
 // Componentes genéricos
 export { Card, StatsCard, QuickActionCard, ProductCard } from './Card';
@@ -19,9 +14,9 @@ export { Table, TableActions } from './Table';
 export { StatusBadge } from './StatusBadge';
 
 // Componentes de estatísticas
-export { default as EstatisticasCard } from './EstatisticasCard';
-export { default as EstatisticasContainer } from './EstatisticasContainer';
-export { default as EstatisticasHistoricoContainer } from './EstatisticasHistoricoContainer';
+export { EstatisticasCard } from './EstatisticasCard';
+export { EstatisticasContainer } from './EstatisticasContainer';
+export { EstatisticasHistoricoContainer } from './EstatisticasHistoricoContainer';
 
 // Componentes de paginação
 export { LoadMoreButton } from './LoadMoreButton';

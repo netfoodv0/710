@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '../ui';
+import { Card } from '../Card';
 import { ModalActionButtons } from './ModalActionButtons';
 import { ModalSizeButtons } from './ModalSizeButtons';
 import { ModalSize } from '../../types/modal';

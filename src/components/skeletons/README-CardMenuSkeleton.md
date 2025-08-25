@@ -64,27 +64,22 @@ O skeleton replica exatamente a estrutura do `CardMenuCategorias`:
 └─────────────────────────────────────────┘
 ```
 
-## Integração com CardapioSkeleton
+## Uso Independente
 
-O `CardMenuSkeleton` pode ser usado como parte do `CardapioSkeleton` existente:
+O `CardMenuSkeleton` pode ser usado independentemente em qualquer componente que precise de um skeleton para categorias de menu:
 
 ```tsx
-// Em CardapioSkeleton.tsx
-import { CardMenuSkeleton } from './CardMenuSkeleton';
+// Uso direto em qualquer componente
+import { CardMenuSkeleton } from '../components/skeletons';
 
-export const CardapioSkeleton: React.FC = () => {
-  return (
-    <div className="pt-6 px-6">
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar de Categorias */}
-        <div className="w-full lg:w-[360px] flex-shrink-0 space-y-6">
-          <CardMenuSkeleton numCategorias={4} />
-        </div>
-        
-        {/* Resto do skeleton... */}
-      </div>
-    </div>
-  );
+const MyComponent = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  
+  if (isLoading) {
+    return <CardMenuSkeleton numCategorias={4} />;
+  }
+  
+  return <CardMenuCategorias />;
 };
 ```
 

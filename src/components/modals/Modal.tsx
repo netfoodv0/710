@@ -1,24 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, createContext, useContext } from 'react';
 import { X } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps } from '../../types/modal';
+import '../../styles/modal.css';
 
-export type ModalSize = 'sm' | 'lg' | 'xl';
+// Contexto para compartilhar a função de fechamento
+const ModalContext = createContext<(() => void) | null>(null);
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title?: string;
-  children: React.ReactNode;
-  size?: ModalSize;
-  showCloseButton?: boolean;
-  className?: string;
-  contentClassName?: string;
-}
-
-const sizeClasses: Record<ModalSize, string> = {
-  sm: 'max-w-md',
-  lg: 'max-w-4xl',
-  xl: 'max-w-7xl'
+// Hook para usar o contexto
+export const useModalClose = () => {
+  const closeFunction = useContext(ModalContext);
+  if (!closeFunction) {
+    throw new Error('useModalClose deve ser usado dentro de um Modal');
+  }
+  return closeFunction;
 };
 
 export function Modal({
@@ -26,11 +20,21 @@ export function Modal({
   onClose,
   title,
   children,
-  size = 'lg',
+  size = 'md',
   showCloseButton = true,
-  className,
-  contentClassName
+  className = ''
 }: ModalProps) {
+  const [isClosing, setIsClosing] = useState(false);
+
+  // Função para fechar com animação - MESMA FUNÇÃO PARA TODOS
+  const handleClose = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      onClose();
+      setIsClosing(false);
+    }, 200); // Duração da animação de saída (sincronizado com CSS)
+  };
+
   // Efeito para controlar o scroll do body
   useEffect(() => {
     if (isOpen) {
@@ -48,7 +52,7 @@ export function Modal({
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
-        onClose();
+        handleClose();
       }
     };
 
@@ -59,45 +63,39 @@ export function Modal({
     return () => {
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, handleClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
+
+  // Separar o footer dos outros children
+  const modalChildren = React.Children.toArray(children);
+  const footer = modalChildren.find(child => 
+    React.isValidElement(child) && child.type === ModalFooter
+  );
+  const otherChildren = modalChildren.filter(child => 
+    !React.isValidElement(child) || child.type !== ModalFooter
+  );
 
   return (
-    <>
+    <ModalContext.Provider value={handleClose}>
       {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-50"
-        onClick={onClose}
-      />
+      <div className={`modal-backdrop ${isClosing ? 'backdrop-exit' : 'backdrop-enter'}`} onClick={handleClose} />
       
-      {/* Modal */}
-      <div 
-        className="fixed inset-0 z-50 flex items-center justify-center"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-      >
+      {/* Container do modal */}
+      <div className="modal-container">
         <div 
-          className={cn(
-            'bg-white rounded-lg shadow-xl w-full max-h-[90vh] overflow-hidden m-4',
-            sizeClasses[size],
-            className
-          )}
-          style={{ backgroundColor: 'white !important' }}
+          className={`modal modal-${size} ${className} ${isClosing ? 'modal-exit' : 'modal-enter'}`}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header automático apenas quando há título */}
+          {/* Header */}
           {title && (
-            <div className="border-b border-gray-200">
-              <div className="flex items-center justify-between px-6 py-6">
-                <h2 id="modal-title" className="text-lg font-semibold text-gray-900">
-                  {title}
-                </h2>
+            <div className="modal-header">
+              <div className="modal-header-content">
+                <h2 className="modal-title">{title}</h2>
                 {showCloseButton && (
                   <button
-                    onClick={onClose}
-                    className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                    onClick={handleClose}
+                    className="modal-close-button"
                     aria-label="Fechar modal"
                   >
                     <X size={20} />
@@ -106,34 +104,37 @@ export function Modal({
               </div>
             </div>
           )}
-
-          {/* Content */}
-          <div className={cn('px-6 py-6 overflow-y-auto', contentClassName)}>
-            {children}
+          
+          {/* Conteúdo principal (scrollável) */}
+          <div className="modal-content">
+            {otherChildren}
           </div>
+          
+          {/* Footer fixo */}
+          {footer}
         </div>
       </div>
-    </>
+    </ModalContext.Provider>
   );
 }
 
-// Componentes auxiliares para facilitar o uso
-export function ModalHeader({ children, className, showCloseButton, onClose }: { 
-  children: React.ReactNode; 
-  className?: string;
-  showCloseButton?: boolean;
-  onClose?: () => void;
-}) {
+// Componentes auxiliares
+export function ModalHeader({ 
+  children, 
+  className = '', 
+  showCloseButton = true, 
+  onClose 
+}: ModalHeaderProps) {
   return (
-    <div className={cn('border-b border-gray-200', className)}>
-      <div className="flex items-center justify-between px-6 py-6">
+    <div className={`modal-header ${className}`}>
+      <div className="modal-header-content">
         <div className="flex-1">
           {children}
         </div>
         {showCloseButton && onClose && (
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            className="modal-close-button"
             aria-label="Fechar modal"
           >
             <X size={20} />
@@ -144,18 +145,18 @@ export function ModalHeader({ children, className, showCloseButton, onClose }: {
   );
 }
 
-export function ModalBody({ children, className }: { children: React.ReactNode; className?: string }) {
+export function ModalBody({ children, className = '' }: ModalBodyProps) {
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={`modal-body ${className}`}>
       {children}
     </div>
   );
 }
 
-export function ModalFooter({ children, className }: { children: React.ReactNode; className?: string }) {
+export function ModalFooter({ children, className = '' }: ModalFooterProps) {
   return (
-    <div className={cn('border-t border-gray-200', className)}>
-      <div className="flex items-center justify-end gap-3 px-6 pt-4">
+    <div className={`modal-footer ${className}`}>
+      <div className="modal-footer-content">
         {children}
       </div>
     </div>
