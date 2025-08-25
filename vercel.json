@@ -1,10 +1,10 @@
 {
-  "buildCommand": "node scripts/build-vercel.js",
-  "installCommand": "npm install --omit=optional --no-optional",
+  "buildCommand": "node scripts/build-hybrid.js",
+  "installCommand": "npm install",
   "framework": "vite",
   "outputDirectory": "dist",
   "env": {
-    "VITE_FORCE_ESBUILD": "true",
-    "VITE_SKIP_OPTIONAL_DEPS": "true"
+    "VITE_FORCE_ESBUILD": "false",
+    "VITE_SKIP_OPTIONAL_DEPS": "false"
   }
 } 
