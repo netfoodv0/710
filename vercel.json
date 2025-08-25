@@ -1,7 +1,7 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "installCommand": "npm install --platform=linux --arch=x64",
+  "installCommand": "npm ci --platform=linux --arch=x64",
   "framework": "vite",
   "rewrites": [
     {

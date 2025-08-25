@@ -6,10 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:vercel": "npm run clean:deps && vite build",
     "build:prod": "cross-env VITE_NODE_ENV=production VITE_APP_ENVIRONMENT=production VITE_USE_EMULATORS=false vite build",
     "build:dev": "cross-env VITE_NODE_ENV=development VITE_APP_ENVIRONMENT=development VITE_USE_EMULATORS=true vite build",
     "preview": "vite preview",
     "start:prod": "cross-env VITE_NODE_ENV=production VITE_APP_ENVIRONMENT=production VITE_USE_EMULATORS=false vite preview",
+    "clean:deps": "rm -rf node_modules/.cache && rm -rf node_modules/.vite",
     "deploy:indexes": "node deploy-indexes.js",
     "deploy:indexes-auto": "node deploy-all-indexes.js",
     "deploy:indexes-ps": "powershell -ExecutionPolicy Bypass -File deploy-indexes.ps1",
