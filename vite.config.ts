@@ -36,6 +36,12 @@ export default defineConfig({
           firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage', 'firebase/analytics']
         }
       }
+    },
+    esbuild: {
+      target: 'es2020',
+      supported: {
+        'top-level-await': true
+      }
     }
   },
   define: {
