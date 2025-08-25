@@ -20,6 +20,10 @@ try {
   console.log('📦 Instalando dependências (sem opcionais)...');
   execSync('npm install --omit=optional --no-optional', { stdio: 'inherit' });
 
+  // REMOVER ROLLUP ANTES DO BUILD
+  console.log('🗑️ Removendo Rollup para evitar erros...');
+  execSync('node scripts/remove-rollup.js', { stdio: 'inherit' });
+
   // Configurar variáveis de ambiente
   process.env.VITE_FORCE_ESBUILD = 'true';
   process.env.VITE_SKIP_OPTIONAL_DEPS = 'true';

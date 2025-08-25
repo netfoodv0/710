@@ -1,5 +1,5 @@
 {
-  "buildCommand": "VITE_FORCE_ESBUILD=true npx vite build --config vite.config.esbuild.ts",
+  "buildCommand": "node scripts/build-vercel.js",
   "installCommand": "npm install --omit=optional --no-optional",
   "framework": "vite",
   "outputDirectory": "dist",
