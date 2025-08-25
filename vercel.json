@@ -1,11 +1,12 @@
 {
   "buildCommand": "npm run build:prod",
   "outputDirectory": "dist",
-  "installCommand": "npm ci --prefer-offline --no-audit",
+  "installCommand": "npm ci --prefer-offline --no-audit --no-optional",
   "framework": "vite",
   "env": {
     "NODE_ENV": "production",
-    "NPM_CONFIG_LEGACY_PEER_DEPS": "true"
+    "NPM_CONFIG_LEGACY_PEER_DEPS": "true",
+    "NPM_CONFIG_OPTIONAL": "false"
   },
   "rewrites": [
     {
