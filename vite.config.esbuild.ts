@@ -2,7 +2,7 @@ import path from "path"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 
-// Configuração específica para o Vercel - Força esbuild, evita Rollup
+// Configuração que força esbuild e evita Rollup completamente
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -28,50 +28,42 @@ export default defineConfig({
     target: 'es2020',
     minify: 'esbuild',
     sourcemap: false,
-    // Força configurações que evitam Rollup
-    rollupOptions: {
-      // Desabilita todas as funcionalidades do Rollup
-      input: undefined,
-      output: undefined,
-      external: undefined,
-      plugins: []
-    },
-    // Força uso do esbuild
+    // Configurações específicas para esbuild
     esbuild: {
       target: 'es2020',
       supported: {
         'top-level-await': true
       }
     },
-    // Configurações adicionais para evitar Rollup
+    // Configurações para evitar Rollup
     lib: false,
     ssr: false,
-    // Força configurações específicas
     emptyOutDir: true,
-    reportCompressedSize: false
+    reportCompressedSize: false,
+    // Força configurações que evitam Rollup
+    rollupOptions: false,
+    // Configurações adicionais para esbuild
+    minifyIdentifiers: false,
+    minifySyntax: false,
+    minifyWhitespace: false
   },
   define: {
     global: 'globalThis',
   },
-  // Plugin personalizado para garantir configurações
+  // Plugin personalizado para forçar esbuild
   plugins: [
     react(),
     {
-      name: 'force-esbuild',
+      name: 'force-esbuild-only',
       configResolved(config) {
         // Força configurações que evitam Rollup
-        config.build.rollupOptions = {
-          input: undefined,
-          output: undefined,
-          external: undefined,
-          plugins: []
-        };
+        config.build.rollupOptions = false;
         config.build.minify = 'esbuild';
         config.build.lib = false;
         config.build.ssr = false;
         
         // Log para debug
-        console.log('🔧 Configuração forçada: esbuild ativo, Rollup desabilitado');
+        console.log('🔧 Configuração forçada: esbuild ativo, Rollup completamente desabilitado');
       }
     }
   ]

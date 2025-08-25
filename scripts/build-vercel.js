@@ -24,9 +24,9 @@ try {
   process.env.VITE_FORCE_ESBUILD = 'true';
   process.env.VITE_SKIP_OPTIONAL_DEPS = 'true';
 
-  // Executar build com configuração específica que desabilita Rollup
-  console.log('🔨 Executando build com configuração específica para Vercel...');
-  execSync('npx vite build --config vite.config.vercel.ts', { stdio: 'inherit' });
+  // Executar build com configuração que força esbuild
+  console.log('🔨 Executando build com configuração que força esbuild...');
+  execSync('npx vite build --config vite.config.esbuild.ts', { stdio: 'inherit' });
 
   console.log('✅ Build concluído com sucesso!');
 } catch (error) {
