@@ -47,6 +47,15 @@ export default defineConfig({
         propertyReadSideEffects: false,
         unknownGlobalSideEffects: false,
       },
+      // Configuração para evitar problemas de módulos específicos de plataforma
+      onwarn(warning, warn) {
+        // Ignorar avisos sobre módulos específicos de plataforma
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
+        if (warning.message.includes('@rollup/rollup-')) return;
+        if (warning.message.includes('rollup-win32-x64-msvc')) return;
+        if (warning.message.includes('rollup-linux-x64-gnu')) return;
+        warn(warning);
+      },
     },
   },
   optimizeDeps: {
