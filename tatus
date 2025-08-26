@@ -1,6 +1,0 @@
-.npmrc
-.vercelignore
-SOLUCAO-ERRO-BUILD-VERCEL.md
-package.json
-vercel.json
-vite.config.prod.ts

@@ -6,18 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:dev": "vite build --config vite.config.dev.ts",
-    "build:prod": "vite build --config vite.config.ts",
+    "build:prod": "vite build",
     "preview": "vite preview",
-    "analyze": "node scripts/analyze-bundle.js",
-    "analyze:advanced": "node scripts/advanced-bundle-analyzer.js",
-    "build:analyze": "npm run build && npm run analyze",
-    "build:analyze:advanced": "npm run build && npm run analyze:advanced",
-    "clean": "rimraf dist",
-    "bundle:check": "npm run build && npm run analyze",
-    "bundle:check:advanced": "npm run build && npm run analyze:advanced",
-    "open:analyzer": "node scripts/open-bundle-analyzer.js",
-    "analyze:full": "npm run build && npm run analyze:advanced && npm run open:analyzer"
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.13.5",
@@ -49,7 +40,6 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.12",
     "@remixicon/react": "^4.6.0",
-    "@rollup/rollup-win32-x64-msvc": "^4.48.1",
     "@syncfusion/ej2-react-diagrams": "^30.2.5",
     "@tanstack/react-query": "^5.83.0",
     "@types/leaflet": "^1.9.20",
@@ -117,15 +107,10 @@
     "lint-staged": "^16.1.2",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "rollup": "^4.48.1",
-    "rollup-plugin-visualizer": "^6.0.3",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
-    "terser": "^5.43.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
-    "vite": "^5.4.8",
-    "vite-bundle-analyzer": "^1.2.1",
-    "webpack-bundle-analyzer": "^4.10.2"
+    "vite": "^5.4.8"
   }
 }
