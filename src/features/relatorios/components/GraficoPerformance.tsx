@@ -44,7 +44,9 @@ export const GraficoPerformance: React.FC<GraficoPerformanceProps> = ({
       },
       zoom: {
         enabled: false
-      }
+      },
+      redrawOnWindowResize: true,
+      redrawOnParentResize: true
     },
     dataLabels: {
       enabled: false
@@ -53,7 +55,7 @@ export const GraficoPerformance: React.FC<GraficoPerformanceProps> = ({
       curve: 'smooth',
       width: 2
     },
-    colors: ['#9333EA', '#3B82F6'],
+    colors: ['#9333EA'],
     fill: {
       type: 'gradient',
       gradient: {
@@ -70,8 +72,11 @@ export const GraficoPerformance: React.FC<GraficoPerformanceProps> = ({
         format: period === 'monthly' ? 'dd/MM' : 'dd/MM',
         style: {
           colors: '#6B7280',
-          fontSize: '12px'
-        }
+          fontSize: '10px',
+          fontFamily: 'Inter, sans-serif'
+        },
+        rotate: -45,
+        rotateAlways: false
       }
     },
     yaxis: {
@@ -79,7 +84,8 @@ export const GraficoPerformance: React.FC<GraficoPerformanceProps> = ({
         formatter: (value) => `R$ ${value.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}`,
         style: {
           colors: '#6B7280',
-          fontSize: '12px'
+          fontSize: '10px',
+          fontFamily: 'Inter, sans-serif'
         }
       }
     },
@@ -97,17 +103,71 @@ export const GraficoPerformance: React.FC<GraficoPerformanceProps> = ({
     grid: {
       borderColor: '#E5E7EB',
       strokeDashArray: 4
-    }
+    },
+    responsive: [
+      {
+        breakpoint: 1024,
+        options: {
+          chart: {
+            height: 200
+          },
+          xaxis: {
+            labels: {
+              fontSize: '9px'
+            }
+          },
+          yaxis: {
+            labels: {
+              fontSize: '9px'
+            }
+          }
+        }
+      },
+      {
+        breakpoint: 768,
+        options: {
+          chart: {
+            height: 180
+          },
+          xaxis: {
+            labels: {
+              fontSize: '8px',
+              rotate: -90
+            }
+          },
+          yaxis: {
+            labels: {
+              fontSize: '8px'
+            }
+          }
+        }
+      },
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            height: 150
+          },
+          xaxis: {
+            labels: {
+              fontSize: '7px',
+              rotate: -90
+            }
+          },
+          yaxis: {
+            labels: {
+              fontSize: '7px'
+            }
+          }
+        }
+      }
+    ]
   };
 
   const areaSeries = [
     {
-      name: period === 'monthly' ? 'Mês Atual' : 'Semana Atual',
+      name: 'Performance',
       data: performanceData?.receitaAtual || []
-    },
-    {
-      name: period === 'monthly' ? 'Mês Anterior' : 'Semana Anterior',
-      data: performanceData?.receitaAnterior || []
     }
   ];
 
@@ -131,22 +191,6 @@ export const GraficoPerformance: React.FC<GraficoPerformanceProps> = ({
           type="area"
           height={250}
         />
-        
-        {/* Legenda personalizada */}
-        <div className="flex items-center justify-center gap-6 mt-4">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-purple-600"></div>
-            <span className="text-xs text-purple-600 lowercase">
-              {period === 'monthly' ? 'mês atual' : 'semana atual'}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-gray-600"></div>
-            <span className="text-xs text-gray-600 lowercase">
-              {period === 'monthly' ? 'mês anterior' : 'semana anterior'}
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );

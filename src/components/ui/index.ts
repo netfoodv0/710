@@ -23,6 +23,7 @@ export { SettingsIcon } from './SettingsIcon';
 export { ClockIcon } from './ClockIcon';
 export { PageHeader } from './PageHeader';
 export { ActionButton } from './ActionButton';
+export { CabecalhoCustom } from './CabecalhoCustom';
 export { ReportIcon } from './ReportIcon';
 export { CouponIcon } from './CouponIcon';
 export { HistoryIcon } from './HistoryIcon';

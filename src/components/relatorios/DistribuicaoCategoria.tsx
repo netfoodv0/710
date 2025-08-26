@@ -14,19 +14,22 @@ export const DistribuicaoCategoria: React.FC<DistribuicaoCategoriaProps> = ({
   mostrarAnimacoes
 }) => {
   return (
-    <div className="bg-white rounded-lg p-4 mb-6" style={{ border: '1px solid #cfd1d3' }}>
+    <div className="bg-white rounded-lg p-4 mb-6 cupons-chart-wrapper" style={{ border: '1px solid #cfd1d3' }}>
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-900" style={{ fontSize: '12px' }}>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900" style={{ fontSize: '16px' }}>
           Distribuição por Categoria
         </h3>
       </div>
       
-      <div className="mt-6 flex justify-between gap-6 flex-wrap w-full">
+      <div className="mt-6 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full justify-between">
         {categorias.map((categoria, index) => (
           <div 
             key={categoria}
-            className="bg-white rounded-lg relative flex-1 overflow-hidden"
-            style={{ minWidth: '160px', height: '200px', border: '1px solid #cfd1d3' }}
+            className="bg-white rounded-lg relative overflow-hidden cupons-chart-card flex-1"
+            style={{ 
+              height: '200px',
+              border: '1px solid #cfd1d3' 
+            }}
           >
             {/* Linha verde dinâmica baseada no percentual com efeito de água */}
             <div 
@@ -44,13 +47,13 @@ export const DistribuicaoCategoria: React.FC<DistribuicaoCategoriaProps> = ({
             />
                                           
             {/* Nome da categoria */}
-            <div className="absolute top-2 left-4 text-xs text-gray-600 font-medium">
+            <div className="absolute top-2 left-2 sm:left-4 text-xs text-gray-600 font-medium">
               {categoria}
             </div>
               
             {/* Percentual */}
             <div className="absolute bottom-2 left-2 text-xs font-bold">
-              <div className="text-black">
+              <div className="text-white">
                 {Math.round(alturasAnimadas[index] || 0)}%
               </div>
             </div>

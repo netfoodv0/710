@@ -114,7 +114,7 @@ export default function RelatoriosCupons() {
         <div className="h-0" />
 
         {/* Content */}
-        <div className="px-6 pt-2 pb-12" style={{ padding: '24px 24px 50px 24px' }}>
+        <div className="px-4 sm:px-6 pt-2 pb-12 cupons-content-container">
           {/* Loading state apenas para operações específicas */}
           {loading && (
             <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -157,40 +157,46 @@ export default function RelatoriosCupons() {
           ) : (
             <>
               {/* Container de Estatísticas de Cupons */}
-              <EstatisticasCupons estatisticas={estatisticasCupons} />
+              <div className="cupons-stats-container">
+                <EstatisticasCupons estatisticas={estatisticasCupons} />
+              </div>
 
               {/* Distribuição por Categoria */}
-              <DistribuicaoCategoria
-                categorias={categorias}
-                percentuais={cardPercentages.map(card => card.percentual)}
-                alturasAnimadas={alturasAnimadas}
-                mostrarAnimacoes={mostrarAnimacoes}
-              />
+              <div className="cupons-chart-container">
+                <DistribuicaoCategoria
+                  categorias={categorias}
+                  percentuais={cardPercentages.map(card => card.percentual)}
+                  alturasAnimadas={alturasAnimadas}
+                  mostrarAnimacoes={mostrarAnimacoes}
+                />
+              </div>
 
               {/* Tabela de Cupons */}
-              <DataTable
-                data={cuponsFicticios}
-                columns={columns}
-                searchPlaceholder="Buscar cupons..."
-                searchFields={['codigo', 'descricao']}
-                filters={{
-                  categories: categoriasFiltros,
-                  statuses: statusOptions,
-                  tipos: tipoOptions,
-                  showDateRange: true
-                }}
-                actions={{
-                  onView: (cupom) => console.log('Visualizar:', cupom),
-                  onEdit: (cupom) => console.log('Editar:', cupom),
-                  onDelete: (cupom) => console.log('Excluir:', cupom)
-                }}
-                pagination={{
-                  itemsPerPageOptions: [5, 8, 10, 15, 20],
-                  defaultItemsPerPage: 8
-                }}
-                onAdd={() => console.log('Adicionar novo cupom')}
-                addButtonText="Novo Cupom"
-              />
+              <div className="cupons-table-container">
+                <DataTable
+                  data={cuponsFicticios}
+                  columns={columns}
+                  searchPlaceholder="Buscar cupons..."
+                  searchFields={['codigo', 'descricao']}
+                  filters={{
+                    categories: categoriasFiltros,
+                    statuses: statusOptions,
+                    tipos: tipoOptions,
+                    showDateRange: true
+                  }}
+                  actions={{
+                    onView: (cupom) => console.log('Visualizar:', cupom),
+                    onEdit: (cupom) => console.log('Editar:', cupom),
+                    onDelete: (cupom) => console.log('Excluir:', cupom)
+                  }}
+                  pagination={{
+                    itemsPerPageOptions: [5, 8, 10, 15, 20],
+                    defaultItemsPerPage: 8
+                  }}
+                  onAdd={() => console.log('Adicionar novo cupom')}
+                  addButtonText="Novo Cupom"
+                />
+              </div>
             </>
           )}
           

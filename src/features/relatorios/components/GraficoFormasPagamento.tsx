@@ -15,7 +15,7 @@ interface DataPoint {
   color: string;
 }
 
-const COLORS = ['#10B981', '#F59E0B', '#3B82F6', '#8B5CF6', '#EF4444', '#06B6D4'];
+const COLORS = ['#9333EA', '#A855F7', '#C084FC', '#D8B4FE', '#E9D5FF', '#F3E8FF'];
 
 export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({ 
   period,
@@ -43,6 +43,8 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
     carregarDados();
   }, [period]);
 
+
+
   // Converter dados para o formato do gráfico
   const dadosGrafico: DataPoint[] = formasPagamento.map((item, index) => ({
     name: item.name,
@@ -52,10 +54,10 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center h-45 ${className}`}>
+      <div className={`flex items-center justify-center h-32 sm:h-45 w-full ${className}`}>
         <div className="text-center">
-          
-          
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
+          <p className="text-sm text-gray-500 mt-2">Carregando...</p>
         </div>
       </div>
     );
@@ -63,15 +65,15 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
 
   if (error || !dadosGrafico || dadosGrafico.length === 0) {
     return (
-      <div className={`flex items-center justify-center h-64 text-gray-500 ${className}`}>
+      <div className={`flex items-center justify-center h-32 sm:h-64 text-gray-500 text-sm sm:text-base w-full ${className}`}>
         {error || 'Nenhum dado disponível'}
       </div>
     );
   }
 
   return (
-    <div className={className}>
-      <ResponsiveContainer width="100%" height={245}>
+    <div className={`w-full h-full ${className}`}>
+      <ResponsiveContainer width="100%" height={200} className="min-h-[200px] sm:min-h-[245px]">
         <PieChart>
           <Pie
             data={dadosGrafico}

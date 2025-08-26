@@ -1,0 +1,44 @@
+/* Estilos para esconder scrollbars na página de horários */
+
+/* Firefox */
+.horarios-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Chrome, Safari, Edge */
+.horarios-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Container da tabela */
+.horarios-table-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow: hidden;
+}
+
+.horarios-table-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tabela */
+.horarios-table {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.horarios-table::-webkit-scrollbar {
+  display: none;
+}
+
+/* Container principal */
+.horarios-main {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overflow: hidden;
+}
+
+.horarios-main::-webkit-scrollbar {
+  display: none;
+}

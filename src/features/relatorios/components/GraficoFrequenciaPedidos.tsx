@@ -11,17 +11,17 @@ interface DataPoint {
   color: string;
 }
 
-// Cores para as categorias de clientes
-const COLORS = ['#10B981', '#3B82F6', '#8B5CF6'];
+// Cores para as categorias de clientes - tons de roxo
+const COLORS = ['#9333EA', '#A855F7', '#C084FC'];
 
 export const GraficoFrequenciaPedidos: React.FC<GraficoFrequenciaPedidosProps> = ({ 
   className = '' 
 }) => {
   // Dados mockados para demonstração - você pode integrar com dados reais depois
   const [frequenciaPedidos] = useState([
-    { name: 'Curiosos', value: 18, color: '#10B981' },
-    { name: 'Fiéis', value: 12, color: '#3B82F6' },
-    { name: 'Super Clientes', value: 8, color: '#8B5CF6' }
+    { name: 'Curiosos', value: 18, color: '#9333EA' },
+    { name: 'Fiéis', value: 12, color: '#A855F7' },
+    { name: 'Super Clientes', value: 8, color: '#C084FC' }
   ]);
 
   // Converter dados para o formato do gráfico
@@ -32,8 +32,8 @@ export const GraficoFrequenciaPedidos: React.FC<GraficoFrequenciaPedidosProps> =
   }));
 
   return (
-    <div className={className}>
-      <ResponsiveContainer width="100%" height={245}>
+    <div className={`w-full h-full ${className}`}>
+      <ResponsiveContainer width="100%" height={200} className="min-h-[200px] sm:min-h-[245px]">
         <PieChart>
           <Pie
             data={dadosGrafico}

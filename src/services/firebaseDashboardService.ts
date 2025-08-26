@@ -283,16 +283,30 @@ export class FirebaseDashboardService extends BaseFirestoreService {
         return [];
       }
 
-      // Mapear cores para formas de pagamento
+      // Mapear cores para formas de pagamento - tons de roxo
       const coresMap: { [key: string]: string } = {
-        'PIX': '#10B981',
-        'pix': '#10B981',
-        'Cartão de Crédito': '#3B82F6',
-        'cartao_credito': '#3B82F6',
-        'Cartão de Débito': '#8B5CF6',
-        'cartao_debito': '#8B5CF6',
-        'Dinheiro': '#F59E0B',
-        'dinheiro': '#F59E0B'
+        'PIX': '#9333EA',
+        'pix': '#9333EA',
+        'Cartão de Crédito': '#A855F7',
+        'cartao_credito': '#A855F7',
+        'Cartão de Débito': '#C084FC',
+        'cartao_debito': '#C084FC',
+        'Dinheiro': '#D8B4FE',
+        'dinheiro': '#D8B4FE'
+      };
+
+      // Função para formatar nomes das formas de pagamento
+      const formatarNomeFormaPagamento = (nome: string): string => {
+        const formatacoes: { [key: string]: string } = {
+          'pix': 'PIX',
+          'dinheiro': 'Dinheiro',
+          'cartao_credito': 'Cartão de Crédito',
+          'cartao_debito': 'Cartão de Débito',
+          'vale_refeicao': 'Vale Refeição',
+          'vale_alimentacao': 'Vale Alimentação'
+        };
+        
+        return formatacoes[nome.toLowerCase()] || nome;
       };
 
       const resultado = Object.entries(formasPagamento).map(([forma, count]) => {
@@ -305,7 +319,7 @@ export class FirebaseDashboardService extends BaseFirestoreService {
         const cor = coresMap[forma] || coresMap[formaNormalizada] || '#6B7280';
         
         return {
-          name: forma,
+          name: formatarNomeFormaPagamento(forma),
           value: percentual,
           color: cor
         };
@@ -572,19 +586,21 @@ export class FirebaseDashboardService extends BaseFirestoreService {
           receitaAnterior.push(receitaDiaAnterior);
         }
       } else {
-        // Dados do mês atual (últimos 28 dias)
-        const inicioMes = new Date(agora);
-        inicioMes.setDate(agora.getDate() - 27);
+        // Dados do mês atual (mês completo)
+        const hoje = new Date();
+        const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+        const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+        const diasDoMes = fimMes.getDate();
         
         // Dados do mês anterior
         const inicioMesAnterior = new Date(inicioMes);
-        inicioMesAnterior.setDate(inicioMesAnterior.getDate() - 28);
-        const fimMesAnterior = new Date(inicioMesAnterior);
-        fimMesAnterior.setDate(inicioMesAnterior.getDate() + 27);
+        inicioMesAnterior.setMonth(inicioMesAnterior.getMonth() - 1);
+        const fimMesAnterior = new Date(inicioMesAnterior.getFullYear(), inicioMesAnterior.getMonth() + 1, 0);
+        const diasMesAnterior = fimMesAnterior.getDate();
 
-        // Gerar categorias (28 dias)
+        // Gerar categorias para o mês atual
         categorias = [];
-        for (let i = 0; i < 28; i++) {
+        for (let i = 0; i < diasDoMes; i++) {
           const data = new Date(inicioMes);
           data.setDate(inicioMes.getDate() + i);
           categorias.push(data.toISOString());
@@ -594,7 +610,7 @@ export class FirebaseDashboardService extends BaseFirestoreService {
         receitaAtual = [];
         receitaAnterior = [];
         
-        for (let i = 0; i < 28; i++) {
+        for (let i = 0; i < diasDoMes; i++) {
           const dataAtual = new Date(inicioMes);
           dataAtual.setDate(inicioMes.getDate() + i);
           const dataInicio = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate());
@@ -608,9 +624,9 @@ export class FirebaseDashboardService extends BaseFirestoreService {
           const receitaDia = pedidosDia.reduce((total, p) => total + p.total, 0);
           receitaAtual.push(receitaDia);
 
-          // Pedidos do dia anterior (mês anterior)
-          const dataAnterior = new Date(dataAtual);
-          dataAnterior.setDate(dataAnterior.getDate() - 28);
+          // Pedidos do dia correspondente no mês anterior
+          const dataAnterior = new Date(inicioMesAnterior);
+          dataAnterior.setDate(inicioMesAnterior.getDate() + i);
           const dataInicioAnterior = new Date(dataAnterior.getFullYear(), dataAnterior.getMonth(), dataAnterior.getDate());
           const dataFimAnterior = new Date(dataInicioAnterior);
           dataFimAnterior.setDate(dataFimAnterior.getDate() + 1);
@@ -723,24 +739,34 @@ export class FirebaseDashboardService extends BaseFirestoreService {
       };
     } else {
       return {
-        receitaAtual: [
-          1150.30, 1280.45, 1420.80, 1350.20, 1680.90, 1890.45, 1750.10,
-          1250.40, 1380.55, 1520.90, 1450.30, 1780.95, 1990.55, 1850.20,
-          1350.50, 1480.65, 1620.95, 1550.40, 1880.98, 2090.65, 1950.30,
-          1450.60, 1580.75, 1720.98, 1650.50, 1980.99, 2190.75, 2050.40
-        ],
-        receitaAnterior: [
-          980.50, 1120.30, 1250.80, 1180.40, 1450.20, 1620.80, 1480.50,
-          1080.60, 1220.40, 1350.85, 1280.50, 1550.25, 1720.85, 1580.55,
-          1180.70, 1320.50, 1450.90, 1380.60, 1650.30, 1820.90, 1680.60,
-          1280.80, 1420.60, 1550.95, 1480.70, 1750.35, 1920.95, 1780.65
-        ],
+        receitaAtual: (() => {
+          const hoje = new Date();
+          const diasDoMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
+          const dados = [];
+          for (let i = 0; i < diasDoMes; i++) {
+            dados.push(Math.floor(Math.random() * 2000) + 500); // Dados simulados
+          }
+          return dados;
+        })(),
+        receitaAnterior: (() => {
+          const hoje = new Date();
+          const diasDoMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
+          const dados = [];
+          for (let i = 0; i < diasDoMes; i++) {
+            dados.push(Math.floor(Math.random() * 1800) + 400); // Dados simulados
+          }
+          return dados;
+        })(),
         categorias: (() => {
           const categories = [];
-          const startDate = new Date('2024-01-01');
-          for (let i = 0; i < 28; i++) {
-            const date = new Date(startDate);
-            date.setDate(startDate.getDate() + i);
+          const hoje = new Date();
+          const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+          const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+          const diasDoMes = fimMes.getDate();
+          
+          for (let i = 0; i < diasDoMes; i++) {
+            const date = new Date(inicioMes);
+            date.setDate(inicioMes.getDate() + i);
             categories.push(date.toISOString());
           }
           return categories;

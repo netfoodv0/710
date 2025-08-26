@@ -2,7 +2,8 @@ import React from 'react';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { useSkeletonDelay } from '../hooks/useSkeletonDelay';
 import { usePedidosActions } from '../hooks/usePedidosActions';
-import { PedidosHeader, PedidosContent } from '../components/pedidos';
+import { PedidosContent } from '../components/pedidos';
+import { CabecalhoCustom } from '../components/ui';
 import { PedidosSessaoSkeleton } from '../components/skeletons/PedidosSkeleton';
 import './Pedidos.css';
 
@@ -26,13 +27,21 @@ export default function Pedidos() {
     <ErrorBoundary>
       <div className="min-h-screen bg-dashboard">
         {/* Cabeçalho da página */}
-        <PedidosHeader
+        <CabecalhoCustom
+          title="Pedidos"
+          showSearch={true}
           searchTerm={searchTerm}
-          isCreating={isCreating}
+          searchPlaceholder="Buscar (nome, telefone ou id do pedido)"
           onSearchChange={handleSearchChange}
           onClearSearch={handleClearSearch}
           onSearchSubmit={handleSearchSubmit}
-          onCreatePedido={handleCriarPedidoFicticio}
+          showActionButton={true}
+          actionButtonLabel="Novo Pedido"
+          actionButtonVariant="primary"
+          actionButtonSize="md"
+          onActionButtonClick={handleCriarPedidoFicticio}
+          actionButtonLoading={isCreating}
+          actionButtonDisabled={isCreating}
         />
         
         {/* Conteúdo da página */}

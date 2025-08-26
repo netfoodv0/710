@@ -23,7 +23,7 @@ export function ActionButton({
   icon
 }: ActionButtonProps) {
   const getButtonStyles = (variant: string = 'primary', size: string = 'md') => {
-    const baseStyles = "inline-flex items-center justify-center gap-3 font-semibold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2";
+    const baseStyles = "inline-flex items-center justify-center gap-3 font-semibold shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 border-0";
     
     const variantStyles = {
       primary: "bg-purple-600 text-white hover:bg-purple-700 focus:ring-purple-500",
@@ -55,7 +55,7 @@ export function ActionButton({
       ) : null}
       <span className="hidden sm:inline">{label}</span>
       <span className="sm:hidden">
-        {label.length > 10 ? label.split(' ')[0] : label}
+        {label.length > 8 ? label.split(' ')[0] : label}
       </span>
     </button>
   );

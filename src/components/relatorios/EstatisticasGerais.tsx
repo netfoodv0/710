@@ -68,20 +68,20 @@ const EstatisticasGeraisComponent: React.FC<EstatisticasGeraisProps> = ({ estati
   ], [estatisticas]);
 
   return (
-    <div className="bg-white rounded-lg p-4 mb-6" style={{ border: '1px solid #cfd1d3' }}>
-      <div className="flex flex-wrap gap-6">
+    <div className="bg-white rounded-lg p-3 sm:p-4 mb-4 sm:mb-6" style={{ border: '1px solid #cfd1d3' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {estatisticasItems.map((item, index) => (
           <div
             key={index}
-            className="flex-1 bg-white rounded-lg p-4 relative"
-            style={{ border: '1px solid #cfd1d3', height: '71px' }}
+            className="bg-white rounded-lg p-3 sm:p-4 relative"
+            style={{ border: '1px solid #cfd1d3', minHeight: '71px' }}
           >
             <div className="text-left h-full flex flex-col justify-between">
               <p className="text-xs font-normal text-gray-600">{item.label}</p>
-              <p className="text-lg font-bold text-gray-900">{item.value}</p>
+              <p className="text-sm sm:text-lg font-bold text-gray-900 break-words">{item.value}</p>
             </div>
             
-            <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+            <div className="absolute top-1/2 right-3 sm:right-4 transform -translate-y-1/2">
               <IconeEstatistica>
                 {item.icon}
               </IconeEstatistica>

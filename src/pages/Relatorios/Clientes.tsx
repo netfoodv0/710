@@ -833,7 +833,7 @@ export default function RelatoriosClientes() {
               {/* Card pai dos cards de distribuição */}
               <div className="bg-white rounded-lg p-4 mb-6" style={{ border: '1px solid #cfd1d3' }}>
                 <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900" style={{ fontSize: '12px' }}>Funil de Fidelidade</h3>
+                  <h3 className="text-lg font-semibold text-gray-900" style={{ fontSize: '16px' }}>Funil de Fidelidade</h3>
                 </div>
                 
                 {/* Cards internos com dimensões específicas */}

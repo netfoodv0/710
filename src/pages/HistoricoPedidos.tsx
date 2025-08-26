@@ -228,7 +228,7 @@ export default function HistoricoPedidos() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-dashboard">
+      <div className="min-h-screen bg-dashboard historico-pedidos-container">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -253,11 +253,11 @@ export default function HistoricoPedidos() {
             variant: "primary",
             size: "md"
           }}
+          className="historico-header"
         />
 
         {/* Content */}
-        <div className="px-6 pt-6 pb-4">
-
+        <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4">
 
           {/* Renderização condicional com loading */}
           {loadingHistorico.data ? (
@@ -266,24 +266,26 @@ export default function HistoricoPedidos() {
               <p className="mt-3 text-sm text-gray-600">Carregando...</p>
             </div>
           ) : (
-            <DataTable
-              data={pedidosHistorico || []}
-              columns={columns}
-              searchPlaceholder="Buscar por número do pedido, cliente, telefone..."
-              searchFields={['numero']}
-              filters={{
-                statuses: statusOptions,
-                showDateRange: true
-              }}
-              actions={{
-                onView: handleViewPedido
-              }}
-              pagination={{
-                itemsPerPageOptions: [5, 10, 15, 20],
-                defaultItemsPerPage: 10
-              }}
-              className="mt-0"
-            />
+            <div className="historico-table-container">
+              <DataTable
+                data={pedidosHistorico || []}
+                columns={columns}
+                searchPlaceholder="Buscar por número do pedido, cliente, telefone..."
+                searchFields={['numero']}
+                filters={{
+                  statuses: statusOptions,
+                  showDateRange: true
+                }}
+                actions={{
+                  onView: handleViewPedido
+                }}
+                pagination={{
+                  itemsPerPageOptions: [5, 10, 15, 20],
+                  defaultItemsPerPage: 10
+                }}
+                className="mt-0 historico-table"
+              />
+            </div>
           )}
           
           {/* Margem inferior da página */}

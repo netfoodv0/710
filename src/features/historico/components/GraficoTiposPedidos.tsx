@@ -11,17 +11,17 @@ interface DataPoint {
   color: string;
 }
 
-// Cores para os tipos de pedidos
-const COLORS = ['#10B981', '#3B82F6', '#8B5CF6'];
+// Cores para os tipos de pedidos - tons de roxo
+const COLORS = ['#9333EA', '#A855F7', '#C084FC'];
 
 export const GraficoTiposPedidos: React.FC<GraficoTiposPedidosProps> = ({ 
   className = '' 
 }) => {
   // Dados mockados para demonstração - você pode integrar com dados reais depois
   const [tiposPedidos] = useState([
-    { name: 'Delivery', value: 45, color: '#10B981' },
-    { name: 'Retirada', value: 35, color: '#3B82F6' },
-    { name: 'Balcão', value: 20, color: '#8B5CF6' }
+    { name: 'Delivery', value: 45, color: '#9333EA' },
+    { name: 'Retirada', value: 35, color: '#A855F7' },
+    { name: 'Balcão', value: 20, color: '#C084FC' }
   ]);
 
   // Converter dados para o formato do gráfico
@@ -32,8 +32,8 @@ export const GraficoTiposPedidos: React.FC<GraficoTiposPedidosProps> = ({
   }));
 
   return (
-    <div className={className}>
-      <ResponsiveContainer width="100%" height={245}>
+    <div className={`w-full h-full ${className}`}>
+      <ResponsiveContainer width="100%" height={200} className="min-h-[200px] sm:min-h-[245px]">
         <PieChart>
           <Pie
             data={dadosGrafico}

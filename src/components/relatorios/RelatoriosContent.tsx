@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { PeriodType } from '../filters/FiltroPeriodo';
 
-import { GraficosVendas } from '../../features/relatorios/components/GraficosVendas';
+
 import { CardTiposPedidos } from '../../features/historico/components/CardTiposPedidos';
 import { GraficoFormasPagamento } from '../../features/relatorios/components/GraficoFormasPagamento';
 import { GraficoPerformance } from '../../features/relatorios/components/GraficoPerformance';
 import { GraficoFrequenciaPedidos } from '../../features/relatorios/components/GraficoFrequenciaPedidos';
+import { ChartAreaInteractive } from '../../features/relatorios/components/AreaChart';
+import { ChartBarLabel } from '../../features/relatorios/components/BarChart';
 
-import { BarChart } from '../charts';
+import { BarChart as BarChartComponent } from '../charts/BarChart';
 import { firebaseDashboardService } from '../../services/firebaseDashboardService';
-import { DistribuicaoClientesCategoria, CategoriaCliente } from './DistribuicaoClientesCategoria';
+
 import { useEstatisticas } from '../../context/estatisticasContext';
 import { useEstatisticasPadrao } from '../../components/shared';
 
@@ -31,6 +33,35 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
       borderWidth: number;
     }>;
   } | null>(null);
+  
+  // Estado para categorias de clientes
+  const [categorias, setCategorias] = useState([
+    {
+      nome: 'Curiosos',
+      quantidade: 18,
+      altura: 260,
+      cor: 'rgba(124, 58, 237, 0.9)'
+    },
+    {
+      nome: 'Novatos',
+      quantidade: 8,
+      altura: 210,
+      cor: 'rgba(139, 92, 246, 0.8)'
+    },
+    {
+      nome: 'Fiéis',
+      quantidade: 0,
+      altura: 50,
+      cor: 'rgba(168, 85, 247, 0.7)'
+    },
+    {
+      nome: 'Super Clientes',
+      quantidade: 0,
+      altura: 50,
+      cor: 'rgba(192, 132, 252, 0.6)'
+    }
+  ]);
+  
   const { estatisticasGerais } = useEstatisticas();
   const { estatisticasGerais: estatisticasPadrao } = useEstatisticasPadrao();
 
@@ -112,33 +143,7 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
   };
 
 
-  // Memoizar categorias estáticas para evitar recriação
-  const categorias = useMemo(() => [
-    {
-      nome: 'Curiosos',
-      quantidade: 18,
-      altura: 260,
-      cor: 'rgba(124, 58, 237, 0.9)'
-    },
-    {
-      nome: 'Novatos',
-      quantidade: 8,
-      altura: 210,
-      cor: 'rgba(139, 92, 246, 0.8)'
-    },
-    {
-      nome: 'Fiéis',
-      quantidade: 0,
-      altura: 50,
-      cor: 'rgba(168, 85, 247, 0.7)'
-    },
-    {
-      nome: 'Super Clientes',
-      quantidade: 0,
-      altura: 50,
-      cor: 'rgba(192, 132, 252, 0.6)'
-    }
-  ], []);
+
 
     // Estado para controlar o efeito de água balançando
   const [mostrarAnimacoes, setMostrarAnimacoes] = useState(false);
@@ -198,7 +203,7 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
           const dadosSemanais = await firebaseDashboardService.calcularDadosPerformance('weekly');
           
           // Converter para formato do gráfico mais indicativo
-          const categorias = dadosSemanais.categorias.map((data: string) => {
+          const labelsSemanais = dadosSemanais.categorias.map((data: string) => {
             const date = new Date(data);
             const dia = date.getDate().toString().padStart(2, '0');
             const mes = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -207,7 +212,7 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
           });
           
           setChartData({
-            labels: categorias,
+            labels: labelsSemanais,
             datasets: [
               {
                 label: 'Pedidos Semanais',
@@ -312,6 +317,18 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
       {/* Container de Estatísticas Gerais */}
       <EstatisticasGerais />
 
+      {/* Container com BarChart */}
+      <div className="rounded w-full">
+        <ChartBarLabel />
+      </div>
+
+      {/* Container com AreaChart - 360px de altura */}
+      <div className="rounded w-full h-90">
+        <div className="h-full">
+          <ChartAreaInteractive />
+        </div>
+      </div>
+
       {/* Primeira linha: 3 gráficos lado a lado */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Tipos de Pedidos */}
@@ -337,7 +354,7 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
         </div>
         
         {/* Segunda linha: Performance Semanal em largura total */}
-        <div className="bg-white border rounded-lg p-4 mt-4" style={{ borderColor: '#cfd1d3' }}>
+        <div className="bg-white border rounded-lg p-4 mt-4 hidden" style={{ borderColor: '#cfd1d3' }}>
           <div className="mb-2">
             <h3 className="text-xs font-semibold text-gray-900">
               {selectedPeriod === 'monthly' ? 'Performance Mensal' : 'Performance Semanal'}
@@ -348,13 +365,13 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
       
 
       {/* Card com Gráfico de Barras */}
-      <div className="bg-white border rounded-lg p-6" style={{ borderColor: 'rgb(207 209 211)' }}>
+      <div className="bg-white border rounded-lg p-6 hidden" style={{ borderColor: 'rgb(207 209 211)' }}>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           {selectedPeriod === 'weekly' ? 'Pedidos Semanais' : 'Pedidos Diários do Mês'}
         </h3>
         <div className="h-64">
           {chartData ? (
-            <BarChart data={chartData} />
+            <BarChartComponent data={chartData} />
           ) : (
             <div className="flex items-center justify-center h-full text-gray-500">
               Nenhum dado disponível

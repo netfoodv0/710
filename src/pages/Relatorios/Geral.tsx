@@ -129,7 +129,7 @@ export default function RelatoriosGeral() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen w-full overflow-x-hidden" style={{ backgroundColor: '#eeebeb' }}>
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -154,12 +154,12 @@ export default function RelatoriosGeral() {
         <div className="h-0" />
 
         {/* Content */}
-        <div className="px-6 pt-2 pb-12 p-8-24-50-24">
+        <div className="w-full px-4 sm:px-6 lg:px-8 pt-2 pb-12">
           {/* Conteúdo principal */}
           <RelatoriosContent dadosFiltrados={dadosRelatorios} selectedPeriod={selectedPeriod} />
           
           {/* Margem inferior da página */}
-          <div className="h-25"></div>
+          <div className="h-6 sm:h-8 lg:h-10"></div>
         </div>
       </div>
     </ErrorBoundary>

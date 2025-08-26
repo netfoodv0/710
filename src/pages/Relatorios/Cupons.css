@@ -116,3 +116,122 @@
     opacity: 0;
   }
 }
+
+/* CSS Responsivo para a página de Cupons */
+
+/* Container principal responsivo */
+.cupons-content-container {
+  transition: all 0.3s ease;
+}
+
+/* Container de estatísticas responsivo */
+.cupons-stats-wrapper {
+  transition: all 0.3s ease;
+}
+
+.cupons-stat-card {
+  transition: all 0.3s ease;
+}
+
+/* Container do gráfico responsivo */
+.cupons-chart-wrapper {
+  transition: all 0.3s ease;
+}
+
+.cupons-chart-card {
+  transition: all 0.3s ease;
+}
+
+/* Container da tabela responsivo */
+.cupons-table-container {
+  transition: all 0.3s ease;
+}
+
+/* Media queries para responsividade */
+@media (max-width: 768px) {
+  .cupons-content-container {
+    padding: 1rem;
+  }
+  
+  .cupons-stats-wrapper {
+    padding: 1rem;
+  }
+  
+  .cupons-stat-card {
+    min-height: 80px;
+    padding: 1rem;
+  }
+  
+  .cupons-chart-wrapper {
+    padding: 1rem;
+  }
+  
+  .cupons-chart-card {
+    min-width: 120px;
+    max-width: 160px;
+    height: 160px;
+  }
+  
+  .cupons-table-container {
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .cupons-content-container {
+    padding: 0.75rem;
+  }
+  
+  .cupons-stats-wrapper {
+    padding: 0.75rem;
+  }
+  
+  .cupons-stat-card {
+    min-height: 70px;
+    padding: 0.75rem;
+  }
+  
+  .cupons-chart-wrapper {
+    padding: 0.75rem;
+  }
+  
+  .cupons-chart-card {
+    min-width: 100px;
+    max-width: 140px;
+    height: 140px;
+  }
+  
+  .cupons-table-container {
+    margin: 0 -0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cupons-content-container {
+    padding: 0.5rem;
+  }
+  
+  .cupons-stats-wrapper {
+    padding: 0.5rem;
+  }
+  
+  .cupons-stat-card {
+    min-height: 60px;
+    padding: 0.5rem;
+  }
+  
+  .cupons-chart-wrapper {
+    padding: 0.5rem;
+  }
+  
+  .cupons-chart-card {
+    min-width: 80px;
+    max-width: 120px;
+    height: 120px;
+  }
+  
+  .cupons-table-container {
+    margin: 0 -0.5rem;
+  }
+}

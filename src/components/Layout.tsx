@@ -11,13 +11,15 @@ export const Layout = memo(({ children }: LayoutProps) => {
 
   return (
     <div className="flex h-screen dashboard-container">
-      {/* Desktop Sidebar */}
-      <DesktopSidebar />
+      {/* Desktop Sidebar - Fixo */}
+      <div className="flex-shrink-0">
+        <DesktopSidebar />
+      </div>
       
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      {/* Main Content - Com margem à esquerda para respeitar o sidebar */}
+      <div className="flex-1 flex flex-col ml-0">
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto dashboard-container">
+        <main className="flex-1 overflow-y-auto dashboard-container dashboard-main-content">
           {children}
         </main>
       </div>

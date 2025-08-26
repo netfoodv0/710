@@ -50,24 +50,24 @@ export function EstatisticasCupons({ estatisticas }: EstatisticasCuponsProps) {
   ];
 
   return (
-    <div className="bg-white rounded-lg p-4 mb-6" style={{ border: '1px solid #cfd1d3' }}>
-      <div className="flex flex-wrap gap-6">
+    <div className="bg-white rounded-lg p-4 mb-6 cupons-stats-wrapper" style={{ border: '1px solid #cfd1d3' }}>
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
         {estatisticasItems.map((item, index) => (
           <div
             key={index}
-            className="flex-1 bg-white rounded-lg p-4 relative cursor-help"
-            style={{ border: '1px solid #cfd1d3', height: '71px' }}
+            className="flex-1 bg-white rounded-lg p-3 sm:p-4 relative cursor-help cupons-stat-card"
+            style={{ border: '1px solid #cfd1d3', minHeight: '71px' }}
             onMouseEnter={() => setTooltipVisible(index)}
             onMouseLeave={() => setTooltipVisible(null)}
           >
             <div className="text-left h-full flex flex-col justify-between">
               <p className="text-xs font-normal text-gray-600">{item.label}</p>
-              <p className="text-lg font-bold text-gray-900">{item.value}</p>
+              <p className="text-base sm:text-lg font-bold text-gray-900">{item.value}</p>
             </div>
             
-            <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
-              <div className="p-2 bg-gray-100 rounded-full">
-                <div className="w-6 h-6 text-gray-600">
+            <div className="absolute top-1/2 right-2 sm:right-4 transform -translate-y-1/2">
+              <div className="p-1.5 sm:p-2 bg-gray-100 rounded-full">
+                <div className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600">
                   {item.icon}
                 </div>
               </div>

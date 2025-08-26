@@ -80,7 +80,14 @@ export default function Horarios() {
 
   return (
     <ErrorBoundary>
-             <div className="min-h-screen bg-dashboard">
+             <div 
+               className="min-h-screen bg-dashboard" 
+               style={{ 
+                 scrollbarWidth: 'none', 
+                 msOverflowStyle: 'none',
+                 overflow: 'hidden'
+               }}
+             >
                 {/* Cabeçalho da página */}
         <PageHeader
           title="Horários de Funcionamento"
@@ -97,14 +104,28 @@ export default function Horarios() {
 
 
         {/* Main Content */}
-        <div className="px-6 pt-6">
-          <div className="w-full">
+        <div className="px-6 pt-6 overflow-hidden">
+          <div className="w-full overflow-hidden">
             {/* Configurações de Horários - Formato Tabela */}
-            <div className="w-full">
-              <div className="bg-white border rounded-lg p-6 border-dashboard">
+            <div className="w-full overflow-hidden">
+              <div 
+                className="bg-white border rounded-lg p-6 border-dashboard overflow-hidden"
+                style={{ 
+                  scrollbarWidth: 'none', 
+                  msOverflowStyle: 'none'
+                }}
+              >
                 {/* Tabela de horários */}
-                <div className="overflow-x-auto rounded-xl border border-dashboard">
-                  <table className="min-w-full divide-y divide-gray-200">
+                <div 
+                  className="rounded-xl border border-dashboard overflow-hidden" 
+                  style={{ 
+                    scrollbarWidth: 'none', 
+                    msOverflowStyle: 'none',
+                    WebkitOverflowScrolling: 'touch',
+                    overflow: 'hidden'
+                  }}
+                >
+                  <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50 table-header-32-5">
                       <tr>
                         <th className="px-4 text-left text-sm font-medium text-gray-900 border-b border-dashboard pt-4 pb-4">
