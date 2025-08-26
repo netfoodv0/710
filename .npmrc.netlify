@@ -18,3 +18,6 @@ engine-strict=false
 
 # Configurações para evitar problemas de dependências específicas de plataforma
 ignore-scripts=false
+
+# Forçar uso de módulos JavaScript em vez de binários nativos
+rollup__prefer_js=true
