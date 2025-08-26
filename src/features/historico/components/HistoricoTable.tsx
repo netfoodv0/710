@@ -7,7 +7,7 @@ import { StatusBadge } from './StatusBadge';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '../../../components/ui/table';
 import { CustomDropdown, DropdownOption } from '../../../components/ui/CustomDropdown';
 import { Input } from '../../../components/ui/input';
-import { Button } from '../../../components/ui/button';
+import { Button } from '../../../components/ui/Button';
 
 export type IconSvgProps = SVGProps<HTMLSVGElement> & {
   size?: number;
