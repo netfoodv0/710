@@ -4,7 +4,9 @@ import { resolve } from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+  ],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),
@@ -17,14 +19,18 @@ export default defineConfig({
     minify: 'esbuild',
     target: 'es2015',
     chunkSizeWarningLimit: 800,
+    // Otimizações avançadas
     cssCodeSplit: true,
     reportCompressedSize: true,
     emptyOutDir: true,
+    // Otimizações de CSS
     cssMinify: true,
+    // Otimizações de assets
     assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
         manualChunks: {
+          // Vendor chunks básicos
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
           firebase: ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage'],
@@ -32,29 +38,23 @@ export default defineConfig({
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
-          if (/\.(png|jpe?g|gif|svg|ico|webp)$/i.test(assetInfo.name)) {
+          const name = assetInfo.name;
+          if (!name) return 'assets/[name]-[hash][extname]';
+          
+          if (/\.(png|jpe?g|gif|svg|ico|webp)$/i.test(name)) {
             return `img/[name]-[hash][extname]`;
           }
-          if (/\.(woff2?|eot|ttf|otf)$/i.test(assetInfo.name)) {
+          if (/\.(woff2?|eot|ttf|otf)$/i.test(name)) {
             return `fonts/[name]-[hash][extname]`;
           }
           return `assets/[name]-[hash][extname]`;
         },
       },
-      external: [],
+      // Tree shaking mais agressivo
       treeshake: {
         moduleSideEffects: false,
         propertyReadSideEffects: false,
         unknownGlobalSideEffects: false,
-      },
-      // Configuração para evitar problemas de módulos específicos de plataforma
-      onwarn(warning, warn) {
-        // Ignorar avisos sobre módulos específicos de plataforma
-        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;
-        if (warning.message.includes('@rollup/rollup-')) return;
-        if (warning.message.includes('rollup-win32-x64-msvc')) return;
-        if (warning.message.includes('rollup-linux-x64-gnu')) return;
-        warn(warning);
       },
     },
   },
@@ -69,8 +69,9 @@ export default defineConfig({
       'firebase/storage',
     ],
     exclude: ['@vite/client', '@vite/env'],
-    force: false,
+    force: true,
   },
+  // Configurações de esbuild para tree shaking
   esbuild: {
     treeShaking: true,
     minifyIdentifiers: true,

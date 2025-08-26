@@ -25,5 +25,4 @@ export { Mesas } from './Mesas';
 export { Login } from './Login';
 export { Cadastro } from './Cadastro';
 export { default as LandingPage } from './LandingPage';
-export { default as LandingPageMobile } from './LandingPageMobile';
 export { default as LandingPageDesktop } from './LandingPageDesktop';

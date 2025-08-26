@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Regras para status do WhatsApp
+    match /whatsapp_status/{userId} {
+      // Permitir leitura e escrita apenas para o próprio usuário
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Permitir leitura para usuários autenticados (para admin/suporte)
+      allow read: if request.auth != null && 
+                     request.auth.token.admin == true;
+    }
+    
+    // Regras para sessões do WhatsApp
+    match /whatsapp_sessions/{sessionId} {
+      // Permitir leitura e escrita para o usuário dono da sessão
+      allow read, write: if request.auth != null && 
+                           request.auth.uid == resource.data.userId;
+      
+      // Permitir criação se o usuário está criando sua própria sessão
+      allow create: if request.auth != null && 
+                      request.auth.uid == request.resource.data.userId;
+      
+      // Permitir leitura para admins
+      allow read: if request.auth != null && 
+                     request.auth.token.admin == true;
+    }
+    
+    // Regras para configurações da IA Gemini
+    match /whatsapp_gemini_config/{configId} {
+      // Permitir leitura e escrita sem autenticação para o bot funcionar
+      allow read, write: if true;
+    }
+    
+    // Regras para histórico de conversas da IA
+    match /whatsapp_conversations/{chatId} {
+      // Permitir leitura e escrita sem autenticação para o bot funcionar
+      allow read, write: if true;
+    }
+    
+    // Regras para estatísticas de uso da IA
+    match /whatsapp_ai_usage/{usageId} {
+      // Permitir criação e leitura sem autenticação para o bot funcionar
+      allow create, read: if true;
+      
+      // Admins podem fazer limpeza (quando autenticados)
+      allow delete: if request.auth != null && 
+                      request.auth.token.admin == true;
+    }
+    
+    // Regras para log de mensagens (auditoria)
+    match /whatsapp_messages_log/{messageId} {
+      // Permitir criação e leitura sem autenticação para o bot funcionar
+      allow create, read: if true;
+      
+      // Admins podem fazer limpeza (quando autenticados)
+      allow delete: if request.auth != null && 
+                      request.auth.token.admin == true;
+    }
+    
+    // Regras para status do bot
+    match /whatsapp_bot_status/{statusId} {
+      // Permitir leitura e escrita sem autenticação para o bot funcionar
+      allow read, write: if true;
+    }
+    
+    // Regras gerais para outras coleções existentes
+    match /{document=**} {
+      // Manter regras existentes para outras coleções
+      allow read, write: if request.auth != null;
+    }
+  }
+}
