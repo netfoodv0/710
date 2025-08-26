@@ -51,7 +51,7 @@ export function MobileLayout({ children }: MobileLayoutProps) {
       
       {/* Main Content - Ajustado sem rodapé fixo */}
       <main className="flex-1 overflow-y-auto pt-2">
-        <div className="px-4 py-2 w-full max-w-md mx-auto">
+        <div className="px-4 py-2 w-full">
           {children}
         </div>
       </main>
