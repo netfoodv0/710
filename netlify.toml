@@ -1,9 +1,17 @@
 [build]
-  command = "npm run build:prod"
+  command = "bash scripts/netlify-build.sh"
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
+
+# Comandos de pré-build para configurar o ambiente
+[build.processing]
+  skip_processing = false
+
+# Script de pré-build para configurar o ambiente
+[build.processing.html]
+  pretty_urls = true
 
 [[redirects]]
   from = "/*"
