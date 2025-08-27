@@ -129,7 +129,7 @@ export default function RelatoriosGeral() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen w-full overflow-x-hidden" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen w-full overflow-x-hidden">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast

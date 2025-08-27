@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { PeriodType } from '../filters/FiltroPeriodo';
 
-
 import { CardTiposPedidos } from '../../features/historico/components/CardTiposPedidos';
 import { GraficoFormasPagamento } from '../../features/relatorios/components/GraficoFormasPagamento';
 import { GraficoPerformance } from '../../features/relatorios/components/GraficoPerformance';
@@ -14,6 +13,8 @@ import { firebaseDashboardService } from '../../services/firebaseDashboardServic
 
 import { useEstatisticas } from '../../context/estatisticasContext';
 import { useEstatisticasPadrao } from '../../components/shared';
+import { EstatisticasCustom } from '../EstatisticasCustom';
+import { BagIcon, RevenueIcon, UsersIcon, TicketIcon } from '../ui';
 
 import { DadosFiltrados, DadosRelatorioGeral } from '../../types/relatorios';
 
@@ -315,7 +316,34 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
     <div className="space-y-6 mt-4">
 
       {/* Container de Estatísticas Gerais */}
-      <EstatisticasGerais />
+              <EstatisticasCustom
+          estatisticas={[
+            {
+              label: 'Total de Pedidos',
+              valor: estatisticasGeraisData.totalPedidos,
+              icon: BagIcon,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Faturamento Total',
+              valor: `R$ ${estatisticasGeraisData.faturamentoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`,
+              icon: RevenueIcon,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Clientes Ativos',
+              valor: estatisticasGeraisData.clientesAtivos,
+              icon: UsersIcon,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Ticket Médio',
+              valor: `R$ ${estatisticasGeraisData.ticketMedio.toFixed(2)}`,
+              icon: TicketIcon,
+              iconColor: '#6b7280'
+            }
+          ]}
+        />
 
       {/* Container com BarChart */}
       <div className="rounded w-full">
@@ -329,6 +357,9 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
         </div>
       </div>
 
+      {/* Espaçamento entre gráficos */}
+      <div className="h-0"></div>
+
       {/* Primeira linha: 3 gráficos lado a lado */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Tipos de Pedidos */}
@@ -337,16 +368,16 @@ export function RelatoriosContent({ dadosFiltrados, selectedPeriod }: Relatorios
           </div>
           
           {/* Formas de Pagamento */}
-          <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
-            <div className="mb-2">
+          <div className="border p-3" style={{ borderColor: '#cfd1d3', background: 'linear-gradient(to bottom, #ffffff, #f5eff2)', borderRadius: '16px' }}>
+            <div className="mb-1">
               <h3 className="text-xs font-semibold text-gray-900">Formas de Pagamento</h3>
             </div>
             <GraficoFormasPagamento period={selectedPeriod} />
           </div>
           
           {/* Frequência de Pedidos */}
-          <div className="bg-white border rounded-lg p-4" style={{ borderColor: '#cfd1d3' }}>
-            <div className="mb-2">
+          <div className="border p-3" style={{ borderColor: '#cfd1d3', background: 'linear-gradient(to bottom, #ffffff, #f5eff2)', borderRadius: '16px' }}>
+            <div className="mb-1">
               <h3 className="text-xs font-semibold text-gray-900">Frequência de Pedidos</h3>
             </div>
             <GraficoFrequenciaPedidos />

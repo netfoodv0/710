@@ -19,7 +19,7 @@ export default function Fidelidade() {
 
 function FidelidadePage() {
   return (
-      <div className="min-h-screen flex flex-col dashboard-container">
+      <div className="min-h-screen flex flex-col">
         <PageHeader
           title="Fidelidade"
           subtitle="Sistema de fidelidade e recompensas"

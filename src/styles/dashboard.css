@@ -5,14 +5,14 @@
 
 :root {
   /* Cores do Dashboard */
-  --dashboard-bg: rgb(238, 235, 235);
+  --dashboard-bg: rgb(229, 218, 222);
   --dashboard-border: #cfd1d3;
   --dashboard-white: #ffffff;
   --dashboard-gray-light: #f3f4f6;
   --dashboard-gray-dark: #374151;
   
   /* Espaçamentos */
-  --dashboard-radius: 0.5rem;
+  --dashboard-radius: 16px;
   --dashboard-radius-full: 9999px;
   --dashboard-padding-sm: 0.75rem;
   --dashboard-padding-md: 1rem;
@@ -33,6 +33,25 @@
 /* Container Principal */
 .dashboard-container {
   background-color: var(--dashboard-bg);
+}
+
+/* Cabeçalho das páginas com margem superior de 16px */
+.dashboard-page-header {
+  margin-top: 16px;
+  margin-left: 24px;
+  margin-right: 24px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 1);
+}
+
+/* Quando o cabeçalho estiver fixo no topo, mantém as margens laterais */
+.dashboard-page-header.sticky {
+  margin-left: 24px;
+  margin-right: 24px;
+  border-radius: 16px;
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 2px solid rgba(255, 255, 255, 1);
 }
 
 /* Classe Base para Cards */
@@ -71,7 +90,6 @@
 }
 
 .dashboard-stat-card {
-  background-color: var(--dashboard-white);
   border: 1px solid var(--dashboard-border);
   border-radius: var(--dashboard-radius);
   box-shadow: var(--dashboard-shadow);
@@ -224,8 +242,8 @@
 
 /* Para Firefox */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f8fafc;
+  /* scrollbar-width: thin; */
+  /* scrollbar-color: #cbd5e1 #f8fafc; */
 }
 
 /* Classe para sempre mostrar scrollbar no container principal */

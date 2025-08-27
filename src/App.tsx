@@ -13,6 +13,7 @@ import { EstatisticasProvider } from './context/estatisticasContext';
 
 import { useNotificationContext } from './context/notificationContextUtils';
 import { NotificationToast } from './components/NotificationToast';
+import { AutoRedirect } from './components/auth/AutoRedirect';
 
 import { AppRoutes } from './routes';
 import { useAuth } from './hooks/useAuth';
@@ -23,8 +24,8 @@ function AppContentInner() {
   const isMobile = useIsMobile();
   const location = useLocation();
 
-  // Se estiver na rota raiz (LandingPage), sempre renderizar sem layout
-  if (location.pathname === '/') {
+  // Se estiver na rota da landing page, sempre renderizar sem layout
+  if (location.pathname === '/landing') {
     return <AppRoutes />;
   }
 
@@ -58,6 +59,7 @@ function AppWithNotifications() {
 
   return (
     <>
+      <AutoRedirect />
       <AppContent />
       {notifications.map((notification) => (
         <NotificationToast

@@ -228,7 +228,7 @@ export default function HistoricoPedidos() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-dashboard historico-pedidos-container">
+      <div className="min-h-screen historico-pedidos-container">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast

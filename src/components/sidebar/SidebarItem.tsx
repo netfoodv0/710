@@ -18,14 +18,15 @@ const SidebarItem = ({ item }: Props) => {
     }
   };
 
-  // Função para renderizar o ícone com a cor apropriada
+  // Função para renderizar o ícone com a cor apropriada e opacidade
   const renderIcon = () => {
     if (!item.sidebarProps?.icon) return null;
     
-    // Se o ícone for um elemento React, clona com a cor apropriada
+    // Se o ícone for um elemento React, clona com a cor apropriada e opacidade
     if (React.isValidElement(item.sidebarProps.icon)) {
       return React.cloneElement(item.sidebarProps.icon, {
-        color: isActive ? "#8217d5" : "#374151"
+        color: isActive ? "#8217d5" : "#374151",
+        style: { opacity: 0.7 } // 70% de opacidade
       } as any);
     }
     
@@ -36,6 +37,7 @@ const SidebarItem = ({ item }: Props) => {
     item.sidebarProps ? (
       <ListItemButton
         onClick={handleClick}
+        selected={isActive}
         sx={{
           "&:hover": {
             backgroundColor: "#f3f4f6" // Cinza claro no hover
@@ -60,7 +62,7 @@ const SidebarItem = ({ item }: Props) => {
             <Typography
               sx={{
                 color: isActive ? "#8217d5" : "#374151", // Roxo quando ativo, cinza escuro quando não
-                fontWeight: isActive ? 600 : 400,
+                fontWeight: isActive ? 700 : 700, // Sempre bold
                 fontSize: "14px" // Tamanho do texto 14px
               }}
             >

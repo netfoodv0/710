@@ -14,8 +14,8 @@ export const CardTiposPedidos: React.FC<CardTiposPedidosProps> = ({ className = 
   ];
 
   return (
-    <div className={`bg-white border rounded-lg p-3 sm:p-4 w-full ${className}`} style={{ borderColor: '#cfd1d3' }}>
-      <div className="mb-3 sm:mb-4">
+    <div className={`border p-2 sm:p-3 w-full ${className}`} style={{ borderColor: '#cfd1d3', background: 'linear-gradient(to bottom, #ffffff, #f5eff2)', borderRadius: '16px' }}>
+      <div className="mb-1 sm:mb-2">
         <h3 className="text-xs sm:text-sm font-semibold text-gray-900">Tipos de Pedidos</h3>
       </div>
       

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
   X,
   Store,
@@ -138,8 +138,14 @@ const menuItems = [
 
 export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, loja, logout } = useAuth();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+
+  const handleLogoClick = () => {
+    navigate('/landing');
+    onClose();
+  };
 
   // Expandir automaticamente os subtítulos quando estiver em uma página de relatório, estoque ou usuários
   useEffect(() => {
@@ -224,7 +230,12 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold italic text-gray-900">VOULT</h1>
+                <h1 
+                  onClick={handleLogoClick}
+                  className="text-2xl font-bold italic text-gray-900 cursor-pointer hover:opacity-80 transition-opacity"
+                >
+                  VOULT
+                </h1>
               </div>
               <button
                 onClick={onClose}

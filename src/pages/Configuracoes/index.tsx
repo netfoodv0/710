@@ -81,7 +81,7 @@ export default function Configuracoes() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-dashboard">
+      <div className="min-h-screen">
         {/* Notificações */}
         <div className="fixed top-4 right-4 z-50 space-y-2">
           {notifications.map((notification) => (

@@ -100,7 +100,7 @@ export const GraficoFrequenciaPedidos: React.FC<GraficoFrequenciaPedidosProps> =
             iconType="circle"
             wrapperStyle={{
               fontSize: '12px',
-              paddingTop: '10px'
+              paddingTop: '0px'
             }}
           />
         </PieChart>

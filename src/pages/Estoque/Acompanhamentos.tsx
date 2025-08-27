@@ -3,6 +3,7 @@ import { PageHeader, DataTable, DataTableColumn } from '@/components/ui';
 import { AlertTriangle, TrendingUp, Package, ShoppingBag } from 'lucide-react';
 import { ModalEditarEstoque, ModalCadastroAcompanhamento } from '../../components/modals';
 import { HeaderEstoqueCompartilhado } from '../../components/estoque';
+import { EstatisticasCustom } from '../../components/EstatisticasCustom';
 
 interface ProdutoAcompanhamento {
   id: number;
@@ -335,7 +336,7 @@ export default function Acompanhamentos() {
   }, [produtos]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-dashboard-rgb">
+    <div className="min-h-screen flex flex-col">
       {/* Cabeçalho da página */}
       <HeaderEstoqueCompartilhado
         actionButton={{
@@ -351,63 +352,37 @@ export default function Acompanhamentos() {
       {/* Conteúdo Principal */}
       <div className="px-6 pt-6 flex-1">
         {/* Estatísticas dos Acompanhamentos */}
-        <div className="bg-white border rounded-lg p-4 flex-shrink-0 mb-6 border-dashboard">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div className="text-left">
-                  <p className="text-xs font-medium text-gray-600">Total de Acompanhamentos</p>
-                  <p className="text-lg font-bold text-gray-900">{produtos.length}</p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <ShoppingBag size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div className="text-left">
-                  <p className="text-xs font-medium text-gray-600">Em Estoque</p>
-                  <p className="text-lg font-bold text-gray-900">
-                    {produtos.filter(p => p.quantidade > p.quantidadeMinima && !p.semControleEstoque).length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <Package size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div className="text-left">
-                  <p className="text-xs font-medium text-gray-600">Estoque Baixo</p>
-                  <p className="text-lg font-bold text-gray-900">
-                    {produtos.filter(p => p.quantidade <= p.quantidadeMinima && p.quantidade > 0 && !p.semControleEstoque).length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <AlertTriangle size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div className="text-left">
-                  <p className="text-xs font-medium text-gray-600">Sem Estoque</p>
-                  <p className="text-lg font-bold text-gray-900">
-                    {produtos.filter(p => p.quantidade === 0 && !p.semControleEstoque).length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <TrendingUp size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <EstatisticasCustom
+          estatisticas={[
+            {
+              label: 'Total de Acompanhamentos',
+              valor: produtos.length,
+              icon: ShoppingBag,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Em Estoque',
+              valor: produtos.filter(p => p.quantidade > p.quantidadeMinima && !p.semControleEstoque).length,
+              icon: Package,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Estoque Baixo',
+              valor: produtos.filter(p => p.quantidade <= p.quantidadeMinima && p.quantidade > 0 && !p.semControleEstoque).length,
+              icon: AlertTriangle,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Sem Estoque',
+              valor: produtos.filter(p => p.quantidade === 0 && !p.semControleEstoque).length,
+              icon: TrendingUp,
+              iconColor: '#6b7280'
+            }
+          ]}
+        />
+        
+        {/* Margem de 24px abaixo das estatísticas */}
+        <div className="mb-6"></div>
 
         {/* Tabela de Acompanhamentos */}
         <DataTable

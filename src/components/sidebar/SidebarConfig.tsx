@@ -1,6 +1,7 @@
 import { RouteType } from './types';
 import { 
   DashboardIcon, 
+  HomeIcon,
   OrderIcon, 
   HistoryIcon, 
   MenuIcon, 
@@ -13,11 +14,11 @@ import {
   ReportIcon, 
   MapIcon, 
   BagIcon,
-  OrganogramaIcon,
-  TableIcon
+  OrganogramaIcon
 } from '../ui';
 
 export const sidebarRoutes: RouteType[] = [
+
   {
     path: "/",
     element: null,
@@ -63,15 +64,7 @@ export const sidebarRoutes: RouteType[] = [
       icon: <SupportIcon />
     }
   },
-  {
-    path: "/mesas",
-    element: null,
-    state: "mesas",
-    sidebarProps: {
-      displayText: "Mesas",
-      icon: <TableIcon />
-    }
-  },
+
   {
     path: "/usuarios",
     element: null,

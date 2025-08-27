@@ -99,20 +99,7 @@ const FormasPedidoSkeleton = () => (
             </div>
           </div>
 
-          {/* Mesas */}
-          <div className="flex items-center justify-between p-2 bg-white rounded-lg dashboard-card-border">
-            <div className="flex items-center space-x-3">
-              <div className="w-[40px] h-[40px] bg-gray-200 rounded-full flex-shrink-0"></div>
-              <div>
-                <div className="h-3 bg-gray-200 rounded w-12 mb-1"></div>
-                <div className="h-2 bg-gray-200 rounded w-20"></div>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="h-5 bg-gray-200 rounded w-6 mb-1"></div>
-              <div className="h-2 bg-gray-200 rounded w-12"></div>
-            </div>
-          </div>
+
 
           {/* Retirada */}
           <div className="flex items-center justify-between p-2 bg-white rounded-lg dashboard-card-border">

@@ -3,6 +3,7 @@ import { PageHeader, BagIcon, DataTable, DataTableColumn } from '@/components/ui
 import { AlertTriangle, TrendingUp, Package } from 'lucide-react';
 import { ModalEditarEstoque, ModalDetalhesProduto } from '../../components/modals';
 import { HeaderEstoqueCompartilhado } from '../../components/estoque';
+import { EstatisticasCustom } from '../../components/EstatisticasCustom';
 
 // Dados fictícios de produtos em estoque
 const produtosEstoque = [
@@ -414,7 +415,7 @@ export default function Estoque() {
   }, [produtos]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-dashboard-rgb">
+    <div className="min-h-screen flex flex-col">
       {/* Cabeçalho da página */}
       <HeaderEstoqueCompartilhado
         actionButton={{
@@ -430,63 +431,37 @@ export default function Estoque() {
       {/* Conteúdo Principal */}
       <div className="px-6 pt-6 flex-1">
         {/* Estatísticas do Estoque */}
-        <div className="bg-white border rounded-lg p-4 flex-shrink-0 mb-6 border-dashboard">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-600">Total de Produtos</p>
-                  <p className="text-lg font-bold text-gray-900">{produtos.length}</p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <BagIcon size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-600">Em Estoque</p>
-                  <p className="text-lg font-bold text-gray-900">
-                    {produtos.filter(p => p.status === 'em_estoque').length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <Package size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-600">Estoque Baixo</p>
-                  <p className="text-lg font-bold text-gray-900">
-                    {produtos.filter(p => p.status === 'estoque_baixo').length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <AlertTriangle size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-3 rounded-lg border border-dashboard">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-medium text-gray-600">Sem Estoque</p>
-                  <p className="text-lg font-bold text-gray-900">
-                    {produtos.filter(p => p.status === 'sem_estoque').length}
-                  </p>
-                </div>
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                  <TrendingUp size={24} color="#6b7280" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <EstatisticasCustom
+          estatisticas={[
+            {
+              label: 'Total de Produtos',
+              valor: produtos.length,
+              icon: BagIcon,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Em Estoque',
+              valor: produtos.filter(p => p.status === 'em_estoque').length,
+              icon: Package,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Estoque Baixo',
+              valor: produtos.filter(p => p.status === 'estoque_baixo').length,
+              icon: AlertTriangle,
+              iconColor: '#6b7280'
+            },
+            {
+              label: 'Sem Estoque',
+              valor: produtos.filter(p => p.status === 'sem_estoque').length,
+              icon: TrendingUp,
+              iconColor: '#6b7280'
+            }
+          ]}
+        />
+        
+        {/* Margem de 24px abaixo das estatísticas */}
+        <div className="mb-6"></div>
 
         {/* Tabela de Estoque */}
         <DataTable

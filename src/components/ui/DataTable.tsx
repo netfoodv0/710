@@ -4,6 +4,7 @@ import { EditIcon } from './EditIcon';
 import { TrashIcon } from './TrashIcon';
 import { ViewIcon } from './ViewIcon';
 import { CustomDropdown, type DropdownOption } from './CustomDropdown';
+import { DateRangePicker } from './DateRangePicker';
 
 export interface DataTableColumn<T> {
   key: keyof T | 'actions';
@@ -62,6 +63,8 @@ export function DataTable<T extends { id: string | number }>({
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>(defaultSort?.direction || 'asc');
   const [dateInicio, setDateInicio] = useState('');
   const [dateFim, setDateFim] = useState('');
+  const [dateInicioTime, setDateInicioTime] = useState('00:00');
+  const [dateFimTime, setDateFimTime] = useState('23:59');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(pagination.defaultItemsPerPage || 8);
   const [showFilters, setShowFilters] = useState(false);
@@ -94,18 +97,18 @@ export function DataTable<T extends { id: string | number }>({
       filtered = filtered.filter((item: any) => item.status === selectedStatus);
     }
 
-    // Filtro de data
+    // Filtro de data e horário
     if (dateInicio && dateFim) {
       filtered = filtered.filter((item: any) => {
         const itemDate = new Date(item.dataHora || item.data || item.createdAt);
-        const inicio = new Date(dateInicio);
-        const fim = new Date(dateFim);
-        return itemDate >= inicio && itemDate <= fim;
+        const startDateTime = new Date(`${dateInicio}T${dateInicioTime}`);
+        const endDateTime = new Date(`${dateFim}T${dateFimTime}`);
+        return itemDate >= startDateTime && itemDate <= endDateTime;
       });
     }
 
     return filtered;
-  }, [data, filterValue, searchFields, selectedCategory, selectedStatus, dateInicio, dateFim]);
+  }, [data, filterValue, searchFields, selectedCategory, selectedStatus, dateInicio, dateFim, dateInicioTime, dateFimTime]);
 
   // Ordenar dados
   const sortedData = useMemo(() => {
@@ -142,7 +145,7 @@ export function DataTable<T extends { id: string | number }>({
   // Resetar para primeira página quando filtros mudarem
   useEffect(() => {
     setCurrentPage(1);
-  }, [filterValue, selectedCategory, selectedStatus, dateInicio, dateFim]);
+  }, [filterValue, selectedCategory, selectedStatus, dateInicio, dateFim, dateInicioTime, dateFimTime]);
 
   // Funções de paginação
   const goToPage = (page: number) => {
@@ -286,7 +289,7 @@ export function DataTable<T extends { id: string | number }>({
   return (
     <div className={className}>
       {/* Filtros e Busca */}
-      <div className="bg-white rounded-lg p-4 sm:p-6 mb-6" style={{ border: '1px solid hsl(210deg 4.35% 81.96%)' }}>
+      <div className="bg-white/60 rounded-2xl p-4 sm:p-6 mb-6 border-2 border-white" style={{ border: '2px solid rgba(255, 255, 255, 1)' }}>
         {/* Header dos filtros com toggle para mobile */}
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-medium text-gray-700">Filtros</h3>
@@ -301,7 +304,7 @@ export function DataTable<T extends { id: string | number }>({
 
         {/* Filtros - sempre visíveis em desktop, condicionais em mobile */}
         <div className={`${showFilters ? 'block' : 'hidden'} lg:block`}>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col lg:flex-row gap-4 items-start">
             {/* Busca - sempre visível */}
             <div className="flex-1 min-w-0">
               <div className="relative">
@@ -311,66 +314,59 @@ export function DataTable<T extends { id: string | number }>({
                   placeholder={searchPlaceholder}
                   value={filterValue}
                   onChange={(e) => setFilterValue(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none"
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none"
                 />
               </div>
             </div>
 
-            {/* Filtros em linha para desktop, coluna para mobile */}
-            <div className="flex flex-col lg:flex-row gap-4">
-              {/* Date Range Picker */}
-              {filters.showDateRange && (
-                <div className="w-full lg:w-80">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                    <input
-                      type="date"
-                      value={dateInicio}
-                      onChange={(e) => setDateInicio(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
-                    />
-                    <span className="text-gray-400 text-sm">até</span>
-                    <input
-                      type="date"
-                      value={dateFim}
-                      onChange={(e) => setDateFim(e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none bg-white"
-                    />
-                  </div>
-                </div>
-              )}
+            {/* Filtros na mesma linha da busca */}
+            {filters.showDateRange && (
+              <div className="w-full lg:w-80">
+                <DateRangePicker
+                  startDate={dateInicio}
+                  endDate={dateFim}
+                  onStartDateChange={setDateInicio}
+                  onEndDateChange={setDateFim}
+                  startTime={dateInicioTime}
+                  endTime={dateFimTime}
+                  onStartTimeChange={setDateInicioTime}
+                  onEndTimeChange={setDateFimTime}
+                  className="w-full"
+                />
+              </div>
+            )}
 
-              {/* Filtro de Categoria */}
-              {filters.categories && (
-                <div className="w-full lg:w-40">
-                  <CustomDropdown
-                    options={[
-                      { value: 'todas', label: 'Todas as Categorias' },
-                      ...filters.categories
-                    ]}
-                    selectedValue={selectedCategory}
-                    onValueChange={(value) => setSelectedCategory(value)}
-                    placeholder="Selecione categoria"
-                    className="w-full"
-                  />
-                </div>
-              )}
+            {/* Filtro de Categoria */}
+            {filters.categories && (
+              <div className="w-full lg:w-40">
+                <CustomDropdown
+                  options={[
+                    { value: 'todas', label: 'Todas as Categorias' },
+                    ...filters.categories
+                  ]}
+                  selectedValue={selectedCategory}
+                  onValueChange={(value) => setSelectedCategory(value)}
+                  placeholder="Selecione categoria"
+                  className="w-full"
+                />
+              </div>
+            )}
 
-              {/* Filtro de Status */}
-              {filters.statuses && (
-                <div className="w-full lg:w-40">
-                  <CustomDropdown
-                    options={[
-                      { value: 'todos', label: 'Todos os Status' },
-                      ...filters.statuses
-                    ]}
-                    selectedValue={selectedStatus}
-                    onValueChange={(value) => setSelectedStatus(value)}
-                    placeholder="Selecione status"
-                    className="w-full"
-                  />
-                </div>
-              )}
-            </div>
+            {/* Filtro de Status */}
+            {filters.statuses && (
+              <div className="w-full lg:w-40">
+                <CustomDropdown
+                  options={[
+                    { value: 'todos', label: 'Todos os Status' },
+                    ...filters.statuses
+                  ]}
+                  selectedValue={selectedStatus}
+                  onValueChange={(value) => setSelectedStatus(value)}
+                  placeholder="Selecione status"
+                  className="w-full"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>

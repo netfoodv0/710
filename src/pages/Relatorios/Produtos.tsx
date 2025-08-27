@@ -9,8 +9,6 @@ import { DataTable } from '../../components/ui';
 
 // Componentes refatorados
 import { 
-  EstatisticasProdutos, 
-  DistribuicaoCategoria, 
   HeaderRelatorioProdutos,
   useConfiguracaoTabelaProdutos 
 } from '../../components/relatorios';
@@ -19,10 +17,12 @@ import {
 import { 
   produtosFicticios, 
   estatisticasProdutos, 
-  categorias, 
-  cardPercentages 
+  categorias
 } from '../../data/produtosMock';
-import { useAnimacaoCards } from '../../hooks/useAnimacaoCards';
+
+import { EstatisticasCustom } from '../../components/EstatisticasCustom';
+import { BagIcon, NewCustomerIcon, CompletedOrderIcon, RevenueIcon } from '../../components/ui';
+import { ChartBarDaily } from '../../components/charts/BarChartDaily';
 
 // Estilos
 import './Produtos.css';
@@ -33,10 +33,7 @@ export default function RelatoriosProdutos() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  // Hook para animações dos cards
-  const { carregamentoCompleto, mostrarAnimacoes, alturasAnimadas } = useAnimacaoCards({
-    percentuais: cardPercentages
-  });
+
   
   // Configuração da tabela
   const { columns } = useConfiguracaoTabelaProdutos();
@@ -84,7 +81,7 @@ export default function RelatoriosProdutos() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -141,26 +138,46 @@ export default function RelatoriosProdutos() {
             </div>
           )}
 
-          {/* Conteúdo principal com loading */}
-          {!carregamentoCompleto ? (
-            <div className="space-y-6">
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-                <p className="mt-4 text-gray-600">Carregando relatório de produtos...</p>
-              </div>
-            </div>
-          ) : (
+
             <>
               {/* Container de Estatísticas de Produtos */}
-              <EstatisticasProdutos estatisticas={estatisticasProdutos} />
-
-              {/* Funil de Fidelidade */}
-              <DistribuicaoCategoria
-                categorias={categorias}
-                percentuais={cardPercentages}
-                alturasAnimadas={alturasAnimadas}
-                mostrarAnimacoes={mostrarAnimacoes}
+              <EstatisticasCustom
+                estatisticas={[
+                  {
+                    label: 'Total de Produtos',
+                    valor: estatisticasProdutos.totalProdutos,
+                    icon: BagIcon,
+                    iconColor: '#6b7280'
+                  },
+                  {
+                    label: 'Novos Produtos',
+                    valor: estatisticasProdutos.novosProdutos,
+                    icon: NewCustomerIcon,
+                    iconColor: '#6b7280'
+                  },
+                  {
+                    label: 'Produtos em Destaque',
+                    valor: estatisticasProdutos.produtosDestaque,
+                    icon: CompletedOrderIcon,
+                    iconColor: '#6b7280'
+                  },
+                  {
+                    label: 'Taxa de Vendas',
+                    valor: `${estatisticasProdutos.taxaVendas.toFixed(1)}%`,
+                    icon: RevenueIcon,
+                    iconColor: '#6b7280'
+                  }
+                ]}
               />
+              
+                            {/* Margem de 24px abaixo das estatísticas */}
+              <div className="mb-6"></div>
+
+              {/* Gráfico de Barras Diário */}
+              <ChartBarDaily />
+              
+              {/* Margem abaixo do gráfico */}
+              <div className="mb-6"></div>
 
               {/* Tabela de Produtos */}
               <DataTable
@@ -184,7 +201,6 @@ export default function RelatoriosProdutos() {
                 addButtonText="Novo Produto"
               />
             </>
-          )}
           
           {/* Margem inferior da página */}
           <div className="h-25"></div>

@@ -302,7 +302,7 @@ export default function Operadores() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-dashboard">
+      <div className="min-h-screen">
         {/* Cabeçalho da página */}
         <PageHeader
           title="Operadores"

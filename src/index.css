@@ -1,10 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* ===== ESTILOS BASE ===== */
 body {
-  background-color: #eeebeb;
+  background-color: #f5eff2;
   color: #111827;
   font-feature-settings: "rlig" 1, "calt" 1;
 }
@@ -15,7 +13,7 @@ body {
 
 main {
   min-height: 100vh;
-  background-color: #eeebeb;
+  background-color: #f5eff2;
 }
 
 /* ===== VARIÁVEIS CSS PARA O TEMA ===== */
@@ -85,12 +83,12 @@ body {
 
 /* ===== DASHBOARD STYLES ===== */
 :root {
-  --dashboard-bg: rgb(238, 235, 235);
+  --dashboard-bg: rgb(245, 239, 242);
   --dashboard-border: #cfd1d3;
   --dashboard-white: #ffffff;
   --dashboard-gray-light: #f3f4f6;
   --dashboard-gray-dark: #374151;
-  --dashboard-radius: 0.5rem;
+  --dashboard-radius: 16px;
   --dashboard-padding-sm: 0.75rem;
   --dashboard-padding-md: 1rem;
   --dashboard-status-green: #10b981;
@@ -115,7 +113,6 @@ body {
 }
 
 .dashboard-stat-card {
-  background-color: var(--dashboard-white);
   border: 1px solid var(--dashboard-border);
   border-radius: var(--dashboard-radius);
   padding: var(--dashboard-padding-sm);

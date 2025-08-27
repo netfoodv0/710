@@ -148,7 +148,7 @@ export function ChartAreaInteractive() {
   })
 
   return (
-    <Card className="pt-0 shadow-none border rounded-lg" style={{ borderColor: '#cfd1d3' }}>
+    <Card className="pt-0 shadow-none border" style={{ borderColor: '#cfd1d3', background: 'linear-gradient(to bottom, #ffffff, #f5eff2)', borderRadius: '16px' }}>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1">
           <CardTitle>Gráfico de Área - Interativo</CardTitle>
@@ -200,7 +200,7 @@ export function ChartAreaInteractive() {
                 />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} horizontal={false} />
             <XAxis
               dataKey="date"
               tickLine={false}

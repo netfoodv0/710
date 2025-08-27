@@ -140,7 +140,7 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
             iconType="circle"
             wrapperStyle={{
               fontSize: '12px',
-              paddingTop: '10px'
+              paddingTop: '0px'
             }}
           />
         </PieChart>

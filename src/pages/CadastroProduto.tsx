@@ -63,7 +63,7 @@ export default function CadastroProduto() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-[#f7f5f3]">
+      <div className="min-h-screen">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast

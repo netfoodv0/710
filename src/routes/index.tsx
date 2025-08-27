@@ -37,8 +37,7 @@ const Estoque = lazy(() => import('../pages/Estoque/Estoque'));
 const Insumos = lazy(() => import('../pages/Estoque/Insumos'));
 const Acompanhamentos = lazy(() => import('../pages/Estoque/Acompanhamentos'));
 
-// Nova página de mesas
-const Mesas = lazy(() => import('../pages/Mesas'));
+
 
 const Login = lazy(() => import('../pages/Login'));
 const Cadastro = lazy(() => import('../pages/Cadastro'));
@@ -47,11 +46,21 @@ export function AppRoutes() {
   return (
     <Routes>
       {/* Rotas públicas */}
-      <Route path="/" element={<LandingPage />} />
+      <Route path="/landing" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
       
       {/* Rotas protegidas */}
+      
+      <Route path="/" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<DashboardFallback />}>
+              <Dashboard />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
       
       <Route path="/dashboard" element={
         <ProtectedRoute>
@@ -123,15 +132,7 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-      <Route path="/mesas" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<TableFallback />}>
-              <Mesas />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
+
       
       <Route path="/configuracoes" element={
         <ProtectedRoute>
@@ -289,7 +290,7 @@ export function AppRoutes() {
       <Route path="/acompanhamentos" element={<Navigate to="/estoque/acompanhamentos" replace />} />
       
       {/* Rota 404 - redireciona para dashboard */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
   );
 }

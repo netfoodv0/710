@@ -25,7 +25,7 @@ export default function Pedidos() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-dashboard">
+      <div className="min-h-screen">
         {/* Cabeçalho da página */}
         <CabecalhoCustom
           title="Pedidos"

@@ -31,7 +31,7 @@ export const HeaderEstoqueCompartilhado: React.FC<HeaderEstoqueCompartilhadoProp
   
   // Opções para o componente Radio (tipos de estoque)
   const estoqueTypeOptions = [
-    { id: 'estoque', label: 'Estoque' },
+    { id: 'estoque', label: 'Produtos' },
     { id: 'insumos', label: 'Insumos' },
     { id: 'acompanhamentos', label: 'Acompanhamentos' }
   ];

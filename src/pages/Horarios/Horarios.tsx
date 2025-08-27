@@ -81,8 +81,9 @@ export default function Horarios() {
   return (
     <ErrorBoundary>
              <div 
-               className="min-h-screen bg-dashboard" 
+               className="min-h-screen" 
                style={{ 
+                 backgroundColor: 'transparent',
                  scrollbarWidth: 'none', 
                  msOverflowStyle: 'none',
                  overflow: 'hidden'

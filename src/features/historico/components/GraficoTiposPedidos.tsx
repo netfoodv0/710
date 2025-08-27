@@ -100,7 +100,7 @@ export const GraficoTiposPedidos: React.FC<GraficoTiposPedidosProps> = ({
             iconType="circle"
             wrapperStyle={{
               fontSize: '12px',
-              paddingTop: '10px'
+              paddingTop: '0px'
             }}
           />
         </PieChart>

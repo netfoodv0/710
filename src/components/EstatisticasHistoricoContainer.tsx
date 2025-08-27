@@ -7,6 +7,11 @@ import { DiscountIcon, RejectedOrderIcon, CompletedOrderIcon, NewCustomerIcon, B
 interface EstatisticasHistoricoContainerProps {
 	estatisticas: EstatisticasHistorico | null;
 	dadosRelatorios?: DadosRelatorios | null;
+	children?: React.ReactNode;
+	className?: string;
+	title?: string;
+	subtitle?: string;
+	actions?: React.ReactNode;
 }
 
 export const EstatisticasHistoricoContainer: React.FC<EstatisticasHistoricoContainerProps> = ({ 
@@ -17,7 +22,7 @@ export const EstatisticasHistoricoContainer: React.FC<EstatisticasHistoricoConta
   actions
 }) => {
   return (
-    <div className={`bg-white rounded-lg p-4 border-dashboard ${className}`}>
+    <div className={`bg-purple-100 rounded-lg p-4 border-dashboard ${className}`}>
       {(title || subtitle || actions) && (
         <div className="flex items-center justify-between mb-4">
           <div>

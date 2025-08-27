@@ -1,8 +1,19 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import MenuIcon from '../components/icons/MenuIcon';
 import { AnimatedBeamMultipleOutputDemo } from '../components/ui/AnimatedBeamMultipleOutputs';
 
 export default function LandingPageDesktop() {
+  const navigate = useNavigate();
+
+  const handleExperimentarAgora = () => {
+    navigate('/cadastro');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="min-h-screen bg-[rgb(245,239,242)]">
       {/* Header Fixo Flutuante */}
@@ -11,8 +22,11 @@ export default function LandingPageDesktop() {
           <div className="w-[48px] h-[56px] bg-[#e7e6ec] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#d1d0d6] transition-colors">
             <MenuIcon size={28} color="#666666" />
           </div>
-          <div className="bg-[#fae9fd] hover:bg-purple-600 rounded-[8px] px-8 py-3 transition-all duration-500 ease-in-out cursor-pointer group hover:shadow-[0_12px_35px_rgba(147,51,234,0.7)]">
-            <span className="text-[16px] font-bold text-purple-600 group-hover:text-white transition-all duration-500 ease-in-out">Experimente gratuitamente agora</span>
+          <div 
+            onClick={handleLogin}
+            className="bg-[#fae9fd] hover:bg-purple-600 rounded-[8px] px-8 py-3 transition-all duration-500 ease-in-out cursor-pointer group hover:shadow-[0_12px_35px_rgba(147,51,234,0.7)]"
+          >
+            <span className="text-[16px] font-bold text-purple-600 group-hover:text-white transition-all duration-500 ease-in-out">Fazer Login</span>
           </div>
           <div className="w-[48px] h-[56px] bg-[#e7e6ec] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#d1d0d6] transition-colors">
             <MenuIcon size={28} color="#666666" />
@@ -39,7 +53,10 @@ export default function LandingPageDesktop() {
       
       {/* Botão Principal */}
       <div className="mt-[40px] flex justify-center">
-        <button className="w-[400px] h-[70px] bg-purple-600 text-white font-bold text-[18px] rounded-[20px] hover:bg-purple-700 transition-colors duration-300 cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_35px_rgba(147,51,234,0.7)]">
+        <button 
+          onClick={handleExperimentarAgora}
+          className="w-[400px] h-[70px] bg-purple-600 text-white font-bold text-[18px] rounded-[20px] hover:bg-purple-700 transition-colors duration-300 cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_35px_rgba(147,51,234,0.7)]"
+        >
           Experimente gratuitamente agora
         </button>
       </div>

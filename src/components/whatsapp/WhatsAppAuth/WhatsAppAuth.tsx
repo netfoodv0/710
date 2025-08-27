@@ -63,7 +63,7 @@ export const WhatsAppAuth: React.FC<WhatsAppAuthProps> = ({ onAuthenticated }) =
   };
 
   return (
-    <div className="min-h-screen bg-[#eeebeb] flex items-center justify-center p-4">
+          <div className="min-h-screen bg-[#f5eff2] flex items-center justify-center p-4">
       {/* Card Principal de Autenticação */}
       <div className="bg-white rounded-lg p-8 max-w-4xl w-full">
         <h2 className="text-xl font-semibold text-[#41525d] mb-8">

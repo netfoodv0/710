@@ -30,11 +30,12 @@ export { HistoryIcon } from './HistoryIcon';
 export { DragIcon } from './DragIcon';
 export { OrderIcon } from './OrderIcon';
 export { DashboardIcon } from './DashboardIcon';
+export { HomeIcon } from './HomeIcon';
 export { MenuIcon } from './MenuIcon';
 export { SupportIcon } from './SupportIcon';
 export { MapIcon } from './MapIcon';
 export { BagIcon } from './BagIcon';
-export { TableIcon } from './TableIcon';
+
 export { RevenueIcon } from './RevenueIcon';
 export { UsersIcon } from './UsersIcon';
 export { TicketIcon } from './TicketIcon';

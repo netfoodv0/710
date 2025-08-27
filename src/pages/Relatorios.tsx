@@ -112,7 +112,7 @@ export default function Relatorios() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast

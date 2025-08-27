@@ -17,6 +17,7 @@ export { StatusBadge } from './StatusBadge';
 export { EstatisticasCard } from './EstatisticasCard';
 export { EstatisticasContainer } from './EstatisticasContainer';
 export { EstatisticasHistoricoContainer } from './EstatisticasHistoricoContainer';
+export { EstatisticasCustom } from './EstatisticasCustom';
 
 // Componentes de paginação
 export { LoadMoreButton } from './LoadMoreButton';

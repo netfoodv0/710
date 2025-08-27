@@ -145,104 +145,150 @@
   opacity: 0.7 !important; /* 70% de opacidade */
 }
 
-/* ===== ESTILOS CUSTOMIZADOS PARA O SCROLLBAR ===== */
+/* ===== ESTILOS LIMPOS PARA O SIDEBAR ===== */
 
-/* SOLUÇÃO UNIVERSAL: Remove o scrollbar padrão em TODOS os navegadores */
+/* Estilos para itens principais (não subpáginas) */
+.MuiDrawer-root .MuiList-root > .MuiListItemButton-root > .MuiListItemIcon-root {
+  color: #000000 !important;
+  background-color: transparent !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+  width: auto !important;
+  height: auto !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 16px !important;
+  flex-shrink: 0 !important;
+}
+
+/* SVGs dentro dos ícones principais */
+.MuiDrawer-root .MuiList-root > .MuiListItemButton-root > .MuiListItemIcon-root svg {
+  color: #000000 !important;
+  fill: #000000 !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Itens principais selecionados - ícones roxos */
+.MuiDrawer-root .MuiList-root > .MuiListItemButton-root.Mui-selected > .MuiListItemIcon-root {
+  color: #8217d5 !important;
+  background-color: transparent !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+.MuiDrawer-root .MuiList-root > .MuiListItemButton-root.Mui-selected > .MuiListItemIcon-root svg {
+  color: #8217d5 !important;
+  fill: #8217d5 !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Regras alternativas para itens selecionados */
+.MuiListItemButton-root.Mui-selected .MuiListItemIcon-root {
+  color: #8217d5 !important;
+  background-color: transparent !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+.MuiListItemButton-root.Mui-selected .MuiListItemIcon-root svg {
+  color: #8217d5 !important;
+  fill: #8217d5 !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Regras globais para itens selecionados */
+.Mui-selected .MuiListItemIcon-root {
+  color: #8217d5 !important;
+  background-color: transparent !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+}
+
+.Mui-selected .MuiListItemIcon-root svg {
+  color: #8217d5 !important;
+  fill: #8217d5 !important;
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Estilos para subpáginas (sem caixas pretas) */
+.MuiDrawer-root .MuiCollapse-root .MuiListItemButton-root .MuiListItemIcon-root {
+  color: #000000 !important;
+  background-color: transparent !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+  width: auto !important;
+  height: auto !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  margin-right: 8px !important;
+}
+
+/* SVGs das subpáginas */
+.MuiDrawer-root .MuiCollapse-root .MuiListItemButton-root .MuiListItemIcon-root svg {
+  color: #000000 !important;
+  fill: #000000 !important;
+  opacity: 0.7 !important; /* 70% de opacidade */
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* Textos das subpáginas com margem à esquerda */
+.MuiDrawer-root .MuiCollapse-root .MuiListItemButton-root .MuiListItemText-root {
+  margin-left: 64px !important;
+  padding-left: 0 !important;
+}
+
+/* Setas de expansão */
+.MuiDrawer-root .MuiListItemButton-root .MuiSvgIcon-root {
+  color: #000000 !important;
+  fill: #000000 !important;
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Hover dos itens principais */
+.MuiDrawer-root .MuiList-root > .MuiListItemButton-root:hover > .MuiListItemIcon-root {
+  background-color: transparent !important;
+  opacity: 1 !important;
+}
+
+/* Hover das subpáginas */
+.MuiDrawer-root .MuiCollapse-root .MuiListItemButton-root:hover .MuiListItemIcon-root {
+  background-color: transparent !important;
+}
+
+/* ===== ESTILOS PARA O SCROLLBAR ===== */
 .MuiDrawer-root .MuiDrawer-paper {
-  /* Firefox */
   scrollbar-width: none;
-  
-  /* Internet Explorer 10+ */
   -ms-overflow-style: none;
-  
-  /* Webkit (Chrome, Safari, Edge) */
-  scrollbar-width: none;
-  
-  /* Garante que não há scrollbar visível */
-  overflow: -moz-scrollbars-none;
 }
 
-/* Remove o scrollbar padrão do Webkit (Chrome, Safari, Edge) */
 .MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar {
-  width: 0px;
-  background: transparent;
+  width: 6px;
 }
 
-/* Remove COMPLETAMENTE as setas de cima e baixo - abordagem mais robusta */
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button {
-  display: none !important;
-  height: 0 !important;
-  width: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Remove especificamente cada tipo de botão com maior especificidade */
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:start,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:end,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:single-button:start,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:single-button:end,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:double-button:start,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:double-button:end,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:decrement,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:increment,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:vertical:start,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:vertical:end,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:horizontal:start,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:horizontal:end {
-  display: none !important;
-  height: 0 !important;
-  width: 0 !important;
-  background: transparent !important;
-  border: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  min-height: 0 !important;
-  min-width: 0 !important;
-  max-height: 0 !important;
-  max-width: 0 !important;
-}
-
-/* Remove o track do scrollbar */
 .MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-track {
-  background: transparent;
-  border: none;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* Remove o thumb do scrollbar */
 .MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-thumb {
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
 }
 
-/* Remove qualquer borda ou outline do scrollbar */
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-corner {
-  background: transparent;
-  border: none;
-}
-
-/* CSS adicional para garantir que as setas não apareçam em nenhum navegador */
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:before,
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button:after {
-  content: none !important;
-  display: none !important;
-}
-
-/* Força a remoção das setas em todos os navegadores Webkit */
-.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-button {
-  -webkit-appearance: none !important;
-  appearance: none !important;
-}
-
-/* Garante que o scrollbar não interfira com o layout */
-.MuiDrawer-root .MuiDrawer-paper {
-  overflow-y: auto;
-  overflow-x: hidden;
+.MuiDrawer-root .MuiDrawer-paper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 /* Remove qualquer padding ou margin que possa causar scroll horizontal */

@@ -9,7 +9,6 @@ import { DataTable } from '../../components/ui';
 
 // Componentes refatorados
 import { 
-  EstatisticasCupons, 
   DistribuicaoCategoria, 
   HeaderRelatorioCupons,
   useConfiguracaoTabelaCupons 
@@ -23,6 +22,8 @@ import {
   cardPercentages 
 } from '../../data/cuponsMock';
 import { useAnimacaoCards } from '../../hooks/useAnimacaoCards';
+import { EstatisticasCustom } from '../../components/EstatisticasCustom';
+import { CouponIcon, BagIcon, UsersIcon, RevenueIcon } from '../../components/ui';
 
 // Estilos
 import './Cupons.css';
@@ -89,7 +90,7 @@ export default function RelatoriosCupons() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+      <div className="min-h-screen">
         {/* Notificações */}
         {notifications.map((notification) => (
           <NotificationToast
@@ -158,7 +159,34 @@ export default function RelatoriosCupons() {
             <>
               {/* Container de Estatísticas de Cupons */}
               <div className="cupons-stats-container">
-                <EstatisticasCupons estatisticas={estatisticasCupons} />
+                <EstatisticasCustom
+                  estatisticas={[
+                    {
+                      label: 'Total de Cupons',
+                      valor: estatisticasCupons.totalCupons,
+                      icon: CouponIcon,
+                      iconColor: '#6b7280'
+                    },
+                    {
+                      label: 'Cupons Ativos',
+                      valor: estatisticasCupons.cuponsAtivos,
+                      icon: BagIcon,
+                      iconColor: '#6b7280'
+                    },
+                    {
+                      label: 'Total de Usos',
+                      valor: estatisticasCupons.totalUsos,
+                      icon: UsersIcon,
+                      iconColor: '#6b7280'
+                    },
+                    {
+                      label: 'Descontos Gerados',
+                      valor: `R$ ${estatisticasCupons.valorTotalDescontos.toFixed(2)}`,
+                      icon: RevenueIcon,
+                      iconColor: '#6b7280'
+                    }
+                  ]}
+                />
               </div>
 
               {/* Distribuição por Categoria */}

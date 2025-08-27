@@ -21,7 +21,7 @@ export function CardapioContent() {
   }
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+    <div className="min-h-screen">
       {/* Notificações */}
       <CardapioNotifications />
 

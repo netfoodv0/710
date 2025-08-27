@@ -140,9 +140,9 @@ export function NovoProdutoForm({ onSubmit, status, onStatusChange, categorias =
 
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#eeebeb' }}>
+          <div className="min-h-screen">
       <style>{spinnerStyles}</style>
-      <div className="p-6 space-y-6" style={{ backgroundColor: '#f7f5f3' }}>
+      <div className="p-6 space-y-6">
         <form id="produto-form" onSubmit={handleSubmit} className="space-y-6">
         
         {/* Grid principal com 2 colunas para os cards */}
