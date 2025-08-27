@@ -9,4 +9,10 @@ export { ModalSelecaoAvatar } from './ModalSelecaoAvatar';
 export { AvatarItem } from './AvatarItem';
 export { AvatarList } from './AvatarList';
 export { avataresDisponiveis, type Avatar } from './avatarData';
-export { CustomModal, CustomModalHeader, CustomModalBody, CustomModalFooter } from './CustomModal'; 
+export { CustomModal, CustomModalHeader, CustomModalBody, CustomModalFooter } from './CustomModal';
+
+// Componentes auxiliares movidos da pasta modal/
+export { ModalInfoCard } from './ModalInfoCard';
+export { ModalStatsCard } from './ModalStatsCard';
+export { ModalActionButtons } from './ModalActionButtons';
+export { ModalSizeButtons } from './ModalSizeButtons'; 
