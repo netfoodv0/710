@@ -15,8 +15,6 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@heroui/date-picker": "^2.3.25",
-    "@heroui/react": "^2.8.2",
     "@hookform/resolvers": "^5.2.1",
     "@iconify/react": "^6.0.0",
     "@internationalized/date": "^3.8.2",
