@@ -16,6 +16,8 @@ import {
   BagIcon,
   OrganogramaIcon
 } from '../ui';
+import { KDSIcon } from '../icons';
+
 
 export const sidebarRoutes: RouteType[] = [
 
@@ -62,6 +64,15 @@ export const sidebarRoutes: RouteType[] = [
     sidebarProps: {
       displayText: "Atendimento",
       icon: <SupportIcon />
+    }
+  },
+  {
+    path: "/kds",
+    element: null,
+    state: "kds",
+    sidebarProps: {
+      displayText: "KDS",
+      icon: <KDSIcon />
     }
   },
 

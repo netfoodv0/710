@@ -108,8 +108,8 @@ export default function Configuracoes() {
 
         {/* Conteúdo principal */}
         <div className="px-6 py-6 space-y-6">
-          {/* Grid principal com 2 colunas para os cards */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {/* Grid principal com 1 coluna para os cards empilhados */}
+          <div className="grid grid-cols-1 gap-6">
             
             {/* Configurações Gerais */}
             <ConfiguracoesGerais form={form} />

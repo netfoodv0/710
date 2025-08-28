@@ -109,23 +109,16 @@ export default function Horarios() {
           <div className="w-full overflow-hidden">
             {/* Configurações de Horários - Formato Tabela */}
             <div className="w-full overflow-hidden">
+              {/* Tabela de horários */}
               <div 
-                className="bg-white border rounded-lg p-6 border-dashboard overflow-hidden"
+                className="bg-white rounded-xl border border-dashboard overflow-hidden" 
                 style={{ 
                   scrollbarWidth: 'none', 
-                  msOverflowStyle: 'none'
+                  msOverflowStyle: 'none',
+                  WebkitOverflowScrolling: 'touch',
+                  overflow: 'hidden'
                 }}
               >
-                {/* Tabela de horários */}
-                <div 
-                  className="rounded-xl border border-dashboard overflow-hidden" 
-                  style={{ 
-                    scrollbarWidth: 'none', 
-                    msOverflowStyle: 'none',
-                    WebkitOverflowScrolling: 'touch',
-                    overflow: 'hidden'
-                  }}
-                >
                   <table className="w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50 table-header-32-5">
                       <tr>
@@ -273,7 +266,6 @@ export default function Horarios() {
                     </tbody>
                   </table>
                 </div>
-              </div>
             </div>
           </div>
         </div>

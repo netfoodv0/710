@@ -1,4 +1,5 @@
 import React from 'react';
+import { Bell } from 'lucide-react';
 import { FormSection, FormSwitch } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function ConfiguracoesNotificacoes({ form }: ConfiguracoesNotificacoesPro
     <FormSection
       title="Configurações de Notificações"
       description="Gerencie as notificações do sistema"
+      icon={<Bell size={30} />}
     >
       <div className="space-y-4">
         <FormSwitch

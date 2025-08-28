@@ -1,4 +1,5 @@
 import React from 'react';
+import { MapPin } from 'lucide-react';
 import { FormSection, InputPersonalizado } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function EnderecoLoja({ form }: EnderecoLojaProps) {
     <FormSection
       title="Endereço da Loja"
       description="Informações de localização da sua loja"
+      icon={<MapPin size={30} />}
     >
       <div className="space-y-4">
         <InputPersonalizado

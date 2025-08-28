@@ -4,7 +4,7 @@ import { useDataFormatter } from '../../hooks/useDataFormatter';
 import { useErrorHandler } from '../../services/errorService';
 import { getDataWithFallback } from '../../services/mockDataService';
 import { ProdutoVendido } from '../../types/dashboard';
-import { ReportIcon } from '../ui';
+import { ReportIcon, ContainerCustom } from '../ui';
 
 interface ProdutosVendidosProps {
   produtos: ProdutoVendido[];
@@ -83,7 +83,7 @@ export const ProdutosVendidos: React.FC<ProdutosVendidosProps> = React.memo(({ p
   }
 
   return (
-    <section className="dashboard-analytics-card" aria-labelledby="top-produtos-title">
+    <ContainerCustom className="flex flex-col max-h-[500px]" aria-labelledby="top-produtos-title">
       <div className="dashboard-analytics-header">
         <h2 id="top-produtos-title" className="text-base font-semibold text-gray-900">
           {dashboard.topProdutos}
@@ -111,7 +111,7 @@ export const ProdutosVendidos: React.FC<ProdutosVendidosProps> = React.memo(({ p
           </div>
         </div>
       </div>
-    </section>
+    </ContainerCustom>
   );
 });
 

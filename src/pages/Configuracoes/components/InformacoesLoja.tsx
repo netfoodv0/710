@@ -1,4 +1,5 @@
 import React from 'react';
+import { Store } from 'lucide-react';
 import { FormSection, FormSingleImageUpload } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function InformacoesLoja({ form }: InformacoesLojaProps) {
     <FormSection
       title="Informações da Loja"
       description="Preencha os detalhes da sua loja."
+      icon={<Store size={30} />}
     >
       <div className="space-y-4">
         <FormSingleImageUpload

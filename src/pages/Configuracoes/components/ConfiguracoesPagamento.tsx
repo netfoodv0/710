@@ -1,4 +1,5 @@
 import React from 'react';
+import { CreditCard } from 'lucide-react';
 import { FormSection, FormSwitch } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function ConfiguracoesPagamento({ form }: ConfiguracoesPagamentoProps) {
     <FormSection
       title="Configurações de Pagamento"
       description="Configure as formas de pagamento aceitas"
+      icon={<CreditCard size={30} />}
     >
       <div className="space-y-4">
         <FormSwitch

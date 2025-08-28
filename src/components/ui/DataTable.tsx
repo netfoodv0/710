@@ -372,7 +372,7 @@ export function DataTable<T extends { id: string | number }>({
       </div>
 
       {/* Tabela */}
-      <div className="bg-white rounded-lg overflow-hidden" style={{ border: '1px solid hsl(210deg 4.35% 81.96%)' }}>
+      <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid hsl(210deg 4.35% 81.96%)' }}>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b" style={{ borderColor: 'hsl(210deg 4.35% 81.96%)' }}>

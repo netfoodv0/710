@@ -21,6 +21,7 @@ const Cardapio = lazy(() => import('../pages/Cardapio'));
 const CadastroProduto = lazy(() => import('../pages/CadastroProduto'));
 
 const Atendimento = lazy(() => import('../pages/Atendimento'));
+const KDSPage = lazy(() => import('../pages/KDSPage'));
 const Configuracoes = lazy(() => import('../pages/Configuracoes'));
 const Horarios = lazy(() => import('../pages/Horarios/Horarios'));
 
@@ -127,6 +128,16 @@ export function AppRoutes() {
           <LojaProtectedRoute>
             <Suspense fallback={<TableFallback />}>
               <Atendimento />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/kds" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<TableFallback />}>
+              <KDSPage />
             </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>

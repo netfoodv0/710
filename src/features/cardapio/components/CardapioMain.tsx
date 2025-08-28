@@ -31,7 +31,7 @@ export function CardapioMain() {
   return (
     <div className="flex-1 space-y-6">
       {/* Lista de Produtos */}
-      <div className="bg-white border rounded-lg" style={{ borderColor: 'rgb(207 209 211)' }}>
+      <div className="bg-white/60 border-2 rounded-2xl" style={{ borderColor: 'white' }}>
         <div className="p-4">
           <ListaProdutos
             produtos={produtosFiltrados}

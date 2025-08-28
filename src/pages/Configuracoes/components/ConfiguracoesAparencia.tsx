@@ -1,4 +1,5 @@
 import React from 'react';
+import { Palette } from 'lucide-react';
 import { FormSection, FormSelect, FormSwitch } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function ConfiguracoesAparencia({ form }: ConfiguracoesAparenciaProps) {
     <FormSection
       title="Configurações de Aparência"
       description="Personalize a aparência do seu sistema"
+      icon={<Palette size={30} />}
     >
       <div className="space-y-4">
         <FormSelect

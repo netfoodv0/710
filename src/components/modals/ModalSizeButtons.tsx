@@ -30,3 +30,6 @@ export const ModalSizeButtons: React.FC<ModalSizeButtonsProps> = ({
     </div>
   );
 };
+
+
+

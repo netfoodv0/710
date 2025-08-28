@@ -1,4 +1,5 @@
 import React from 'react';
+import { Clock } from 'lucide-react';
 import { FormSection, FormSelect } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 import { useHorarioAtual } from '../hooks/useHorarioAtual';
@@ -15,6 +16,7 @@ export function FusoHorario({ form }: FusoHorarioProps) {
     <FormSection
       title="Fuso Horário"
       description="Selecione o fuso horário que sua loja deve seguir"
+      icon={<Clock size={30} />}
     >
       <div className="space-y-4">
         {/* Fuso Horário Principal */}

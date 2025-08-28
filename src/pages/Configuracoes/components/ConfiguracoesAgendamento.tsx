@@ -1,4 +1,5 @@
 import React from 'react';
+import { Calendar } from 'lucide-react';
 import { FormSection, FormSwitch, InputPersonalizadoQuantidade } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 import { useAgendamentoUtils } from '../hooks/useAgendamentoUtils';
@@ -15,6 +16,7 @@ export function ConfiguracoesAgendamento({ form }: ConfiguracoesAgendamentoProps
     <FormSection
       title="Configurações de agendamento"
       description="Configure as opções de agendamento para a sua loja"
+      icon={<Calendar size={30} />}
     >
       <div className="flex gap-6">
         {/* Preview do lado esquerdo */}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Truck } from 'lucide-react';
 import { FormSection, FormSwitch, InputPersonalizadoPreco, InputPersonalizadoQuantidade } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function ConfiguracoesEntrega({ form }: ConfiguracoesEntregaProps) {
     <FormSection
       title="Configurações de Entrega"
       description="Configure as opções de entrega"
+      icon={<Truck size={30} />}
     >
       <div className="space-y-4">
         {/* Switches de Entrega */}

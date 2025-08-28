@@ -1,5 +1,7 @@
 import React from 'react';
-import { FormSection, InputPersonalizado, FormTextarea } from '../../../components/forms';
+import { Settings } from 'lucide-react';
+import { AccordionCard } from '../../../components/ui';
+import { InputPersonalizado, FormTextarea } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
 interface ConfiguracoesGeraisProps {
@@ -10,9 +12,10 @@ export function ConfiguracoesGerais({ form }: ConfiguracoesGeraisProps) {
   const { config, updateStringField } = form;
 
   return (
-    <FormSection
+    <AccordionCard
       title="Configurações Gerais"
       description="Informações básicas do seu restaurante"
+      icon={Settings}
     >
       <div className="space-y-4">
         <InputPersonalizado
@@ -68,6 +71,6 @@ export function ConfiguracoesGerais({ form }: ConfiguracoesGeraisProps) {
           </div>
         )}
       </div>
-    </FormSection>
+    </AccordionCard>
   );
 }

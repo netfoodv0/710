@@ -106,11 +106,11 @@ const SortableItem = React.memo(function SortableItem({
       style={style}
       className={`sortable-categoria ${isDragging ? 'dragging' : ''}`}
     >
-      <div className={`flex-shrink-0 lg:w-full w-auto flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 relative hover:bg-gray-50 border-dashboard ${
-        categoriaCompleta?.status === 'inativo' 
-          ? 'bg-gray-50 opacity-75' 
-          : ''
-      }`}>
+             <div className={`flex-shrink-0 lg:w-full w-auto flex items-center gap-3 p-3 rounded-lg border transition-all duration-200 relative hover:bg-gray-50 border-dashboard bg-white ${
+         categoriaCompleta?.status === 'inativo' 
+           ? 'bg-gray-50 opacity-75' 
+           : ''
+       }`}>
         {/* Ícone de arrasto */}
         <div 
           {...attributes} 
@@ -219,7 +219,7 @@ export function CardMenuCategorias({
   };
 
   return (
-    <div className={`bg-white border rounded-lg p-4 border-dashboard`}>
+    <div className={`bg-white/60 border-2 rounded-2xl p-4`} style={{ borderColor: 'white' }}>
       <div className="bg-white border rounded-lg p-4 mb-4 border-dashboard">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

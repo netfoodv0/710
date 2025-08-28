@@ -4,6 +4,7 @@ import { useIcons } from '../../types/icons';
 import { useErrorHandler } from '../../services/errorService';
 import { getDataWithFallback } from '../../services/mockDataService';
 import { FormaPedida } from '../../types/dashboard';
+import { ContainerCustom } from '../ui';
 
 interface FormasPedidasProps {
   formas: FormaPedida[];
@@ -77,7 +78,7 @@ export const FormasPedidas: React.FC<FormasPedidasProps> = React.memo(({ formas,
   }
 
   return (
-    <section className="dashboard-analytics-card pb-2" aria-labelledby="formas-pedido-title">
+    <ContainerCustom className="flex flex-col max-h-[500px] pb-2" aria-labelledby="formas-pedido-title">
       <div className="dashboard-analytics-header">
         <h2 id="formas-pedido-title" className="text-base font-semibold text-gray-900">
           {dashboard.formasDePedido}
@@ -100,7 +101,7 @@ export const FormasPedidas: React.FC<FormasPedidasProps> = React.memo(({ formas,
           {dashboard.economiaComTaxasDescricao}
         </p>
       </div>
-    </section>
+    </ContainerCustom>
   );
 });
 

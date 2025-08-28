@@ -43,3 +43,6 @@ export const ModalInfoCard: React.FC<ModalInfoCardProps> = ({
     </Card>
   );
 };
+
+
+

@@ -4,6 +4,7 @@ import { useDataFormatter } from '../../hooks/useDataFormatter';
 import { useErrorHandler } from '../../services/errorService';
 import { getDataWithFallback } from '../../services/mockDataService';
 import { PedidoEmAndamento } from '../../types/dashboard';
+import { ContainerCustom } from '../ui';
 
 interface PedidosAndamentoProps {
   pedidosEmAndamento?: number;
@@ -61,7 +62,7 @@ export const PedidosAndamento: React.FC<PedidosAndamentoProps> = React.memo(({
 
   if (loading) {
     return (
-      <section className="dashboard-analytics-card" aria-labelledby="pedidos-andamento-title">
+      <ContainerCustom className="flex flex-col max-h-[500px]" aria-labelledby="pedidos-andamento-title">
         <div className="dashboard-analytics-header">
           <div className="h-5 bg-gray-200 rounded w-36"></div>
           <div className="w-2 h-2 bg-gray-200 rounded-lg"></div>
@@ -76,12 +77,12 @@ export const PedidosAndamento: React.FC<PedidosAndamentoProps> = React.memo(({
         <div className="mt-auto pt-2 flex-shrink-0">
           <div className="w-full h-10 bg-gray-200 rounded-[100px]"></div>
         </div>
-      </section>
+      </ContainerCustom>
     );
   }
 
   return (
-    <section className="dashboard-analytics-card" aria-labelledby="pedidos-andamento-title">
+    <ContainerCustom className="flex flex-col max-h-[500px]" aria-labelledby="pedidos-andamento-title">
       <div className="dashboard-analytics-header">
         <h2 id="pedidos-andamento-title" className="text-base font-semibold text-gray-900">
           {dashboard.pedidosEmAndamento}
@@ -111,7 +112,7 @@ export const PedidosAndamento: React.FC<PedidosAndamentoProps> = React.memo(({
           </div>
         </div>
       </div>
-    </section>
+    </ContainerCustom>
   );
 });
 

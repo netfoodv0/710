@@ -1,4 +1,5 @@
 import React from 'react';
+import { Printer } from 'lucide-react';
 import { FormSection, FormSwitch, FormSelect } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function ConfiguracaoNotinha({ form }: ConfiguracaoNotinhaProps) {
     <FormSection
       title="Configuração da Notinha"
       description="Defina suas preferências para as notas impressas dos pedidos."
+      icon={<Printer size={30} />}
     >
       <div className="flex gap-6">
         {/* Controles à Esquerda */}

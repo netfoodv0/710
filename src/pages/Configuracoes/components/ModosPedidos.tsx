@@ -1,4 +1,5 @@
 import React from 'react';
+import { ShoppingCart } from 'lucide-react';
 import { FormSection, FormSwitch } from '../../../components/forms';
 import { useConfiguracoesForm } from '../hooks/useConfiguracoesForm';
 
@@ -13,6 +14,7 @@ export function ModosPedidos({ form }: ModosPedidosProps) {
     <FormSection
       title="Modos de Pedidos"
       description="Escolha os modos de pedidos disponíveis para a sua loja."
+      icon={<ShoppingCart size={30} />}
     >
       <div className="space-y-4">
         <FormSwitch
