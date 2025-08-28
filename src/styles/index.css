@@ -1,19 +1,22 @@
 /* Arquivo de índice para todos os estilos do sistema */
 
+/* Import das variáveis CSS centralizadas */
+@import '@/styles/organized/variables.css';
+
 /* Import das animações centralizadas */
-@import './animations.css';
+@import '@/styles/organized/animations/animations.css';
 
 /* Import dos componentes centralizados */
-@import './components.css';
+@import '@/styles/organized/components/components.css';
 
 /* Import das utilities */
-@import './utilities.css';
+@import '@/styles/organized/utilities/utilities.css';
 
 /* Import dos estilos do dashboard */
-@import './dashboard.css';
+@import '@/styles/organized/layouts/dashboard.css';
 
 /* Import dos estilos específicos do modal de usuário */
-@import './modal-usuario.css';
+@import '@/styles/modal-usuario.css';
 
 /* Import dos estilos do modal refatorado */
-@import './modal.css';
+@import '@/styles/modal.css';

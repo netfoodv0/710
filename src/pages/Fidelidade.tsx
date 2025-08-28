@@ -4,9 +4,6 @@ import { PageHeader } from '../components/ui';
 import { FidelidadeProvider, useFidelidade } from '../context/fidelidadeContext';
 import { FidelidadeContent } from '../components/fidelidade/FidelidadeContent';
 
-// Estilos
-import '../styles/dashboard.css';
-
 export default function Fidelidade() {
   return (
     <ErrorBoundary>

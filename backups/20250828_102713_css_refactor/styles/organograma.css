@@ -1,0 +1,270 @@
+/* Estilos para o organograma */
+.hierarchy-viewer {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  overflow: auto;
+}
+
+.node-template {
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px;
+  width: 150px;
+  height: 224px;
+  position: relative;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  transition: all 0.2s ease;
+}
+
+.node-template:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.node-header {
+  margin-bottom: 0px;
+}
+
+.node-header .cargo {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0px;
+}
+
+.node-header .departamento {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.node-content {
+  margin-bottom: 1px;
+}
+
+.node-content .nome {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  margin-bottom: 0px;
+}
+
+.node-content .email,
+.node-content .telefone {
+  display: block;
+  font-size: 11px;
+  color: #6b7280;
+  margin-bottom: 2px;
+}
+
+.node-button {
+  background-color: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.node-button:hover {
+  background-color: #7c3aed;
+}
+
+/* Estilos para diferentes níveis */
+.nivel-1,
+.nivel-2,
+.nivel-3,
+.nivel-4 {
+  background-color: rgb(154, 12, 124);
+  border-color: rgb(154, 12, 124);
+}
+
+/* Prevenir seleção durante arrastar */
+.organograma-container {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.organograma-content {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .hierarchy-viewer {
+    padding: 15px;
+  }
+  
+  .node-template {
+    min-width: 160px;
+    padding: 8px;
+  }
+}
+
+/* Controles de Zoom */
+.zoom-button {
+  width: 40px;
+  height: 40px;
+  background-color: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zoom-button:hover {
+  background-color: #7c3aed;
+}
+
+.zoom-button.reset {
+  font-size: 16px;
+}
+
+.zoom-level {
+  background-color: #f3f4f6;
+  color: #374151;
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+/* Avatar circular */
+.node-avatar {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0;
+  position: relative;
+}
+
+.avatar-placeholder {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.avatar-image {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #d1d5db;
+}
+
+/* Card interno */
+.node-inner-card {
+  width: 100%;
+  height: 50px;
+  background-color: rgb(16, 22, 84);
+  border-radius: 0px 0px 2px 2px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 6px 8px 10px 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+
+.node-inner-card .node-content {
+  margin: 0;
+  padding: 0;
+}
+
+.node-inner-card .node-header {
+  margin: 0;
+  padding: 0;
+}
+
+.node-inner-card .nome {
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.node-inner-card .cargo {
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  line-height: 1.1;
+}
+
+/* Barra inferior do card */
+.node-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background-color: rgb(154, 12, 124);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  z-index: 1;
+}
+
+.node-bottom-bar .node-content {
+  margin-bottom: 2px;
+}
+
+.node-bottom-bar .node-header {
+  margin-bottom: 0;
+}

@@ -20,9 +20,6 @@ import {
   CardsGridSkeleton 
 } from '../components/skeletons/DashboardSkeleton';
 
-// Estilos
-import '../styles/dashboard.css';
-
 export default function Dashboard() {
   const { selectedPeriod } = usePeriod();
   const { data, loading, error, refreshData } = useDashboard(selectedPeriod);

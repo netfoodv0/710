@@ -1,0 +1,190 @@
+/* Estilos de componentes centralizados */
+
+/* Estilos para modais */
+.modal-overlay {
+  z-index: 9998;
+}
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: var(--dashboard-white);
+}
+
+.modal-header {
+  background-color: var(--dashboard-white);
+}
+
+.modal-body {
+  background-color: var(--dashboard-white);
+}
+
+.modal-footer {
+  background-color: var(--dashboard-white);
+}
+
+/* Estilos para CustomModal - MOVIDOS para modal-usuario.css para evitar conflitos */
+
+/* Estilos para modais - consolidados e sem !important */
+.modal-overlay,
+.fixed.inset-0 {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+}
+
+/* Fundo branco para modais usando especificidade */
+.modal-content,
+div[role="dialog"] {
+  background-color: white;
+  background: white;
+}
+
+/* Backdrop do modal */
+.fixed.inset-0.bg-black.bg-opacity-50 {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Estilos para CustomDropdown usando especificidade */
+.CustomDropdown button:hover {
+  background-color: #faf5ff;
+  background: #faf5ff;
+  border-color: #c4b5fd;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.CustomDropdown .py-1 button:hover {
+  background-color: #faf5ff;
+  background: #faf5ff;
+  color: #7c3aed;
+  font-weight: 500;
+}
+
+/* Hover para opções selecionadas */
+.CustomDropdown .py-1 button.bg-purple-100:hover {
+  background-color: #e9d5ff;
+  background: #e9d5ff;
+  color: #6b21a8;
+}
+
+/* Estilos para checkboxes roxos */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #9333ea;
+  border-color: #9333ea;
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+input[type="checkbox"]:hover {
+  border-color: #9333ea;
+}
+
+input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.2);
+}
+
+/* Estilos para mensagens de erro - REMOVIDOS para evitar conflitos com modal.css */
+
+/* Desabilitar validações nativas do navegador usando especificidade */
+input:invalid,
+textarea:invalid,
+select:invalid {
+  box-shadow: none;
+  outline: none;
+}
+
+/* Esconder mensagens de validação nativas */
+input:invalid::before,
+textarea:invalid::before,
+select:invalid::before,
+input:invalid::after,
+textarea:invalid::after,
+select:invalid::after {
+  display: none;
+  content: none;
+}
+
+/* Desabilitar tooltips de validação nativos */
+input[title*="Please"],
+textarea[title*="Please"],
+select[title*="Please"] {
+  pointer-events: none;
+}
+
+/* Estilos para gráficos Recharts */
+.recharts-pie-label {
+  z-index: 10;
+  pointer-events: none;
+}
+
+.recharts-pie-label-text {
+  font-size: 12px;
+  font-weight: 500;
+  fill: #374151;
+}
+
+/* Estilos para scrollbars */
+.analytics-scroll::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.analytics-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.analytics-scroll::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.analytics-scroll::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+.analytics-scroll::-webkit-scrollbar-thumb:active {
+  background: transparent;
+}
+
+/* Para Firefox - scrollbars invisíveis */
+.analytics-scroll {
+  scrollbar-width: none;
+  scrollbar-color: transparent transparent;
+}
+
+/* Classe específica para sempre esconder scrollbars */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari and Opera */
+}
+
+/* Estilos para sidebar - MOVIDOS para Sidebar.css para evitar conflitos */

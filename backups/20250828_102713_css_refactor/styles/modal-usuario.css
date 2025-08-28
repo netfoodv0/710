@@ -1,0 +1,237 @@
+/* Estilos específicos para o Modal de Criar Usuário */
+/* Usando alta especificidade para sobrescrever estilos conflitantes */
+
+/* Modal principal */
+.modal-criar-usuario,
+.modal-criar-usuario *,
+.modal-criar-usuario .CustomModal,
+.modal-criar-usuario .CustomModal * {
+  /* Reset de estilos conflitantes */
+  background-color: white !important;
+  background: white !important;
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* Container do modal */
+.modal-criar-usuario .CustomModal {
+  border-radius: 8px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #cfd1d3 !important;
+}
+
+/* Header do modal */
+.modal-criar-usuario .CustomModal .px-6.py-4.border-b {
+  background-color: white !important;
+  border-bottom-color: #cfd1d3 !important;
+  padding: 1.5rem !important;
+}
+
+.modal-criar-usuario .CustomModal h3 {
+  color: #1f2937 !important;
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  line-height: 1.75rem !important;
+}
+
+/* Botão de fechar */
+.modal-criar-usuario .CustomModal button[onclick*="onClose"] {
+  background-color: transparent !important;
+  border: 1px solid #cfd1d3 !important;
+  border-radius: 9999px !important;
+  padding: 0.5rem !important;
+  color: #9ca3af !important;
+  transition: all 0.3s ease !important;
+}
+
+.modal-criar-usuario .CustomModal button[onclick*="onClose"]:hover {
+  background-color: #f3f4f6 !important;
+  color: #4b5563 !important;
+  border-color: #d1d5db !important;
+}
+
+/* Body do modal */
+.modal-criar-usuario .CustomModal .px-6.py-4:not(.border-b):not(.border-t) {
+  background-color: white !important;
+  padding: 1.5rem !important;
+}
+
+/* Formulário */
+.modal-criar-usuario form {
+  background-color: white !important;
+}
+
+/* Labels dos campos */
+.modal-criar-usuario label {
+  color: #374151 !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+/* Campos de input */
+.modal-criar-usuario input,
+.modal-criar-usuario select,
+.modal-criar-usuario textarea {
+  width: 100% !important;
+  padding: 0.5rem 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  background-color: white !important;
+  color: #111827 !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.modal-criar-usuario input:focus,
+.modal-criar-usuario select:focus,
+.modal-criar-usuario textarea:focus {
+  outline: none !important;
+  border-color: #9333ea !important;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1) !important;
+}
+
+.modal-criar-usuario input:hover,
+.modal-criar-usuario select:hover,
+.modal-criar-usuario textarea:hover {
+  border-color: #9ca3af !important;
+}
+
+/* Dropdown customizado */
+.modal-criar-usuario .CustomDropdown {
+  background-color: white !important;
+}
+
+.modal-criar-usuario .CustomDropdown button {
+  width: 100% !important;
+  padding: 0.5rem 0.75rem !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 8px !important;
+  background-color: white !important;
+  color: #111827 !important;
+  font-size: 0.875rem !important;
+  text-align: left !important;
+  transition: all 0.2s ease !important;
+}
+
+.modal-criar-usuario .CustomDropdown button:hover {
+  background-color: #faf5ff !important;
+  border-color: #c4b5fd !important;
+}
+
+.modal-criar-usuario .CustomDropdown button:focus {
+  outline: none !important;
+  border-color: #9333ea !important;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1) !important;
+}
+
+
+
+/* Texto de ajuda */
+.modal-criar-usuario .text-sm.text-gray-500 {
+  color: #6b7280 !important;
+  font-size: 0.875rem !important;
+  margin-top: 0.25rem !important;
+}
+
+/* Footer do modal */
+.modal-criar-usuario .CustomModal .border-t {
+  background-color: #f8fafc !important;
+  border-top-color: #cfd1d3 !important;
+  padding: 1.5rem !important;
+}
+
+/* Botões do footer */
+.modal-criar-usuario .flex.justify-end.space-x-3 button {
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid transparent !important;
+}
+
+/* Botão Cancelar */
+.modal-criar-usuario .flex.justify-end.space-x-3 button[type="button"] {
+  background-color: white !important;
+  color: #4b5563 !important;
+  border-color: #d1d5db !important;
+}
+
+.modal-criar-usuario .flex.justify-end.space-x-3 button[type="button"]:hover {
+  background-color: #f9fafb !important;
+  color: #1f2937 !important;
+  border-color: #9ca3af !important;
+}
+
+/* Botão Criar Usuário */
+.modal-criar-usuario .flex.justify-end.space-x-3 button[type="submit"] {
+  background-color: #9333ea !important;
+  color: white !important;
+  border-color: #9333ea !important;
+}
+
+.modal-criar-usuario .flex.justify-end.space-x-3 button[type="submit"]:hover {
+  background-color: #7c3aed !important;
+  border-color: #7c3aed !important;
+}
+
+.modal-criar-usuario .flex.justify-end.space-x-3 button[type="submit"]:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1) !important;
+}
+
+/* Espaçamento entre campos */
+.modal-criar-usuario .space-y-4 > * + * {
+  margin-top: 1rem !important;
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+  .modal-criar-usuario .CustomModal {
+    margin: 1rem !important;
+    max-width: calc(100vw - 2rem) !important;
+  }
+  
+  .modal-criar-usuario .CustomModal .px-6.py-4 {
+    padding: 1rem !important;
+  }
+  
+  .modal-criar-usuario .CustomModal .border-t {
+    padding: 1rem !important;
+  }
+}
+
+/* Estados de loading e disabled */
+.modal-criar-usuario button:disabled,
+.modal-criar-usuario input:disabled,
+.modal-criar-usuario select:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* Animações */
+.modal-criar-usuario .CustomModal {
+  animation: modalSlideIn 0.3s ease-out !important;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Backdrop */
+.modal-criar-usuario + .fixed.inset-0.bg-black.bg-opacity-60 {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(4px) !important;
+}

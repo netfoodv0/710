@@ -1,11 +1,15 @@
-import React from 'react';
-import { PageHeader } from '../components/ui';
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../hooks/useTranslation';
+import { useNotificationContext } from '../context/notificationContextUtils';
+import { NotificationToast } from '../components/NotificationToast';
 import { ErrorBoundary } from '../components/ErrorBoundary';
-import { KDSContent } from '../components/kds';
-import { DragEndEvent } from '@dnd-kit/core';
+import { PageHeader } from '../components/ui';
+import { usePeriod } from '../context/periodContext';
+import { useSkeletonDelay } from '../hooks/useSkeletonDelay';
 import { useResponsiveColumns } from '../hooks/useResponsiveColumns';
 import { usePedidosKDS } from '../hooks/usePedidosKDS';
-import '../styles/dashboard.css';
+import { DragEndEvent } from '@dnd-kit/core';
+import { KDSContent } from '../components/kds';
 
 export default function KDSPage() {
   // Hook para calcular colunas responsivas

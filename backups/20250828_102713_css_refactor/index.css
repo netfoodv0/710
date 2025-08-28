@@ -1,9 +1,4 @@
-/* ===== IMPORT DOS ESTILOS ORGANIZADOS ===== */
-@import './styles/index.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /* ===== ESTILOS BASE ===== */
 body {
@@ -86,6 +81,62 @@ body {
   color: hsl(var(--foreground));
 }
 
+/* ===== DASHBOARD STYLES ===== */
+:root {
+  --dashboard-bg: rgb(245, 239, 242);
+  --dashboard-border: #cfd1d3;
+  --dashboard-white: #ffffff;
+  --dashboard-gray-light: #f3f4f6;
+  --dashboard-gray-dark: #374151;
+  --dashboard-radius: 16px;
+  --dashboard-padding-sm: 0.75rem;
+  --dashboard-padding-md: 1rem;
+  --dashboard-status-green: #10b981;
+  --dashboard-status-purple: #8b5cf6;
+  --dashboard-status-red: #ef4444;
+}
+
+.dashboard-container {
+  background-color: var(--dashboard-bg);
+}
+
+.dashboard-base-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+}
+
+.dashboard-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+}
+
+.dashboard-stat-card {
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  padding: var(--dashboard-padding-sm);
+}
+
+.dashboard-analytics-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  padding: var(--dashboard-padding-md);
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+}
+
+.dashboard-info-box {
+  margin-top: 1rem;
+  padding: var(--dashboard-padding-sm);
+  background-color: #f0fdf4;
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  flex-shrink: 0;
+}
+
 /* ===== UTILITIES ===== */
 .read-the-docs {
   color: #888;
@@ -160,21 +211,40 @@ body {
   }
 }
 
-.responsive-padding {
-  padding: 0.75rem;
-}
-
-@media (min-width: 640px) {
   .responsive-padding {
-    padding: 1rem;
+    padding: 0.75rem;
   }
-}
-
-@media (min-width: 1024px) {
-  .responsive-padding {
-    padding: 1.5rem;
+  
+  @media (min-width: 640px) {
+    .responsive-padding {
+      padding: 1rem;
+    }
   }
-}
+  
+  @media (min-width: 1024px) {
+    .responsive-padding {
+      padding: 1.5rem;
+    }
+  }
+  
+  /* ===== CORREÇÕES PARA COMPONENTES UI ===== */
+  /* Sobrescrever borda padrão para botões ActionButton */
+  button[class*="ActionButton"],
+  button[class*="action-button"],
+  .ActionButton,
+  .action-button {
+    border: none !important;
+    border-color: transparent !important;
+  }
+  
+  /* Sobrescrever borda padrão para todos os botões se necessário */
+  button {
+    border: none;
+  }
+  
+  button:focus {
+    border: none;
+  }
 
 /* ===== CORREÇÕES PARA COMPONENTES UI ===== */
 /* Sobrescrever borda padrão para botões ActionButton */

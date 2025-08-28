@@ -1,0 +1,240 @@
+/* Arquivo central de animações - Consolida todas as animações do sistema */
+
+/* Animações para filtros de status */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animações para modais */
+@keyframes slideRightEnter {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideRightExit {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Classes de animação */
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.pulse {
+  animation: pulse 0.3s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Animações para modais */
+.slide-right-enter {
+  animation: slideRightEnter 0.3s ease-out;
+}
+
+.slide-right-exit {
+  animation: slideRightExit 0.3s ease-in;
+}
+
+/* Estados de animação */
+.status-filter {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.status-filter:hover {
+  animation: pulse 0.3s ease-in-out;
+}
+
+/* Animações para drag and drop */
+.sortable-produto,
+.sortable-categoria {
+  transition: all 0.2s ease;
+}
+
+.sortable-produto.dragging,
+.sortable-categoria.dragging {
+  cursor: grabbing;
+  transform-origin: center;
+  transition: none;
+  z-index: 9999;
+}
+
+/* Animações para modais */
+.modal-closed {
+  opacity: 0;
+  transform: translateY(-7rem) scale(0.9);
+  transition: all 0.3s ease-out;
+}
+
+.modal-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: all 0.3s ease-out;
+}
+
+/* Animações para dropdowns */
+.CustomDropdown svg {
+  transform-origin: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.CustomDropdown svg.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* Animações para modais - MOVIDAS para modal-usuario.css para evitar conflitos */
+
+/* ===== ANIMAÇÕES DO SIDEBAR ===== */
+
+/* Variáveis de transição do sidebar */
+:root {
+  --sidebar-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --sidebar-transition-fast: 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --sidebar-transition-slow: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Animações específicas do sidebar */
+@keyframes sidebarSlideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes sidebarFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes sidebarIconRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+/* Classes de animação do sidebar */
+.sidebar-slide-in {
+  animation: sidebarSlideIn 0.3s var(--sidebar-transition);
+}
+
+.sidebar-fade-in {
+  animation: sidebarFadeIn 0.2s var(--sidebar-transition);
+}
+
+.sidebar-icon-rotate {
+  transition: transform var(--sidebar-transition);
+}
+
+.sidebar-icon-rotate.rotated {
+  transform: rotate(180deg);
+}
+
+/* Transições do sidebar */
+.sidebar-transition {
+  transition: all var(--sidebar-transition);
+}
+
+.sidebar-transition-fast {
+  transition: all var(--sidebar-transition-fast);
+}
+
+.sidebar-transition-slow {
+  transition: all var(--sidebar-transition-slow);
+}
+
+/* Transformações específicas para modais - MOVIDAS para modal-usuario.css para evitar conflitos */
