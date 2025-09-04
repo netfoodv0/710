@@ -1,9 +1,8 @@
 import React from 'react';
-import { useDashboardTranslation } from '../../hooks/useTranslation';
-import { useIcons } from '../../types/icons';
+import { useDashboardTranslation } from '../../pages/PaginaDashboard/hooks';
 import { useErrorHandler } from '../../services/errorService';
 import { getDataWithFallback } from '../../services/mockDataService';
-import { FormaPedida } from '../../types/dashboard';
+import { FormaPedida } from '../../pages/PaginaDashboard/types';
 import { ContainerCustom } from '../ui';
 
 interface FormasPedidasProps {
@@ -13,15 +12,30 @@ interface FormasPedidasProps {
 
 // Componente para renderizar item individual
 const FormaPedidaItem: React.FC<{ forma: FormaPedida }> = ({ forma }) => {
-  const { renderIcon } = useIcons();
   const { dashboard } = useDashboardTranslation();
+
+  // Função simples para renderizar ícone baseado no tipo
+  const renderIcon = (iconType: string) => {
+    const iconMap: Record<string, string> = {
+      'delivery': '🚚',
+      'pickup': '📦',
+      'dine_in': '🍽️',
+      'whatsapp': '📱',
+      'telefone': '📞',
+      'presencial': '🏪',
+      'online': '💻',
+      'app': '📲'
+    };
+    
+    return iconMap[iconType] || '📋';
+  };
 
   return (
     <div className="flex items-center justify-between p-2 bg-white rounded-lg dashboard-card-border">
       <div className="flex items-center space-x-3">
         <div className="w-[40px] h-[40px] bg-gray-100 rounded-full flex items-center justify-center">
-          <div className="text-gray-600">
-            {renderIcon(forma.icone, { size: 20, color: '#6b7280' })}
+          <div className="text-gray-600 text-lg">
+            {renderIcon(forma.icone)}
           </div>
         </div>
         <div>

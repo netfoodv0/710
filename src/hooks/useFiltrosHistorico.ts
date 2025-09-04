@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Pedido, FiltrosHistoricoState, filtrosHistoricoSchema } from '../types';
+import { Pedido } from '../types/global/pedidos';
+import { FiltrosHistoricoState, filtrosHistoricoSchema } from '../features/historico/types/historico.types';
 
 export function useFiltrosHistorico(pedidos: Pedido[]) {
   const [filtros, setFiltros] = useState<FiltrosHistoricoState>({

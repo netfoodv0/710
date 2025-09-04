@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Produto } from '../types/produtos';
+import { Produto } from '../types/global/produtos';
 
 interface UseListaProdutosProps {
   onDelete: (id: string) => Promise<void>;

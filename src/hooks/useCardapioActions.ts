@@ -7,8 +7,8 @@ import { useAuth } from './useAuth';
 import { useNotificationContext } from '../context/notificationContextUtils';
 import { useAnalyticsContext } from '../context/analyticsContextUtils';
 import { useAnalyticsService } from '../utils/analytics';
-import { Categoria, CriarCategoriaData } from '../types/categoria';
-import { Produto } from '../types/produtos';
+import { Categoria, CriarCategoriaData } from '../types/global/categoria';
+import { Produto } from '../types/global/produtos';
 
 export function useCardapioActions() {
   const navigate = useNavigate();

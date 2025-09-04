@@ -1,0 +1,1 @@
+export { PedidosLayout } from './PedidosLayout';

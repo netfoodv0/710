@@ -1,0 +1,9 @@
+export { FidelidadeLayout } from './FidelidadeLayout';
+export { SeletorSistema } from './SeletorSistema';
+export { EstatisticasGerais } from './EstatisticasGerais';
+export { SistemaCashback } from './SistemaCashback';
+export { SistemaPontos } from './SistemaPontos';
+export { ConfiguracoesPontos } from './ConfiguracoesPontos';
+export { ProdutosResgataveis } from './ProdutosResgataveis';
+export { ClientesPontos } from './ClientesPontos';
+export { MigracaoSistemas } from './MigracaoSistemas';

@@ -3,7 +3,7 @@ import { FormInput } from '../forms/FormInput';
 
 import { CustomDropdown, DropdownOption } from '../ui';
 import { CustomModal } from './CustomModal';
-import { CupomFormData } from '../../types/cupom';
+import { CupomFormData } from '../../types/global/cupom';
 
 interface ModalCriarCupomProps {
   isOpen: boolean;

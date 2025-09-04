@@ -1,5 +1,5 @@
 import React from 'react';
-import { Produto, ListaProdutosProps } from '../../types/produtos';
+import { Produto, ListaProdutosProps } from '../../types/global/produtos';
 import { ModalProduto } from '../modals/ModalCriarEditarProduto';
 import { useListaProdutos } from '../../hooks/useListaProdutos';
 import { ListaProdutosHeader } from './HeaderListaProdutos';

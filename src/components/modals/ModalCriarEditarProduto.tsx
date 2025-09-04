@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalProdutoProps } from '../../types/produtos';
+import { ModalProdutoProps } from '../../types/global/produtos';
 import { FormularioProduto } from '../forms/FormularioProduto';
 
 import { useModalProduto } from '../../hooks/useModalProduto';

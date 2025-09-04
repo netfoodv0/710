@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { DadosRelatorios, ExportOptions } from '../types/relatorios.types';
 import { relatoriosService } from '../services/relatoriosService';
 import { PeriodType } from '../../../components/filters/FiltroPeriodo';
-import { DadosFiltrados, ConfigRelatorio } from '../../../types/relatorios';
+import { DadosFiltrados, ConfigRelatorio } from '../../../types/global/relatorios';
 
 interface UseRelatoriosReturn {
   dados: DadosRelatorios | null;

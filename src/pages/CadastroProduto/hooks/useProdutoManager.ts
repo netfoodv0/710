@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { firebaseCardapioService } from '../../../services/firebaseCardapioService';
 import { useNotificationContext } from '../../../context/notificationContextUtils';
-import { Produto } from '../../../types/produtos';
+import { Produto } from '../../../types/global/produtos';
 import { FormData } from '../../../hooks/useNovoProdutoForm';
 import { transformFormDataToProduto, transformProdutoToFormData } from '../utils/produtoTransformUtils';
 

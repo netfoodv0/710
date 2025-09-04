@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { firebaseCategoriaService } from '../services/firebaseCategoriaService';
-import { Categoria, CriarCategoriaData, EditarCategoriaData, FiltrosCategoria } from '../types/categoria';
+import { Categoria, CriarCategoriaData, EditarCategoriaData, FiltrosCategoria } from '../types/global/categoria';
 import { useAuth } from './useAuth';
 
 // Cache global para categorias

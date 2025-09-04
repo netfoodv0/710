@@ -1,4 +1,4 @@
-import { DiaSemana } from '../../types/produtos';
+import { DiaSemana } from '../../types/global/produtos';
 
 export const DIAS_SEMANA: DiaSemana[] = [
   { id: 0, nome: 'Domingo', ativo: true },

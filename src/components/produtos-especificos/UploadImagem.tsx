@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
-import { UploadImagemProps } from '../../types/produtos';
+import { UploadImagemProps } from '../../types/global/produtos';
 
 export const UploadImagem: React.FC<UploadImagemProps> = ({
   onUpload,

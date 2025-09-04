@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Pedido, StatusPedido, filtrosHistoricoSchema, pedidoSchema } from '../types';
+import { Pedido, StatusPedido } from '../types/global/pedidos';
+import { filtrosHistoricoSchema, pedidoSchema } from '../features/historico/types/historico.types';
 import { historicoPedidoService, FiltrosHistorico, EstatisticasHistorico } from '../services/historicoPedidoService';
 import { useAuth } from './useAuth';
 

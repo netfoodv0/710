@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useCallback, ReactNode } from 'react';
-import { Categoria, CriarCategoriaData } from '../types/categoria';
-import { Produto } from '../types/produtos';
+import { Categoria, CriarCategoriaData } from '../types/global/categoria';
+import { Produto } from '../types/global/produtos';
 
 // Tipos para o estado
 interface CardapioState {

@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import { useEstatisticas } from '../context/estatisticasContext';
-import { DadosRelatorioGeral, DadosRelatorioClientes } from '../types/relatorios';
+import { DadosRelatorioGeral, DadosRelatorioClientes } from '../types/global/relatorios';
 
 export const useEstatisticasOptimized = () => {
   const { 

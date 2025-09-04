@@ -2,7 +2,6 @@ import React from "react";
 import { ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { RouteType } from "./types";
-import { motion, AnimatePresence } from "motion/react";
 
 type Props = {
   item: RouteType;
@@ -12,7 +11,11 @@ type Props = {
 const SidebarItem = ({ item, isCollapsed = false }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isActive = location.pathname === item.path;
+  
+  // Lógica especial para o dashboard (rota raiz)
+  const isActive = item.path === "/" 
+    ? location.pathname === "/" || location.pathname === "/dashboard"
+    : location.pathname === item.path;
 
   const handleClick = () => {
     if (item.path) {
@@ -44,14 +47,14 @@ const SidebarItem = ({ item, isCollapsed = false }: Props) => {
           "&:hover": {
             backgroundColor: "#f3f4f6" // Cinza claro no hover
           },
-          paddingY: "12px",
+          paddingY: isCollapsed ? "14.5px" : "12px", // 53px quando fechado, 48px quando aberto
           paddingX: isCollapsed ? "0px" : "0px", // 0px à esquerda
           margin: "0px", // Remove margens
           backgroundColor: isActive ? "#f3f4f6" : "transparent", // Cinza claro quando ativo
           borderRight: "none", // Removida a borda roxa
           "& .MuiListItemIcon-root": {
             minWidth: isCollapsed ? "40px" : "40px", // Largura mínima para o ícone
-            marginLeft: isCollapsed ? "20px" : "24px" // Margem à esquerda para o ícone
+            marginLeft: isCollapsed ? "24px" : "24px" // Margem à esquerda para o ícone
           }
         }}
       >
@@ -59,35 +62,24 @@ const SidebarItem = ({ item, isCollapsed = false }: Props) => {
           {renderIcon()}
         </ListItemIcon>
         
-        <AnimatePresence>
-          {!isCollapsed && (
-                            <motion.div
-                  initial={{ opacity: 0, width: 0, x: -10 }}
-                  animate={{ opacity: 1, width: "auto", x: 0 }}
-                  exit={{ opacity: 0, width: 0, x: -10 }}
-                  transition={{ 
-                    duration: 0.3,
-                    ease: [0.4, 0.0, 0.2, 1]
+        {!isCollapsed && (
+          <div style={{ overflow: "hidden" }}>
+            <ListItemText
+              disableTypography
+              primary={
+                <Typography
+                  sx={{
+                    color: isActive ? "#8217d5" : "#374151", // Roxo quando ativo, cinza escuro quando não
+                    fontWeight: isActive ? 700 : 700, // Sempre bold
+                    fontSize: "14px" // Tamanho do texto 14px
                   }}
-                  style={{ overflow: "hidden" }}
                 >
-              <ListItemText
-                disableTypography
-                primary={
-                  <Typography
-                    sx={{
-                      color: isActive ? "#8217d5" : "#374151", // Roxo quando ativo, cinza escuro quando não
-                      fontWeight: isActive ? 700 : 700, // Sempre bold
-                      fontSize: "14px" // Tamanho do texto 14px
-                    }}
-                  >
-                    {item.sidebarProps.displayText}
-                  </Typography>
-                }
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+                  {item.sidebarProps.displayText}
+                </Typography>
+              }
+            />
+          </div>
+        )}
       </ListItemButton>
     ) : null
   );

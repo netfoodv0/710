@@ -8,7 +8,7 @@ import {
   DocumentData,
   Timestamp
 } from 'firebase/firestore';
-import { Categoria, CriarCategoriaData, PeriodoDisponibilidade } from '../types/categoria';
+import { Categoria, CriarCategoriaData, PeriodoDisponibilidade } from '../types/global/categoria';
 import { BaseFirestoreService } from './firebase/BaseFirestoreService';
 
 export interface FiltrosCategoria {

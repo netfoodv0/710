@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star } from 'lucide-react';
-import { Produto } from '../../types/produtos';
+import { Produto } from '../../types/global/produtos';
 
 interface ModalProdutoPreviewProps {
   produto: Produto;

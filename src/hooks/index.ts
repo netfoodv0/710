@@ -1,6 +1,5 @@
 // Hooks principais
 export { useAuth } from './useAuth';
-export { useDashboard } from './useDashboard';
 export { useAnalytics } from './useAnalytics';
 export { useNotifications } from './useNotifications';
 export { usePeriodFilter } from './usePeriodFilter';

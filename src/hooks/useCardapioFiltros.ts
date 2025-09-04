@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import { useCardapioContext } from '../context/CardapioContext';
-import { Produto } from '../types/produtos';
-import { Categoria } from '../types/categoria';
+import { Produto } from '../types/global/produtos';
+import { Categoria } from '../types/global/categoria';
 
 export function useCardapioFiltros(
   produtos: Produto[], 

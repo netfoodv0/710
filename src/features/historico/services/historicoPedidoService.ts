@@ -10,7 +10,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { Pedido, StatusPedido } from '../../../types';
-import { ClientePedido, ItemPedido, PagamentoPedido, EnderecoEntrega, Extra } from '../../../types/produtos';
+import { ClientePedido, ItemPedido, PagamentoPedido, EnderecoEntrega, Extra } from '../../../types/global/produtos';
 import { firebasePedidoService } from '../../pedidos/services/firebasePedidoService';
 
 export interface FiltrosHistorico {

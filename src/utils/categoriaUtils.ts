@@ -1,4 +1,4 @@
-import { Produto } from '../types/produtos';
+import { Produto } from '../types/global/produtos';
 
 /**
  * Extrai categorias únicas de uma lista de produtos

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Categoria } from '../types/categoria';
+import { Categoria } from '../types/global/categoria';
 
 // Categorias mockadas para desenvolvimento
 const categoriasDesenvolvimento: Categoria[] = [

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Clock, Calendar, Check } from 'lucide-react';
-import { DisponibilidadeProduto, DiaSemana, DisponibilidadeProdutoProps } from '../../types/produtos';
+import { DisponibilidadeProduto, DiaSemana, DisponibilidadeProdutoProps } from '../../types/global/produtos';
 
 export const DisponibilidadeProduto: React.FC<DisponibilidadeProdutoProps> = ({
   disponibilidade,

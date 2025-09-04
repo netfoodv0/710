@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute, LojaProtectedRoute } from '../components/auth';
 import { 
@@ -10,38 +10,39 @@ import {
 } from '../components/ui/RouteFallback';
 
 // Importação estática para OrganogramaPage para resolver problema de 404
-import OrganogramaPage from '../pages/OrganogramaPage';
-import LandingPage from '../pages/LandingPage';
+import OrganogramaPage from '../pages/PaginaOrganograma/OrganogramaPage';
+import LandingPage from '../pages/auth/LandingPage';
 
 // Lazy loading das páginas para melhor performance
-const Dashboard = lazy(() => import('../pages/Dashboard'));
-const Pedidos = lazy(() => import('../pages/Pedidos'));
-const HistoricoPedidos = lazy(() => import('../pages/HistoricoPedidos'));
-const Cardapio = lazy(() => import('../pages/Cardapio'));
-const CadastroProduto = lazy(() => import('../pages/CadastroProduto'));
+const Dashboard = lazy(() => import('../pages/PaginaDashboard/Dashboard'));
+const Pedidos = lazy(() => import('../pages/PaginaPedidos/Pedidos'));
+const PDV = lazy(() => import('../pages/PaginaPDV/PDV'));
+const HistoricoPedidos = lazy(() => import('../pages/PaginaHistoricoPedidos/HistoricoPedidos'));
+const Cardapio = lazy(() => import('../pages/PaginaCardapio/Cardapio'));
+const CadastroProduto = lazy(() => import('../pages/PaginaCadastroProduto/CadastroProduto'));
 
-const Atendimento = lazy(() => import('../pages/Atendimento'));
-const KDSPage = lazy(() => import('../pages/KDSPage'));
-const Configuracoes = lazy(() => import('../pages/Configuracoes'));
-const Horarios = lazy(() => import('../pages/Horarios/Horarios'));
+const Atendimento = lazy(() => import('../pages/PaginaAtendimento/Atendimento'));
+const KDSPage = lazy(() => import('../pages/PaginaKDS/KDS'));
+const Configuracoes = lazy(() => import('../pages/PaginaConfiguracoes/Configuracoes'));
+const Horarios = lazy(() => import('../pages/PaginaHorarios/Horarios'));
 
-const Relatorios = lazy(() => import('../pages/Relatorios'));
-const RelatoriosClientes = lazy(() => import('../pages/Relatorios/Clientes'));
-const RelatoriosProdutos = lazy(() => import('../pages/Relatorios/Produtos'));
-const RelatoriosCupons = lazy(() => import('../pages/Relatorios/Cupons'));
-const Fidelidade = lazy(() => import('../pages/Fidelidade'));
-const Usuarios = lazy(() => import('../pages/Usuarios'));
-const Operadores = lazy(() => import('../pages/Usuarios/Operadores'));
-const Motoboys = lazy(() => import('../pages/Usuarios/Motoboys'));
-const Mapa = lazy(() => import('../pages/Mapa'));
-const Estoque = lazy(() => import('../pages/Estoque/Estoque'));
-const Insumos = lazy(() => import('../pages/Estoque/Insumos'));
-const Acompanhamentos = lazy(() => import('../pages/Estoque/Acompanhamentos'));
+const Relatorios = lazy(() => import('../pages/PaginaRelatoriosGeral/RelatoriosGeral'));
+const RelatoriosClientes = lazy(() => import('../pages/PaginaRelatoriosClientes/RelatoriosClientes'));
+const RelatoriosProdutos = lazy(() => import('../pages/PaginaRelatoriosProdutos/RelatoriosProdutos'));
+const RelatoriosCupons = lazy(() => import('../pages/PaginaCupons/Cupons'));
+const Fidelidade = lazy(() => import('../pages/PaginaFidelidade/Fidelidade'));
+const Usuarios = lazy(() => import('../pages/PaginaUsuarios/Usuarios'));
+const Operadores = lazy(() => import('../pages/PaginaOperadores/Operadores'));
+const Motoboys = lazy(() => import('../pages/PaginaMotoboys/Motoboys'));
+const Mapa = lazy(() => import('../pages/PaginaMapa/Mapa'));
+const Estoque = lazy(() => import('../pages/PaginaEstoque/Estoque'));
+const Insumos = lazy(() => import('../pages/PaginaInsumos/Insumos'));
+const Acompanhamentos = lazy(() => import('../pages/PaginaAcompanhamentos/Acompanhamentos'));
 
 
 
-const Login = lazy(() => import('../pages/Login'));
-const Cadastro = lazy(() => import('../pages/Cadastro'));
+const Login = lazy(() => import('../pages/auth/Login'));
+const Cadastro = lazy(() => import('../pages/auth/Cadastro'));
 
 export function AppRoutes() {
   return (
@@ -78,6 +79,16 @@ export function AppRoutes() {
           <LojaProtectedRoute>
             <Suspense fallback={<TableFallback />}>
               <Pedidos />
+            </Suspense>
+          </LojaProtectedRoute>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/pdv" element={
+        <ProtectedRoute>
+          <LojaProtectedRoute>
+            <Suspense fallback={<TableFallback />}>
+              <PDV />
             </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>

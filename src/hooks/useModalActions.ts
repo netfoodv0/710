@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { ModalSize, ModalTab, ModalState, ModalActions } from '../types/modal';
+import { ModalSize, ModalTab, ModalState, ModalActions } from '../types/global/modal';
 
 export const useModalActions = (): [ModalState, ModalActions] => {
   const [showModal, setShowModal] = useState(false);

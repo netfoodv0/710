@@ -22,7 +22,7 @@ import {
   DadosCrescimento
 } from '../types/relatorios.types';
 import { PeriodType } from '../../../components/filters/FiltroPeriodo';
-import { Pedido, StatusPedido } from '../../../types/pedidos';
+import { Pedido, StatusPedido } from '../../../types/global/pedidos';
 
 export class FirebaseRelatoriosService {
   private pedidosCollection = collection(db, 'pedidos');

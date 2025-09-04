@@ -1,7 +1,6 @@
 import { Drawer, List, Stack, Toolbar, Typography, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
 import { sidebarRoutes } from "./SidebarConfig";
 import SidebarItem from "./SidebarItem";
 import SidebarItemCollapse from "./SidebarItemCollapse";
@@ -21,14 +20,9 @@ const DesktopSidebar = () => {
   };
 
   return (
-    <motion.div
-      initial={{ width: 240 }}
-      animate={{ width: isOpen ? 240 : 80 }}
-      transition={{ 
-        duration: 0.4, 
-        ease: [0.4, 0.0, 0.2, 1] // Curva de easing mais suave
-      }}
+    <div
       style={{
+        width: isOpen ? 240 : 80,
         flexShrink: 0,
         marginLeft: "24px",
         marginTop: "16px",
@@ -47,7 +41,8 @@ const DesktopSidebar = () => {
         WebkitBackdropFilter: "blur(24px)",
         display: "flex",
         flexDirection: "column",
-        position: "relative"
+        position: "relative",
+        transition: "width 0.3s ease-in-out"
       }}
     >
       {/* Cabeçalho fixo */}
@@ -76,37 +71,26 @@ const DesktopSidebar = () => {
           justifyContent={isOpen ? "center" : "center"}
           spacing={1}
         >
-          <AnimatePresence mode="wait">
-            {isOpen && (
-              <motion.div
-                key="logo-text"
-                initial={{ opacity: 0, scale: 0.8, x: -20 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                exit={{ opacity: 0, scale: 0.8, x: -20 }}
-                transition={{ 
-                  duration: 0.3,
-                  ease: [0.4, 0.0, 0.2, 1]
+          {isOpen && (
+            <div>
+              <Typography 
+                variant="h6" 
+                onClick={handleLogoClick}
+                sx={{ 
+                  color: "#8217d5",
+                  fontWeight: 900,
+                  fontSize: "36px",
+                  fontStyle: "italic",
+                  cursor: "pointer",
+                  "&:hover": {
+                    opacity: 0.8
+                  }
                 }}
               >
-                <Typography 
-                  variant="h6" 
-                  onClick={handleLogoClick}
-                  sx={{ 
-                    color: "#8217d5",
-                    fontWeight: 900,
-                    fontSize: "36px",
-                    fontStyle: "italic",
-                    cursor: "pointer",
-                    "&:hover": {
-                      opacity: 0.8
-                    }
-                  }}
-                >
-                  VOULT
-                </Typography>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                VOULT
+              </Typography>
+            </div>
+          )}
           
           {/* Botão toggle */}
           <IconButton
@@ -122,15 +106,7 @@ const DesktopSidebar = () => {
               marginLeft: isOpen ? 1 : 0
             }}
           >
-            <motion.div
-              animate={{ rotate: isOpen ? 0 : 180 }}
-              transition={{ 
-                duration: 0.4,
-                ease: [0.4, 0.0, 0.2, 1]
-              }}
-            >
-              <MenuIcon color="#8217d5" size={20} />
-            </motion.div>
+            <MenuIcon color="#8217d5" size={20} />
           </IconButton>
         </Stack>
       </Toolbar>
@@ -167,7 +143,7 @@ const DesktopSidebar = () => {
           ) : null
         ))}
       </List>
-    </motion.div>
+    </div>
   );
 };
 

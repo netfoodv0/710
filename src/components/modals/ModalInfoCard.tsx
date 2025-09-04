@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from '../Card';
 import { ModalActionButtons } from './ModalActionButtons';
 import { ModalSizeButtons } from './ModalSizeButtons';
-import { ModalSize } from '../../types/modal';
+import { ModalSize } from '../../types/global/modal';
 
 interface ModalInfoCardProps {
   modalSize: ModalSize;
@@ -43,6 +43,7 @@ export const ModalInfoCard: React.FC<ModalInfoCardProps> = ({
     </Card>
   );
 };
+
 
 
 

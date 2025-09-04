@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react';
-import { loginSchema, type LoginFormData } from '../../types/auth';
+import { loginSchema, type LoginFormData } from '../../types/global/auth';
 
 interface LoginFormProps {
   onSubmit: (data: LoginFormData) => Promise<void>;

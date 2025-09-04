@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ColunaHeader, PedidoCard } from './';
-import { Pedido } from '../../types/pedidos';
+import { Pedido } from '../../types/global/pedidos';
 
 interface PedidosColumnsProps {
   pedidos: Pedido[];

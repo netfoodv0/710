@@ -1,7 +1,7 @@
 import React from 'react';
 import { Check, ArrowRight, CheckCircle, X } from 'lucide-react';
 import { Button } from '../ui/Button';
-import { StatusPedido } from '../../../types/pedidos';
+import { StatusPedido } from '../../../types/global/pedidos';
 
 interface AcoesStatusPedidoProps {
   status: StatusPedido;

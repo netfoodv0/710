@@ -1,11 +1,13 @@
 export { Modal, ModalHeader, ModalBody, ModalFooter } from './Modal';
 export { ModalEditarEstoque } from './ModalEditarEstoque';
 export { ModalEditarAcompanhamento } from './ModalEditarAcompanhamento';
+export { ModalCadastroAcompanhamento } from './ModalCadastroAcompanhamento';
 export { ModalDetalhesProduto } from './ModalDetalhesProduto';
 export { ModalCadastroInsumo } from './ModalCadastroInsumo';
 export { ModalCriarCupom } from './ModalCriarCupom';
 export { ModalCriarUsuario } from './ModalCriarUsuario';
 export { ModalSelecaoAvatar } from './ModalSelecaoAvatar';
+export { ModalFormasPagamento } from './ModalFormasPagamento';
 export { AvatarItem } from './AvatarItem';
 export { AvatarList } from './AvatarList';
 export { avataresDisponiveis, type Avatar } from './avatarData';

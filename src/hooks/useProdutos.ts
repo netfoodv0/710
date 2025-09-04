@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Produto, ScoreQualidade, ValidacaoProduto } from '../types/produtos';
+import { Produto, ScoreQualidade, ValidacaoProduto } from '../types/global/produtos';
 import { useProdutosFirebase } from './useProdutosFirebase';
 import { useNotifications } from './useNotifications';
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { firebasePedidoService } from '../services/firebasePedidoService';
 import { gerarPedidoFicticio } from '../utils/pedidoUtils';
 import { useNotifications } from './useNotifications';
-import { Pedido, PedidosState, PedidosActions } from '../types/pedidos';
+import { Pedido, PedidosState, PedidosActions } from '../types/global/pedidos';
 import { pedidosMock } from '../data/pedidosMock';
 
 export const usePedidosActions = (): [PedidosState, PedidosActions] => {

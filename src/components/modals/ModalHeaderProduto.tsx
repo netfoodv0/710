@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Star } from 'lucide-react';
-import { Produto } from '../../types/produtos';
+import { Produto } from '../../types/global/produtos';
 
 interface ModalProdutoHeaderProps {
   isEditing: boolean;

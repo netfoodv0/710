@@ -1,6 +1,6 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { X } from 'lucide-react';
-import { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps } from '../../types/modal';
+import { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps } from '../../types/global/modal';
 import '../../styles/modal.css';
 
 // Contexto para compartilhar a função de fechamento

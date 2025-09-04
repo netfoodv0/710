@@ -1,5 +1,5 @@
 import React from 'react';
-import { Categoria } from '../../types/produtos';
+import { Categoria } from '../../types/global/categoria';
 import { InputPersonalizado } from './InputPersonalizado';
 import { GoogleFloatingSelect } from '../ui/google-floating-select';
 

@@ -1,0 +1,113 @@
+import React, { useState, useMemo } from 'react';
+import { PageHeader, DataTable, DataTableColumn } from '../../../components/ui';
+import { ModalCriarUsuario } from '../../../components/modals';
+import { MotoboysTableProps } from '../types';
+
+export function MotoboysTable({ 
+  motoboys, 
+  loading, 
+  onEdit, 
+  onDelete, 
+  onCreate 
+}: MotoboysTableProps) {
+  const [showModal, setShowModal] = useState(false);
+
+  const columns: DataTableColumn[] = useMemo(() => [
+    {
+      key: 'nome',
+      label: 'Nome',
+      sortable: true
+    },
+    {
+      key: 'telefone',
+      label: 'Telefone',
+      sortable: false
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      sortable: true,
+      render: (value: string) => value === 'ativo' ? 'Ativo' : 'Inativo'
+    },
+    {
+      key: 'dataContratacao',
+      label: 'Data Contratação',
+      sortable: true,
+      render: (value: any) => {
+        try {
+          return value ? new Date(value).toLocaleDateString('pt-BR') : 'N/A';
+        } catch {
+          return 'N/A';
+        }
+      }
+    },
+    {
+      key: 'ultimaEntrega',
+      label: 'Última Entrega',
+      sortable: true,
+      render: (value: any) => {
+        try {
+          return value ? new Date(value).toLocaleDateString('pt-BR') : 'N/A';
+        } catch {
+          return 'N/A';
+        }
+      }
+    },
+    {
+      key: 'avaliacao',
+      label: 'Avaliação',
+      sortable: true,
+      render: (value: any) => {
+        const numValue = typeof value === 'number' ? value : parseFloat(value) || 0;
+        return `${numValue.toFixed(1)} ⭐`;
+      }
+    },
+    {
+      key: 'totalEntregas',
+      label: 'Total Entregas',
+      sortable: true
+    },
+    {
+      key: 'actions',
+      label: 'Ações',
+      sortable: false,
+      render: (value: any, row: any) => `Editar | Excluir`
+    }
+  ], [onEdit, onDelete]);
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Motoboys"
+        subtitle="Gerencie entregadores do sistema"
+        actionButton={{
+          label: "Novo Motoboy",
+          onClick: () => setShowModal(true),
+          variant: "primary",
+          size: "md"
+        }}
+      />
+
+      <DataTable
+        data={motoboys}
+        columns={columns}
+        loading={loading}
+        searchable
+        pagination
+        itemsPerPage={10}
+      />
+
+      {showModal && (
+        <ModalCriarUsuario
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onSuccess={() => {
+            setShowModal(false);
+            onCreate();
+          }}
+          tipoUsuario="motoboy"
+        />
+      )}
+    </div>
+  );
+}

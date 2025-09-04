@@ -1,5 +1,5 @@
 import { auth, db } from './firebase';
-import type { Loja } from '../types/auth';
+import type { Loja } from '../types/global/auth';
 
 /**
  * Middleware para garantir isolamento de dados por loja

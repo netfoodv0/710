@@ -222,7 +222,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
       )}
       
       {/* Sidebar */}
-      <div className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
+      <div className={`fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-50 transform ${
         isOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
@@ -232,14 +232,14 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
               <div className="flex items-center gap-3">
                 <h1 
                   onClick={handleLogoClick}
-                  className="text-2xl font-bold italic text-gray-900 cursor-pointer hover:opacity-80 transition-opacity"
+                  className="text-2xl font-bold italic text-gray-900 cursor-pointer hover:opacity-80"
                 >
                   VOULT
                 </h1>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="p-2 rounded-lg hover:bg-gray-100"
               >
                 <X className="w-5 h-5 text-[#525866]" />
               </button>
@@ -284,7 +284,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                       <Link
                         to={hasSubItems ? '#' : item.path}
                         onClick={() => handleItemClick(item)}
-                        className={`w-full flex items-center gap-3 px-3 py-3 rounded transition-all duration-200 ${
+                        className={`w-full flex items-center gap-3 px-3 py-3 rounded ${
                           isActive 
                             ? 'text-[#8217d5] bg-purple-50' 
                             : 'text-[#525866] hover:bg-gray-50'
@@ -293,7 +293,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                         <Icon className="w-6 h-6" color={isActive ? "#8217d5" : "#525866"} />
                         <span>{item.label}</span>
                         {hasSubItems && (
-                          <ChevronDown className={`w-4 h-4 ml-auto transition-transform duration-200 ${itemExpanded ? 'rotate-180' : ''}`} color={isActive ? "#8217d5" : "#525866"} />
+                          <ChevronDown className={`w-4 h-4 ml-auto ${itemExpanded ? 'rotate-180' : ''}`} color={isActive ? "#8217d5" : "#525866"} />
                         )}
                       </Link>
                     </div>
@@ -309,7 +309,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
                               <Link
                                 to={subItem.path}
                                 onClick={onClose}
-                                className={`flex items-center gap-3 px-3 py-2 rounded transition-all duration-200 ${
+                                className={`flex items-center gap-3 px-3 py-2 rounded ${
                                   isSubActive 
                                     ? 'text-[#8217d5] bg-purple-50' 
                                     : 'text-[#525866] hover:bg-gray-50'
@@ -341,7 +341,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             
             <button
               onClick={logout}
-              className="flex items-center gap-3 w-full px-3 py-3 text-[#525866] hover:bg-red-50 rounded transition-colors"
+                              className="flex items-center gap-3 w-full px-3 py-3 text-[#525866] hover:bg-red-50 rounded"
             >
                               <LogOut className="w-6 h-6 text-[#525866]" />
               <span className="font-medium">Sair</span>

@@ -1,9 +1,9 @@
 import React from 'react';
-import { useDashboardTranslation } from '../../hooks/useTranslation';
-import { useDataFormatter } from '../../hooks/useDataFormatter';
+import { useDashboardTranslation } from '../../pages/PaginaDashboard/hooks';
+import { useDataFormatter } from '../../pages/PaginaDashboard/hooks';
 import { useErrorHandler } from '../../services/errorService';
 import { getDataWithFallback } from '../../services/mockDataService';
-import { ProdutoVendido } from '../../types/dashboard';
+import { ProdutoVendido } from '../../pages/PaginaDashboard/types';
 import { ReportIcon, ContainerCustom } from '../ui';
 
 interface ProdutosVendidosProps {

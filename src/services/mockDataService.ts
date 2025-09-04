@@ -1,5 +1,5 @@
-import { FormaPedidaIconType } from '../types/icons';
-import { FormaPedida, ProdutoVendido, PedidoEmAndamento } from '../types/dashboard';
+import { FormaPedidaIconType } from '../types/global/icons';
+import { FormaPedida, ProdutoVendido, PedidoEmAndamento } from '../types/global/dashboard';
 
 // Serviço centralizado para dados mockados do dashboard
 export interface MockDataConfig {

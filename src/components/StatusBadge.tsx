@@ -9,8 +9,8 @@ import {
   XCircle,
   AlertCircle
 } from 'lucide-react';
-import { StatusBadgeProps } from '../types/ui';
-import { StatusPedido } from '../types/pedidos';
+import { StatusBadgeProps } from '../types/global/ui';
+import { StatusPedido } from '../types/global/pedidos';
 
 // Configuração para status de pedidos
 const statusPedidoConfig: Record<StatusPedido, {

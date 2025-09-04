@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDashboardTranslation } from '../../hooks/useTranslation';
+import { useDashboardTranslation } from '../../pages/PaginaDashboard/hooks';
 
 // Interface genérica para o componente de lista
 interface DataListProps<T> {

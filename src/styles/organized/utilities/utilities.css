@@ -1,6 +1,6 @@
-/* Utilitários CSS para substituir estilos inline */
+/* ===== UTILITÁRIOS CSS PARA SUBSTITUIR ESTILOS INLINE ===== */
 
-/* Backgrounds */
+/* ===== BACKGROUNDS ===== */
 .bg-dashboard {
   background-color: var(--dashboard-bg);
 }
@@ -9,7 +9,7 @@
   background-color: rgb(238, 235, 235);
 }
 
-/* Bordas */
+/* ===== BORDAS ===== */
 .border-dashboard {
   border-color: var(--dashboard-border);
 }
@@ -18,7 +18,7 @@
   border-color: rgb(207, 209, 211);
 }
 
-/* Alturas específicas */
+/* ===== ALTURAS ESPECÍFICAS ===== */
 .h-32\.5 {
   height: 32.5px;
 }
@@ -63,7 +63,7 @@
   height: 500px;
 }
 
-/* Larguras específicas */
+/* ===== LARGURAS ESPECÍFICAS ===== */
 .w-120 {
   width: 120px;
 }
@@ -80,12 +80,12 @@
   width: 290px;
 }
 
-/* Larguras mínimas */
+/* ===== LARGURAS MÍNIMAS ===== */
 .min-w-160 {
   min-width: 160px;
 }
 
-/* Padding específicos */
+/* ===== PADDING ESPECÍFICOS ===== */
 .p-16 {
   padding: 16px;
 }
@@ -98,7 +98,7 @@
   padding: 24px 24px 50px 24px;
 }
 
-/* Padding top específicos */
+/* ===== PADDING TOP ESPECÍFICOS ===== */
 .pt-4 {
   padding-top: 4px;
 }
@@ -107,21 +107,17 @@
   padding-bottom: 4px;
 }
 
-/* Tamanhos de fonte específicos */
+/* ===== TAMANHOS DE FONTE ESPECÍFICOS ===== */
 .text-12 {
   font-size: 12px;
 }
 
-/* Estados de foco movidos para components.css */
-
-/* Transições */
+/* ===== TRANSIÇÕES ===== */
 .transition-opacity {
   transition: opacity 0.3s ease-in-out;
 }
 
-/* Estados de drag and drop movidos para animations.css */
-
-/* Scrollbar personalizada - CONSOLIDADA */
+/* ===== SCROLLBAR PERSONALIZADA ===== */
 .scrollbar-dark {
   scrollbar-width: thin;
   scrollbar-color: #64748b #1f2937;
@@ -144,25 +140,25 @@
   background: #94a3b8;
 }
 
-/* Utilitários para WhatsApp */
+/* ===== UTILITÁRIOS PARA WHATSAPP ===== */
 .whatsapp-sidebar {
   border-right: 1px solid rgba(134, 150, 160, 0.15);
 }
 
-/* Utilitários para notinha */
+/* ===== UTILITÁRIOS PARA NOTINHA ===== */
 .notinha-preview {
   width: 265px;
   min-height: 400px;
 }
 
-/* Utilitários para relatórios */
+/* ===== UTILITÁRIOS PARA RELATÓRIOS ===== */
 .relatorio-container {
   min-width: 160px;
   height: 200px;
   border: 1px solid var(--dashboard-border);
 }
 
-/* Utilitários para tabelas */
+/* ===== UTILITÁRIOS PARA TABELAS ===== */
 .table-header-73 {
   height: 73px;
 }
@@ -171,7 +167,7 @@
   height: 32.5px;
 }
 
-/* Utilitários para cards */
+/* ===== UTILITÁRIOS PARA CARDS ===== */
 .card-padding-16 {
   padding: 16px;
 }
@@ -184,7 +180,7 @@
   height: 99px;
 }
 
-/* Utilitários para formulários */
+/* ===== UTILITÁRIOS PARA FORMULÁRIOS ===== */
 .form-input-height-36 {
   width: 120px;
   height: 36px;
@@ -192,9 +188,7 @@
   max-height: 36px;
 }
 
-/* Animações movidas para animations.css */
-
-/* Utilitários responsivos */
+/* ===== UTILITÁRIOS RESPONSIVOS ===== */
 @media (max-width: 768px) {
   .mobile-h-400 {
     height: 400px;

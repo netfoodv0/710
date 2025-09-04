@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Percent, DollarSign, Calendar, Star } from 'lucide-react';
-import { DescontoProduto, DescontoProdutoProps } from '../../types/produtos';
+import { DescontoProduto, DescontoProdutoProps } from '../../types/global/produtos';
 
 export const DescontoProduto: React.FC<DescontoProdutoProps> = ({
   desconto,

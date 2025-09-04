@@ -1,4 +1,4 @@
-import { MapAddress, MapCoordinates } from '../types/map';
+import { MapAddress, MapCoordinates } from '../types/global/map';
 
 export const mapUtils = {
   /**

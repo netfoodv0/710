@@ -1,7 +1,7 @@
 import React from 'react';
 import { PedidosColumns } from './PedidosColumns';
 import { PedidosLoading } from './';
-import { Pedido } from '../../types/pedidos';
+import { Pedido } from '../../types/global/pedidos';
 
 interface PedidosContentProps {
   pedidos: Pedido[];

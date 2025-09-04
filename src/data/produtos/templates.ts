@@ -1,4 +1,4 @@
-import { ClassificacaoProduto } from '../../types/produtos';
+import { ClassificacaoProduto } from '../../types/global/produtos';
 
 interface TemplateProduto {
   id: string;

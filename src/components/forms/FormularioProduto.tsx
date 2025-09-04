@@ -1,5 +1,5 @@
 import React from 'react';
-import { Produto, FormularioProdutoProps } from '../../types/produtos';
+import { Produto, FormularioProdutoProps } from '../../types/global/produtos';
 import { useFormularioProduto } from '../../hooks/useFormularioProduto';
 import { FormularioProdutoTabs } from './FormularioProdutoTabs';
 import { FormularioProdutoBasico } from './FormularioProdutoBasico';

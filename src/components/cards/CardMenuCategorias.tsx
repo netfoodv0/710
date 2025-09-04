@@ -2,7 +2,7 @@ import React from 'react';
 import { Tag, Package, Coffee, Pizza, Cake, Wine, Utensils, Plus } from 'lucide-react';
 import { DragIcon, ActionButton } from '../ui';
 import { MenuAcoesCategoria } from '../menus/MenuAcoesCategoria';
-import { Categoria } from '../../types/categoria';
+import { Categoria } from '../../types/global/categoria';
 import { DndContext, DragEndEvent, closestCenter, MeasuringStrategy } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';

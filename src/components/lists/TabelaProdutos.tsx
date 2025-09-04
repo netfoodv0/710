@@ -1,5 +1,5 @@
 import React from 'react';
-import { Produto } from '../../types/produtos';
+import { Produto } from '../../types/global/produtos';
 import { ListaProdutosRow } from './LinhaProduto';
 
 interface ListaProdutosTableProps {

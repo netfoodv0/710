@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { Produto } from '../types/produtos';
+import { Produto } from '../types/global/produtos';
 
 export interface FiltrosCardapioState {
   categoria: string;

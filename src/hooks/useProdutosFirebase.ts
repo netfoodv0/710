@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Produto, ScoreQualidade, ValidacaoProduto } from '../types/produtos';
+import { Produto, ScoreQualidade, ValidacaoProduto } from '../types/global/produtos';
 import { firebaseCardapioService, FiltrosProduto } from '../services/firebaseCardapioService';
 import { useNotifications } from './useNotifications';
 import { useAuth } from './useAuth';

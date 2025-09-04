@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MoreVertical } from 'lucide-react';
 import { EditIcon, TrashIcon, DuplicateIcon } from '../ui';
-import { Categoria } from '../../types/categoria';
+import { Categoria } from '../../types/global/categoria';
 
 interface MenuAcoesCategoriaProps {
   categoria: Categoria;

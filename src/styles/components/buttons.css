@@ -1,0 +1,18 @@
+/* ===== CORREÇÕES PARA COMPONENTES UI ===== */
+/* Sobrescrever borda padrão para botões ActionButton */
+button[class*="ActionButton"],
+button[class*="action-button"],
+.ActionButton,
+.action-button {
+  border: none !important;
+  border-color: transparent !important;
+}
+
+/* Sobrescrever borda padrão para todos os botões se necessário */
+button {
+  border: none;
+}
+
+button:focus {
+  border: none;
+}

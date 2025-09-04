@@ -16,7 +16,7 @@ import { useEstatisticasPadrao } from '../../components/shared';
 import { EstatisticasCustom } from '../EstatisticasCustom';
 import { BagIcon, RevenueIcon, UsersIcon, TicketIcon } from '../ui';
 
-import { DadosFiltrados, DadosRelatorioGeral } from '../../types/relatorios';
+import { DadosFiltrados, DadosRelatorioGeral } from '../../types/global/relatorios';
 
 interface RelatoriosContentProps {
   dadosFiltrados: DadosFiltrados | null;

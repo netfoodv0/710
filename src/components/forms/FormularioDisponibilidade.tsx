@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { TrashIcon, ClockIcon } from '../ui';
-import { PeriodoDisponibilidade, DiaSemana, DIAS_SEMANA } from '../../types/categoria';
+import { PeriodoDisponibilidade, DiaSemana, DIAS_SEMANA } from '../../types/global/categoria';
 
 interface FormularioDisponibilidadeProps {
   periodos?: PeriodoDisponibilidade[];

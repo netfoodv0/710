@@ -1,4 +1,4 @@
-import { ModalStats } from '../types/modal';
+import { ModalStats } from '../types/global/modal';
 
 export const modalStats: ModalStats = {
   totalModais: 12,

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import type { Loja } from '../types/auth';
+import type { Loja } from '../types/global/auth';
 
 interface LojaContextType {
   loja: Loja | null;

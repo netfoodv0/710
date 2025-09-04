@@ -1,0 +1,52 @@
+/* ===== UTILITÁRIOS RESPONSIVOS ===== */
+.responsive-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+.responsive-text {
+  font-size: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-text {
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-text {
+    font-size: 1rem;
+  }
+}
+
+.responsive-padding {
+  padding: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .responsive-padding {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-padding {
+    padding: 1.5rem;
+  }
+}

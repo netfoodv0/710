@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Produto, ScoreQualidade } from '../types/produtos';
+import { Produto, ScoreQualidade } from '../types/global/produtos';
 
 interface UseModalProdutoProps {
   isOpen: boolean;

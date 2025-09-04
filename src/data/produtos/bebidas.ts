@@ -1,4 +1,4 @@
-import { Produto } from '../../types/produtos';
+import { Produto } from '../../types/global/produtos';
 import { DIAS_SEMANA } from './constantes';
 
 export const bebidasMock: Produto[] = [

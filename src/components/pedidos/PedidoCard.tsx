@@ -7,7 +7,7 @@ import { PrinterIcon } from './PrinterIcon';
 import { DollarIcon } from './DollarIcon';
 import { PixIcon } from './PixIcon';
 import { CreditCardIcon } from './CreditCardIcon';
-import { Adicional, ItemPedido } from '../../types/pedidos';
+import { Adicional, ItemPedido } from '../../types/global/pedidos';
 
 interface PedidoCardProps {
   numero: string;

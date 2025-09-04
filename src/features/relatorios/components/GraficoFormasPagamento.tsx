@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { firebaseDashboardService } from '../../../services/firebaseDashboardService';
-import { DadosFormaPagamento } from '../../../types/dashboard';
+import { DadosFormaPagamento } from '../../../pages/PaginaDashboard/types';
 import { PeriodType } from '../../../components/filters/FiltroPeriodo';
 
 interface GraficoFormasPagamentoProps {

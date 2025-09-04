@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, X, Package } from 'lucide-react';
-import { CategoriaAdicional, ComplementosProdutoProps } from '../../types/produtos';
+import { CategoriaAdicional, ComplementosProdutoProps } from '../../types/global/produtos';
 
 export const ComplementosProduto: React.FC<ComplementosProdutoProps> = ({
   complementos,

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback, useMemo } from 'react';
 import { User as FirebaseUser } from 'firebase/auth';
 import { AuthService } from '../services/authService';
-import type { Usuario, Loja, AuthState, AuthStatus } from '../types/auth';
+import type { Usuario, Loja, AuthState, AuthStatus } from '../types/global/auth';
 
 interface AuthContextType extends AuthState {
   login: (email: string, senha: string) => Promise<void>;

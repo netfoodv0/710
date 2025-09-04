@@ -1,0 +1,1 @@
+export { useOperadores } from './useOperadores';

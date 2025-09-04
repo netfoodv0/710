@@ -3,12 +3,12 @@
 @import '../utilities/utilities.css';
 @import '../components/components.css';
 
-/* Container Principal */
+/* ===== CONTAINER PRINCIPAL ===== */
 .dashboard-container {
   background-color: var(--dashboard-bg);
 }
 
-/* Cabeçalho das páginas com margem superior de 16px */
+/* ===== CABEÇALHO DAS PÁGINAS ===== */
 .dashboard-page-header {
   margin-top: 16px;
   margin-left: 24px;
@@ -18,7 +18,6 @@
   border: 2px solid rgba(255, 255, 255, 1);
 }
 
-/* Quando o cabeçalho estiver fixo no topo, mantém as margens laterais */
 .dashboard-page-header.sticky {
   margin-left: 24px;
   margin-right: 24px;
@@ -27,7 +26,7 @@
   border: 2px solid rgba(255, 255, 255, 1);
 }
 
-/* Classe Base para Cards */
+/* ===== CLASSES BASE PARA CARDS ===== */
 .dashboard-base-card {
   background-color: var(--dashboard-white);
   border: 1px solid var(--dashboard-border);
@@ -35,7 +34,33 @@
   box-shadow: var(--dashboard-shadow);
 }
 
-/* Classes Utilitárias - Adicionadas conforme sugestões */
+.dashboard-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
+}
+
+.dashboard-stat-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
+  padding: var(--dashboard-padding-sm);
+}
+
+.dashboard-analytics-card {
+  background-color: var(--dashboard-white);
+  border: 1px solid var(--dashboard-border);
+  border-radius: var(--dashboard-radius);
+  box-shadow: var(--dashboard-shadow);
+  padding: var(--dashboard-padding-md);
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+}
+
+/* ===== CLASSES UTILITÁRIAS ===== */
 .dashboard-card-border {
   border: 1px solid var(--dashboard-border);
 }
@@ -54,42 +79,7 @@
   line-height: 20px;
 }
 
-/* Cards Específicos */
-.dashboard-card {
-  background-color: var(--dashboard-white);
-  border: 1px solid var(--dashboard-border);
-  border-radius: var(--dashboard-radius);
-  box-shadow: var(--dashboard-shadow);
-}
-
-.dashboard-stat-card {
-  border: 1px solid var(--dashboard-border);
-  border-radius: var(--dashboard-radius);
-  box-shadow: var(--dashboard-shadow);
-  padding: var(--dashboard-padding-sm);
-}
-
-.dashboard-analytics-card {
-  background-color: var(--dashboard-white);
-  border: 1px solid var(--dashboard-border);
-  border-radius: var(--dashboard-radius);
-  box-shadow: var(--dashboard-shadow);
-  padding: var(--dashboard-padding-md);
-  display: flex;
-  flex-direction: column;
-  max-height: 500px;
-}
-
-.dashboard-info-box {
-  margin-top: 1rem;
-  padding: var(--dashboard-padding-sm);
-  background-color: #f0fdf4;
-  border: 1px solid var(--dashboard-border);
-  border-radius: var(--dashboard-radius);
-  flex-shrink: 0;
-}
-
-/* Container de Ícones */
+/* ===== CONTAINER DE ÍCONES ===== */
 .dashboard-icon-container {
   width: 2.5rem;
   height: 2.5rem;
@@ -100,7 +90,7 @@
   justify-content: center;
 }
 
-/* Cabeçalho de Analytics */
+/* ===== CABEÇALHO DE ANALYTICS ===== */
 .dashboard-analytics-header {
   display: flex;
   align-items: center;
@@ -115,7 +105,7 @@
   overflow: hidden;
 }
 
-/* Indicadores de Status */
+/* ===== INDICADORES DE STATUS ===== */
 .dashboard-status-indicator {
   width: 0.5rem;
   height: 0.5rem;
@@ -134,12 +124,12 @@
   background-color: var(--dashboard-status-red);
 }
 
-/* Bordas Utilitárias */
+/* ===== BORDAS UTILITÁRIAS ===== */
 .dashboard-border {
   border-color: var(--dashboard-border);
 }
 
-/* Estilos para cards customizados - Consolidados */
+/* ===== CARDS CUSTOMIZADOS ===== */
 .custom-card {
   background-color: var(--dashboard-white);
   border: 1px solid var(--dashboard-border);
@@ -151,7 +141,6 @@
   box-shadow: var(--dashboard-shadow-hover);
 }
 
-/* Estilo específico para aba geral */
 .aba-geral-card {
   background-color: var(--dashboard-white);
   border: 2px solid var(--dashboard-border);
@@ -159,7 +148,7 @@
   box-shadow: none;
 }
 
-/* Botões padronizados - Consolidados */
+/* ===== BOTÕES PADRONIZADOS ===== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -189,7 +178,7 @@
   background-color: var(--dashboard-gray-light);
 }
 
-/* Scrollbar minimalista */
+/* ===== SCROLLBAR MINIMALISTA ===== */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -215,22 +204,16 @@
 
 /* Para Firefox */
 * {
-  /* scrollbar-width: thin; */
-  /* scrollbar-color: #cbd5e1 #f8fafc; */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
 }
 
-/* Classe para sempre mostrar scrollbar no container principal */
+/* ===== CLASSE PARA SEMPRE MOSTRAR SCROLLBAR ===== */
 .scrollbar-visible {
   overflow-y: scroll;
 }
 
-/* Estilos de modais movidos para components.css */
-
-/* Estados de foco movidos para components.css */
-
-/* Animações movidas para animations.css */
-
-/* Melhorias de Responsividade - Adicionadas conforme sugestões */
+/* ===== MELHORIAS DE RESPONSIVIDADE ===== */
 @media (max-width: 768px) {
   .dashboard-analytics-card {
     max-height: none;
@@ -394,7 +377,7 @@
   }
 }
 
-/* Otimizações de Performance CSS - Seletores simplificados */
+/* ===== OTIMIZAÇÕES DE PERFORMANCE CSS ===== */
 .dashboard-modal-button:hover .dashboard-modal-icon {
   opacity: 0.8;
 }
@@ -403,7 +386,7 @@
   border-color: var(--dashboard-status-purple);
 }
 
-/* Classes de acessibilidade */
+/* ===== CLASSES DE ACESSIBILIDADE ===== */
 .dashboard-focus-visible:focus-visible {
   outline: 2px solid var(--dashboard-status-purple);
   outline-offset: 2px;

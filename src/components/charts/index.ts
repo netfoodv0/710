@@ -12,4 +12,4 @@ export const GraficoFormasPagamento = lazy(() => import('../../features/relatori
 export const GraficoTiposPedidos = lazy(() => import('../../features/historico/components/GraficoTiposPedidos'));
 
 // Componentes que não são charts mas são pesados
-export const OrganogramaPage = lazy(() => import('../../pages/OrganogramaPage'));
+export const OrganogramaPage = lazy(() => import('../../pages/PaginaOrganograma/OrganogramaPage'));

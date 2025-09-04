@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Produto } from '../types/produtos';
+import { Produto } from '../types/global/produtos';
 
 export interface FormData {
   // Informações Básicas

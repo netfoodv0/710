@@ -1,0 +1,12 @@
+export { ConfiguracoesLayout } from './ConfiguracoesLayout';
+export { ConfiguracoesGerais } from './ConfiguracoesGerais';
+export { InformacoesLoja } from './InformacoesLoja';
+export { EnderecoLoja } from './EnderecoLoja';
+export { ConfiguracoesEntrega } from './ConfiguracoesEntrega';
+export { ModosPedidos } from './ModosPedidos';
+export { ConfiguracoesAgendamento } from './ConfiguracoesAgendamento';
+export { ConfiguracaoNotinha } from './ConfiguracaoNotinha';
+export { ConfiguracoesPagamento } from './ConfiguracoesPagamento';
+export { ConfiguracoesNotificacoes } from './ConfiguracoesNotificacoes';
+export { ConfiguracoesAparencia } from './ConfiguracoesAparencia';
+export { FusoHorario } from './FusoHorario';

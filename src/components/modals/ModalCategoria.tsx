@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Tag } from 'lucide-react';
 import { SaveIcon } from '../ui';
-import { ModalCategoriaProps, CriarCategoriaData, PeriodoDisponibilidade } from '../../types/categoria';
+import { ModalCategoriaProps, CriarCategoriaData, PeriodoDisponibilidade } from '../../types/global/categoria';
 import { FormularioDisponibilidade } from '../forms/FormularioDisponibilidade';
 import { FormSwitch } from '../forms/FormSwitch';
 import { Modal, ModalHeader, ModalBody, ModalFooter } from './Modal';

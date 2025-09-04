@@ -1,6 +1,6 @@
 import React from 'react';
 import { Leaf, Droplets, Snowflake, Wine, Apple } from 'lucide-react';
-import { ClassificacaoProduto, ClassificacoesProdutoProps } from '../../types/produtos';
+import { ClassificacaoProduto, ClassificacoesProdutoProps } from '../../types/global/produtos';
 
 export const ClassificacoesProduto: React.FC<ClassificacoesProdutoProps> = ({
   classificacoes,

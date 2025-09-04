@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertTriangle } from 'lucide-react';
-import { ScoreQualidade } from '../../types/produtos';
+import { ScoreQualidade } from '../../types/global/produtos';
 
 interface ModalProdutoScoreProps {
   scoreQualidade: ScoreQualidade | null;

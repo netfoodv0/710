@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Store, Phone, Mail, Lock, MapPin, Loader2, Check } from 'lucide-react';
-import { cadastroLojaSchema, type CadastroLojaFormData } from '../../types/auth';
+import { cadastroLojaSchema, type CadastroLojaFormData } from '../../types/global/auth';
 
 interface CadastroFormProps {
   onSubmit: (data: CadastroLojaFormData) => Promise<void>;

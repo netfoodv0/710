@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { MobileCard } from './MobileCard';
 import { MobileButton } from './MobileButton';
-import { useDashboard } from '../../hooks/useDashboard';
+import { useDashboard } from '../../pages/PaginaDashboard/hooks';
 import { OrderIcon } from '../ui';
 
 interface MetricCardProps {

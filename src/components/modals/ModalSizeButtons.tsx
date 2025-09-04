@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalSize } from '../../types/modal';
+import { ModalSize } from '../../types/global/modal';
 
 interface ModalSizeButtonsProps {
   modalSize: ModalSize;
@@ -30,6 +30,7 @@ export const ModalSizeButtons: React.FC<ModalSizeButtonsProps> = ({
     </div>
   );
 };
+
 
 
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Produto, FormularioProdutoProps } from '../types/produtos';
+import { Produto, FormularioProdutoProps } from '../types/global/produtos';
 
 type TabType = 'basico' | 'midia' | 'classificacoes' | 'disponibilidade' | 'descontos';
 

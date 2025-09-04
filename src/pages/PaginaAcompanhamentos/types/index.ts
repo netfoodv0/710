@@ -1,0 +1,1 @@
+export * from './acompanhamentos.types';

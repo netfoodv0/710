@@ -1,6 +1,5 @@
 import { Pedido } from '../types';
-
-export type PedidoComColuna = Pedido & { coluna: string };
+import { PedidoComColuna } from '../pages/PaginaKDS/types';
 
 export const mockPedidos: PedidoComColuna[] = [
   {
