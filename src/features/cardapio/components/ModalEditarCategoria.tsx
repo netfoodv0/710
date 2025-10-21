@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ModalGlobal } from '../../../components/modals/ModalGlobal';
 import { Button } from '../../../components/ui/Button';
-import { Input } from '../../../components/ui/Input';
+import { Input } from '../../../components/ui/input';
 import { FormSwitch } from '../../../components/forms/FormSwitch';
 import { useCategoriaService } from '../../../hooks/useCategoriaService';
 import { CategoriaModal } from '../../../types/cardapio/categoriaModal';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ModalGlobal } from '../../../components/modals/ModalGlobal';
 import { Button } from '../../../components/ui/Button';
-import { Input } from '../../../components/ui/Input';
+import { Input } from '../../../components/ui/input';
 import { FormSwitch } from '../../../components/forms/FormSwitch';
 import { ComplementosService } from '../../../pages/PaginaComplementos/services/complementosService';
 import { auth } from '../../../lib/firebase';
