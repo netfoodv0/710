@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Phone, MessageSquare } from 'lucide-react';
 import { usePDVContext } from '../../context/PDVContext';
 import { CUSTOMER_VALIDATION } from '../../constants/pdv';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 import { Modal, ModalBody, ModalFooter } from './Modal';
 import { FormInput } from '../forms/FormInput';
 import { ModalEndereco } from './ModalEndereco';
