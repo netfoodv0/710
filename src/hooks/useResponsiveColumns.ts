@@ -5,7 +5,7 @@ export function useResponsiveColumns() {
 
   useEffect(() => {
         const calculateColumns = () => {
-      const cardWidth = 240; // Largura fixa de cada card
+      const cardWidth = 192; // Largura fixa de cada card (reduzido em ~20%)
       const gap = 24; // Gap entre colunas (gap-6 = 24px)
       const padding = 48; // Padding lateral (px-6 = 24px * 2)
       const availableWidth = window.innerWidth - padding;
@@ -21,8 +21,8 @@ export function useResponsiveColumns() {
         }
       }
       
-      // Limita entre 1 e 4 colunas
-      maxColumns = Math.max(1, Math.min(4, maxColumns));
+      // Limita entre 1 e 5 colunas
+      maxColumns = Math.max(1, Math.min(5, maxColumns));
       
       setColumns(maxColumns);
     };

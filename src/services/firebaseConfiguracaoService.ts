@@ -131,6 +131,7 @@ export class FirebaseConfiguracaoService extends BaseFirestoreService {
       cnpj: '',
       telefone: '',
       email: '',
+      fusoHorario: 'America/Sao_Paulo', // Fuso horário padrão do Brasil
       endereco: {
         rua: '',
         bairro: '',

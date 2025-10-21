@@ -10,9 +10,7 @@ interface LojaContextType {
   refreshLoja: () => Promise<void>;
 }
 
-const LojaContext = createContext<LojaContextType | undefined>(undefined);
-
-export { LojaContext };
+export const LojaContext = createContext<LojaContextType | undefined>(undefined);
 
 interface LojaProviderProps {
   children: ReactNode;

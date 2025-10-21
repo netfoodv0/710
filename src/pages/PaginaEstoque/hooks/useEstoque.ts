@@ -1,84 +1,13 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNotificationContext } from '../../../context/notificationContextUtils';
 import { DataTableColumn } from '../../../components/ui';
 import { UseEstoqueReturn, ProdutoEstoque } from '../types';
-
-// Dados fictícios de produtos em estoque
-const produtosEstoque: ProdutoEstoque[] = [
-  {
-    id: 1,
-    nome: 'Pizza Margherita',
-    categoria: 'Pizzas',
-    quantidade: 45,
-    quantidadeMinima: 10,
-    precoCusto: 12.50,
-    custoEstoque: 562.50,
-    precoUnitario: 28.90,
-    status: 'em_estoque',
-    semControleEstoque: false,
-    fichaTecnica: 'Sim',
-    medida: 'un'
-  },
-  {
-    id: 2,
-    nome: 'Hambúrguer Clássico',
-    categoria: 'Lanches',
-    quantidade: 8,
-    quantidadeMinima: 15,
-    precoCusto: 8.20,
-    custoEstoque: 65.60,
-    precoUnitario: 18.90,
-    status: 'baixo_estoque',
-    semControleEstoque: false,
-    fichaTecnica: 'Sim',
-    medida: 'un'
-  },
-  {
-    id: 3,
-    nome: 'Coca-Cola 350ml',
-    categoria: 'Bebidas',
-    quantidade: 0,
-    quantidadeMinima: 20,
-    precoCusto: 2.50,
-    custoEstoque: 0,
-    precoUnitario: 5.90,
-    status: 'sem_estoque',
-    semControleEstoque: false,
-    fichaTecnica: 'Não',
-    medida: 'un'
-  },
-  {
-    id: 4,
-    nome: 'Batata Frita',
-    categoria: 'Acompanhamentos',
-    quantidade: 25,
-    quantidadeMinima: 5,
-    precoCusto: 3.80,
-    custoEstoque: 95.00,
-    precoUnitario: 8.50,
-    status: 'em_estoque',
-    semControleEstoque: false,
-    fichaTecnica: 'Sim',
-    medida: 'porção'
-  },
-  {
-    id: 5,
-    nome: 'Salada Caesar',
-    categoria: 'Saladas',
-    quantidade: 12,
-    quantidadeMinima: 8,
-    precoCusto: 6.20,
-    custoEstoque: 74.40,
-    precoUnitario: 14.90,
-    status: 'em_estoque',
-    semControleEstoque: false,
-    fichaTecnica: 'Sim',
-    medida: 'un'
-  }
-];
+import { useProdutoService } from '../../../hooks/useProdutoService';
+import { useCategoriaService } from '../../../hooks/useCategoriaService';
+import { auth } from '../../../lib/firebase';
 
 export function useEstoque(): UseEstoqueReturn {
-  const [produtos, setProdutos] = useState<ProdutoEstoque[]>(produtosEstoque);
+  const [produtos, setProdutos] = useState<ProdutoEstoque[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,6 +15,74 @@ export function useEstoque(): UseEstoqueReturn {
   const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoEstoque | null>(null);
 
   const { showSuccess, showError } = useNotificationContext();
+  const { buscarProdutos, atualizarProduto } = useProdutoService();
+  const { buscarCategorias } = useCategoriaService();
+
+  // Função para carregar produtos do banco de dados
+  const carregarProdutos = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const user = auth.currentUser;
+      if (!user || !user.uid) {
+        throw new Error('Usuário não autenticado');
+      }
+
+      // Carregar produtos e categorias em paralelo
+      const [produtosCardapio, categorias] = await Promise.all([
+        buscarProdutos(user.uid),
+        buscarCategorias(user.uid)
+      ]);
+
+      // Converter produtos do cardápio para o formato de estoque
+      const produtosEstoque: ProdutoEstoque[] = produtosCardapio.map(produto => {
+
+        // Determinar status com base no controle de estoque
+        let status: 'em_estoque' | 'baixo_estoque' | 'sem_estoque' | 'sem_controle' = 'em_estoque';
+        
+        // Se controleEstoque for false, significa que não há controle de estoque
+        if (!produto.controleEstoque) {
+          status = 'sem_controle';
+        } else if (produto.estoqueAtual === 0) {
+          status = 'sem_estoque';
+        } else if (produto.estoqueMinimo && produto.estoqueAtual <= produto.estoqueMinimo) {
+          status = 'baixo_estoque';
+        } else {
+          status = 'em_estoque';
+        }
+
+
+        return {
+          id: produto.id, // Manter como string para evitar NaN
+          nome: produto.nome,
+          categoria: produto.categoria,
+          quantidade: produto.estoqueAtual, // Estoque Atual
+          quantidadeMinima: produto.estoqueMinimo || 0, // Estoque Mínimo real
+          precoCusto: produto.precoCusto,
+          custoEstoque: produto.precoCusto * produto.estoqueAtual,
+          precoUnitario: produto.precoVenda,
+          status,
+          semControleEstoque: !produto.controleEstoque, // Se controleEstoque for false, não tem controle
+          fichaTecnica: 'Sim', // Valor padrão
+          medida: produto.unidadeMedida === 'unidade' ? 'un' : produto.unidadeMedida.substring(0, 2)
+        };
+      });
+
+      setProdutos(produtosEstoque);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar produtos';
+      setError(errorMessage);
+      console.error('Erro ao carregar produtos:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [buscarProdutos, buscarCategorias]);
+
+  // Carregar produtos ao montar o componente
+  useEffect(() => {
+    carregarProdutos();
+  }, [carregarProdutos]);
 
   // Função para formatar moeda
   const formatCurrency = (value: number) => {
@@ -100,11 +97,24 @@ export function useEstoque(): UseEstoqueReturn {
     const statusConfig = {
       em_estoque: { label: 'Em Estoque', color: 'bg-green-100 text-green-800' },
       baixo_estoque: { label: 'Baixo Estoque', color: 'bg-yellow-100 text-yellow-800' },
-      sem_estoque: { label: 'Sem Estoque', color: 'bg-red-100 text-red-800' }
+      sem_estoque: { label: 'Sem Estoque', color: 'bg-red-100 text-red-800' },
+      sem_controle: { label: 'Sem Controle', color: 'bg-gray-100 text-gray-800' }
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.em_estoque;
     return config.label;
+  };
+
+  // Função para obter cor do status
+  const getStatusColor = (status: string) => {
+    const statusConfig = {
+      em_estoque: 'bg-green-100 text-green-800',
+      baixo_estoque: 'bg-yellow-100 text-yellow-800',
+      sem_estoque: 'bg-red-100 text-red-800',
+      sem_controle: 'bg-gray-100 text-gray-800'
+    };
+    
+    return statusConfig[status as keyof typeof statusConfig] || statusConfig.em_estoque;
   };
 
   // Definir colunas da tabela
@@ -123,15 +133,29 @@ export function useEstoque(): UseEstoqueReturn {
     },
     {
       key: 'quantidade',
-      label: 'Quantidade',
+      label: 'Estoque Atual',
       sortable: true,
-      render: (produto) => `${produto.quantidade} ${produto.medida}`
+      render: (produto) => {
+        // Se não há controle de estoque, exibir "Sem Controle"
+        if (produto.semControleEstoque) {
+          return 'Sem Controle';
+        }
+        
+        return `${produto.quantidade} ${produto.medida}`;
+      }
     },
     {
       key: 'quantidadeMinima',
-      label: 'Mínimo',
+      label: 'Estoque Mínimo',
       sortable: true,
-      render: (produto) => `${produto.quantidadeMinima} ${produto.medida}`
+      render: (produto) => {
+        // Se não há controle de estoque, exibir "Sem Controle"
+        if (produto.semControleEstoque) {
+          return 'Sem Controle';
+        }
+        
+        return `${produto.quantidadeMinima} ${produto.medida}`;
+      }
     },
     {
       key: 'precoCusto',
@@ -149,7 +173,14 @@ export function useEstoque(): UseEstoqueReturn {
       key: 'status',
       label: 'Status',
       sortable: true,
-      render: (produto) => getStatusBadge(produto.status)
+      render: (produto) => {
+        // Se não há controle de estoque, exibir "Sem Controle"
+        if (produto.semControleEstoque) {
+          return 'Sem Controle';
+        }
+        
+        return getStatusBadge(produto.status);
+      }
     },
     {
       key: 'actions',
@@ -185,20 +216,41 @@ export function useEstoque(): UseEstoqueReturn {
     handleOpenModal(produto);
   }, [handleCloseModalDetalhes, handleOpenModal]);
 
-  const handleSave = useCallback((produto: ProdutoEstoque) => {
-    setProdutos(prev => prev.map(p => p.id === produto.id ? produto : p));
-    handleCloseModal();
-    showSuccess('Produto atualizado com sucesso!');
-  }, [handleCloseModal, showSuccess]);
+  const handleSave = useCallback(async (produto: ProdutoEstoque) => {
+    try {
+      // Converter produto de estoque para formato do cardápio
+      const dadosAtualizacao = {
+        nome: produto.nome,
+        categoria: produto.categoria,
+        precoVenda: produto.precoUnitario,
+        precoCusto: produto.precoCusto,
+        estoqueAtual: produto.quantidade,
+        estoqueMinimo: produto.quantidadeMinima,
+        controleEstoque: !produto.semControleEstoque,
+        status: produto.status === 'sem_controle' ? 'ativo' : 'ativo',
+        codigoBarras: null,
+        codigoSku: null,
+        unidadeMedida: produto.medida === 'un' ? 'unidade' : produto.medida,
+        imagem: null,
+        horariosDisponibilidade: []
+      };
+
+      // Atualizar no Firebase
+      await atualizarProduto(produto.id, dadosAtualizacao);
+      
+      // Atualizar estado local
+      setProdutos(prev => prev.map(p => p.id === produto.id ? produto : p));
+      handleCloseModal();
+      showSuccess('Produto atualizado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar produto:', error);
+      showError('Erro ao atualizar produto');
+    }
+  }, [handleCloseModal, showSuccess, showError, atualizarProduto]);
 
   const handleRetry = useCallback(() => {
-    setError(null);
-    setLoading(true);
-    // Simular recarregamento
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+    carregarProdutos();
+  }, [carregarProdutos]);
 
   return {
     produtos,
@@ -217,3 +269,5 @@ export function useEstoque(): UseEstoqueReturn {
     handleRetry
   };
 }
+
+

@@ -16,3 +16,5 @@ export function MapContainer({ config, showHeatmap, showDeliveryRadius }: MapCon
     </div>
   );
 }
+
+

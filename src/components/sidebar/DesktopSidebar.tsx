@@ -24,21 +24,18 @@ const DesktopSidebar = () => {
       style={{
         width: isOpen ? 240 : 80,
         flexShrink: 0,
-        marginLeft: "24px",
-        marginTop: "16px",
-        marginBottom: "16px",
-        height: "calc(100vh - 32px)",
-        maxHeight: "calc(100vh - 32px)",
+        marginLeft: "0px",
+        marginTop: "0px",
+        marginBottom: "0px",
+        height: "100vh",
+        maxHeight: "100vh",
         overflow: "hidden",
-        border: "2px solid rgba(255, 255, 255, 0.5)",
-        backgroundColor: "rgba(255, 255, 255, 0.6)",
+        backgroundColor: "#ffffff",
         color: "#000000",
-        borderTopLeftRadius: "16px",
-        borderTopRightRadius: "16px",
-        borderBottomLeftRadius: "16px",
-        borderBottomRightRadius: "16px",
-        backdropFilter: "blur(24px)",
-        WebkitBackdropFilter: "blur(24px)",
+        borderTopLeftRadius: "0px",
+        borderTopRightRadius: "0px",
+        borderBottomLeftRadius: "0px",
+        borderBottomRightRadius: "0px",
         display: "flex",
         flexDirection: "column",
         position: "relative",
@@ -59,7 +56,7 @@ const DesktopSidebar = () => {
           top: 0,
           backgroundColor: "transparent",
           zIndex: 1,
-          borderBottom: "1px solid rgba(255, 255, 255, 0.3)",
+          borderBottom: "1px solid #e5e7eb",
           boxSizing: "border-box",
           flexShrink: 0
         }}
@@ -117,19 +114,19 @@ const DesktopSidebar = () => {
         sx={{ 
           flex: 1,
           overflow: "auto",
-          maxHeight: "calc(100vh - 32px - 73px)",
+          maxHeight: "calc(100vh - 73px)",
           "&::-webkit-scrollbar": {
             width: "6px"
           },
           "&::-webkit-scrollbar-track": {
-            background: "rgba(255, 255, 255, 0.6)"
+            background: "#f5f5f5"
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "rgba(255, 255, 255, 0.8)",
+            background: "#d1d5db",
             borderRadius: "3px"
           },
           "&::-webkit-scrollbar-thumb:hover": {
-            background: "rgba(255, 255, 255, 1)"
+            background: "#9ca3af"
           }
         }}
       >

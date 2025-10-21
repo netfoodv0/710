@@ -71,25 +71,27 @@ export class AuthService {
   // Cadastro de usuário e loja
   static async cadastrarLoja(data: CadastroLojaFormData): Promise<{ usuario: Usuario; loja: Loja }> {
     try {
+      console.log('Iniciando cadastro com dados:', {
+        email: data.email,
+        nomeLoja: data.nomeLoja,
+        whatsapp: data.whatsapp,
+        segmento: data.segmento
+      });
+
       // Criar usuário no Firebase Auth
+      console.log('Criando usuário no Firebase Auth...');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.senha
       );
+      console.log('Usuário criado no Firebase Auth:', userCredential.user.uid);
 
       const user = userCredential.user;
 
-      // Verificar se já existe uma loja com este e-mail
-      const lojasRef = collection(db, 'lojas');
-      const q = query(lojasRef, where('email', '==', data.email));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        // Se já existe uma loja, deletar o usuário criado
-        await user.delete();
-        throw new Error('Já existe uma loja cadastrada com este e-mail');
-      }
+      // Remover verificação de e-mail duplicado por enquanto
+      // (Isso evita problemas de permissão durante o cadastro)
+      // TODO: Implementar verificação de e-mail duplicado de forma mais eficiente
 
       // Criar dados do usuário
       const usuarioData: Usuario = {
@@ -112,20 +114,34 @@ export class AuthService {
       };
 
       // Salvar dados no Firestore
+      console.log('Salvando dados do usuário no Firestore...');
+      console.log('Dados do usuário:', usuarioData);
+      console.log('Dados da loja:', lojaData);
+      
       await Promise.all([
         setDoc(doc(db, 'usuarios', user.uid), usuarioData),
         setDoc(doc(db, 'lojas', user.uid), lojaData)
       ]);
+      
+      console.log('Dados salvos com sucesso no Firestore');
 
       return {
         usuario: usuarioData,
         loja: lojaData
       };
     } catch (error: any) {
+      console.error('Erro no cadastro:', error);
+      console.error('Código do erro:', error.code);
+      console.error('Mensagem do erro:', error.message);
+      
       if (error.code === 'auth/email-already-in-use') {
         throw new Error('Este e-mail já está em uso');
       } else if (error.code === 'auth/weak-password') {
         throw new Error('A senha deve ter pelo menos 6 caracteres');
+      } else if (error.code === 'auth/invalid-email') {
+        throw new Error('E-mail inválido');
+      } else if (error.code === 'auth/operation-not-allowed') {
+        throw new Error('Operação não permitida. Verifique as configurações do Firebase');
       } else {
         throw new Error('Erro ao criar conta: ' + error.message);
       }
@@ -145,15 +161,22 @@ export class AuthService {
   static async getCurrentUser(): Promise<Usuario | null> {
     try {
       const user = auth.currentUser;
-      if (!user) return null;
-
-      const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
-      
-      if (!userDoc.exists()) {
+      if (!user) {
+        console.log('Nenhum usuário Firebase logado');
         return null;
       }
 
-      return userDoc.data() as Usuario;
+      console.log('Buscando dados do usuário:', user.uid);
+      const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
+      
+      if (!userDoc.exists()) {
+        console.log('Documento do usuário não encontrado no Firestore');
+        return null;
+      }
+
+      const userData = userDoc.data() as Usuario;
+      console.log('Dados do usuário encontrados:', userData);
+      return userData;
     } catch (error) {
       console.error('Erro ao buscar usuário atual:', error);
       return null;

@@ -18,3 +18,5 @@ export function EstoqueError({ error, onRetry }: EstoqueErrorProps) {
     </div>
   );
 }
+
+

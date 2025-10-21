@@ -2,34 +2,43 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNotificationContext } from '../../../context/notificationContextUtils';
 import { useAnimacaoCards } from '../../../hooks/useAnimacaoCards';
 import { useConfiguracaoTabelaCupons } from '../../../components/relatorios';
-import { 
-  cuponsFicticios, 
-  estatisticasCupons, 
-  categorias, 
-  cardPercentages 
-} from '../../../data/cuponsMock';
+// Usando apenas dados reais do Firebase
 import { UseCuponsReturn, CuponsData, Cupom, PeriodType } from '../types';
+import { FirebaseCuponsService } from '../../../services/firebase/cuponsService';
 
 export function useCupons(): UseCuponsReturn {
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
   const [loading, setLoading] = useState(true); // Inicia como true para mostrar loading
   const [error, setError] = useState<string | null>(null);
+  const [cupons, setCupons] = useState<Cupom[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   
   const { showSuccess, showError } = useNotificationContext();
+  const cuponsService = useMemo(() => new FirebaseCuponsService(), []);
 
-  // Simular carregamento inicial
+  // Carregar cupons do Firebase
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000); // 1 segundo de loading
+    const loadCupons = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const cuponsData = await cuponsService.buscarCupons();
+        setCupons(cuponsData);
+      } catch (err) {
+        setError('Erro ao carregar cupons');
+        console.error('Erro ao carregar cupons:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, []);
+    loadCupons();
+  }, [cuponsService]);
   
   // Hook para animações dos cards - só executa quando não está carregando
   const percentuais = useMemo(() => 
-    loading ? [] : cardPercentages.map(card => card.percentual), 
-    [cardPercentages, loading]
+    loading ? [] : [], 
+    [loading]
   );
   
   const { carregamentoCompleto, mostrarAnimacoes, alturasAnimadas } = useAnimacaoCards({
@@ -39,22 +48,23 @@ export function useCupons(): UseCuponsReturn {
   // Configuração da tabela
   const { columns } = useConfiguracaoTabelaCupons();
 
-  // Categorias únicas para filtros
+  // Categorias únicas para filtros baseadas nos dados reais
   const categoriasFiltros = useMemo(() => {
-    return categorias.map(cat => ({ value: cat, label: cat }));
-  }, []);
+    const categoriasUnicas = [...new Set(cupons.map(c => c.categoria))];
+    return categoriasUnicas.map(cat => ({ value: cat, label: cat }));
+  }, [cupons]);
 
-  // Status únicos para filtros
+  // Status únicos para filtros baseados nos dados reais
   const statusOptions = useMemo(() => {
-    const status = [...new Set(cuponsFicticios.map(c => c.status))];
+    const status = [...new Set(cupons.map(c => c.status))];
     return status.map(st => ({ value: st, label: st === 'ativo' ? 'Ativo' : 'Inativo' }));
-  }, []);
+  }, [cupons]);
 
-  // Tipo únicos para filtros
+  // Tipo únicos para filtros baseados nos dados reais
   const tipoOptions = useMemo(() => {
-    const tipos = [...new Set(cuponsFicticios.map(c => c.tipo))];
+    const tipos = [...new Set(cupons.map(c => c.tipo))];
     return tipos.map(t => ({ value: t, label: t === 'percentual' ? 'Percentual' : 'Valor Fixo' }));
-  }, []);
+  }, [cupons]);
 
   const handlePeriodChange = useCallback((period: PeriodType) => {
     setSelectedPeriod(period);
@@ -86,15 +96,30 @@ export function useCupons(): UseCuponsReturn {
   }, []);
 
   const handleAdd = useCallback(() => {
-    console.log('Adicionar novo cupom');
+    setIsModalOpen(true);
+  }, []);
+
+  const handleCupomCriado = useCallback((novoCupom: Cupom) => {
+    setCupons(prev => [novoCupom, ...prev]);
+    setIsModalOpen(false);
+    showSuccess('Cupom criado com sucesso!');
+  }, [showSuccess]);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
   }, []);
 
   // Dados consolidados
   const data: CuponsData = {
-    cupons: cuponsFicticios,
-    estatisticas: estatisticasCupons,
-    categorias,
-    cardPercentages,
+    cupons,
+    estatisticas: {
+      totalCupons: cupons.length,
+      cuponsAtivos: cupons.filter(c => c.status === 'ativo').length,
+      cuponsInativos: cupons.filter(c => c.status === 'inativo').length,
+      totalUsos: cupons.reduce((acc, c) => acc + (c.usosAtuais || 0), 0)
+    },
+    categorias: [...new Set(cupons.map(c => c.categoria))],
+    cardPercentages: [], // Sem dados mocados
     selectedPeriod,
     loading,
     error
@@ -114,6 +139,9 @@ export function useCupons(): UseCuponsReturn {
     columns,
     carregamentoCompleto,
     mostrarAnimacoes,
-    alturasAnimadas
+    alturasAnimadas,
+    isModalOpen,
+    handleCupomCriado,
+    handleCloseModal
   };
 }

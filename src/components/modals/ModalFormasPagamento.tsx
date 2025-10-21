@@ -8,13 +8,14 @@ interface PaymentMethod {
   id: string;
   name: string;
   value: number;
+  enabled: boolean;
 }
 
 const PAYMENT_METHODS = [
-  { id: 'cash', name: 'Dinheiro', value: 0 },
-  { id: 'pix', name: 'PIX', value: 0 },
-  { id: 'credit', name: 'Crédito', value: 0 },
-  { id: 'debit', name: 'Débito', value: 0 },
+  { id: 'cash', name: 'Dinheiro', value: 0, enabled: false },
+  { id: 'pix', name: 'PIX', value: 0, enabled: false },
+  { id: 'credit', name: 'Crédito', value: 0, enabled: false },
+  { id: 'debit', name: 'Débito', value: 0, enabled: false },
 ];
 
 // Interface para item do histórico de pagamento
@@ -31,6 +32,7 @@ interface PaymentHistoryItem {
 interface ModalFormasPagamentoProps {
   isOpen: boolean;
   onClose: () => void;
+  onPaymentComplete?: () => void;
 }
 
 // Componente para o card de valor financeiro
@@ -367,10 +369,11 @@ const PaymentHistoryModal: React.FC<{
 
 export const ModalFormasPagamento: React.FC<ModalFormasPagamentoProps> = ({
   isOpen,
-  onClose
+  onClose,
+  onPaymentComplete
 }) => {
-  const { calculatedValues } = usePDVContext();
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(PAYMENT_METHODS);
+  const { calculatedValues, paymentMethods: contextPaymentMethods, updatePaymentMethods } = usePDVContext();
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>(contextPaymentMethods || PAYMENT_METHODS);
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [showDiscountModal, setShowDiscountModal] = useState(false);
   const [showPaymentMethodModal, setShowPaymentMethodModal] = useState(false);
@@ -378,12 +381,32 @@ export const ModalFormasPagamento: React.FC<ModalFormasPagamentoProps> = ({
   const [showHistoryModal, setShowHistoryModal] = useState(false);
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistoryItem[]>([]);
   const [summaryValues, setSummaryValues] = useState({
-    subtotal: calculatedValues.subtotal,
-    discount: calculatedValues.discountTotal,
-    service: calculatedValues.serviceTotal,
+    subtotal: 0,
+    discount: 0,
+    service: 0,
     paid: 0,
-    toPay: calculatedValues.total
+    toPay: 0
   });
+
+  // Atualizar valores do resumo quando o modal abrir ou os valores calculados mudarem
+  React.useEffect(() => {
+    if (isOpen && calculatedValues) {
+      setSummaryValues({
+        subtotal: calculatedValues.subtotal || 0,
+        discount: calculatedValues.discountTotal || 0,
+        service: calculatedValues.serviceTotal || 0,
+        paid: 0,
+        toPay: calculatedValues.total || 0
+      });
+    }
+  }, [isOpen, calculatedValues]);
+
+  // Sincronizar métodos de pagamento com o contexto
+  React.useEffect(() => {
+    if (isOpen && contextPaymentMethods) {
+      setPaymentMethods(contextPaymentMethods);
+    }
+  }, [isOpen, contextPaymentMethods]);
 
   const formatCurrency = useCallback((value: number) => {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -394,8 +417,8 @@ export const ModalFormasPagamento: React.FC<ModalFormasPagamentoProps> = ({
   }, [paymentMethods]);
 
   const getRemainingAmount = useCallback(() => {
-    return calculatedValues.total - getTotalPaid();
-  }, [calculatedValues.total, getTotalPaid]);
+    return (calculatedValues?.total || 0) - getTotalPaid();
+  }, [calculatedValues?.total, getTotalPaid]);
 
   const isPaymentComplete = useCallback(() => {
     return getRemainingAmount() <= 0;
@@ -432,13 +455,14 @@ export const ModalFormasPagamento: React.FC<ModalFormasPagamentoProps> = ({
   }, []);
 
   const handlePaymentMethodSave = useCallback((methodId: string, value: number) => {
-    setPaymentMethods(prev => 
-      prev.map(method => 
-        method.id === methodId 
-          ? { ...method, value } 
-          : method
-      )
+    const updatedMethods = paymentMethods.map(method => 
+      method.id === methodId 
+        ? { ...method, value } 
+        : method
     );
+    
+    setPaymentMethods(updatedMethods);
+    updatePaymentMethods(updatedMethods);
 
     // Adicionar ao histórico se o valor for maior que 0
     if (value > 0) {
@@ -479,10 +503,14 @@ export const ModalFormasPagamento: React.FC<ModalFormasPagamentoProps> = ({
   }, [paymentMethods]);
 
   const handleCompletePayment = useCallback(() => {
+    // Atualizar o contexto com os métodos de pagamento atuais
+    updatePaymentMethods(paymentMethods);
+    
     // Implementar lógica para concluir pagamento
     console.log('Pagamento concluído');
+    onPaymentComplete?.();
     onClose();
-  }, [onClose]);
+  }, [onClose, onPaymentComplete, paymentMethods, updatePaymentMethods]);
 
   return (
     <>
@@ -563,11 +591,11 @@ export const ModalFormasPagamento: React.FC<ModalFormasPagamentoProps> = ({
                 setPaymentMethods(PAYMENT_METHODS);
                 setPaymentHistory([]);
                 setSummaryValues({
-                  subtotal: calculatedValues.subtotal,
-                  discount: calculatedValues.discountTotal,
-                  service: calculatedValues.serviceTotal,
+                  subtotal: calculatedValues?.subtotal || 0,
+                  discount: calculatedValues?.discountTotal || 0,
+                  service: calculatedValues?.serviceTotal || 0,
                   paid: 0,
-                  toPay: calculatedValues.total
+                  toPay: calculatedValues?.total || 0
                 });
               }}
               className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors border border-gray-300 rounded-lg hover:bg-gray-50"
@@ -595,14 +623,14 @@ export const ModalFormasPagamento: React.FC<ModalFormasPagamentoProps> = ({
       <ServiceEditModal
         isOpen={showServiceModal}
         onClose={() => setShowServiceModal(false)}
-        value={calculatedValues.serviceTotal}
+        value={calculatedValues?.serviceTotal || 0}
         onSave={handleServiceSave}
       />
 
       <DiscountEditModal
         isOpen={showDiscountModal}
         onClose={() => setShowDiscountModal(false)}
-        value={calculatedValues.discountTotal}
+        value={calculatedValues?.discountTotal || 0}
         type="discount"
         onSave={handleDiscountSave}
       />

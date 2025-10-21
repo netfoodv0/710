@@ -3,10 +3,17 @@ import {
   addDoc, 
   updateDoc, 
   deleteDoc, 
+  getDoc,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
   startAfter,
   writeBatch,
   serverTimestamp,
-  collection
+  collection,
+  onSnapshot
 } from 'firebase/firestore';
 import { Pedido } from '../types';
 import { BaseFirestoreService } from './firebase/BaseFirestoreService';
@@ -21,6 +28,7 @@ export class FirebasePedidoService extends BaseFirestoreService {
     try {
       return super.getLojaId();
     } catch (error) {
+      console.error('❌ Erro ao obter lojaId do BaseFirestoreService:', error);
       return null;
     }
   }
@@ -71,6 +79,147 @@ export class FirebasePedidoService extends BaseFirestoreService {
     }
   }
 
+  buscarPedidosTempoReal(filtros: {
+    status?: string | string[];
+    dataInicio?: Date;
+    dataFim?: Date;
+    limit?: number;
+  } = {}, callback: (pedidos: Pedido[]) => void): () => void {
+    try {
+      const lojaId = this.getLojaId();
+      
+      console.log('🔍 FirebasePedidoService - lojaId:', lojaId);
+      
+      if (!lojaId) {
+        console.error('❌ lojaId é null - usuário não autenticado');
+        callback([]);
+        return () => {};
+      }
+      
+      // Determinar status para buscar
+      let statusParaBuscar: string[];
+      if (filtros.status) {
+        if (Array.isArray(filtros.status)) {
+          statusParaBuscar = filtros.status;
+        } else {
+          statusParaBuscar = [filtros.status];
+        }
+      } else {
+        // Status padrão para pedidos em andamento
+        statusParaBuscar = ['pendente', 'confirmado', 'pronto'];
+      }
+
+      // Construir query base - buscar pedidos com status específicos
+      let q = query(
+        this.pedidosCollection,
+        where('lojaId', '==', lojaId),
+        where('status', 'in', statusParaBuscar)
+      );
+
+      // Aplicar outros filtros
+      const constraints: any[] = [];
+      
+      if (filtros.dataInicio) {
+        constraints.push(where('dataHora', '>=', filtros.dataInicio));
+      }
+      
+      if (filtros.dataFim) {
+        constraints.push(where('dataHora', '<=', filtros.dataFim));
+      }
+      
+      if (filtros.limit) {
+        constraints.push(limit(filtros.limit));
+      }
+
+      // Aplicar constraints se houver
+      if (constraints.length > 0) {
+        q = query(q, ...constraints);
+      }
+
+      // Teste: buscar todos os pedidos primeiro (sem await)
+      console.log('🧪 Teste: buscando todos os pedidos...');
+      const testQuery = query(this.pedidosCollection);
+      getDocs(testQuery).then(testSnapshot => {
+        console.log('🧪 Teste - Total de pedidos no Firebase:', testSnapshot.size);
+        testSnapshot.docs.forEach(doc => {
+          const data = doc.data();
+          console.log('🧪 Teste - Pedido encontrado:', doc.id, 'lojaId:', data.lojaId, 'status:', data.status);
+        });
+      }).catch(error => {
+        console.error('🧪 Erro no teste:', error);
+      });
+
+      // Configurar listener em tempo real
+      console.log('🔧 Configurando onSnapshot com query:', q);
+      console.log('🔧 Query path:', this.pedidosCollection.path);
+      console.log('🔧 LojaId na query:', lojaId);
+      
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        console.log('📡 Listener ativo - snapshot size:', snapshot.size);
+        console.log('📡 Listener ativo - snapshot empty:', snapshot.empty);
+        console.log('📡 Listener ativo - snapshot metadata:', snapshot.metadata);
+        console.log('📡 Listener ativo - snapshot docs:', snapshot.docs.length);
+        
+        if (snapshot.empty) {
+          console.log('⚠️ Snapshot vazio - nenhum pedido encontrado');
+          callback([]);
+          return;
+        }
+        
+        const pedidos = snapshot.docs.map(doc => {
+          const data = doc.data();
+          console.log('📄 Documento encontrado:', doc.id, data);
+          console.log('📄 dataHora original:', data.dataHora, 'tipo:', typeof data.dataHora);
+          
+          // Converter dataHora corretamente
+          let dataHora: Date;
+          if (data.dataHora?.toDate) {
+            dataHora = data.dataHora.toDate();
+          } else if (data.dataHora instanceof Date) {
+            dataHora = data.dataHora;
+          } else if (data.dataHora) {
+            dataHora = new Date(data.dataHora);
+          } else {
+            dataHora = new Date(); // Fallback para data atual
+          }
+          
+          // Converter dataAtualizacao corretamente
+          let dataAtualizacao: Date;
+          if (data.dataAtualizacao?.toDate) {
+            dataAtualizacao = data.dataAtualizacao.toDate();
+          } else if (data.dataAtualizacao instanceof Date) {
+            dataAtualizacao = data.dataAtualizacao;
+          } else if (data.dataAtualizacao) {
+            dataAtualizacao = new Date(data.dataAtualizacao);
+          } else {
+            dataAtualizacao = new Date(); // Fallback para data atual
+          }
+          
+          console.log('📄 dataHora convertida:', dataHora);
+          
+          return {
+            id: doc.id,
+            ...data,
+            dataHora,
+            dataAtualizacao
+          } as Pedido;
+        });
+        
+        console.log('✅ Pedidos atualizados em tempo real:', pedidos.length);
+        callback(pedidos);
+      }, (error) => {
+        console.error('❌ Erro no listener em tempo real:', error);
+        console.error('❌ Código do erro:', error.code);
+        console.error('❌ Mensagem do erro:', error.message);
+      });
+
+      return unsubscribe;
+    } catch (error) {
+      console.error('Erro ao configurar listener em tempo real:', error);
+      throw new Error('Falha ao configurar listener em tempo real');
+    }
+  }
+
   async buscarPedido(id: string): Promise<Pedido | null> {
     try {
       const documentSnapshot = await this.fetchDocument<Pedido>('pedidos', id);
@@ -90,6 +239,8 @@ export class FirebasePedidoService extends BaseFirestoreService {
     try {
       const lojaId = this.getLojaId();
       
+      console.log('🔍 FirebasePedidoService - Status recebido:', pedido.status);
+      
       const pedidoData = {
         ...pedido,
         lojaId, // Adicionar ID da loja
@@ -97,7 +248,10 @@ export class FirebasePedidoService extends BaseFirestoreService {
         dataAtualizacao: serverTimestamp()
       };
 
+      console.log('🔍 FirebasePedidoService - Dados a serem salvos:', pedidoData);
+      
       const docRef = await addDoc(this.pedidosCollection, pedidoData);
+      console.log('✅ FirebasePedidoService - Pedido criado com ID:', docRef.id);
       return docRef.id;
     } catch (error) {
       console.error('Erro ao criar pedido:', error);
@@ -202,6 +356,33 @@ export class FirebasePedidoService extends BaseFirestoreService {
     } catch (error) {
       console.error('Erro ao buscar histórico de pedidos:', error);
       throw new Error('Falha ao carregar histórico de pedidos');
+    }
+  }
+
+  async moverParaHistorico(pedido: Pedido): Promise<void> {
+    try {
+      console.log('🔄 FirebasePedidoService - Movendo pedido para histórico:', pedido.id);
+      
+      // Criar documento no histórico
+      const historicoData = {
+        ...pedido,
+        status: 'entregue' as StatusPedido,
+        dataFinalizacao: serverTimestamp(),
+        dataAtualizacao: serverTimestamp()
+      };
+      
+      // Salvar no histórico
+      const historicoRef = collection(db, 'historicoPedidos');
+      await addDoc(historicoRef, historicoData);
+      
+      // Excluir da coleção de pedidos ativos
+      const pedidoRef = doc(this.pedidosCollection, pedido.id);
+      await deleteDoc(pedidoRef);
+      
+      console.log('✅ FirebasePedidoService - Pedido movido para histórico com sucesso');
+    } catch (error) {
+      console.error('❌ FirebasePedidoService - Erro ao mover para histórico:', error);
+      throw new Error('Falha ao mover pedido para histórico');
     }
   }
 }

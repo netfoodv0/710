@@ -58,3 +58,5 @@ export interface PDVPaymentProps {
   pedido: any;
   onFinalizarPagamento: () => void;
 }
+
+

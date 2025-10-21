@@ -119,3 +119,5 @@ export const gerarNomeArquivoExportacao = (filtros?: any): string => {
   
   return `historico_pedidos_${data}_${hora}${sufixo}.csv`;
 };
+
+

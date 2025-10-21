@@ -47,3 +47,5 @@ export function useRelatoriosClientesTranslation(): RelatoriosClientesTranslatio
 
   return translations;
 }
+
+

@@ -1,0 +1,221 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===== REGRAS PARA COLEÇÕES ATUAIS (NÍVEL RAIZ) =====
+    
+    // Produtos - Acesso por usuário autenticado
+    match /produtos/{produtoId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Pedidos - Acesso por usuário autenticado
+    match /pedidos/{pedidoId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Operadores - Acesso por usuário autenticado
+    match /operadores/{operadorId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Motoboys - Acesso por usuário autenticado
+    match /motoboys/{motoboyId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Cupons - Acesso por usuário autenticado
+    match /cupons/{cupomId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Clientes - Acesso por usuário autenticado
+    match /clientes/{clienteId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Categorias - Acesso por usuário autenticado
+    match /categorias/{categoriaId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Categorias de Produtos - Acesso por usuário autenticado
+    match /categoriasProdutos/{categoriaId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Categorias Adicionais - Acesso por usuário autenticado
+    match /categoriasAdicionais/{categoriaId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Complementos - Acesso por usuário autenticado
+    match /complementos/{complementoId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Categorias de Complementos - Acesso por usuário autenticado
+    match /categoriasComplementos/{categoriaId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Histórico de Pedidos - Acesso por usuário autenticado
+    match /historicoPedidos/{pedidoId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Configurações - Acesso por usuário autenticado
+    match /configuracoes/{configId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Disponibilidade de Categorias - Acesso por usuário autenticado
+    match /disponibilidadeCategorias/{disponibilidadeId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Produtos Resgatáveis - Acesso por usuário autenticado
+    match /produtosResgataveis/{produtoId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Clientes Pontos - Acesso por usuário autenticado
+    match /clientesPontos/{clienteId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Pontos - Acesso por usuário autenticado
+    match /pontos/{pontoId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Configuração Fidelidade - Acesso por usuário autenticado
+    match /configuracaoFidelidade/{configId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // ===== REGRAS PARA LOJAS (FUTURA MIGRAÇÃO) =====
+    match /lojas/{lojaId} {
+      // Permitir leitura e escrita para usuários autenticados
+      allow read, write: if request.auth != null;
+    }
+    
+    // ===== SUBCOLEÇÕES DA LOJA (FUTURA MIGRAÇÃO) =====
+    
+    // Produtos da loja
+    match /lojas/{lojaId}/produtos/{produtoId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Pedidos da loja
+    match /lojas/{lojaId}/pedidos/{pedidoId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Operadores da loja
+    match /lojas/{lojaId}/operadores/{operadorId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Motoboys da loja
+    match /lojas/{lojaId}/motoboys/{motoboyId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Cupons da loja
+    match /lojas/{lojaId}/cupons/{cupomId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Clientes da loja
+    match /lojas/{lojaId}/clientes/{clienteId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Categorias da loja
+    match /lojas/{lojaId}/categorias/{categoriaId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Complementos da loja
+    match /lojas/{lojaId}/complementos/{complementoId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // Categorias de Complementos da loja
+    match /lojas/{lojaId}/categoriasComplementos/{categoriaId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == lojaId;
+    }
+    
+    // ===== COLEÇÕES GLOBAIS (Sistema) =====
+    
+    // Usuários do sistema
+    match /usuarios/{userId} {
+      // Permitir leitura e escrita para usuários autenticados
+      allow read, write: if request.auth != null;
+    }
+    
+    // WhatsApp - Status global
+    match /whatsapp_status/{userId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == userId;
+    }
+    
+    // WhatsApp - Sessões
+    match /whatsapp_sessions/{sessionId} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == resource.data.userId;
+      allow create: if request.auth != null 
+        && request.auth.uid == request.resource.data.userId;
+    }
+    
+    // WhatsApp - Configurações IA
+    match /whatsapp_gemini_config/{configId} {
+      allow read, write: if true; // Bot precisa acessar
+    }
+    
+    // WhatsApp - Conversas
+    match /whatsapp_conversations/{chatId} {
+      allow read, write: if true; // Bot precisa acessar
+    }
+    
+    // WhatsApp - Uso da IA
+    match /whatsapp_ai_usage/{usageId} {
+      allow create, read: if true; // Bot precisa acessar
+      allow delete: if request.auth != null 
+        && request.auth.token.admin == true;
+    }
+    
+    // WhatsApp - Log de mensagens
+    match /whatsapp_messages_log/{messageId} {
+      allow create, read: if true; // Bot precisa acessar
+      allow delete: if request.auth != null 
+        && request.auth.token.admin == true;
+    }
+    
+    // WhatsApp - Status do bot
+    match /whatsapp_bot_status/{statusId} {
+      allow read, write: if true; // Bot precisa acessar
+    }
+    
+    // Analytics global
+    match /analytics/{analyticsId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // ===== REGRAS DE FALLBACK =====
+    // Bloquear acesso a qualquer outra coleção não especificada
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

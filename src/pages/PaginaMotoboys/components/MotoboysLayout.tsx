@@ -4,7 +4,7 @@ import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { MotoboysTable } from './MotoboysTable';
 import { MotoboysLayoutProps } from '../types';
 
-export function MotoboysLayout({ data }: MotoboysLayoutProps) {
+export function MotoboysLayout({ data, onCreate }: MotoboysLayoutProps) {
   // Error state
   if (data.error) {
     return (
@@ -37,7 +37,7 @@ export function MotoboysLayout({ data }: MotoboysLayoutProps) {
   };
 
   const handleCreate = () => {
-    console.log('Create motoboy');
+    if (onCreate) onCreate();
   };
 
   return (
@@ -54,3 +54,5 @@ export function MotoboysLayout({ data }: MotoboysLayoutProps) {
     </ErrorBoundary>
   );
 }
+
+

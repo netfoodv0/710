@@ -4,7 +4,7 @@ import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { OperadoresTable } from './OperadoresTable';
 import { OperadoresLayoutProps } from '../types';
 
-export function OperadoresLayout({ data }: OperadoresLayoutProps) {
+export function OperadoresLayout({ data, onCreate }: OperadoresLayoutProps) {
   // Error state
   if (data.error) {
     return (
@@ -37,7 +37,7 @@ export function OperadoresLayout({ data }: OperadoresLayoutProps) {
   };
 
   const handleCreate = () => {
-    console.log('Create operador');
+    if (onCreate) onCreate();
   };
 
   return (
@@ -54,3 +54,5 @@ export function OperadoresLayout({ data }: OperadoresLayoutProps) {
     </ErrorBoundary>
   );
 }
+
+

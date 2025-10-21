@@ -104,3 +104,5 @@ export function EnderecoLoja({ config, onConfigChange, loading }: EnderecoLojaPr
     </div>
   );
 }
+
+

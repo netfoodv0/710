@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Save, Package, AlertTriangle } from 'lucide-react';
 
 interface ProdutoEstoque {
-  id: number;
+  id: string; // Mudado de number para string
   nome: string;
   categoria: string;
   quantidade: number;
@@ -145,7 +145,7 @@ export function ModalEditarEstoque({ isOpen, onClose, produto, onSave }: ModalEd
                   <label className={`block text-sm font-medium mb-2 ${
                     formData.semControleEstoque ? 'text-gray-400' : 'text-gray-700'
                   }`}>
-                    Quantidade Atual
+                    Estoque Atual
                   </label>
                   <input
                     type="number"
@@ -166,7 +166,7 @@ export function ModalEditarEstoque({ isOpen, onClose, produto, onSave }: ModalEd
                   <label className={`block text-sm font-medium mb-2 ${
                     formData.semControleEstoque ? 'text-gray-400' : 'text-gray-700'
                   }`}>
-                    Quantidade Mínima
+                    Estoque Mínimo
                   </label>
                   <input
                     type="number"

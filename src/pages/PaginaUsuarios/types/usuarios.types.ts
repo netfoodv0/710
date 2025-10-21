@@ -74,3 +74,5 @@ export interface UsuariosStatsProps {
   operadoresAtivos: number;
   motoboysAtivos: number;
 }
+
+

@@ -4,7 +4,6 @@ export interface PedidosData {
   pedidos: any[];
   loading: boolean;
   searchTerm: string;
-  isCreating: boolean;
   error: string | null;
 }
 
@@ -17,7 +16,6 @@ export interface PedidosLayoutProps {
   onSearchChange: (term: string) => void;
   onClearSearch: () => void;
   onSearchSubmit: (term: string) => void;
-  onCriarPedidoFicticio: () => void;
   onOpenPDV: () => void;
 }
 
@@ -31,7 +29,6 @@ export interface PedidosActions {
   handleSearchChange: (term: string) => void;
   handleClearSearch: () => void;
   handleSearchSubmit: (term: string) => void;
-  handleCriarPedidoFicticio: () => void;
   handleOpenPDV: () => void;
 }
 
@@ -54,7 +51,7 @@ export interface PedidosHeaderProps {
   onSearchChange: (term: string) => void;
   onClearSearch: () => void;
   onSearchSubmit: (term: string) => void;
-  onCriarPedidoFicticio: () => void;
-  isCreating: boolean;
   onOpenPDV: () => void;
 }
+
+

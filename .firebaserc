@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "vault-v2-ef6d6"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }

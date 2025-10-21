@@ -11,10 +11,7 @@ interface AuthContextType extends AuthState {
   refreshUserData: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// ✅ EXPORTAR o AuthContext
-export { AuthContext };
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -151,6 +148,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
           updateState({ status: 'loading' });
           
+          // Aguardar um pouco para garantir que os dados foram salvos no Firestore
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
           const user = await AuthService.getCurrentUser();
           const loja = await AuthService.getCurrentLoja();
           
@@ -168,7 +168,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
               user: null,
               loja: null,
               status: 'unauthenticated',
-              error: 'Dados do usuário não encontrados'
+              error: null // Não mostrar erro automaticamente
             });
           }
         } catch (error) {
@@ -176,8 +176,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           updateState({
             user: null,
             loja: null,
-            status: 'error',
-            error: 'Erro ao carregar dados do usuário'
+            status: 'unauthenticated',
+            error: null // Não mostrar erro automaticamente no carregamento
           });
         }
       } else {

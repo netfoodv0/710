@@ -117,3 +117,5 @@ export function useRelatoriosGeral(): UseRelatoriosGeralReturn {
     handleRetry
   };
 }
+
+

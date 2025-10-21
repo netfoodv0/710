@@ -66,3 +66,5 @@ export const calcularEstatisticas = (operadores: any[], motoboys: any[]) => {
     motoboysAtivos: motoboys.filter(mb => mb.status === 'ativo').length
   };
 };
+
+

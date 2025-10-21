@@ -25,3 +25,5 @@ export function CuponsError({ error }: CuponsErrorProps) {
     </div>
   );
 }
+
+

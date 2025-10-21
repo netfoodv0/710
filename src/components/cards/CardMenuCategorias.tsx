@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tag, Package, Coffee, Pizza, Cake, Wine, Utensils, Plus } from 'lucide-react';
 import { DragIcon, ActionButton } from '../ui';
 import { MenuAcoesCategoria } from '../menus/MenuAcoesCategoria';
@@ -19,7 +19,37 @@ interface CardMenuCategoriasProps {
   onDeleteCategoria?: (categoria: Categoria) => void;
   onReorderCategorias?: (categorias: string[]) => void;
   onToggleStatus?: (categoria: Categoria) => void; // ✅ NOVA FUNCIONALIDADE: Toggle de status
+  
+  // Props para complementos
+  complementos?: any[]; // Array de complementos
+  complementoSelecionado?: string;
+  onComplementoClick?: (complemento: string) => void;
+  onNovoComplemento?: () => void;
+  complementosCompletos?: any[];
+  onEditComplemento?: (complemento: any) => void;
+  onDuplicateComplemento?: (complemento: any) => void;
+  onDeleteComplemento?: (complemento: any) => void;
+  onReorderComplementos?: (complementos: any[]) => void;
+  onToggleStatusComplemento?: (complemento: any) => void;
+  
+  // Props para categorias de complementos
+  categoriasComplementos?: string[]; // Array de nomes de categorias de complementos
+  categoriaComplementoSelecionada?: string; // Categoria de complemento selecionada
+  onCategoriaComplementoClick?: (categoria: string) => void; // Callback para clicar em categoria de complemento
+  onNovaCategoriaComplemento?: () => void;
+  categoriasComplementosCompletas?: any[]; // Array completo de categorias de complementos
+  onEditCategoriaComplemento?: (categoria: any) => void;
+  onDuplicateCategoriaComplemento?: (categoria: any) => void;
+  onDeleteCategoriaComplemento?: (categoria: any) => void;
+  onReorderCategoriasComplementos?: (categorias: string[]) => void;
+  onToggleStatusCategoriaComplemento?: (categoria: any) => void;
+  
+  // Callback para mudança de aba
+  onAbaChange?: (aba: 'produtos' | 'complementos') => void;
 }
+
+// Tipo para as abas da navbar
+type TipoAba = 'produtos' | 'complementos';
 
 // Mapeamento de ícones para categorias comuns
 const getIconeCategoria = (categoria: string) => {
@@ -186,6 +216,50 @@ const SortableItem = React.memo(function SortableItem({
   );
 });
 
+// Componente da Navbar com abas
+const NavbarAbas = ({ 
+  abaAtiva, 
+  onMudarAba, 
+  onAbaChange 
+}: { 
+  abaAtiva: TipoAba; 
+  onMudarAba: (aba: TipoAba) => void;
+  onAbaChange?: (aba: TipoAba) => void;
+}) => {
+  return (
+    <div className="bg-white border rounded-lg p-1 mb-4 border-dashboard shadow-sm">
+      <div className="flex bg-gray-100 rounded-md p-1">
+        <button
+          onClick={() => {
+            onMudarAba('produtos');
+            onAbaChange?.('produtos');
+          }}
+          className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200 ${
+            abaAtiva === 'produtos'
+              ? 'bg-white text-purple-600 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+          }`}
+        >
+          Produtos
+        </button>
+        <button
+          onClick={() => {
+            onMudarAba('complementos');
+            onAbaChange?.('complementos');
+          }}
+          className={`flex-1 px-4 py-2.5 text-sm font-medium rounded-md transition-all duration-200 ${
+            abaAtiva === 'complementos'
+              ? 'bg-white text-purple-600 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+          }`}
+        >
+          Complementos
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export function CardMenuCategorias({ 
   categorias, 
   categoriaSelecionada, 
@@ -196,39 +270,101 @@ export function CardMenuCategorias({
   onDuplicateCategoria,
   onDeleteCategoria,
   onReorderCategorias,
-  onToggleStatus
+  onToggleStatus,
+  
+  // Props para complementos
+  complementos = [],
+  complementoSelecionado,
+  onComplementoClick,
+  onNovoComplemento,
+  complementosCompletos = [],
+  onEditComplemento,
+  onDuplicateComplemento,
+  onDeleteComplemento,
+  onReorderComplementos,
+  onToggleStatusComplemento,
+  
+  // Props para categorias de complementos
+  categoriasComplementos = [],
+  categoriaComplementoSelecionada,
+  onCategoriaComplementoClick,
+  onNovaCategoriaComplemento,
+  categoriasComplementosCompletas = [],
+  onEditCategoriaComplemento,
+  onDuplicateCategoriaComplemento,
+  onDeleteCategoriaComplemento,
+  onReorderCategoriasComplementos,
+  onToggleStatusCategoriaComplemento,
+  
+  onAbaChange
 }: CardMenuCategoriasProps) {
-  // Sempre mostrar o card, mesmo sem categorias (para permitir criar)
-  const temCategorias = categorias && categorias.length > 0;
+  // Estado para controlar qual aba está ativa
+  const [abaAtiva, setAbaAtiva] = useState<TipoAba>('produtos');
+  
+  // Dados baseados na aba ativa
+  const dadosAtivos = abaAtiva === 'produtos' ? {
+    items: categorias,
+    itemSelecionado: categoriaSelecionada,
+    onItemClick: onCategoriaClick,
+    onNovoItem: onNovaCategoria,
+    itemsCompletos: categoriasCompletas,
+    onEditItem: onEditCategoria,
+    onDuplicateItem: onDuplicateCategoria,
+    onDeleteItem: onDeleteCategoria,
+    onReorderItems: onReorderCategorias,
+    onToggleStatusItem: onToggleStatus,
+    temItems: categorias && categorias.length > 0
+  } : {
+    items: categoriasComplementos || [], // Usar categorias de complementos em vez de complementos
+    itemSelecionado: categoriaComplementoSelecionada, // Usar categoria de complemento selecionada
+    onItemClick: onCategoriaComplementoClick, // Usar callback para categoria de complemento
+    onNovoItem: onNovaCategoriaComplemento, // Usar callback para nova categoria de complemento
+    itemsCompletos: categoriasComplementosCompletas, // Usar categorias completas de complementos
+    onEditItem: onEditCategoriaComplemento, // Usar callback para editar categoria de complemento
+    onDuplicateItem: onDuplicateCategoriaComplemento, // Usar callback para duplicar categoria de complemento
+    onDeleteItem: onDeleteCategoriaComplemento, // Usar callback para excluir categoria de complemento
+    onReorderItems: onReorderCategoriasComplementos, // Usar callback para reordenar categorias de complementos
+    onToggleStatusItem: onToggleStatusCategoriaComplemento, // Usar callback para toggle status categoria de complemento
+    temItems: categoriasComplementos && categoriasComplementos.length > 0 // Verificar se há categorias de complementos
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
-    if (active.id !== over?.id && onReorderCategorias && over) {
-      const oldIndex = categorias.indexOf(active.id as string);
-      const newIndex = categorias.indexOf(over.id as string);
+    if (active.id !== over?.id && dadosAtivos.onReorderItems && over) {
+      const oldIndex = dadosAtivos.items.indexOf(active.id as string);
+      const newIndex = dadosAtivos.items.indexOf(over.id as string);
       
       if (oldIndex !== -1 && newIndex !== -1) {
-        const newCategorias = [...categorias];
-        const [removed] = newCategorias.splice(oldIndex, 1);
-        newCategorias.splice(newIndex, 0, removed);
+        const newItems = [...dadosAtivos.items];
+        const [removed] = newItems.splice(oldIndex, 1);
+        newItems.splice(newIndex, 0, removed);
         
-        onReorderCategorias(newCategorias);
+        dadosAtivos.onReorderItems(newItems);
       }
     }
   };
 
   return (
     <div className={`bg-white/60 border-2 rounded-2xl p-4`} style={{ borderColor: 'white' }}>
+      {/* Navbar com abas - NO TOPO */}
+      <NavbarAbas 
+        abaAtiva={abaAtiva} 
+        onMudarAba={setAbaAtiva} 
+        onAbaChange={onAbaChange}
+      />
+      
       <div className="bg-white border rounded-lg p-4 mb-4 border-dashboard">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-semibold text-gray-900">Categorias</h3>
+            <h3 className="text-lg font-semibold text-gray-900">
+              {abaAtiva === 'produtos' ? 'Produtos' : 'Complementos'}
+            </h3>
           </div>
-          {onNovaCategoria && (
+          {dadosAtivos.onNovoItem && (
             <ActionButton
-              label="Nova categoria"
-              onClick={onNovaCategoria}
+              label={`Nova ${abaAtiva === 'produtos' ? 'categoria' : 'complemento'}`}
+              onClick={dadosAtivos.onNovoItem}
               variant="primary"
               size="sm"
               icon={<Plus className="w-3.5 h-3.5" />}
@@ -238,54 +374,74 @@ export function CardMenuCategorias({
       </div>
       
       {/* Conteúdo do card */}
-      {!temCategorias ? (
+      {!dadosAtivos.temItems ? (
         /* Estado vazio */
         <div className="text-center py-6">
           <Package className="w-8 h-8 text-gray-400 mx-auto mb-2" />
           <p className="text-sm text-gray-500 mb-3">
-            Nenhuma categoria encontrada
+            {abaAtiva === 'produtos' 
+              ? 'Nenhuma categoria de produtos encontrada'
+              : 'Nenhuma categoria de complementos encontrada'
+            }
           </p>
           <p className="text-xs text-gray-400">
-            Crie sua primeira categoria para organizar os produtos
+            {abaAtiva === 'produtos'
+              ? 'Crie sua primeira categoria para organizar os produtos'
+              : 'Crie sua primeira categoria para organizar os complementos'
+            }
           </p>
         </div>
       ) : (
-        /* Lista de categorias com Drag and Drop */
-        <DndContext 
-          onDragEnd={handleDragEnd}
-          collisionDetection={closestCenter}
-          measuring={{
-            droppable: {
-              strategy: MeasuringStrategy.Always
-            }
-          }}
-          modifiers={[]}
-        >
-          <div className="space-y-3 lg:space-y-3 flex flex-row lg:flex-col gap-3 lg:gap-0 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
+        /* Conteúdo baseado na aba ativa */
+        <div className="space-y-4">
+          {/* Indicador da aba ativa */}
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className={`w-2 h-2 rounded-full ${abaAtiva === 'produtos' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
+            <span>
+              {abaAtiva === 'produtos' 
+                ? 'Gerenciando categorias de produtos' 
+                : 'Gerenciando categorias de complementos'
+              }
+            </span>
+          </div>
+
+          {/* Lista de categorias com Drag and Drop */}
+          <DndContext 
+            onDragEnd={handleDragEnd}
+            collisionDetection={closestCenter}
+            measuring={{
+              droppable: {
+                strategy: MeasuringStrategy.Always
+              }
+            }}
+            modifiers={[]}
+          >
+            <div className="space-y-3 lg:space-y-3 flex flex-row lg:flex-col gap-3 lg:gap-0 overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0">
             <SortableContext
-              items={categorias}
+              items={dadosAtivos.items}
               strategy={verticalListSortingStrategy}
             >
-              {categorias.map((categoria, index) => {
-                const categoriaCompleta = categoriasCompletas?.find(c => c.nome === categoria);
+              {dadosAtivos.items.map((item, index) => {
+                const itemCompleto = dadosAtivos.itemsCompletos?.find(c => c.nome === item || c.id === item);
                 
                 return (
                   <SortableItem
-                    key={`categoria-${categoria}-${index}`} // ✅ CORREÇÃO: Key mais estável
-                    categoria={categoria}
-                    categoriaCompleta={categoriaCompleta}
-                    categoriaSelecionada={categoriaSelecionada}
-                    onCategoriaClick={onCategoriaClick}
-                    onEditCategoria={onEditCategoria}
-                    onDuplicateCategoria={onDuplicateCategoria}
-                    onDeleteCategoria={onDeleteCategoria}
-                    onToggleStatus={onToggleStatus}
+                    key={`${abaAtiva}-${item}-${index}`} // ✅ CORREÇÃO: Key mais estável
+                    categoria={item}
+                    categoriaCompleta={itemCompleto}
+                    categoriaSelecionada={dadosAtivos.itemSelecionado}
+                    onCategoriaClick={dadosAtivos.onItemClick}
+                    onEditCategoria={dadosAtivos.onEditItem}
+                    onDuplicateCategoria={dadosAtivos.onDuplicateItem}
+                    onDeleteCategoria={dadosAtivos.onDeleteItem}
+                    onToggleStatus={dadosAtivos.onToggleStatusItem}
                   />
                 );
               })}
             </SortableContext>
-          </div>
-        </DndContext>
+            </div>
+          </DndContext>
+        </div>
       )}
     </div>
   );

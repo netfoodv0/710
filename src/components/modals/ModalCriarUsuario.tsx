@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { FormInput } from '../forms/FormInput';
 import { FormAvatarUpload } from '../forms/FormAvatarUpload';
 import { CustomDropdown, DropdownOption } from '../ui';
-import { Modal, ModalHeader, ModalBody, ModalFooter, useModalClose } from './Modal';
+import { ModalGlobal } from './ModalGlobal';
+import { OperadoresService } from '../../pages/PaginaOperadores/services';
+import { MotoboysService } from '../../pages/PaginaMotoboys/services';
 
-// Componente interno que usa o hook (só é renderizado quando o Modal está ativo)
+// Componente interno para o footer do modal
 function ModalFooterContent({ isSubmitting, onClose, usuarioEditando }: { isSubmitting: boolean; onClose: () => void; usuarioEditando?: UsuarioFormData | null }) {
-  const closeWithAnimation = useModalClose();
-  
   return (
     <>
       <button
         type="button"
-        onClick={closeWithAnimation}
+        onClick={onClose}
         className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors border border-gray-300 rounded-lg hover:bg-gray-50"
         disabled={isSubmitting}
       >
@@ -21,7 +21,7 @@ function ModalFooterContent({ isSubmitting, onClose, usuarioEditando }: { isSubm
       <button
         type="submit"
         form="usuario-form"
-        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300"
         disabled={isSubmitting}
       >
         {isSubmitting ? (usuarioEditando ? 'Salvando...' : 'Criando...') : (usuarioEditando ? 'Salvar Alterações' : 'Criar Usuário')}
@@ -42,8 +42,10 @@ interface UsuarioFormData {
 interface ModalCriarUsuarioProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (usuarioData: UsuarioFormData) => void;
+  onSubmit?: (usuarioData: UsuarioFormData) => Promise<void> | void;
+  onSuccess?: () => void;
   usuarioEditando?: UsuarioFormData | null;
+  tipoUsuario?: 'operador' | 'motoboy' | 'gerente' | 'supervisor' | 'atendente' | 'cozinheiro';
 }
 
 const funcoesUsuario: DropdownOption[] = [
@@ -54,7 +56,7 @@ const funcoesUsuario: DropdownOption[] = [
   { value: 'cozinheiro', label: 'Cozinheiro' }
 ];
 
-export function ModalCriarUsuario({ isOpen, onClose, onSubmit, usuarioEditando }: ModalCriarUsuarioProps) {
+export function ModalCriarUsuario({ isOpen, onClose, onSubmit, onSuccess, usuarioEditando, tipoUsuario }: ModalCriarUsuarioProps) {
   const [formData, setFormData] = useState<UsuarioFormData>({
     nome: '',
     email: '',
@@ -139,10 +141,15 @@ export function ModalCriarUsuario({ isOpen, onClose, onSubmit, usuarioEditando }
         break;
         
       case 'funcao':
-        if (!value) {
-          newErrors.funcao = 'Função do usuário é obrigatória';
-        } else {
+        // Para motoboy, não validar função
+        if (tipoUsuario === 'motoboy') {
           delete newErrors.funcao;
+        } else {
+          if (!value) {
+            newErrors.funcao = 'Função do usuário é obrigatória';
+          } else {
+            delete newErrors.funcao;
+          }
         }
         break;
     }
@@ -244,8 +251,10 @@ export function ModalCriarUsuario({ isOpen, onClose, onSubmit, usuarioEditando }
       newErrors.cpf = 'CPF deve ter 11 dígitos';
     }
 
-    if (!formData.funcao) {
-      newErrors.funcao = 'Função do usuário é obrigatória';
+    if (tipoUsuario !== 'motoboy') {
+      if (!formData.funcao) {
+        newErrors.funcao = 'Função do usuário é obrigatória';
+      }
     }
 
     setErrors(newErrors);
@@ -258,7 +267,28 @@ export function ModalCriarUsuario({ isOpen, onClose, onSubmit, usuarioEditando }
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        await onSubmit(formData);
+        if (onSubmit) {
+          await onSubmit(formData);
+        } else if (tipoUsuario === 'operador') {
+          // Mapear dados do formulário para o modelo de Operador
+          await OperadoresService.criarOperador({
+            nome: formData.nome,
+            email: formData.email,
+            telefone: formData.whatsapp,
+            cargo: formData.funcao,
+            status: 'ativo',
+            permissoes: [],
+            dataAdmissao: new Date().toISOString().split('T')[0]
+          });
+        } else if (tipoUsuario === 'motoboy') {
+          await MotoboysService.criarMotoboy({
+            nome: formData.nome,
+            telefone: formData.whatsapp,
+            status: 'ativo',
+            dataContratacao: new Date().toISOString().split('T')[0]
+          });
+        }
+        if (onSuccess) onSuccess();
         handleClose();
       } finally {
         setIsSubmitting(false);
@@ -282,75 +312,82 @@ export function ModalCriarUsuario({ isOpen, onClose, onSubmit, usuarioEditando }
   };
 
   return (
-    <Modal
+    <ModalGlobal
       isOpen={isOpen}
       onClose={handleClose}
       title={usuarioEditando ? `Editar usuário: ${usuarioEditando.nome}` : "Criar novo usuário"}
       size="sm"
-      className="modal-criar-usuario"
+      maxHeight="32rem"
+      footer={
+        <ModalFooterContent 
+          isSubmitting={isSubmitting} 
+          onClose={onClose}
+          usuarioEditando={usuarioEditando}
+        />
+      }
     >
-      <ModalBody className="max-h-[32rem] overflow-y-auto">
-        <form id="usuario-form" onSubmit={handleSubmit} className="space-y-4">
-          <FormAvatarUpload
-            label="Foto do usuário"
-            value={formData.avatar}
-            onChange={(value) => handleInputChange('avatar', value)}
-            dimensions="84x84"
-            maxSize={2}
-            error={errors.avatar}
-            showAvatarSelector={true}
-          />
-          
-          <FormInput
-            label="Nome"
-            type="text"
-            value={formData.nome}
-            onChange={(value) => handleInputChange('nome', value as string)}
-            onBlur={() => handleBlur('nome')}
-            required
-            validationMessage="Por favor, informe o nome completo"
-            helperText={errors.nome}
-          />
-          
-          <FormInput
-            label="Email"
-            type="email"
-            value={formData.email}
-            onChange={(value) => handleInputChange('email', value as string)}
-            onBlur={() => handleBlur('email')}
-            required
-            validationMessage="Por favor, informe um email válido"
-            helperText={errors.email}
-          />
+      <form id="usuario-form" onSubmit={handleSubmit} className="space-y-4">
+        <FormAvatarUpload
+          label="Foto do usuário"
+          value={formData.avatar}
+          onChange={(value) => handleInputChange('avatar', value)}
+          dimensions="84x84"
+          maxSize={2}
+          error={errors.avatar}
+          showAvatarSelector={true}
+        />
+        
+        <FormInput
+          label="Nome"
+          type="text"
+          value={formData.nome}
+          onChange={(value) => handleInputChange('nome', value as string)}
+          onBlur={() => handleBlur('nome')}
+          required
+          validationMessage="Por favor, informe o nome completo"
+          helperText={errors.nome}
+        />
+        
+        <FormInput
+          label="Email"
+          type="email"
+          value={formData.email}
+          onChange={(value) => handleInputChange('email', value as string)}
+          onBlur={() => handleBlur('email')}
+          required
+          validationMessage="Por favor, informe um email válido"
+          helperText={errors.email}
+        />
 
-          <FormInput
-            label="Whatsapp"
-            type="text"
-            value={formData.whatsapp}
-            onChange={(value) => {
-              const formatted = formatWhatsApp(value as string);
-              handleInputChange('whatsapp', formatted);
-            }}
-            onBlur={() => handleBlur('whatsapp')}
-            required
-            validationMessage="Por favor, informe o número do WhatsApp"
-            helperText={errors.whatsapp}
-          />
-          
-          <FormInput
-            label="CPF"
-            type="text"
-            value={formData.cpf}
-            onChange={(value) => {
-              const formatted = formatCPF(value as string);
-              handleInputChange('cpf', formatted);
-            }}
-            onBlur={() => handleBlur('cpf')}
-            required
-            validationMessage="Por favor, informe o CPF completo"
-            helperText={errors.cpf}
-          />
+        <FormInput
+          label="Whatsapp"
+          type="text"
+          value={formData.whatsapp}
+          onChange={(value) => {
+            const formatted = formatWhatsApp(value as string);
+            handleInputChange('whatsapp', formatted);
+          }}
+          onBlur={() => handleBlur('whatsapp')}
+          required
+          validationMessage="Por favor, informe o número do WhatsApp"
+          helperText={errors.whatsapp}
+        />
+        
+        <FormInput
+          label="CPF"
+          type="text"
+          value={formData.cpf}
+          onChange={(value) => {
+            const formatted = formatCPF(value as string);
+            handleInputChange('cpf', formatted);
+          }}
+          onBlur={() => handleBlur('cpf')}
+          required
+          validationMessage="Por favor, informe o CPF completo"
+          helperText={errors.cpf}
+        />
 
+        {tipoUsuario !== 'motoboy' && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Função do usuário
@@ -366,16 +403,8 @@ export function ModalCriarUsuario({ isOpen, onClose, onSubmit, usuarioEditando }
               <p className="modal-error-message">{errors.funcao}</p>
             )}
           </div>
-        </form>
-      </ModalBody>
-      
-      <ModalFooter className="sticky bottom-0 bg-white border-t border-gray-200">
-        <ModalFooterContent 
-          isSubmitting={isSubmitting} 
-          onClose={onClose}
-          usuarioEditando={usuarioEditando}
-        />
-      </ModalFooter>
-    </Modal>
+        )}
+      </form>
+    </ModalGlobal>
   );
 }

@@ -77,3 +77,5 @@ export function ConfiguracoesGerais({ config, onConfigChange, loading }: Configu
     </div>
   );
 }
+
+

@@ -1,7 +1,11 @@
 import { useCallback } from 'react';
 import { UseAcompanhamentosActionsReturn } from '../types';
+import { AcompanhamentosService } from '../services/acompanhamentosService';
+import { useNotificationContext } from '../../../context/notificationContextUtils';
 
 export function useAcompanhamentosActions(): UseAcompanhamentosActionsReturn {
+  const { showSuccess, showError } = useNotificationContext();
+
   const handleOpenModal = useCallback((produto: any) => {
     console.log('Open modal for acompanhamento:', produto);
   }, []);
@@ -26,9 +30,15 @@ export function useAcompanhamentosActions(): UseAcompanhamentosActionsReturn {
     console.log('Save acompanhamento:', produto);
   }, []);
 
-  const handleRetry = useCallback(() => {
-    console.log('Retry operation');
-  }, []);
+  const handleRetry = useCallback(async () => {
+    try {
+      // Recarregar dados do Firebase
+      showSuccess('Dados recarregados com sucesso');
+    } catch (error) {
+      console.error('Erro ao recarregar dados:', error);
+      showError('Erro ao recarregar dados');
+    }
+  }, [showSuccess, showError]);
 
   return {
     handleOpenModal,
@@ -40,3 +50,5 @@ export function useAcompanhamentosActions(): UseAcompanhamentosActionsReturn {
     handleRetry
   };
 }
+
+

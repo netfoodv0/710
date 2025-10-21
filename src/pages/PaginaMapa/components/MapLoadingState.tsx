@@ -11,3 +11,5 @@ export function MapLoadingState({ message = 'Carregando configurações da loja.
     </div>
   );
 }
+
+

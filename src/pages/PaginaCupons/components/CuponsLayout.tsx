@@ -96,10 +96,10 @@ export function CuponsLayout({
               />
             )}
 
-            {/* Tabela de Cupons */}
-            {cupons && cupons.length > 0 && columns && columns.length > 0 && (
+            {/* Tabela de Cupons - sempre visível */}
+            {columns && columns.length > 0 && (
               <CuponsTable 
-                cupons={cupons}
+                cupons={cupons || []}
                 columns={columns}
                 categoriasFiltros={categoriasFiltros}
                 statusOptions={statusOptions}

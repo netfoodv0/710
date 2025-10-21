@@ -49,6 +49,11 @@ const menuItems = [
     icon: ModalIcon
   },
   {
+    path: '/horarios',
+    label: 'Horários',
+    icon: ClockIcon
+  },
+  {
     path: '/configuracoes',
     label: 'Configurações',
     icon: SettingsIcon
@@ -74,11 +79,6 @@ const menuItems = [
     path: '/organograma',
     label: 'Organograma',
     icon: OrganogramaIcon
-  },
-  {
-    path: '/horarios',
-    label: 'Horários',
-    icon: ClockIcon
   },
   {
     path: '/cupons',
@@ -120,11 +120,6 @@ const menuItems = [
       {
         path: '/estoque/produtos',
         label: 'Produtos',
-        icon: EstoqueIcon
-      },
-      {
-        path: '/estoque/insumos',
-        label: 'Insumos',
         icon: EstoqueIcon
       },
       {

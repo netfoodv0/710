@@ -29,3 +29,5 @@ export function useRelatoriosGeralActions(): UseRelatoriosGeralActionsReturn {
     handleRetry
   };
 }
+
+

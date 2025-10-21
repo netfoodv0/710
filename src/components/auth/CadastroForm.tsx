@@ -106,6 +106,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('whatsapp')}
                   type="tel"
                   id="whatsapp"
+                  autoComplete="tel"
                   className="block w-full pl-10 pr-3 h-10 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="(00) 00000-0000"
                   disabled={isLoading}
@@ -159,6 +160,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('email')}
                   type="email"
                   id="email"
+                  autoComplete="email"
                   className="block w-full pl-10 pr-3 h-10 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="suporte@sistema-voult.com"
                   disabled={isLoading}
@@ -182,6 +184,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('senha')}
                   type={showPassword ? 'text' : 'password'}
                   id="senha"
+                  autoComplete="new-password"
                   className="block w-full pl-10 pr-12 h-10 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="••••••••"
                   disabled={isLoading}
@@ -225,6 +228,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('endereco.cep')}
                   type="text"
                   id="cep"
+                  autoComplete="postal-code"
                   className="block w-full h-10 px-3 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="00000-000"
                   disabled={isLoading}
@@ -243,6 +247,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('endereco.numero')}
                   type="text"
                   id="numero"
+                  autoComplete="address-line2"
                   className="block w-full h-10 px-3 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="123"
                   disabled={isLoading}
@@ -266,6 +271,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('endereco.rua')}
                   type="text"
                   id="rua"
+                  autoComplete="address-line1"
                   className="block w-full pl-10 pr-3 h-10 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="Ex: Avenida Paulista"
                   disabled={isLoading}
@@ -286,6 +292,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('endereco.bairro')}
                   type="text"
                   id="bairro"
+                  autoComplete="address-level2"
                   className="block w-full h-10 px-3 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="Centro"
                   disabled={isLoading}
@@ -304,6 +311,7 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
                   {...register('endereco.cidade')}
                   type="text"
                   id="cidade"
+                  autoComplete="address-level1"
                   className="block w-full h-10 px-3 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
                   placeholder="São Paulo"
                   disabled={isLoading}

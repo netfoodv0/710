@@ -41,3 +41,5 @@ export function useAcompanhamentosTranslation(): AcompanhamentosTranslations {
 
   return translations;
 }
+
+

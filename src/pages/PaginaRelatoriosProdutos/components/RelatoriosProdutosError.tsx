@@ -18,3 +18,5 @@ export function RelatoriosProdutosError({ error, onRetry }: RelatoriosProdutosEr
     </div>
   );
 }
+
+

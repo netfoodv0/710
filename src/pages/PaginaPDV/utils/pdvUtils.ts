@@ -168,3 +168,5 @@ export const formatarDataHora = (data: Date): string => {
     second: '2-digit'
   }).format(data);
 };
+
+

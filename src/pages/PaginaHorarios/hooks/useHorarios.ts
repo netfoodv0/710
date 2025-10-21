@@ -1,73 +1,125 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useConfiguracoes } from '../../PaginaConfiguracoes/hooks/useConfiguracoes';
-import { useNotificationContext } from '../../../context/notificationContextUtils';
-import { UseHorariosReturn, HorariosData } from '../types';
+import { useHorariosActions } from './useHorariosActions';
+import { useHorariosTranslation } from './useHorariosTranslation';
+import { HorarioData, HorariosConfig, UseHorariosReturn } from '../types';
+
+const DIAS_SEMANA = [
+  'Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 
+  'Quinta-feira', 'Sexta-feira', 'Sábado'
+];
+
+const generateInitialHorarios = (): HorarioData[] => {
+  return DIAS_SEMANA.map(dia => ({
+    id: dia.toLowerCase().replace('-', '_'),
+    diaSemana: dia,
+    horaAbertura: '00:00',
+    horaFechamento: '23:59',
+    ativo: true
+  }));
+};
 
 export function useHorarios(): UseHorariosReturn {
+  const [data, setData] = useState<HorariosConfig>({
+    fusoHorario: 'America/Sao_Paulo', // Fuso horário padrão do Brasil
+    horarios: generateInitialHorarios()
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   const { 
-    config, 
-    setConfig, 
-    salvando,
-    handleSalvar, 
-    error, 
-    limparErro,
-    handleHorarioChange,
-    adicionarPausa,
-    removerPausa,
-    atualizarPausa,
-    adicionarHorarioEspecial,
-    removerHorarioEspecial,
-    atualizarHorarioEspecial,
-    atualizarConfiguracaoAvancada
-  } = useConfiguracoes();
+    fetchHorariosData, 
+    saveHorariosData 
+  } = useHorariosActions();
   
-  const { showSuccess, showError } = useNotificationContext();
-  
-  const [horarioAtual, setHorarioAtual] = useState(new Date());
+  const { t } = useHorariosTranslation();
 
-  // Atualiza o horário a cada segundo
+  // Carrega os dados iniciais
   useEffect(() => {
-    const interval = setInterval(() => {
-      setHorarioAtual(new Date());
-    }, 1000);
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const result = await fetchHorariosData();
+        setData(result);
+      } catch (err) {
+        // Erro silencioso - não exibe mensagem
+        console.error('Erro ao carregar horários:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return () => clearInterval(interval);
+    loadData();
+  }, [fetchHorariosData]);
+
+  // Atualiza um horário específico
+  const handleUpdateHorario = useCallback(async (diaSemana: string, newData: Partial<HorarioData>) => {
+    try {
+      setData(prev => ({
+        ...prev,
+        horarios: prev.horarios.map(horario => 
+          horario.diaSemana === diaSemana 
+            ? { ...horario, ...newData }
+            : horario
+        )
+      }));
+    } catch (err) {
+      // Erro silencioso - não exibe mensagem
+      console.error('Erro ao atualizar horário:', err);
+    }
   }, []);
 
-  // Função para salvar horários
-  const handleSave = useCallback(async () => {
+  // Atualiza o fuso horário
+  const handleUpdateFusoHorario = useCallback(async (fusoHorario: string) => {
     try {
-      await handleSalvar();
-      showSuccess('Horários salvos com sucesso!');
+      setData(prev => ({
+        ...prev,
+        fusoHorario
+      }));
     } catch (err) {
-      showError('Erro ao salvar horários');
+      // Erro silencioso - não exibe mensagem
+      console.error('Erro ao atualizar fuso horário:', err);
     }
-  }, [handleSalvar, showSuccess, showError]);
+  }, []);
 
-  // Função para tentar novamente em caso de erro
-  const handleRetry = useCallback(() => {
-    limparErro();
-  }, [limparErro]);
+  // Alterna o status ativo/inativo de um dia
+  const handleToggleDia = useCallback(async (diaSemana: string) => {
+    try {
+      setData(prev => ({
+        ...prev,
+        horarios: prev.horarios.map(horario => 
+          horario.diaSemana === diaSemana 
+            ? { ...horario, ativo: !horario.ativo }
+            : horario
+        )
+      }));
+    } catch (err) {
+      // Erro silencioso - não exibe mensagem
+      console.error('Erro ao alterar status do dia:', err);
+    }
+  }, []);
 
-  // Dados consolidados
-  const data: HorariosData = {
-    config,
-    horarioAtual,
-    loading: salvando,
-    error
-  };
+  // Salva todos os horários
+  const handleSaveHorarios = useCallback(async () => {
+    setIsSaving(true);
+    
+    try {
+      await saveHorariosData(data);
+    } catch (err) {
+      // Erro silencioso - não exibe mensagem
+      console.error('Erro ao salvar horários:', err);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [data, saveHorariosData]);
 
   return {
     data,
-    handleSave,
-    handleRetry,
-    handleHorarioChange,
-    adicionarPausa,
-    removerPausa,
-    atualizarPausa,
-    adicionarHorarioEspecial,
-    removerHorarioEspecial,
-    atualizarHorarioEspecial,
-    atualizarConfiguracaoAvancada
+    isLoading,
+    isSaving,
+    handleUpdateHorario,
+    handleUpdateFusoHorario,
+    handleToggleDia,
+    handleSaveHorarios,
+    t
   };
 }

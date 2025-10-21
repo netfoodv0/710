@@ -190,14 +190,23 @@ export class FirebaseCategoriaService extends BaseFirestoreService {
     }
   }
 
-  async excluirCategoria(id: string): Promise<void> {
+  async excluirCategoria(id: string): Promise<{ produtosExcluidos: number }> {
     try {
-      // Excluir períodos de disponibilidade primeiro
+      // Importar o serviço de produtos
+      const { FirebaseProdutosService } = await import('./firebase/produtosService');
+      const produtosService = new FirebaseProdutosService();
+      
+      // Excluir todos os produtos da categoria primeiro
+      const produtosExcluidos = await produtosService.excluirProdutosPorCategoria(id);
+      
+      // Excluir períodos de disponibilidade
       await this.excluirDisponibilidade(id);
       
       // Excluir categoria
       const docRef = doc(this.categoriasCollection, id);
       await deleteDoc(docRef);
+      
+      return { produtosExcluidos };
     } catch (error) {
       console.error('Erro ao excluir categoria:', error);
       throw new Error('Falha ao excluir categoria');

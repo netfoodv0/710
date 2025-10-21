@@ -5,7 +5,10 @@ import {
   deleteDoc, 
   startAfter,
   writeBatch,
-  serverTimestamp
+  serverTimestamp,
+  query,
+  where,
+  getDocs
 } from 'firebase/firestore';
 import { Produto } from '../../types';
 import { FiltrosProduto } from '../firebaseCardapioService';
@@ -312,6 +315,52 @@ export class FirebaseProdutosService extends BaseFirestoreService {
     } catch (error) {
       console.error('Erro ao atualizar status dos produtos:', error);
       throw new Error('Falha ao atualizar status dos produtos');
+    }
+  }
+
+  async buscarProdutosPorCategoria(categoriaId: string): Promise<Produto[]> {
+    try {
+      const lojaId = this.getLojaId();
+      
+      const q = query(
+        this.produtosCollection,
+        where('lojaId', '==', lojaId),
+        where('categoriaId', '==', categoriaId)
+      );
+      
+      const snapshot = await getDocs(q);
+      return this.mapDocuments<Produto>(snapshot);
+    } catch (error) {
+      console.error('Erro ao buscar produtos por categoria:', error);
+      throw new Error('Falha ao buscar produtos da categoria');
+    }
+  }
+
+  async excluirProdutosPorCategoria(categoriaId: string): Promise<number> {
+    try {
+      const lojaId = this.getLojaId();
+      
+      // Buscar todos os produtos da categoria
+      const produtos = await this.buscarProdutosPorCategoria(categoriaId);
+      
+      if (produtos.length === 0) {
+        return 0; // Nenhum produto para excluir
+      }
+
+      // Excluir todos os produtos em batch
+      const batch = writeBatch(db);
+      
+      produtos.forEach(produto => {
+        const docRef = doc(this.produtosCollection, produto.id);
+        batch.delete(docRef);
+      });
+
+      await batch.commit();
+      
+      return produtos.length;
+    } catch (error) {
+      console.error('Erro ao excluir produtos por categoria:', error);
+      throw new Error('Falha ao excluir produtos da categoria');
     }
   }
 } 

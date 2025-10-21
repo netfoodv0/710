@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { usePDVContext } from '../../../context/PDVContext';
 import { OrderItem } from './OrderItem';
 import { OrderActions } from './OrderActions';
-import { OrderStatus } from './OrderStatus';
-import { OrderNavigation } from './OrderNavigation';
 import { CustomerInfo } from '../customers/CustomerInfo';
 import { ShoppingBag } from 'lucide-react';
 import { ProductDetailsModal } from '../products/ProductDetailsModal';
@@ -15,7 +13,7 @@ import { ThreeDotsIcon } from '../../ui/ThreeDotsIcon';
 import { Edit2 } from 'lucide-react';
 
 export const OrderSummary: React.FC = () => {
-  const { selectedProducts, selectedCustomer, orderType, calculatedValues, activeTab, setActiveTab, addProduct, removeProduct } = usePDVContext();
+  const { selectedProducts, selectedCustomer, orderType, calculatedValues, addProduct, removeProduct, customerName, customerPhone } = usePDVContext();
   const [showCustomerForm, setShowCustomerForm] = useState(false);
   const [showCustomerMenu, setShowCustomerMenu] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -76,15 +74,54 @@ export const OrderSummary: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Navegação entre Sacola e Cliente */}
-      <OrderNavigation activeTab={activeTab} onTabChange={setActiveTab} />
-      
-      {/* Conteúdo baseado na aba ativa */}
+      {/* Resumo dos Dados do Cliente */}
+      {(selectedCustomer || customerName || customerPhone) && (
+        <div className="bg-blue-50 border-b border-blue-200 px-3 py-2">
+          <div className="text-xs font-semibold text-blue-800 mb-1 uppercase tracking-wide">
+            Dados do Cliente
+          </div>
+          <div className="space-y-0.5">
+            {selectedCustomer ? (
+              <>
+                <div className="text-sm font-medium text-gray-900">
+                  {selectedCustomer.name}
+                </div>
+                {selectedCustomer.phone && (
+                  <div className="text-xs text-gray-600">
+                    {selectedCustomer.phone}
+                  </div>
+                )}
+                {orderType === 'delivery' && selectedCustomer.addresses && selectedCustomer.addresses.length > 0 && (
+                  <div className="text-xs text-gray-600">
+                    {selectedCustomer.addresses[0].street}, {selectedCustomer.addresses[0].number}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                {customerName && (
+                  <div className="text-sm font-medium text-gray-900">
+                    {customerName}
+                  </div>
+                )}
+                {customerPhone && (
+                  <div className="text-xs text-gray-600">
+                    {customerPhone}
+                  </div>
+                )}
+              </>
+            )}
+            <div className="text-xs text-blue-600 font-medium">
+              {orderType === 'delivery' ? 'Delivery' : orderType === 'pickup' ? 'Retirada' : 'Balcão'}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Conteúdo da Sacola */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {activeTab === 'sacola' ? (
-          <>
-            {/* Lista de Produtos */}
-            {selectedProducts.length > 0 ? (
+        {/* Lista de Produtos */}
+        {selectedProducts.length > 0 ? (
               <div className="space-y-3">
                 {selectedProducts.map((product) => (
                   <div key={product.id} className="bg-white rounded-lg border border-gray-200 p-3 relative group">
@@ -211,15 +248,6 @@ export const OrderSummary: React.FC = () => {
 
             {/* Resumo de Valores */}
             {selectedProducts.length > 0 && <TotalCalculator />}
-          </>
-        ) : (
-          <>
-            {/* Status e Informações do Pedido */}
-            <OrderStatus />
-          </>
-        )}
-
-
       </div>
 
       {/* Ações do Pedido - Removido para evitar duplicação com PDVValuesDisplay */}

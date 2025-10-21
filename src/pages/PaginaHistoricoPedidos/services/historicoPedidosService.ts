@@ -12,7 +12,6 @@ import {
 import { db } from '../../../lib/firebase';
 import { Pedido, StatusPedido } from '../../../types';
 import { ClientePedido, ItemPedido, PagamentoPedido, EnderecoEntrega, Extra } from '../../../types/global/produtos';
-import { mockHistoricoPedidos } from './mockHistoricoPedidos';
 
 export interface FiltrosHistorico {
   status?: StatusPedido;
@@ -44,45 +43,79 @@ export interface EstatisticasHistorico {
 }
 
 class HistoricoPedidosService {
-  private readonly COLLECTION_PEDIDOS = 'pedidos';
+  private readonly COLLECTION_HISTORICO = 'historicoPedidos';
+  private lojaId: string | null = null;
 
-  private getLojaId(): string {
-    // Por enquanto, retornar um ID fixo para testes
-    // Em produção, isso deve vir do contexto de loja
-    return 'loja-teste';
+  constructor(lojaId?: string | null) {
+    this.lojaId = lojaId || null;
+  }
+
+  setLojaId(lojaId: string | null): void {
+    this.lojaId = lojaId;
   }
 
   async obterHistoricoPedidos(filtros?: FiltrosHistorico): Promise<Pedido[]> {
     try {
-      // Simular delay de rede
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('🔍 HistoricoPedidosService - Buscando histórico de pedidos');
       
-      // Por enquanto, retornar dados mockados
-      let pedidos = [...mockHistoricoPedidos];
+      if (!this.lojaId) {
+        console.error('❌ HistoricoPedidosService - LojaId não encontrado');
+        return [];
+      }
 
-      // Aplicar filtros se fornecidos
+      console.log('🏪 HistoricoPedidosService - LojaId:', this.lojaId);
+
+      // Buscar no histórico (coleção separada)
+      const historicoCollection = collection(db, this.COLLECTION_HISTORICO);
+      
+      let q = query(
+        historicoCollection,
+        where('lojaId', '==', this.lojaId),
+        orderBy('dataHora', 'desc')
+      );
+      
+      const constraints = [];
+
       if (filtros?.status && filtros.status !== 'todos') {
-        pedidos = pedidos.filter(p => p.status === filtros.status);
+        constraints.push(where('status', '==', filtros.status));
       }
 
       if (filtros?.dataInicio) {
-        pedidos = pedidos.filter(p => p.dataHora >= filtros.dataInicio!);
+        constraints.push(where('dataHora', '>=', filtros.dataInicio));
       }
 
       if (filtros?.dataFim) {
-        pedidos = pedidos.filter(p => p.dataHora <= filtros.dataFim!);
+        constraints.push(where('dataHora', '<=', filtros.dataFim));
       }
 
       if (filtros?.formaPagamento && filtros.formaPagamento !== 'todos') {
-        pedidos = pedidos.filter(p => p.formaPagamento === filtros.formaPagamento);
+        constraints.push(where('pagamento.metodo', '==', filtros.formaPagamento));
       }
 
-      // Ordenar por data mais recente
-      pedidos.sort((a, b) => b.dataHora.getTime() - a.dataHora.getTime());
+      constraints.forEach(constraint => {
+        q = query(q, constraint);
+      });
 
+      const snapshot = await getDocs(q);
+      const pedidos: Pedido[] = [];
+
+      console.log('📊 HistoricoPedidosService - Total de pedidos encontrados:', snapshot.size);
+
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        pedidos.push({
+          ...data,
+          id: doc.id,
+          dataHora: data.dataHora?.toDate() || new Date(),
+          dataCriacao: data.dataCriacao?.toDate() || new Date(),
+          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
+        } as Pedido);
+      });
+
+      console.log('✅ HistoricoPedidosService - Pedidos carregados:', pedidos.length);
       return pedidos;
     } catch (error) {
-      console.error('Erro ao obter histórico de pedidos:', error);
+      console.error('❌ HistoricoPedidosService - Erro ao obter histórico de pedidos:', error);
       throw error;
     }
   }

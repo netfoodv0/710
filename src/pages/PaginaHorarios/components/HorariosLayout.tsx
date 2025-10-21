@@ -1,62 +1,27 @@
 import React from 'react';
-import { PageHeader } from '../../../components/ui';
-import { HorariosForm } from './HorariosForm';
-import { HorariosError } from './HorariosError';
-import { HorariosLayoutProps } from '../types';
 
-export function HorariosLayout({ 
-  data, 
-  onSave, 
-  onRetry, 
-  loading = false 
-}: HorariosLayoutProps) {
-  const { config, error } = data;
+interface HorariosLayoutProps {
+  children: React.ReactNode;
+}
 
-  // Error state
-  if (error) {
-    return <HorariosError error={error} onRetry={onRetry} />;
-  }
-
+export function HorariosLayout({ children }: HorariosLayoutProps) {
   return (
-    <div 
-      className="min-h-screen" 
-      style={{ 
-        backgroundColor: 'transparent',
-        scrollbarWidth: 'none', 
-        msOverflowStyle: 'none',
-        overflow: 'hidden'
-      }}
-    >
-      {/* Cabeçalho da página */}
-      <PageHeader
-        title="Horários de Funcionamento"
-        subtitle="Configure os horários de funcionamento do seu restaurante"
-        actionButton={{
-          label: "Salvar Horários",
-          onClick: onSave,
-          loading: loading,
-          disabled: loading,
-          variant: "success",
-          size: "md"
-        }}
-      />
-
-      {/* Main Content */}
-      <div className="px-6 pt-6 overflow-hidden">
-        <div className="w-full overflow-hidden">
-          <HorariosForm 
-            config={config}
-            onHorarioChange={() => {}}
-            onAdicionarPausa={() => {}}
-            onRemoverPausa={() => {}}
-            onAtualizarPausa={() => {}}
-            onAdicionarHorarioEspecial={() => {}}
-            onRemoverHorarioEspecial={() => {}}
-            onAtualizarHorarioEspecial={() => {}}
-            onAtualizarConfiguracaoAvancada={() => {}}
-          />
-        </div>
+    <div className="h-full w-full">
+      <div className="container mx-auto p-6">
+        {children}
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+

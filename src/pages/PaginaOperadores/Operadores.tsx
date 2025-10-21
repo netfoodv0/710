@@ -10,13 +10,13 @@ import { useOperadores } from './hooks/useOperadores';
 import { OperadoresLayout } from './components/OperadoresLayout';
 
 export default function Operadores() {
-  const { data } = useOperadores();
+  const { data, carregarDados } = useOperadores();
   const { showNotification } = useNotificationContext();
 
   return (
     <ErrorBoundary>
       <div className="min-h-screen">
-        <OperadoresLayout data={data} />
+        <OperadoresLayout data={data} onCreate={carregarDados} />
       </div>
     </ErrorBoundary>
   );

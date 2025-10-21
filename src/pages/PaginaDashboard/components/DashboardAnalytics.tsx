@@ -25,8 +25,6 @@ export const DashboardAnalytics: React.FC<DashboardAnalyticsProps> = ({ data, lo
       {/* Pedidos em Andamento */}
       <PedidosAndamento 
         pedidosEmAndamento={data.estatisticas.pedidosPendentes}
-        pedidos={data.pedidosEmAndamento}
-        loading={loading}
       />
     </div>
   );

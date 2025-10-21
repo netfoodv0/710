@@ -67,3 +67,5 @@ export function ConfiguracoesEntrega({ config, onConfigChange, loading }: Config
     </div>
   );
 }
+
+

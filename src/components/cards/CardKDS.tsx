@@ -41,7 +41,7 @@ export function CardKDS({
   return (
     <div 
       ref={setNodeRef}
-      className={`bg-white rounded-b-lg border border-gray-200 w-[240px] ${
+      className={`bg-white rounded-b-lg border border-gray-200 w-full ${
         variant === 'compact' ? 'p-3' : 'p-5'
       } ${isDragging ? 'shadow-2xl' : ''}`}
       style={{

@@ -1,7 +1,8 @@
 // Types específicos para a página de Operadores
 
 export interface Operador {
-  id: number;
+  id: string;
+  lojaId: string;
   nome: string;
   email: string;
   telefone: string;
@@ -10,6 +11,8 @@ export interface Operador {
   dataAdmissao: string;
   ultimoAcesso: string;
   permissoes: string[];
+  dataCriacao: Date;
+  dataAtualizacao: Date;
 }
 
 export interface OperadoresData {
@@ -20,12 +23,13 @@ export interface OperadoresData {
 
 export interface OperadoresLayoutProps {
   data: OperadoresData;
+  onCreate?: () => void;
 }
 
 export interface OperadoresActions {
   criarOperador: (operador: Partial<Operador>) => Promise<void>;
-  editarOperador: (id: number, operador: Partial<Operador>) => Promise<void>;
-  excluirOperador: (id: number) => Promise<void>;
+  editarOperador: (id: string, operador: Partial<Operador>) => Promise<void>;
+  excluirOperador: (id: string) => Promise<void>;
 }
 
 export interface OperadoresTranslation {
@@ -36,8 +40,8 @@ export interface OperadoresTranslation {
 export interface OperadoresTableProps {
   operadores: Operador[];
   loading: boolean;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
   onCreate: () => void;
 }
 
@@ -46,3 +50,5 @@ export interface OperadoresStatsProps {
   operadoresAtivos: number;
   operadoresInativos: number;
 }
+
+

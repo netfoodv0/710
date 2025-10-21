@@ -25,7 +25,8 @@ export function EstoqueTable({
         statuses: [
           { value: 'em_estoque', label: 'Em Estoque' },
           { value: 'baixo_estoque', label: 'Baixo Estoque' },
-          { value: 'sem_estoque', label: 'Sem Estoque' }
+          { value: 'sem_estoque', label: 'Sem Estoque' },
+          { value: 'sem_controle', label: 'Sem Controle' }
         ],
         showDateRange: false
       }}
@@ -42,3 +43,5 @@ export function EstoqueTable({
     />
   );
 }
+
+

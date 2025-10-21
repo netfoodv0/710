@@ -35,6 +35,11 @@ function AppContentInner() {
   }
 
   // Se estiver autenticado, renderizar com layout
+  // Mas apenas se não estiver nas rotas de login/cadastro
+  if (location.pathname === '/login' || location.pathname === '/cadastro') {
+    return <AppRoutes />;
+  }
+
   return (
     <>
       {isMobile ? (

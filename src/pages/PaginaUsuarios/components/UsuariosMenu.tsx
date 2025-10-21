@@ -63,3 +63,5 @@ export function UsuariosMenu({ onNavigate }: UsuariosMenuProps) {
     </div>
   );
 }
+
+

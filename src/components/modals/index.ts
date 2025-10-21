@@ -1,10 +1,10 @@
 export { Modal, ModalHeader, ModalBody, ModalFooter } from './Modal';
+export { ModalGlobal } from './ModalGlobal';
+export { ModalCriarCupom } from './ModalCriarCupom';
 export { ModalEditarEstoque } from './ModalEditarEstoque';
 export { ModalEditarAcompanhamento } from './ModalEditarAcompanhamento';
 export { ModalCadastroAcompanhamento } from './ModalCadastroAcompanhamento';
 export { ModalDetalhesProduto } from './ModalDetalhesProduto';
-export { ModalCadastroInsumo } from './ModalCadastroInsumo';
-export { ModalCriarCupom } from './ModalCriarCupom';
 export { ModalCriarUsuario } from './ModalCriarUsuario';
 export { ModalSelecaoAvatar } from './ModalSelecaoAvatar';
 export { ModalFormasPagamento } from './ModalFormasPagamento';

@@ -1,81 +1,24 @@
 // Tipos específicos para a página de Acompanhamentos
 import { DataTableColumn } from '../../../components/ui';
+import { ProdutoEstoqueBase, EstoqueStateBase, EstoqueLayoutPropsBase, EstoqueTablePropsBase, EstoqueStatsPropsBase, EstoqueErrorPropsBase, UseEstoqueReturnBase, EstoqueDataBase, EstoqueTranslationsBase } from '../../shared/types/estoque-base.types';
 
 // Interface para produto acompanhamento
-export interface ProdutoAcompanhamento {
-  id: number;
-  nome: string;
-  categoria: string;
-  quantidade: number;
-  quantidadeMinima: number;
-  precoCusto: number;
-  custoEstoque: number;
-  semControleEstoque: boolean;
-  fichaTecnica: string;
-  status: 'em_estoque' | 'baixo_estoque' | 'sem_estoque';
-  medida: string;
-}
+export interface ProdutoAcompanhamento extends ProdutoEstoqueBase {}
 
 // Estados dos acompanhamentos
-export interface AcompanhamentosState {
-  produtos: ProdutoAcompanhamento[];
-  loading: boolean;
-  error: string | null;
-  isModalOpen: boolean;
-  isModalDetalhesOpen: boolean;
-  produtoSelecionado: ProdutoAcompanhamento | null;
-}
+export interface AcompanhamentosState extends EstoqueStateBase<ProdutoAcompanhamento> {}
 
 // Props para componentes de Acompanhamentos
-export interface AcompanhamentosLayoutProps {
-  produtos: ProdutoAcompanhamento[];
-  columns: DataTableColumn<ProdutoAcompanhamento>[];
-  loading: boolean;
-  error: string | null;
-  isModalOpen: boolean;
-  isModalDetalhesOpen: boolean;
-  produtoSelecionado: ProdutoAcompanhamento | null;
-  onOpenModal: (produto: ProdutoAcompanhamento) => void;
-  onCloseModal: () => void;
-  onOpenModalDetalhes: (produto: ProdutoAcompanhamento) => void;
-  onCloseModalDetalhes: () => void;
-  onAlterarEstoque: (produto: ProdutoAcompanhamento) => void;
-  onSave: (produto: ProdutoAcompanhamento) => void;
-}
+export interface AcompanhamentosLayoutProps extends EstoqueLayoutPropsBase<ProdutoAcompanhamento> {}
 
-export interface AcompanhamentosStatsProps {
-  produtos: ProdutoAcompanhamento[];
-}
+export interface AcompanhamentosStatsProps extends EstoqueStatsPropsBase<ProdutoAcompanhamento> {}
 
-export interface AcompanhamentosTableProps {
-  produtos: ProdutoAcompanhamento[];
-  columns: DataTableColumn<ProdutoAcompanhamento>[];
-  onOpenModal: (produto: ProdutoAcompanhamento) => void;
-  onOpenModalDetalhes: (produto: ProdutoAcompanhamento) => void;
-}
+export interface AcompanhamentosTableProps extends EstoqueTablePropsBase<ProdutoAcompanhamento> {}
 
-export interface AcompanhamentosErrorProps {
-  error: string;
-  onRetry: () => void;
-}
+export interface AcompanhamentosErrorProps extends EstoqueErrorPropsBase {}
 
 // Hook return types
-export interface UseAcompanhamentosReturn {
-  produtos: ProdutoAcompanhamento[];
-  columns: DataTableColumn<ProdutoAcompanhamento>[];
-  loading: boolean;
-  error: string | null;
-  isModalOpen: boolean;
-  isModalDetalhesOpen: boolean;
-  produtoSelecionado: ProdutoAcompanhamento | null;
-  handleOpenModal: (produto: ProdutoAcompanhamento) => void;
-  handleCloseModal: () => void;
-  handleOpenModalDetalhes: (produto: ProdutoAcompanhamento) => void;
-  handleCloseModalDetalhes: () => void;
-  handleAlterarEstoque: (produto: ProdutoAcompanhamento) => void;
-  handleSave: (produto: ProdutoAcompanhamento) => void;
-  handleRetry: () => void;
-}
+export interface UseAcompanhamentosReturn extends UseEstoqueReturnBase<ProdutoAcompanhamento> {}
 
 export interface UseAcompanhamentosActionsReturn {
   handleOpenModal: (produto: ProdutoAcompanhamento) => void;
@@ -88,42 +31,9 @@ export interface UseAcompanhamentosActionsReturn {
 }
 
 // Tipos para dados dos acompanhamentos
-export interface AcompanhamentosData {
-  produtos: ProdutoAcompanhamento[];
-  loading: boolean;
-  error: string | null;
-}
+export interface AcompanhamentosData extends EstoqueDataBase<ProdutoAcompanhamento> {}
 
 // Tipos para traduções
-export interface AcompanhamentosTranslations {
-  title: string;
-  subtitle: string;
-  stats: {
-    totalProdutos: string;
-    baixoEstoque: string;
-    semEstoque: string;
-    valorTotal: string;
-  };
-  table: {
-    nome: string;
-    categoria: string;
-    quantidade: string;
-    quantidadeMinima: string;
-    precoCusto: string;
-    custoEstoque: string;
-    status: string;
-    acoes: string;
-  };
-  modals: {
-    editarEstoque: string;
-    detalhesProduto: string;
-    alterarEstoque: string;
-    salvar: string;
-    cancelar: string;
-  };
-  error: {
-    title: string;
-    message: string;
-    retry: string;
-  };
-}
+export interface AcompanhamentosTranslations extends EstoqueTranslationsBase {}
+
+

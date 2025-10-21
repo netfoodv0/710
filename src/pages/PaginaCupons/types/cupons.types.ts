@@ -2,10 +2,10 @@ import { PeriodType } from '../../../components/filters/FiltroPeriodo';
 
 // Tipos específicos para a página de Cupons
 export interface Cupom {
-  id: number;
+  id: string;
   codigo: string;
   descricao: string;
-  tipo: 'percentual' | 'valor_fixo';
+  tipo: 'percentual' | 'valor_fixo' | 'brinde' | 'frete_gratis';
   valor: number;
   status: 'ativo' | 'inativo';
   categoria: string;
@@ -14,6 +14,8 @@ export interface Cupom {
   usoMaximo: number;
   usosAtuais: number;
   valorMinimo: number;
+  lojaId?: string;
+  dataAtualizacao?: string;
 }
 
 export interface EstatisticaCupom {
@@ -88,6 +90,9 @@ export interface UseCuponsReturn {
   carregamentoCompleto: boolean;
   mostrarAnimacoes: boolean;
   alturasAnimadas: number[];
+  isModalOpen: boolean;
+  handleCupomCriado: (cupom: Cupom) => void;
+  handleCloseModal: () => void;
 }
 
 export interface UseCuponsActionsReturn {
@@ -114,3 +119,5 @@ export interface FiltroTipo {
   value: string;
   label: string;
 }
+
+

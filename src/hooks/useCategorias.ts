@@ -273,14 +273,16 @@ export function useCategorias(lojaId: string, filtros?: FiltrosCategoria): UseCa
     }
   }, [lojaId, recarregar]);
 
-  const excluirCategoria = useCallback(async (id: string) => {
+  const excluirCategoria = useCallback(async (id: string): Promise<{ produtosExcluidos: number }> => {
     try {
       if (!lojaId || lojaId.trim() === '' || lojaId === 'null') {
         throw new Error('Usuário não autenticado');
       }
       
-      await firebaseCategoriaService.excluirCategoria(id);
+      const resultado = await firebaseCategoriaService.excluirCategoria(id);
       await recarregar(); // Recarregar lista
+      
+      return resultado;
     } catch (error) {
       throw error;
     }

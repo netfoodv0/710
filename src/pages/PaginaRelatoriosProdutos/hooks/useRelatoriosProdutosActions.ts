@@ -23,3 +23,5 @@ export function useRelatoriosProdutosActions(): UseRelatoriosProdutosActionsRetu
     handleRetry
   };
 }
+
+

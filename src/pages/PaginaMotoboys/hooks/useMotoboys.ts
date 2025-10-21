@@ -60,6 +60,52 @@ export function useMotoboys() {
     }
   }, [showNotification]);
 
+  const editarMotoboy = useCallback(async (id: string, motoboy: Partial<Motoboy>) => {
+    try {
+      await MotoboysService.editarMotoboy(id, motoboy);
+      setData(prev => ({
+        ...prev,
+        motoboys: prev.motoboys.map(mot => 
+          mot.id === id ? { ...mot, ...motoboy, dataAtualizacao: new Date() } : mot
+        )
+      }));
+      
+      showNotification({
+        type: 'success',
+        title: 'Sucesso',
+        message: 'Motoboy editado com sucesso!'
+      });
+    } catch (error) {
+      showNotification({
+        type: 'error',
+        title: 'Erro',
+        message: 'Não foi possível editar o motoboy'
+      });
+    }
+  }, [showNotification]);
+
+  const excluirMotoboy = useCallback(async (id: string) => {
+    try {
+      await MotoboysService.excluirMotoboy(id);
+      setData(prev => ({
+        ...prev,
+        motoboys: prev.motoboys.filter(mot => mot.id !== id)
+      }));
+      
+      showNotification({
+        type: 'success',
+        title: 'Sucesso',
+        message: 'Motoboy excluído com sucesso!'
+      });
+    } catch (error) {
+      showNotification({
+        type: 'error',
+        title: 'Erro',
+        message: 'Não foi possível excluir o motoboy'
+      });
+    }
+  }, [showNotification]);
+
   useEffect(() => {
     carregarDados();
   }, [carregarDados]);
@@ -67,6 +113,10 @@ export function useMotoboys() {
   return {
     data,
     carregarDados,
-    criarMotoboy
+    criarMotoboy,
+    editarMotoboy,
+    excluirMotoboy
   };
 }
+
+

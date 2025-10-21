@@ -66,6 +66,7 @@ export interface Pedido {
   pagamento: PagamentoPedido;
   observacoes?: string;
   dataHora: Date;
+  dataCriacao: Date;
   tempoPreparo?: number;
   tempoEntrega?: number;
   motoboyId?: string;

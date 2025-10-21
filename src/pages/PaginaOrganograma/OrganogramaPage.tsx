@@ -5,6 +5,8 @@ import { avataresDisponiveis } from '../../components/modals/avatarData';
 import { useAuth } from '../../hooks/useAuth';
 import { useLoja } from '../../context/lojaContext';
 import { ModalCriarUsuario } from '../../components/modals/ModalCriarUsuario';
+import { OperadoresService } from '../PaginaOperadores/services';
+import type { Operador } from '../PaginaOperadores/types';
 
 interface OrganogramaNode extends INode {
   nome: string;
@@ -158,6 +160,68 @@ const OrganogramaPage: React.FC = () => {
       ]
     }
   ];
+
+  // Estado para operadores reais e nós derivados
+  const [operadoresReais, setOperadoresReais] = useState<Operador[]>([]);
+  const [nodesReais, setNodesReais] = useState<OrganogramaNode[] | null>(null);
+
+  // Montar nós a partir de operadores reais
+  const montarNodesReais = (operadores: Operador[]): OrganogramaNode[] => {
+    const root: OrganogramaNode = {
+      key: 'root',
+      nome: loja?.nomeLoja || 'Minha Loja',
+      cargo: 'Organograma',
+      avatar: avataresDisponiveis[0]?.svg,
+      cssClass: 'nivel-1',
+      childs: []
+    };
+
+    // Agrupar por cargo
+    const cargoToUsers = new Map<string, Operador[]>();
+    operadores.forEach(op => {
+      const cargo = op.cargo || 'Operador';
+      if (!cargoToUsers.has(cargo)) cargoToUsers.set(cargo, []);
+      cargoToUsers.get(cargo)!.push(op);
+    });
+
+    const childs: OrganogramaNode[] = [];
+    cargoToUsers.forEach((lista, cargo) => {
+      const cargoNode: OrganogramaNode = {
+        key: `cargo-${cargo}`,
+        nome: cargo,
+        cargo: cargo,
+        avatar: avataresDisponiveis[1]?.svg,
+        cssClass: 'nivel-2',
+        childs: lista.map((op, idx) => ({
+          key: `op-${op.id || idx}`,
+          nome: op.nome,
+          cargo: op.cargo,
+          avatar: avataresDisponiveis[(idx % avataresDisponiveis.length)]?.svg,
+          cssClass: 'nivel-3'
+        }))
+      };
+      childs.push(cargoNode);
+    });
+
+    root.childs = childs;
+    return [root];
+  };
+
+  // Carregar operadores reais ao iniciar
+  useEffect(() => {
+    (async () => {
+      try {
+        const ops = await OperadoresService.getOperadores();
+        setOperadoresReais(ops);
+        const montados = montarNodesReais(ops);
+        setNodesReais(montados);
+      } catch (e) {
+        // fallback silencioso para nós fictícios
+        setNodesReais(null);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loja?.id]);
 
   // Dados fictícios para os usuários (como na tabela de operadores)
   const dadosUsuarios: Record<string, UsuarioData> = {
@@ -606,7 +670,7 @@ const OrganogramaPage: React.FC = () => {
           }}
         >
           <ReactHiererchyChart 
-            nodes={nodes} 
+            nodes={nodesReais && nodesReais.length > 0 ? nodesReais : nodes} 
             direction="vertical"
             randerNode={renderNode} 
           />

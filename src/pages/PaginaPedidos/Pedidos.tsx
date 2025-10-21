@@ -16,7 +16,6 @@ export default function Pedidos() {
     handleSearchChange,
     handleClearSearch,
     handleSearchSubmit,
-    handleCriarPedidoFicticio,
     handleOpenPDV
   } = usePedidos();
 
@@ -30,8 +29,9 @@ export default function Pedidos() {
       onSearchChange={handleSearchChange}
       onClearSearch={handleClearSearch}
       onSearchSubmit={handleSearchSubmit}
-      onCriarPedidoFicticio={handleCriarPedidoFicticio}
       onOpenPDV={handleOpenPDV}
     />
   );
 }
+
+

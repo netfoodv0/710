@@ -1,10 +1,32 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { firebaseDashboardService } from '../../../services/firebaseDashboardService';
+import { historicoPedidosService } from '../../../pages/PaginaHistoricoPedidos/services/historicoPedidosService';
+import { FirebaseClientesService } from '../../../services/firebaseClientesService';
+import { useAuth } from '../../../hooks/useAuth';
 import { 
   DashboardData,
-  PeriodType
+  PeriodType,
+  DashboardEstatisticas
 } from '../types/dashboard.types';
-import { getMockFormas, getMockProdutos, getMockPedidos } from '../../../services/mockDataService';
+import { getMockFormas, getMockProdutos } from '../../../services/mockDataService';
+import { 
+  calcularProdutosMaisVendidos,
+  calcularFormasPedidoReais,
+  calcularEstatisticasReais
+} from '../utils/dashboard-calculations';
+import { DASHBOARD_CONSTANTS } from '../constants/dashboard.constants';
+
+// Estado inicial padrão
+const DEFAULT_ESTATISTICAS: DashboardEstatisticas = {
+  totalPedidos: 0,
+  faturamentoTotal: 0,
+  totalClientes: 0,
+  ticketMedio: 0,
+  pedidos7Dias: 0,
+  receita7Dias: 0,
+  pedidosPendentes: 0
+};
+
 
 interface UseDashboardReturn {
   data: DashboardData;
@@ -14,20 +36,17 @@ interface UseDashboardReturn {
 }
 
 export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn => {
-  const [data, setData] = useState<DashboardData>({
-    estatisticas: {
-      faturamentoTotal: 0,
-      ticketMedio: 0,
-      totalPedidos: 0,
-      totalClientes: 0,
-      receita7Dias: 0,
-      pedidos7Dias: 0,
-      pedidosPendentes: 0
-    },
-    formasPedidas: getMockFormas(),
-    produtosVendidos: getMockProdutos(),
-    pedidosEmAndamento: getMockPedidos()
-  });
+  const { getLojaId, isAuthenticated } = useAuth();
+  
+  // Estado inicial com useMemo para evitar recriação desnecessária
+  const initialData = useMemo((): DashboardData => ({
+    estatisticas: DEFAULT_ESTATISTICAS,
+    formasPedidas: getMockFormas() as any,
+    produtosVendidos: getMockProdutos() as any,
+    pedidosEmAndamento: []
+  }), []);
+  
+  const [data, setData] = useState<DashboardData>(initialData);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,55 +55,92 @@ export const useDashboard = (period: PeriodType = 'weekly'): UseDashboardReturn 
       setLoading(true);
       setError(null);
 
-      // Converter PeriodType para o formato esperado pelo serviço
-      const periodo = period === 'daily' ? 'daily' : period === 'monthly' ? 'monthly' : 'weekly';
+      // Verificar se o usuário está autenticado antes de buscar dados
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
+      }
+
+      // Configurar lojaId no serviço de histórico
+      const lojaId = getLojaId();
+      if (!lojaId) {
+        setError('ID da loja não encontrado');
+        return;
+      }
       
-      // Buscar dados reais do Firebase
-      const dadosReais = await firebaseDashboardService.buscarDadosDashboard(periodo);
+      historicoPedidosService.setLojaId(lojaId);
+
+      // Converter período para formato do Firebase
+      const firebasePeriod = period === 'daily' ? 'daily' : period === 'monthly' ? 'monthly' : 'weekly';
+
+      // Instanciar serviço de clientes
+      const clientesService = new FirebaseClientesService();
       
-      // Adicionar dados mock para os novos componentes quando não houver dados reais
+      // Buscar dados reais do Firebase, histórico de pedidos e clientes únicos em paralelo
+      const [dadosReais, pedidosHistorico, clientesUnicos] = await Promise.all([
+        firebaseDashboardService.buscarDadosDashboard(firebasePeriod),
+        historicoPedidosService.obterHistoricoPedidos(),
+        clientesService.buscarClientesUnicos().catch(() => []) // Fallback em caso de erro
+      ]);
+      
+      // Calcular estatísticas reais baseadas no histórico de pedidos
+      const estatisticasCalculadas = calcularEstatisticasReais(pedidosHistorico, clientesUnicos.length);
+      
+      // Calcular formas de pedido reais
+      const formasPedidoReais = calcularFormasPedidoReais(pedidosHistorico);
+      
+      // Calcular produtos mais vendidos reais
+      const produtosMaisVendidos = calcularProdutosMaisVendidos(pedidosHistorico);
+      
+      // Adicionar pedidos pendentes dos dados do Firebase
+      const estatisticasComDadosReais: DashboardEstatisticas = {
+        ...estatisticasCalculadas,
+        pedidosPendentes: dadosReais.estatisticas?.pedidosPendentes || 0
+      };
+      
+      // Criar dados completos do dashboard
       const dadosCompletos: DashboardData = {
-        ...dadosReais,
-        formasPedidas: dadosReais.formasPedidas?.length > 0 ? dadosReais.formasPedidas : getMockFormas(),
-        produtosVendidos: dadosReais.produtosVendidos?.length > 0 ? dadosReais.produtosVendidos : getMockProdutos(),
-        pedidosEmAndamento: dadosReais.pedidosEmAndamento?.length > 0 ? dadosReais.pedidosEmAndamento : getMockPedidos()
+        estatisticas: estatisticasComDadosReais,
+        formasPedidas: formasPedidoReais as any,
+        produtosVendidos: produtosMaisVendidos as any,
+        pedidosEmAndamento: []
       };
       
       // Delay mínimo para evitar piscadas e garantir carregamento suave
-      const minDelay = 600; // 600ms para ser consistente com o skeleton
       const startTime = Date.now();
-      
       setData(dadosCompletos);
       
-      // Garantir que o loading seja exibido por pelo menos 600ms
+      // Garantir que o loading seja exibido por pelo menos o tempo mínimo
       const elapsedTime = Date.now() - startTime;
-      if (elapsedTime < minDelay) {
-        await new Promise(resolve => setTimeout(resolve, minDelay - elapsedTime));
+      if (elapsedTime < DASHBOARD_CONSTANTS.LOADING_MIN_DELAY_MS) {
+        await new Promise(resolve => setTimeout(resolve, DASHBOARD_CONSTANTS.LOADING_MIN_DELAY_MS - elapsedTime));
       }
       
     } catch (err) {
       setError('Erro ao carregar dados do dashboard');
       console.error('Erro ao carregar dashboard:', err);
       
-      // Em caso de erro, usar dados mock
-      setData(prevData => ({
-        ...prevData,
-        formasPedidas: getMockFormas(),
-        produtosVendidos: getMockProdutos(),
-        pedidosEmAndamento: getMockPedidos()
-      }));
+      // Em caso de erro, usar dados padrão
+      setData({
+        estatisticas: DEFAULT_ESTATISTICAS,
+        formasPedidas: calcularFormasPedidoReais([]) as any,
+        produtosVendidos: calcularProdutosMaisVendidos([]) as any,
+        pedidosEmAndamento: []
+      });
     } finally {
       setLoading(false);
     }
-  }, [period]);
+  }, [period, isAuthenticated]);
 
   const refreshData = useCallback(async () => {
     await carregarDados();
   }, [carregarDados]);
 
   useEffect(() => {
-    carregarDados();
-  }, [carregarDados]);
+    if (isAuthenticated) {
+      carregarDados();
+    }
+  }, [carregarDados, isAuthenticated]);
 
   return {
     data,

@@ -1,98 +1,188 @@
 import React, { useState } from 'react';
+import { ModalGlobal } from './ModalGlobal';
 import { FormInput } from '../forms/FormInput';
-
-import { CustomDropdown, DropdownOption } from '../ui';
-import { CustomModal } from './CustomModal';
-import { CupomFormData } from '../../types/global/cupom';
+import { FormSelect } from '../forms/FormSelect';
+import { FormTextarea } from '../forms/FormTextarea';
+import { Button } from '../ui/Button';
+import { Cupom } from '../../pages/PaginaCupons/types/cupons.types';
+import { FirebaseCuponsService } from '../../services/firebase/cuponsService';
+import { useNotificationContext } from '../../context/notificationContextUtils';
 
 interface ModalCriarCupomProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (cupomData: CupomFormData) => void;
+  onSuccess?: (cupom: Cupom) => void;
 }
 
-const tiposCupom: DropdownOption[] = [
-  { value: 'fixo', label: 'Desconto Fixo (R$)' },
-  { value: 'percentual', label: 'Desconto Percentual (%)' },
-  { value: 'frete_gratis', label: 'Frete Grátis' },
-  { value: 'brinde', label: 'Brinde' }
+interface FormData {
+  codigo: string;
+  descricao: string;
+  tipo: 'percentual' | 'valor_fixo' | 'brinde' | 'frete_gratis';
+  valor: number;
+  status: 'ativo' | 'inativo';
+  categoria: string;
+  dataExpiracao: string;
+  usoMaximo: number;
+  valorMinimo: number;
+}
+
+const tiposCupom = [
+  { value: 'percentual', label: 'Percentual' },
+  { value: 'valor_fixo', label: 'Valor Fixo' },
+  { value: 'brinde', label: 'Brinde' },
+  { value: 'frete_gratis', label: 'Frete Grátis' }
 ];
 
-export function ModalCriarCupom({ isOpen, onClose, onSubmit }: ModalCriarCupomProps) {
-  const [formData, setFormData] = useState<CupomFormData>({
+const statusOptions = [
+  { value: 'ativo', label: 'Ativo' },
+  { value: 'inativo', label: 'Inativo' }
+];
+
+const categorias = [
+  'Desconto Fixo',
+  'Desconto Percentual',
+  'Frete Grátis',
+  'Brinde'
+];
+
+export function ModalCriarCupom({ isOpen, onClose, onSuccess }: ModalCriarCupomProps) {
+  const [formData, setFormData] = useState<FormData>({
     codigo: '',
     descricao: '',
-    categoria: '',
-    tipoDesconto: 'fixo',
-    valorDesconto: 0,
-    valorMinimo: 0,
-    maximoUsos: 100,
-    dataInicio: '',
-    dataFim: '',
-    ativo: true
+    tipo: 'percentual',
+    valor: 0,
+    status: 'ativo',
+    categoria: 'Desconto Percentual',
+    dataExpiracao: '',
+    usoMaximo: 100,
+    valorMinimo: 0
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Partial<FormData>>({});
 
-  const handleInputChange = (field: keyof CupomFormData, value: string | number | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    // Limpar erro do campo quando usuário começa a digitar
+  const cuponsService = new FirebaseCuponsService();
+  const { showError, showSuccess } = useNotificationContext();
+
+  const handleInputChange = (field: keyof FormData, value: string | number) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    
+    // Limpar erro do campo quando usuário começar a digitar
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
     }
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Partial<FormData> = {};
 
     if (!formData.codigo.trim()) {
       newErrors.codigo = 'Código é obrigatório';
+    } else if (formData.codigo.length < 3) {
+      newErrors.codigo = 'Código deve ter pelo menos 3 caracteres';
+    } else if (formData.codigo.length > 20) {
+      newErrors.codigo = 'Código deve ter no máximo 20 caracteres';
+    } else if (!/^[A-Z0-9]+$/.test(formData.codigo.toUpperCase())) {
+      newErrors.codigo = 'Código deve conter apenas letras e números';
     }
 
     if (!formData.descricao.trim()) {
       newErrors.descricao = 'Descrição é obrigatória';
     }
 
-    if (!formData.categoria) {
-      newErrors.categoria = 'Categoria é obrigatória';
+    if (formData.valor < 0) {
+      newErrors.valor = 'Valor não pode ser negativo';
     }
 
-    if (formData.tipoDesconto !== 'frete_gratis' && formData.tipoDesconto !== 'brinde') {
-      if (formData.valorDesconto <= 0) {
-        newErrors.valorDesconto = 'Valor do desconto deve ser maior que zero';
+    if (formData.tipo === 'percentual' && formData.valor > 100) {
+      newErrors.valor = 'Percentual não pode ser maior que 100%';
+    }
+
+    if (!formData.dataExpiracao) {
+      newErrors.dataExpiracao = 'Data de expiração é obrigatória';
+    } else {
+      const dataExp = new Date(formData.dataExpiracao);
+      const hoje = new Date();
+      if (dataExp <= hoje) {
+        newErrors.dataExpiracao = 'Data de expiração deve ser futura';
       }
+    }
+
+    if (formData.usoMaximo <= 0) {
+      newErrors.usoMaximo = 'Uso máximo deve ser maior que zero';
     }
 
     if (formData.valorMinimo < 0) {
       newErrors.valorMinimo = 'Valor mínimo não pode ser negativo';
     }
 
-    if (formData.maximoUsos <= 0) {
-      newErrors.maximoUsos = 'Máximo de usos deve ser maior que zero';
-    }
-
-    if (!formData.dataInicio) {
-      newErrors.dataInicio = 'Data de início é obrigatória';
-    }
-
-    if (!formData.dataFim) {
-      newErrors.dataFim = 'Data de fim é obrigatória';
-    }
-
-    if (formData.dataInicio && formData.dataFim && new Date(formData.dataInicio) >= new Date(formData.dataFim)) {
-      newErrors.dataFim = 'Data de fim deve ser posterior à data de início';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      onSubmit(formData);
-      onClose();
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // Verificar se código já existe
+      const codigoExiste = await cuponsService.verificarCodigoExistente(formData.codigo);
+      if (codigoExiste) {
+        setErrors({ codigo: 'Este código já está em uso' });
+        showError('Este código de cupom já está em uso. Escolha outro código.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Criar cupom
+      const cupomId = await cuponsService.criarCupom({
+        codigo: formData.codigo.toUpperCase(),
+        descricao: formData.descricao,
+        tipo: formData.tipo,
+        valor: formData.valor,
+        status: formData.status,
+        categoria: formData.categoria,
+        dataExpiracao: formData.dataExpiracao,
+        usoMaximo: formData.usoMaximo,
+        usosAtuais: 0,
+        valorMinimo: formData.valorMinimo
+      });
+
+      // Criar objeto do cupom para atualização instantânea
+      const cupomCriado: Cupom = {
+        id: cupomId,
+        codigo: formData.codigo.toUpperCase(),
+        descricao: formData.descricao,
+        tipo: formData.tipo,
+        valor: formData.valor,
+        status: formData.status,
+        categoria: formData.categoria,
+        dataCriacao: new Date().toISOString().split('T')[0],
+        dataExpiracao: formData.dataExpiracao,
+        usoMaximo: formData.usoMaximo,
+        usosAtuais: 0,
+        valorMinimo: formData.valorMinimo
+      };
+
+      // Chamar onSuccess imediatamente com o cupom criado
+      if (typeof onSuccess === 'function') {
+        onSuccess(cupomCriado);
+      }
+      showSuccess('Cupom criado com sucesso!');
+      handleClose();
+    } catch (error) {
+      console.error('Erro ao criar cupom:', error);
+      showError('Erro ao criar cupom. Por favor, tente novamente.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -100,191 +190,136 @@ export function ModalCriarCupom({ isOpen, onClose, onSubmit }: ModalCriarCupomPr
     setFormData({
       codigo: '',
       descricao: '',
-      categoria: '',
-      tipoDesconto: 'fixo',
-      valorDesconto: 0,
-      valorMinimo: 0,
-      maximoUsos: 100,
-      dataInicio: '',
-      dataFim: '',
-      ativo: true
+      tipo: 'percentual',
+      valor: 0,
+      status: 'ativo',
+      categoria: 'Desconto Percentual',
+      dataExpiracao: '',
+      usoMaximo: 100,
+      valorMinimo: 0
     });
     setErrors({});
     onClose();
   };
 
-  const isDescontoValor = formData.tipoDesconto === 'fixo' || formData.tipoDesconto === 'percentual';
-
-  const footerContent = (
-    <div className="flex justify-end space-x-3">
-      <button
-        type="button"
+  const footer = (
+    <div className="flex gap-3 justify-end">
+      <Button
+        variant="secondary"
         onClick={handleClose}
-        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+        disabled={isSubmitting}
       >
-        CANCELAR
-      </button>
-      <button
+        Cancelar
+      </Button>
+      <Button
+        variant="primary"
         onClick={handleSubmit}
-        disabled={!formData.codigo.trim() || !formData.descricao.trim()}
-        className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+        disabled={isSubmitting}
       >
-        SALVAR
-      </button>
+        {isSubmitting ? 'Criando...' : 'Criar Cupom'}
+      </Button>
     </div>
   );
 
   return (
-    <CustomModal
+    <ModalGlobal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Criar Novo Cupom"
-      size="medium"
-      footerContent={footerContent}
+      size="lg"
+      footer={footer}
+      maxHeight="40rem"
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Informações Básicas */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900 pb-2">
-            Informações Básicas
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormInput
-              label="Código do Cupom"
-              type="text"
-              value={formData.codigo}
-              onChange={(value) => handleInputChange('codigo', value as string)}
-              required
-              helperText={errors.codigo}
-            />
-            
-            <FormInput
-              label="Descrição"
-              type="text"
-              value={formData.descricao}
-              onChange={(value) => handleInputChange('descricao', value as string)}
-              required
-              helperText={errors.descricao}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Tipo de Cupom *
-              </label>
-              <CustomDropdown
-                options={tiposCupom}
-                selectedValue={formData.tipoDesconto}
-                onValueChange={(value) => {
-                  handleInputChange('tipoDesconto', value as any);
-                  // Definir categoria automaticamente baseada no tipo
-                  const categoriaMap: Record<string, string> = {
-                    'fixo': 'Desconto Fixo',
-                    'percentual': 'Desconto Percentual',
-                    'frete_gratis': 'Frete Grátis',
-                    'brinde': 'Brinde'
-                  };
-                  handleInputChange('categoria', categoriaMap[value] || '');
-                }}
-                placeholder="Selecione o tipo de cupom"
-                size="md"
-              />
-              {errors.categoria && (
-                <p className="mt-1 text-sm text-red-600">{errors.categoria}</p>
-              )}
-            </div>
-          </div>
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            label="Código do Cupom"
+            value={formData.codigo}
+            onChange={(value) => handleInputChange('codigo', (value as string).toUpperCase())}
+            error={errors.codigo}
+            placeholder="Ex: DESCONTO10"
+            maxLength={20}
+          />
+          
+          <FormSelect
+            label="Tipo"
+            value={formData.tipo}
+            onChange={(value) => handleInputChange('tipo', value as FormData['tipo'])}
+            options={tiposCupom}
+            error={errors.tipo}
+          />
         </div>
 
-        {/* Configuração do Desconto */}
-        {isDescontoValor && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium text-gray-900 pb-2">
-              Configuração do Desconto
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormInput
-                label={formData.tipoDesconto === 'fixo' ? 'Valor do Desconto (R$)' : 'Percentual (%)'}
-                type="number"
-                value={formData.valorDesconto}
-                onChange={(value) => handleInputChange('valorDesconto', typeof value === 'number' ? value : parseFloat(value) || 0)}
-                required
-                min={0}
-                step={formData.tipoDesconto === 'fixo' ? 0.01 : 1}
-                helperText={errors.valorDesconto}
-              />
-              
-              <FormInput
-                label="Valor Mínimo do Pedido (R$)"
-                type="number"
-                value={formData.valorMinimo}
-                onChange={(value) => handleInputChange('valorMinimo', typeof value === 'number' ? value : parseFloat(value) || 0)}
-                min={0}
-                step={0.01}
-                helperText={errors.valorMinimo}
-              />
-            </div>
-          </div>
-        )}
+        <FormTextarea
+          label="Descrição"
+          value={formData.descricao}
+          onChange={(value) => handleInputChange('descricao', value as string)}
+          error={errors.descricao}
+          placeholder="Descreva o cupom..."
+          rows={3}
+        />
 
-        {/* Configurações de Uso */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900 pb-2">
-            Configurações de Uso
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormInput
-              label="Máximo de Usos"
-              type="number"
-              value={formData.maximoUsos}
-              onChange={(value) => handleInputChange('maximoUsos', typeof value === 'number' ? value : parseInt(value) || 1)}
-              required
-              min={1}
-              helperText={errors.maximoUsos}
-            />
-            
-            <div className="flex items-center space-x-3 mt-8">
-              <input
-                type="checkbox"
-                id="ativo"
-                checked={formData.ativo}
-                onChange={(e) => handleInputChange('ativo', e.target.checked)}
-                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-              />
-              <label htmlFor="ativo" className="text-sm font-medium text-gray-700">
-                Cupom ativo
-              </label>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            label={formData.tipo === 'percentual' ? 'Percentual (%)' : 'Valor (R$)'}
+            type="number"
+            value={formData.valor}
+            onChange={(value) => handleInputChange('valor', typeof value === 'number' ? value : parseFloat(value as string) || 0)}
+            error={errors.valor}
+            min={0}
+            max={formData.tipo === 'percentual' ? 100 : undefined}
+            step={formData.tipo === 'percentual' ? 0.1 : 0.01}
+          />
+
+          <FormInput
+            label="Valor Mínimo (R$)"
+            type="number"
+            value={formData.valorMinimo}
+            onChange={(value) => handleInputChange('valorMinimo', typeof value === 'number' ? value : parseFloat(value as string) || 0)}
+            error={errors.valorMinimo}
+            min={0}
+            step={0.01}
+          />
         </div>
 
-        {/* Período de Validade */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900 pb-2">
-            Período de Validade
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormInput
-              label="Data de Início"
-              type="datetime-local"
-              value={formData.dataInicio}
-              onChange={(value) => handleInputChange('dataInicio', String(value))}
-              required
-              helperText={errors.dataInicio}
-            />
-            
-            <FormInput
-              label="Data de Fim"
-              type="datetime-local"
-              value={formData.dataFim}
-              onChange={(value) => handleInputChange('dataFim', String(value))}
-              required
-              helperText={errors.dataFim}
-            />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormSelect
+            label="Status"
+            value={formData.status}
+            onChange={(value) => handleInputChange('status', value as FormData['status'])}
+            options={statusOptions}
+            error={errors.status}
+          />
+
+          <FormSelect
+            label="Categoria"
+            value={formData.categoria}
+            onChange={(value) => handleInputChange('categoria', value as string)}
+            options={categorias.map(cat => ({ value: cat, label: cat }))}
+            error={errors.categoria}
+          />
         </div>
-      </form>
-    </CustomModal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            label="Data de Expiração"
+            type="date"
+            value={formData.dataExpiracao}
+            onChange={(value) => handleInputChange('dataExpiracao', value as string)}
+            error={errors.dataExpiracao}
+            min={new Date().toISOString().split('T')[0]}
+          />
+
+          <FormInput
+            label="Uso Máximo"
+            type="number"
+            value={formData.usoMaximo}
+            onChange={(value) => handleInputChange('usoMaximo', typeof value === 'number' ? value : parseInt(value as string) || 0)}
+            error={errors.usoMaximo}
+            min={1}
+          />
+        </div>
+      </div>
+    </ModalGlobal>
   );
 }

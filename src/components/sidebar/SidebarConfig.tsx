@@ -10,13 +10,11 @@ import {
   UsersIcon, 
   ClockIcon, 
   CouponIcon, 
-  FidelidadeIcon,
   ReportIcon, 
   MapIcon, 
   BagIcon,
   OrganogramaIcon
 } from '../ui';
-import { KDSIcon } from '../icons';
 
 
 export const sidebarRoutes: RouteType[] = [
@@ -67,14 +65,15 @@ export const sidebarRoutes: RouteType[] = [
     }
   },
   {
-    path: "/kds",
+    path: "/horarios",
     element: null,
-    state: "kds",
+    state: "horarios",
     sidebarProps: {
-      displayText: "KDS",
-      icon: <KDSIcon />
+      displayText: "Horários",
+      icon: <ClockIcon />
     }
   },
+
 
   {
     path: "/usuarios",
@@ -113,30 +112,12 @@ export const sidebarRoutes: RouteType[] = [
     }
   },
   {
-    path: "/horarios",
-    element: null,
-    state: "horarios",
-    sidebarProps: {
-      displayText: "Horários",
-      icon: <ClockIcon />
-    }
-  },
-  {
     path: "/cupons",
     element: null,
     state: "cupons",
     sidebarProps: {
       displayText: "Cupons",
       icon: <CouponIcon />
-    }
-  },
-  {
-    path: "/fidelidade",
-    element: null,
-    state: "fidelidade",
-    sidebarProps: {
-      displayText: "Fidelidade",
-      icon: <FidelidadeIcon />
     }
   },
   {
@@ -198,14 +179,6 @@ export const sidebarRoutes: RouteType[] = [
         state: "estoque.produtos",
         sidebarProps: {
           displayText: "Produtos"
-        }
-      },
-      {
-        path: "/estoque/insumos",
-        element: null,
-        state: "estoque.insumos",
-        sidebarProps: {
-          displayText: "Insumos"
         }
       },
       {

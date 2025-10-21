@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotificationContext } from '../../../context/notificationContextUtils';
+import { useAuth } from '../../../hooks/useAuth';
 import { pedidosService } from '../services';
 import { PedidosData } from '../types';
 
@@ -9,12 +10,12 @@ export function usePedidos() {
     pedidos: [],
     loading: true,
     searchTerm: '',
-    isCreating: false,
     error: null
   });
 
   const navigate = useNavigate();
   const { showError, showSuccess } = useNotificationContext();
+  const { user, status, getLojaId } = useAuth();
 
   const carregarPedidos = useCallback(async () => {
     try {
@@ -38,6 +39,49 @@ export function usePedidos() {
     }
   }, [showError]);
 
+  const configurarAtualizacaoTempoReal = useCallback(() => {
+    try {
+      console.log('🔐 Status de autenticação:', status);
+      console.log('👤 Usuário:', user?.uid);
+      
+      const lojaId = getLojaId();
+      console.log('🏪 Loja ID:', lojaId);
+      
+      setData(prev => ({ ...prev, loading: true, error: null }));
+      
+      if (!lojaId) {
+        console.error('❌ lojaId é null - não configurando listener');
+        setData(prev => ({
+          ...prev,
+          loading: false,
+          error: 'ID da loja não disponível'
+        }));
+        return () => {};
+      }
+      
+      const unsubscribe = pedidosService.obterPedidosTempoReal(lojaId, (pedidos) => {
+        console.log('📦 Pedidos recebidos no callback:', pedidos.length);
+        setData(prev => ({
+          ...prev,
+          pedidos,
+          loading: false
+        }));
+      });
+
+      return unsubscribe;
+    } catch (error) {
+      console.error('❌ Erro ao configurar listener:', error);
+      setData(prev => ({
+        ...prev,
+        loading: false,
+        error: 'Erro ao configurar atualização em tempo real'
+      }));
+      
+      showError('Não foi possível configurar atualização em tempo real');
+      return () => {};
+    }
+  }, [showError, getLojaId]);
+
   const refreshDados = useCallback(() => {
     carregarPedidos();
   }, [carregarPedidos]);
@@ -46,41 +90,44 @@ export function usePedidos() {
     try {
       await pedidosService.aceitarPedido(id);
       showSuccess('Pedido aceito com sucesso!');
-      refreshDados();
+      // Não precisa chamar refreshDados() - atualização em tempo real
     } catch (error) {
       showError('Erro ao aceitar pedido');
     }
-  }, [showSuccess, showError, refreshDados]);
+  }, [showSuccess, showError]);
 
   const handleAvançar = useCallback(async (id: string) => {
     try {
+      console.log('🚀 Avançando pedido:', id);
       await pedidosService.avancarPedido(id);
+      console.log('✅ Pedido avançado com sucesso:', id);
       showSuccess('Pedido avançado com sucesso!');
-      refreshDados();
+      // Não precisa chamar refreshDados() - atualização em tempo real
     } catch (error) {
+      console.error('❌ Erro ao avançar pedido:', error);
       showError('Erro ao avançar pedido');
     }
-  }, [showSuccess, showError, refreshDados]);
+  }, [showSuccess, showError]);
 
   const handleFinalizar = useCallback(async (id: string) => {
     try {
       await pedidosService.finalizarPedido(id);
       showSuccess('Pedido finalizado com sucesso!');
-      refreshDados();
+      // Não precisa chamar refreshDados() - atualização em tempo real
     } catch (error) {
       showError('Erro ao finalizar pedido');
     }
-  }, [showSuccess, showError, refreshDados]);
+  }, [showSuccess, showError]);
 
   const handleRecusar = useCallback(async (id: string) => {
     try {
       await pedidosService.recusarPedido(id);
       showSuccess('Pedido recusado com sucesso!');
-      refreshDados();
+      // Não precisa chamar refreshDados() - atualização em tempo real
     } catch (error) {
       showError('Erro ao recusar pedido');
     }
-  }, [showSuccess, showError, refreshDados]);
+  }, [showSuccess, showError]);
 
   const handleSearchChange = useCallback((term: string) => {
     setData(prev => ({ ...prev, searchTerm: term }));
@@ -94,27 +141,28 @@ export function usePedidos() {
     setData(prev => ({ ...prev, searchTerm: term }));
   }, []);
 
-  const handleCriarPedidoFicticio = useCallback(async () => {
-    try {
-      setData(prev => ({ ...prev, isCreating: true }));
-      
-      await pedidosService.criarPedidoFicticio();
-      showSuccess('Pedido fictício criado com sucesso!');
-      refreshDados();
-    } catch (error) {
-      showError('Erro ao criar pedido fictício');
-    } finally {
-      setData(prev => ({ ...prev, isCreating: false }));
-    }
-  }, [showSuccess, showError, refreshDados]);
 
   const handleOpenPDV = useCallback(() => {
     navigate('/pdv');
   }, [navigate]);
 
   useEffect(() => {
-    carregarPedidos();
-  }, [carregarPedidos]);
+    // Só configurar se usuário estiver autenticado
+    if (status !== 'authenticated' || !user) {
+      console.log('⏳ Aguardando autenticação...');
+      return;
+    }
+
+    // Configurar atualização em tempo real
+    const unsubscribe = configurarAtualizacaoTempoReal();
+    
+    // Limpar listener quando componente desmontar
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, [status, user?.uid]); // Dependências mais específicas
 
   return {
     data,
@@ -127,7 +175,8 @@ export function usePedidos() {
     handleSearchChange,
     handleClearSearch,
     handleSearchSubmit,
-    handleCriarPedidoFicticio,
     handleOpenPDV
   };
 }
+
+

@@ -6,15 +6,15 @@ import { Produto } from '../types/global/produtos';
 interface CardapioState {
   // Estados de UI
   activeSection: 'produtos';
-  modalCategoriaOpen: boolean;
   modalProdutoOpen: boolean;
-  categoriaSelecionadaEdicao: Categoria | undefined;
   
   // Estados de filtros
   filtros: {
     categoria: string;
     status: string;
     disponibilidade: string;
+    abaAtiva?: 'produtos' | 'complementos';
+    complementoSelecionado?: any;
   };
   searchTerm: string;
   
@@ -29,9 +29,7 @@ interface CardapioState {
 // Tipos para as ações
 type CardapioAction =
   | { type: 'SET_ACTIVE_SECTION'; payload: 'produtos' }
-  | { type: 'SET_MODAL_CATEGORIA_OPEN'; payload: boolean }
   | { type: 'SET_MODAL_PRODUTO_OPEN'; payload: boolean }
-  | { type: 'SET_CATEGORIA_SELECIONADA_EDICAO'; payload: Categoria | undefined }
   | { type: 'SET_FILTROS'; payload: Partial<CardapioState['filtros']> }
   | { type: 'SET_SEARCH_TERM'; payload: string }
   // | { type: 'SET_LOADING_PRODUTOS'; payload: boolean }
@@ -42,13 +40,13 @@ type CardapioAction =
 // Estado inicial
 const initialState: CardapioState = {
   activeSection: 'produtos',
-  modalCategoriaOpen: false,
   modalProdutoOpen: false,
-  categoriaSelecionadaEdicao: undefined,
   filtros: {
     categoria: 'todos',
     status: 'todos',
-    disponibilidade: 'todos'
+    disponibilidade: 'todos',
+    abaAtiva: 'produtos',
+    complementoSelecionado: null
   },
   searchTerm: '',
   // loadingProdutos: false,
@@ -62,14 +60,8 @@ function cardapioReducer(state: CardapioState, action: CardapioAction): Cardapio
     case 'SET_ACTIVE_SECTION':
       return { ...state, activeSection: action.payload };
     
-    case 'SET_MODAL_CATEGORIA_OPEN':
-      return { ...state, modalCategoriaOpen: action.payload };
-    
     case 'SET_MODAL_PRODUTO_OPEN':
       return { ...state, modalProdutoOpen: action.payload };
-    
-    case 'SET_CATEGORIA_SELECIONADA_EDICAO':
-      return { ...state, categoriaSelecionadaEdicao: action.payload };
     
     case 'SET_FILTROS':
       return { 
@@ -103,8 +95,6 @@ interface CardapioContextType {
   dispatch: React.Dispatch<CardapioAction>;
   
   // Ações para modais
-  openModalCategoria: (categoria?: Categoria) => void;
-  closeModalCategoria: () => void;
   openModalProduto: () => void;
   closeModalProduto: () => void;
   
@@ -138,16 +128,6 @@ export function CardapioProvider({ children }: CardapioProviderProps) {
   const [state, dispatch] = useReducer(cardapioReducer, initialState);
 
   // Ações para modais
-  const openModalCategoria = useCallback((categoria?: Categoria) => {
-    dispatch({ type: 'SET_CATEGORIA_SELECIONADA_EDICAO', payload: categoria });
-    dispatch({ type: 'SET_MODAL_CATEGORIA_OPEN', payload: true });
-  }, []);
-
-  const closeModalCategoria = useCallback(() => {
-    dispatch({ type: 'SET_MODAL_CATEGORIA_OPEN', payload: false });
-    dispatch({ type: 'SET_CATEGORIA_SELECIONADA_EDICAO', payload: undefined });
-  }, []);
-
   const openModalProduto = useCallback(() => {
     dispatch({ type: 'SET_MODAL_PRODUTO_OPEN', payload: true });
   }, []);
@@ -200,8 +180,6 @@ export function CardapioProvider({ children }: CardapioProviderProps) {
   const value: CardapioContextType = {
     state,
     dispatch,
-    openModalCategoria,
-    closeModalCategoria,
     openModalProduto,
     closeModalProduto,
     updateFiltros,

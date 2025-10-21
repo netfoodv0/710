@@ -1,27 +1,4 @@
-// Types específicos para a página de Cardápio
-
-export interface CardapioData {
-  produtos: any[];
-  categorias: any[];
-  loading: boolean;
-  error: string | null;
-}
-
-export interface CardapioLayoutProps {
-  data: CardapioData;
-  onRetry: () => void;
-}
-
-export interface CardapioActions {
-  carregarProdutos: () => Promise<void>;
-  carregarCategorias: () => Promise<void>;
-  refreshDados: () => void;
-  handleRetry: () => void;
-}
-
-export interface CardapioTranslation {
-  t: (key: string) => string;
-}
+// Types específicos para a página de Cardápio (apenas front-end)
 
 // Props para componentes específicos
 export interface CardapioHeaderProps {
@@ -29,13 +6,11 @@ export interface CardapioHeaderProps {
 }
 
 export interface CardapioSidebarProps {
-  categorias: any[];
-  loading: boolean;
+  // Props específicas da sidebar se necessário
 }
 
 export interface CardapioMainProps {
-  produtos: any[];
-  loading: boolean;
+  // Props específicas do conteúdo principal se necessário
 }
 
 export interface CardapioModalsProps {
@@ -46,7 +21,3 @@ export interface CardapioNotificationsProps {
   // Props específicas das notificações se necessário
 }
 
-export interface CardapioErrorProps {
-  error: string;
-  onRetry: () => void;
-}

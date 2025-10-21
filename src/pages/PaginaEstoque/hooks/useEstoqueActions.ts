@@ -47,3 +47,5 @@ export function useEstoqueActions(): UseEstoqueActionsReturn {
     handleRetry
   };
 }
+
+

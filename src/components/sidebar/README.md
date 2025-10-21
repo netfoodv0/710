@@ -28,7 +28,7 @@
 - Cupons
 - Relatórios (Geral, Clientes, Produtos)
 - Mapa
-- Estoque (Produtos, Insumos, Acompanhamentos)
+- Estoque (Produtos, Acompanhamentos)
 - Configurações
 
 ### **Como Usar:**

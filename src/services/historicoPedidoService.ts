@@ -46,11 +46,15 @@ class HistoricoPedidoService extends BaseFirestoreService {
   // Obter histórico de pedidos com filtros otimizado
   async obterHistoricoComFiltros(filtros: FiltrosHistorico): Promise<Pedido[]> {
     try {
+      console.log('🔍 HistoricoPedidoService - Iniciando busca de histórico...');
+      
       // Primeiro, buscar todos os pedidos entregues
       const pedidosEntregues = await this.buscarPedidosPorStatus('entregue');
+      console.log('📦 Pedidos entregues encontrados:', pedidosEntregues.length);
       
       // Depois, buscar todos os pedidos cancelados
       const pedidosCancelados = await this.buscarPedidosPorStatus('cancelado');
+      console.log('❌ Pedidos cancelados encontrados:', pedidosCancelados.length);
       
       // Combinar os resultados e remover duplicatas baseado no ID
       let todosPedidos = [...pedidosEntregues, ...pedidosCancelados];
@@ -121,6 +125,7 @@ class HistoricoPedidoService extends BaseFirestoreService {
         console.warn('⚠️ HistoricoPedidoService: Alguns pedidos foram filtrados por ID inválido');
       }
 
+      console.log('✅ HistoricoPedidoService - Total de pedidos válidos retornados:', pedidosValidos.length);
       return pedidosValidos;
     } catch (error) {
       console.error('Erro ao obter histórico com filtros:', error);

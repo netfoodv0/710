@@ -2,8 +2,8 @@
   "firestore": {
     "database": "(default)",
     "location": "southamerica-east1",
-    "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "rules": "Banco de dados/firestore.rules",
+    "indexes": "Banco de dados/firestore.indexes.json"
   },
   "hosting": {
     "public": "dist",

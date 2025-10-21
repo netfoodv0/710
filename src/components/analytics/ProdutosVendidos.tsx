@@ -12,26 +12,31 @@ interface ProdutosVendidosProps {
 }
 
 // Componente para renderizar item individual
-const ProdutoItem: React.FC<{ produto: ProdutoVendido }> = ({ produto }) => {
-  const { getProductImage, formatCurrency } = useDataFormatter();
+const ProdutoItem: React.FC<{ produto: any }> = ({ produto }) => {
+  const { formatCurrency } = useDataFormatter();
   const { dashboard } = useDashboardTranslation();
-  const { handleImageError } = useErrorHandler();
+
+  // Usar imagem do produto se disponível, senão usar placeholder
+  const imagemProduto = produto.imagem || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik00MCAzMkMzNS41ODE3IDMyIDMyIDM1LjU4MTcgMzIgNDBTMzUuNTgxNyA0OCA0MCA0OFM0OCA0NC40MTgzIDQ4IDQwUzQ0LjQxODMgMzIgNDAgMzJaTTQwIDQ0QzM3Ljc5MDkgNDQgMzYgNDIuMjA5MSAzNiA0MFMzNy43OTA5IDM2IDQwIDM2UzQ0IDM3Ljc5MDkgNDQgNDBTNDIuMjA5MSA0NCA0MCA0NFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+';
 
   return (
     <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 bg-white rounded-lg dashboard-card-border h-[62px]">
       <div className="w-[40px] h-[40px] rounded-full overflow-hidden flex-shrink-0">
         <img 
-          src={getProductImage(produto.nome)} 
+          src={imagemProduto} 
           alt={`Imagem do produto ${produto.nome}`}
           className="w-full h-full object-cover"
-          onError={(e) => handleImageError(e, 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=80&h=80&fit=crop&crop=center', 'ProdutoItem')}
+          onError={(e) => {
+            // Fallback para placeholder SVG
+            (e.target as HTMLImageElement).src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik00MCAzMkMzNS41ODE3IDMyIDMyIDM1LjU4MTcgMzIgNDBTMzUuNTgxNyA0OCA0MCA0OFM0OCA0NC40MTgzIDQ4IDQwUzQ0LjQxODMgMzIgNDAgMzJaTTQwIDQ0QzM3Ljc5MDkgNDQgMzYgNDIuMjA5MSAzNiA0MFMzNy43OTA5IDM2IDQwIDM2UzQ0IDM3Ljc5MDkgNDQgNDBTNDIuMjA5MSA0NCA0MCA0NFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+';
+          }}
         />
       </div>
       <div className="grid grid-rows-2 gap-1">
         <p className="font-medium text-gray-700 text-sm">{produto.nome}</p>
         <div className="grid grid-cols-2 gap-4">
           <span className="text-xs text-gray-500">{produto.quantidade} {dashboard.vendas}</span>
-          <span className="text-xs font-semibold text-gray-900">{formatCurrency(produto.receita)}</span>
+          <span className="text-xs font-semibold text-gray-900">{formatCurrency(produto.valorTotal || produto.receita || 0)}</span>
         </div>
       </div>
       <div className="flex items-center justify-center">

@@ -1,7 +1,8 @@
 // Types específicos para a página de Motoboys
 
 export interface Motoboy {
-  id: number;
+  id: string;
+  lojaId: string;
   nome: string;
   telefone: string;
   status: 'ativo' | 'inativo';
@@ -9,6 +10,8 @@ export interface Motoboy {
   ultimaEntrega: string;
   avaliacao: number;
   totalEntregas: number;
+  dataCriacao: Date;
+  dataAtualizacao: Date;
 }
 
 export interface MotoboysData {
@@ -19,12 +22,13 @@ export interface MotoboysData {
 
 export interface MotoboysLayoutProps {
   data: MotoboysData;
+  onCreate?: () => void;
 }
 
 export interface MotoboysActions {
   criarMotoboy: (motoboy: Partial<Motoboy>) => Promise<void>;
-  editarMotoboy: (id: number, motoboy: Partial<Motoboy>) => Promise<void>;
-  excluirMotoboy: (id: number) => Promise<void>;
+  editarMotoboy: (id: string, motoboy: Partial<Motoboy>) => Promise<void>;
+  excluirMotoboy: (id: string) => Promise<void>;
 }
 
 export interface MotoboysTranslation {
@@ -35,8 +39,8 @@ export interface MotoboysTranslation {
 export interface MotoboysTableProps {
   motoboys: Motoboy[];
   loading: boolean;
-  onEdit: (id: number) => void;
-  onDelete: (id: number) => void;
+  onEdit: (id: string) => void;
+  onDelete: (id: string) => void;
   onCreate: () => void;
 }
 
@@ -45,3 +49,5 @@ export interface MotoboysStatsProps {
   motoboysAtivos: number;
   motoboysInativos: number;
 }
+
+

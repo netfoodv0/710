@@ -3,7 +3,6 @@ export { default as Dashboard } from '../PaginaDashboard';
 export { Pedidos } from '../PaginaPedidos';
 export { HistoricoPedidos } from '../PaginaHistoricoPedidos';
 export { Cardapio } from '../PaginaCardapio';
-export { CadastroProduto } from '../PaginaCadastroProduto';
 export { Atendimento } from '../PaginaAtendimento';
 export { default as Modal } from '../Modal';
 export { Configuracoes } from '../PaginaConfiguracoes';

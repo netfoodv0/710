@@ -1,79 +1,13 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNotificationContext } from '../../../context/notificationContextUtils';
 import { DataTableColumn } from '../../../components/ui';
 import { UseAcompanhamentosReturn, ProdutoAcompanhamento } from '../types';
+import { AcompanhamentosService } from '../services/acompanhamentosService';
+import { useAuth } from '../../../hooks';
 
-// Dados fictícios de acompanhamentos
-const produtosAcompanhamentos: ProdutoAcompanhamento[] = [
-  {
-    id: 1,
-    nome: 'Batata Frita',
-    categoria: 'Acompanhamentos',
-    quantidade: 45,
-    quantidadeMinima: 10,
-    precoCusto: 3.50,
-    custoEstoque: 157.50,
-    semControleEstoque: false,
-    fichaTecnica: 'Sim',
-    status: 'em_estoque',
-    medida: 'porção'
-  },
-  {
-    id: 2,
-    nome: 'Onion Rings',
-    categoria: 'Acompanhamentos',
-    quantidade: 8,
-    quantidadeMinima: 15,
-    precoCusto: 4.20,
-    custoEstoque: 33.60,
-    semControleEstoque: false,
-    fichaTecnica: 'Sim',
-    status: 'baixo_estoque',
-    medida: 'porção'
-  },
-  {
-    id: 3,
-    nome: 'Nuggets de Frango',
-    categoria: 'Acompanhamentos',
-    quantidade: 0,
-    quantidadeMinima: 20,
-    precoCusto: 5.80,
-    custoEstoque: 0,
-    semControleEstoque: false,
-    fichaTecnica: 'Sim',
-    status: 'sem_estoque',
-    medida: 'un'
-  },
-  {
-    id: 4,
-    nome: 'Molho Barbecue',
-    categoria: 'Molhos',
-    quantidade: 25,
-    quantidadeMinima: 5,
-    precoCusto: 2.30,
-    custoEstoque: 57.50,
-    semControleEstoque: false,
-    fichaTecnica: 'Não',
-    status: 'em_estoque',
-    medida: 'un'
-  },
-  {
-    id: 5,
-    nome: 'Molho Ketchup',
-    categoria: 'Molhos',
-    quantidade: 12,
-    quantidadeMinima: 8,
-    precoCusto: 1.80,
-    custoEstoque: 21.60,
-    semControleEstoque: false,
-    fichaTecnica: 'Não',
-    status: 'em_estoque',
-    medida: 'un'
-  }
-];
 
 export function useAcompanhamentos(): UseAcompanhamentosReturn {
-  const [produtos, setProdutos] = useState<ProdutoAcompanhamento[]>(produtosAcompanhamentos);
+  const [produtos, setProdutos] = useState<ProdutoAcompanhamento[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,6 +15,30 @@ export function useAcompanhamentos(): UseAcompanhamentosReturn {
   const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoAcompanhamento | null>(null);
 
   const { showSuccess, showError } = useNotificationContext();
+  const { loja } = useAuth();
+
+  // Carregar dados do Firebase
+  useEffect(() => {
+    const carregarAcompanhamentos = async () => {
+      if (!loja?.id) return;
+      
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const acompanhamentos = await AcompanhamentosService.buscarAcompanhamentos(loja.id);
+        setProdutos(acompanhamentos);
+      } catch (err) {
+        console.error('Erro ao carregar acompanhamentos:', err);
+        setError('Erro ao carregar acompanhamentos');
+        showError('Erro ao carregar acompanhamentos');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    carregarAcompanhamentos();
+  }, [loja?.id, showError]);
 
   // Função para formatar moeda
   const formatCurrency = (value: number) => {
@@ -95,7 +53,8 @@ export function useAcompanhamentos(): UseAcompanhamentosReturn {
     const statusConfig = {
       em_estoque: { label: 'Em Estoque', color: 'bg-green-100 text-green-800' },
       baixo_estoque: { label: 'Baixo Estoque', color: 'bg-yellow-100 text-yellow-800' },
-      sem_estoque: { label: 'Sem Estoque', color: 'bg-red-100 text-red-800' }
+      sem_estoque: { label: 'Sem Estoque', color: 'bg-red-100 text-red-800' },
+      sem_controle: { label: 'Sem Controle', color: 'bg-gray-100 text-gray-800' }
     };
     
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.em_estoque;
@@ -118,15 +77,29 @@ export function useAcompanhamentos(): UseAcompanhamentosReturn {
     },
     {
       key: 'quantidade',
-      label: 'Quantidade',
+      label: 'Estoque Atual',
       sortable: true,
-      render: (produto) => `${produto.quantidade} ${produto.medida}`
+      render: (produto) => {
+        // Se não há controle de estoque, exibir "Sem Controle"
+        if (produto.semControleEstoque) {
+          return 'Sem Controle';
+        }
+        
+        return `${produto.quantidade} ${produto.medida}`;
+      }
     },
     {
       key: 'quantidadeMinima',
-      label: 'Mínimo',
+      label: 'Estoque Mínimo',
       sortable: true,
-      render: (produto) => `${produto.quantidadeMinima} ${produto.medida}`
+      render: (produto) => {
+        // Se não há controle de estoque, exibir "Sem Controle"
+        if (produto.semControleEstoque) {
+          return 'Sem Controle';
+        }
+        
+        return `${produto.quantidadeMinima} ${produto.medida}`;
+      }
     },
     {
       key: 'precoCusto',
@@ -144,7 +117,14 @@ export function useAcompanhamentos(): UseAcompanhamentosReturn {
       key: 'status',
       label: 'Status',
       sortable: true,
-      render: (produto) => getStatusBadge(produto.status)
+      render: (produto) => {
+        // Se não há controle de estoque, exibir "Sem Controle"
+        if (produto.semControleEstoque) {
+          return 'Sem Controle';
+        }
+        
+        return getStatusBadge(produto.status);
+      }
     },
     {
       key: 'actions',
@@ -186,14 +166,24 @@ export function useAcompanhamentos(): UseAcompanhamentosReturn {
     showSuccess('Acompanhamento atualizado com sucesso!');
   }, [handleCloseModal, showSuccess]);
 
-  const handleRetry = useCallback(() => {
+  const handleRetry = useCallback(async () => {
+    if (!loja?.id) return;
+    
     setError(null);
     setLoading(true);
-    // Simular recarregamento
-    setTimeout(() => {
+    
+    try {
+      const acompanhamentos = await AcompanhamentosService.buscarAcompanhamentos(loja.id);
+      setProdutos(acompanhamentos);
+      showSuccess('Dados recarregados com sucesso');
+    } catch (err) {
+      console.error('Erro ao recarregar acompanhamentos:', err);
+      setError('Erro ao recarregar acompanhamentos');
+      showError('Erro ao recarregar acompanhamentos');
+    } finally {
       setLoading(false);
-    }, 1000);
-  }, []);
+    }
+  }, [loja?.id, showSuccess, showError]);
 
   return {
     produtos,
@@ -212,3 +202,5 @@ export function useAcompanhamentos(): UseAcompanhamentosReturn {
     handleRetry
   };
 }
+
+

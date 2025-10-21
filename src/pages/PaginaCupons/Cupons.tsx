@@ -1,9 +1,9 @@
-import React from 'react';
 import { useNotificationContext } from '../../context/notificationContextUtils';
 import { NotificationToast } from '../../components/NotificationToast';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { useCupons } from './hooks';
 import { CuponsLayout } from './components';
+import { ModalCriarCupom } from '../../components/modals/ModalCriarCupom';
 
 // Estilos removidos - usando apenas Tailwind CSS
 
@@ -22,7 +22,10 @@ export default function Cupons() {
     columns,
     carregamentoCompleto,
     mostrarAnimacoes,
-    alturasAnimadas
+    alturasAnimadas,
+    isModalOpen,
+    handleCupomCriado,
+    handleCloseModal
   } = useCupons();
 
   const { notifications, removeNotification } = useNotificationContext();
@@ -59,6 +62,13 @@ export default function Cupons() {
           carregamentoCompleto={carregamentoCompleto}
           mostrarAnimacoes={mostrarAnimacoes}
           alturasAnimadas={alturasAnimadas}
+        />
+
+        {/* Modal de Criar Cupom */}
+        <ModalCriarCupom
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSuccess={handleCupomCriado}
         />
       </div>
     </ErrorBoundary>

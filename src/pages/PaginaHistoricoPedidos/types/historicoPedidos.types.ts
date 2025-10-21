@@ -49,3 +49,5 @@ export interface HistoricoPedidosFiltersProps {
 
 // Re-exportar tipos do histórico
 export type { Pedido, StatusPedido, FiltrosHistoricoState } from '../../../features/historico/types/historico.types';
+
+

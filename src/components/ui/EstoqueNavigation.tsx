@@ -16,8 +16,6 @@ export function EstoqueNavigation({ currentPage }: EstoqueNavigationProps) {
     if (location.pathname.startsWith('/estoque')) {
       if (location.pathname === '/estoque/produtos') {
         setCurrentPage('produto');
-              } else if (location.pathname === '/estoque/insumos') {
-          setCurrentPage('insumos');
       } else if (location.pathname.includes('/estoque/acompanhamentos')) {
         setCurrentPage('acompanhamento');
       }
@@ -45,12 +43,6 @@ export function EstoqueNavigation({ currentPage }: EstoqueNavigationProps) {
         className={getButtonStyle('produto')}
       >
         Produto
-      </button>
-      <button
-        onClick={() => handleNavigation('/estoque/insumos')}
-        className={getButtonStyle('insumos')}
-      >
-        Insumos
       </button>
       <button
         onClick={() => handleNavigation('/estoque/acompanhamentos')}

@@ -8,6 +8,10 @@ export function AcompanhamentosTable({
   onOpenModal,
   onOpenModalDetalhes
 }: AcompanhamentosTableProps) {
+  // Extrair categorias únicas dos produtos
+  const categorias = Array.from(new Set(produtos.map(p => p.categoria)))
+    .map(categoria => ({ value: categoria, label: categoria }));
+
   return (
     <DataTable
       data={produtos}
@@ -15,14 +19,12 @@ export function AcompanhamentosTable({
       searchPlaceholder="Buscar acompanhamentos..."
       searchFields={['nome', 'categoria']}
       filters={{
-        categories: [
-          { value: 'Acompanhamentos', label: 'Acompanhamentos' },
-          { value: 'Molhos', label: 'Molhos' }
-        ],
+        categories: categorias,
         statuses: [
           { value: 'em_estoque', label: 'Em Estoque' },
           { value: 'baixo_estoque', label: 'Baixo Estoque' },
-          { value: 'sem_estoque', label: 'Sem Estoque' }
+          { value: 'sem_estoque', label: 'Sem Estoque' },
+          { value: 'sem_controle', label: 'Sem Controle' }
         ],
         showDateRange: false
       }}
@@ -39,3 +41,5 @@ export function AcompanhamentosTable({
     />
   );
 }
+
+

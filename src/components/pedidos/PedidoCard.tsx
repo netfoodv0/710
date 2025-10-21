@@ -87,7 +87,10 @@ export const PedidoCard = memo(({
               Recusar
             </button>
             <button 
-              onClick={onAvançar}
+              onClick={() => {
+                console.log('🔄 Botão Avançar clicado para pedido:', numero);
+                onAvançar?.();
+              }}
               className="px-3 py-1 text-xs font-medium text-white bg-green-600 rounded-full hover:bg-green-700 transition-colors border" 
               style={{ borderColor: 'rgb(207 209 211)' }}
             >

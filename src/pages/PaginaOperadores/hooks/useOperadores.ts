@@ -60,6 +60,52 @@ export function useOperadores() {
     }
   }, [showNotification]);
 
+  const editarOperador = useCallback(async (id: string, operador: Partial<Operador>) => {
+    try {
+      await OperadoresService.editarOperador(id, operador);
+      setData(prev => ({
+        ...prev,
+        operadores: prev.operadores.map(op => 
+          op.id === id ? { ...op, ...operador, dataAtualizacao: new Date() } : op
+        )
+      }));
+      
+      showNotification({
+        type: 'success',
+        title: 'Sucesso',
+        message: 'Operador editado com sucesso!'
+      });
+    } catch (error) {
+      showNotification({
+        type: 'error',
+        title: 'Erro',
+        message: 'Não foi possível editar o operador'
+      });
+    }
+  }, [showNotification]);
+
+  const excluirOperador = useCallback(async (id: string) => {
+    try {
+      await OperadoresService.excluirOperador(id);
+      setData(prev => ({
+        ...prev,
+        operadores: prev.operadores.filter(op => op.id !== id)
+      }));
+      
+      showNotification({
+        type: 'success',
+        title: 'Sucesso',
+        message: 'Operador excluído com sucesso!'
+      });
+    } catch (error) {
+      showNotification({
+        type: 'error',
+        title: 'Erro',
+        message: 'Não foi possível excluir o operador'
+      });
+    }
+  }, [showNotification]);
+
   useEffect(() => {
     carregarDados();
   }, [carregarDados]);
@@ -67,6 +113,10 @@ export function useOperadores() {
   return {
     data,
     carregarDados,
-    criarOperador
+    criarOperador,
+    editarOperador,
+    excluirOperador
   };
 }
+
+

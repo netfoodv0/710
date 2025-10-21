@@ -15,8 +15,8 @@
 /* Import dos estilos do dashboard */
 @import '@/styles/organized/layouts/dashboard.css';
 
-/* Import dos estilos específicos do modal de usuário */
-@import '@/styles/modal-usuario.css';
+/* Import dos estilos do modal global */
+@import '@/styles/modal-global.css';
 
 /* Import dos estilos do modal refatorado */
 @import '@/styles/modal.css';

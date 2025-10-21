@@ -1,0 +1,214 @@
+/* Modal Global - CSS Reutilizável */
+
+.modal-global {
+  /* Container do modal */
+  .CustomModal {
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e5e7eb;
+    background-color: white;
+  }
+
+  /* Header */
+  .CustomModal .px-6.py-4.border-b {
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.5rem;
+  }
+
+  .CustomModal h3 {
+    color: #1f2937;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.75rem;
+    margin: 0;
+  }
+
+  /* Botão de fechar */
+  .CustomModal button[onclick*="onClose"] {
+    background-color: transparent;
+    border: 1px solid #d1d5db;
+    border-radius: 50%;
+    padding: 0.5rem;
+    color: #9ca3af;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .CustomModal button[onclick*="onClose"]:hover {
+    background-color: #f3f4f6;
+    color: #6b7280;
+    border-color: #9ca3af;
+  }
+
+  /* Body */
+  .CustomModal .px-6.py-4:not(.border-b):not(.border-t) {
+    background-color: white;
+    padding: 1.5rem;
+  }
+
+  /* Formulários */
+  form {
+    background-color: white;
+  }
+
+  /* Labels */
+  label {
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  /* Inputs */
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: white;
+    color: #111827;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    transition: border-color 0.2s ease;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #9333ea;
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: #9ca3af;
+  }
+
+  /* Dropdown */
+  .CustomDropdown {
+    background-color: white;
+  }
+
+  .CustomDropdown button {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: white;
+    color: #111827;
+    font-size: 0.875rem;
+    text-align: left;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .CustomDropdown button:hover {
+    background-color: #faf5ff;
+    border-color: #c4b5fd;
+  }
+
+  .CustomDropdown button:focus {
+    outline: none;
+    border-color: #9333ea;
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+  }
+
+  /* Texto de ajuda */
+  .text-sm.text-gray-500 {
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+
+  /* Footer */
+  .CustomModal .border-t {
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+    padding: 1.5rem;
+  }
+
+  /* Botões do footer */
+  .flex.justify-end.space-x-3 {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .flex.justify-end.space-x-3 button {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid #d1d5db;
+  }
+
+  /* Botão Cancelar */
+  .flex.justify-end.space-x-3 button[type="button"] {
+    background-color: white;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+  }
+
+  .flex.justify-end.space-x-3 button[type="button"]:hover {
+    background-color: #f9fafb;
+    color: #1f2937;
+    border-color: #9ca3af;
+  }
+
+  /* Botão Submit */
+  .flex.justify-end.space-x-3 button[type="submit"] {
+    background-color: #9333ea;
+    color: white;
+    border: 1px solid #d1d5db;
+  }
+
+  .flex.justify-end.space-x-3 button[type="submit"]:hover {
+    background-color: #7c3aed;
+    border-color: #d1d5db;
+  }
+
+  .flex.justify-end.space-x-3 button[type="submit"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+  }
+
+  /* Estados disabled */
+  button:disabled,
+  input:disabled,
+  select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Espaçamento entre campos */
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Responsividade */
+  @media (max-width: 640px) {
+    .CustomModal {
+      margin: 1rem;
+      max-width: calc(100vw - 2rem);
+    }
+    
+    .CustomModal .px-6.py-4 {
+      padding: 1rem;
+    }
+    
+    .CustomModal .border-t {
+      padding: 1rem;
+    }
+  }
+}
+
+
+

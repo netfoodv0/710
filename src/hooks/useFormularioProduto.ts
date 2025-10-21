@@ -120,6 +120,7 @@ export function useFormularioProduto({ produto, onSubmit }: UseFormularioProduto
           const reader = new FileReader();
           reader.onload = () => {
             processedData.imagem = reader.result as string;
+            console.log('Submetendo dados com imagem processada:', processedData);
             onSubmit(processedData);
           };
           reader.readAsDataURL(file);

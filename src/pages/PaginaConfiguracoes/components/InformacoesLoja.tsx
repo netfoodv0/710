@@ -40,3 +40,5 @@ export function InformacoesLoja({ config, onConfigChange, loading }: Informacoes
     </div>
   );
 }
+
+

@@ -1,25 +1,26 @@
-import React from 'react';
-import { useProducts } from '../../../hooks/useProducts';
+import React, { useCallback, useEffect } from 'react';
+import { useProductsFirebasePDV } from '../../../hooks/useProductsFirebasePDV';
+import { usePDVContext } from '../../../context/PDVContext';
 
 export const CategoryTabs: React.FC = () => {
-  const { categories, selectedCategory, selectCategory } = useProducts();
+  const { categories } = useProductsFirebasePDV();
+  const { selectedCategory, setSelectedCategory } = usePDVContext();
 
-  const handleCategorySelect = (categoryId: string) => {
-    selectCategory(categoryId === selectedCategory ? null : categoryId);
-  };
+  // Pré-selecionar a primeira categoria quando as categorias são carregadas
+  useEffect(() => {
+    if (categories.length > 0 && !selectedCategory) {
+      // Ordenar categorias por ordem e selecionar a primeira
+      const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
+      setSelectedCategory(sortedCategories[0].id);
+    }
+  }, [categories, selectedCategory, setSelectedCategory]);
+
+  const handleCategorySelect = useCallback((categoryId: string) => {
+    setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
+  }, [selectedCategory, setSelectedCategory]);
 
   return (
-    <div className="p-3 space-y-2">
-      {/* Categoria "Todas" */}
-      <div
-        onClick={() => handleCategorySelect('')}
-        className={`p-2 rounded-lg cursor-pointer transition-colors hover:bg-purple-50 ${
-          !selectedCategory ? 'bg-purple-100 text-purple-800 border border-purple-300' : 'bg-purple-100 text-purple-800'
-        }`}
-      >
-        <span className="text-sm font-medium">Todas</span>
-      </div>
-
+    <div className="p-3">
       {/* Categorias específicas */}
       {categories.map((category) => {
         const isSelected = selectedCategory === category.id;
@@ -29,10 +30,12 @@ export const CategoryTabs: React.FC = () => {
             key={category.id}
             onClick={() => handleCategorySelect(category.id)}
             className={`p-2 rounded-lg cursor-pointer transition-colors hover:bg-purple-50 ${
-              isSelected ? 'bg-purple-100 text-purple-800 border border-purple-300' : category.color
+              isSelected ? 'bg-white text-purple-800' : 'bg-white text-purple-800'
             }`}
           >
-            <span className="text-sm font-medium">{category.name}</span>
+            <span className={`text-sm ${isSelected ? 'font-bold' : 'font-medium'}`}>
+              {category.name}
+            </span>
           </div>
         );
       })}

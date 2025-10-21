@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, TrendingUp, TrendingDown, Plus, Minus } from 'lucide-react';
 
 interface ProdutoEstoque {
-  id: number;
+  id: string; // Mudado de number para string
   nome: string;
   categoria: string;
   quantidade: number;
@@ -16,15 +16,6 @@ interface ProdutoEstoque {
   medida: string;
 }
 
-interface Insumo {
-  id: number;
-  nome: string;
-  categoria: string;
-  quantidade: number;
-  custo: number;
-  estoque: string;
-  permiteNegativo: boolean;
-}
 
 interface ModalDetalhesProdutoProps {
   isOpen: boolean;
@@ -44,27 +35,6 @@ export function ModalDetalhesProduto({ isOpen, onClose, produto, onAlterarEstoqu
   // Estados para controle de edição
   const [produtoEditado, setProdutoEditado] = useState<ProdutoEstoque | null>(null);
   const [modoEdicao, setModoEdicao] = useState(false);
-  const [insumos, setInsumos] = useState<Insumo[]>([
-    {
-      id: 1,
-      nome: 'Fatia de queijo',
-      categoria: 'categorias teste',
-      quantidade: 1,
-      custo: 0.00,
-      estoque: 'Crítico',
-      permiteNegativo: false
-    },
-    {
-      id: 2,
-      nome: 'insumo demostrativo',
-      categoria: 'categorias teste',
-      quantidade: 3,
-      custo: 0.00,
-      estoque: 'Sem controle',
-      permiteNegativo: true
-    }
-  ]);
-  const [novoInsumo, setNovoInsumo] = useState('');
 
   // useEffect para inicializar produto editado
   React.useEffect(() => {
@@ -111,31 +81,6 @@ export function ModalDetalhesProduto({ isOpen, onClose, produto, onAlterarEstoqu
     }
   };
 
-  const handleAdicionarInsumo = () => {
-    if (novoInsumo.trim()) {
-      const novoInsumoObj: Insumo = {
-        id: Date.now(),
-        nome: novoInsumo,
-        categoria: 'Nova categoria',
-        quantidade: 1,
-        custo: 0.00,
-        estoque: 'Sem controle',
-        permiteNegativo: false
-      };
-      setInsumos(prev => [...prev, novoInsumoObj]);
-      setNovoInsumo('');
-    }
-  };
-
-  const handleEditarInsumo = (id: number, campo: keyof Insumo, valor: any) => {
-    setInsumos(prev => prev.map(insumo => 
-      insumo.id === id ? { ...insumo, [campo]: valor } : insumo
-    ));
-  };
-
-  const handleRemoverInsumo = (id: number) => {
-    setInsumos(prev => prev.filter(insumo => insumo.id !== id));
-  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -147,10 +92,12 @@ export function ModalDetalhesProduto({ isOpen, onClose, produto, onAlterarEstoqu
   const getStatusBadge = (status: string) => {
     if (status === 'em_estoque') {
       return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Em estoque</span>;
-    } else if (status === 'estoque_baixo') {
+    } else if (status === 'baixo_estoque') {
       return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Estoque baixo</span>;
+    } else if (status === 'sem_controle') {
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Sem controle</span>;
     } else {
-      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">Em falta</span>;
+      return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Sem estoque</span>;
     }
   };
 
@@ -232,7 +179,7 @@ export function ModalDetalhesProduto({ isOpen, onClose, produto, onAlterarEstoqu
               {/* Controles de estoque */}
               <div className="grid grid-cols-3 gap-4">
                                  <div>
-                   <label className="block text-sm font-medium text-gray-700 mb-2">Estoque mínimo</label>
+                   <label className="block text-sm font-medium text-gray-700 mb-2">Estoque Mínimo</label>
                    <input
                      type="number"
                      value={produtoEditado?.quantidadeMinima || 0}
@@ -242,7 +189,7 @@ export function ModalDetalhesProduto({ isOpen, onClose, produto, onAlterarEstoqu
                    />
                  </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Estoque atual</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Estoque Atual</label>
                   <input
                     type="number"
                     value={produto.quantidade}
@@ -324,122 +271,6 @@ export function ModalDetalhesProduto({ isOpen, onClose, produto, onAlterarEstoqu
                 {getStatusBadge(produto.status)}
               </div>
 
-              {/* Campo de busca de insumos */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Pesquise e adicione um insumo
-        </label>
-                               <div className="flex space-x-2">
-                 <div className="flex-1 relative">
-                   <input
-                     type="text"
-                     placeholder="Pesquise e adicione um insumo"
-                     value={novoInsumo}
-                     onChange={(e) => setNovoInsumo(e.target.value)}
-                     onKeyPress={(e) => e.key === 'Enter' && handleAdicionarInsumo()}
-                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                   />
-                 </div>
-                 <button
-                   onClick={handleAdicionarInsumo}
-                   disabled={!novoInsumo.trim()}
-                   className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                 >
-                   Adicionar
-                 </button>
-               </div>
-              </div>
-
-              {/* Tabela de insumos */}
-              <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-200 rounded-lg">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Insumo</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qtde</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Custo</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estoque</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permite negativo</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {insumos.map((insumo) => (
-                      <tr key={insumo.id}>
-                        <td className="px-4 py-3">
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{insumo.nome}</div>
-                            <div className="text-xs text-gray-500">{insumo.categoria}</div>
-                          </div>
-                        </td>
-                                                 <td className="px-4 py-3">
-                           <input
-                             type="number"
-                             value={insumo.quantidade}
-                             onChange={(e) => handleEditarInsumo(insumo.id, 'quantidade', Number(e.target.value))}
-                             className="w-16 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-red-500"
-                             min="0"
-                           />
-                           <span className="ml-1 text-xs text-gray-500">UN</span>
-                         </td>
-                         <td className="px-4 py-3">
-                           <div>
-                             <input
-                               type="number"
-                               value={insumo.custo}
-                               onChange={(e) => handleEditarInsumo(insumo.id, 'custo', Number(e.target.value))}
-                               className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-red-500"
-                               min="0"
-                               step="0.01"
-                             />
-                             <div className="text-xs text-gray-500">0%</div>
-                           </div>
-                         </td>
-                         <td className="px-4 py-3">
-                           <select
-                             value={insumo.estoque}
-                             onChange={(e) => handleEditarInsumo(insumo.id, 'estoque', e.target.value)}
-                             className={`text-xs font-medium px-2.5 py-0.5 rounded-full border-0 ${
-                               insumo.estoque === 'Crítico' 
-                                 ? 'bg-red-100 text-red-800' 
-                                 : 'bg-gray-100 text-gray-800'
-                             }`}
-                           >
-                             <option value="Crítico">Crítico</option>
-                             <option value="Sem controle">Sem controle</option>
-                             <option value="Normal">Normal</option>
-                           </select>
-                         </td>
-                         <td className="px-4 py-3">
-                           <button
-                             onClick={() => handleEditarInsumo(insumo.id, 'permiteNegativo', !insumo.permiteNegativo)}
-                             className={`text-sm px-2 py-1 rounded ${
-                               insumo.permiteNegativo 
-                                 ? 'bg-green-100 text-green-800' 
-                                 : 'bg-gray-100 text-gray-800'
-                             }`}
-                           >
-                             {insumo.permiteNegativo ? 'Sim' : 'Não'}
-                           </button>
-                         </td>
-                        <td className="px-4 py-3">
-                          <div className="flex space-x-2">
-                            <button 
-                              onClick={() => handleRemoverInsumo(insumo.id)}
-                              className="p-1 text-gray-400 hover:text-red-600 transition-colors"
-                              title="Remover insumo"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                              </svg>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
             </div>
           )}
         </div>

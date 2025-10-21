@@ -2,31 +2,40 @@
 
 export interface Product {
   id: string;
-  nome: string;
-  preco: number;
-  categoria: string;
-  ativo: boolean;
-  imagem?: string;
-  descricao?: string;
-  tempoPreparo?: number;
-  estoque?: number;
-  disponivel: boolean;
+  name: string;
+  description?: string;
+  price: number;
+  categoryId: string;
+  category: ProductCategory;
+  images?: string[];
+  available: boolean;
+  stock: number;
+  minStock: number;
+  maxStock: number;
+  unit: string;
+  customizations: any[];
+  allergens: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ProductCategory {
   id: string;
-  nome: string;
-  ativa: boolean;
-  ordem: number;
+  name: string;
+  description: string;
+  color: string;
+  order: number;
+  products: Product[];
 }
 
 export interface ProductSearchFilters {
-  categoria?: string;
-  precoMin?: number;
-  precoMax?: number;
-  disponivel?: boolean;
-  ativo?: boolean;
-  busca?: string;
+  available?: boolean;
+  priceRange?: {
+    min: number;
+    max: number;
+  };
+  sortBy?: 'name' | 'price';
+  sortOrder?: 'asc' | 'desc';
 }
 
 export interface ProductFormData {

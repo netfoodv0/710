@@ -40,45 +40,8 @@ export const CouponModal: React.FC<CouponModalProps> = ({
     discountAmount?: number;
   } | null>(null);
 
-  // Mock de cupons disponíveis (em produção viria da API)
-  const availableCoupons: Coupon[] = [
-    {
-      code: 'WELCOME10',
-      type: 'percentage',
-      value: 10,
-      minOrderValue: 30,
-      maxDiscount: 20,
-      validFrom: new Date('2024-01-01'),
-      validUntil: new Date('2024-12-31'),
-      usageLimit: 1000,
-      usedCount: 150,
-      isActive: true
-    },
-    {
-      code: 'FREESHIP',
-      type: 'fixed',
-      value: 5,
-      minOrderValue: 50,
-      maxDiscount: 5,
-      validFrom: new Date('2024-01-01'),
-      validUntil: new Date('2024-12-31'),
-      usageLimit: 500,
-      usedCount: 80,
-      isActive: true
-    },
-    {
-      code: 'SAVE20',
-      type: 'percentage',
-      value: 20,
-      minOrderValue: 100,
-      maxDiscount: 50,
-      validFrom: new Date('2024-01-01'),
-      validUntil: new Date('2024-12-31'),
-      usageLimit: 200,
-      usedCount: 45,
-      isActive: true
-    }
-  ];
+  // Cupons serão carregados do Firebase/API
+  const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
 
   const validateCoupon = async (code: string) => {
     setIsValidating(true);

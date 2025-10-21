@@ -17,6 +17,7 @@ export interface ConfiguracaoLoja {
     estado: string;
     cep: string;
   };
+  fusoHorario: string; // Fuso horário da loja
   horarioFuncionamento: {
     segunda: { abertura: string; fechamento: string; ativo: boolean };
     terca: { abertura: string; fechamento: string; ativo: boolean };
@@ -50,6 +51,7 @@ export const configuracaoLojaSchema = z.object({
   cnpj: z.string().min(14, 'CNPJ deve ter 14 dígitos'),
   telefone: z.string().min(10, 'Telefone é obrigatório'),
   email: z.string().email('Email inválido'),
+  fusoHorario: z.string().min(1, 'Fuso horário é obrigatório'),
   endereco: z.object({
     rua: z.string().min(1, 'Rua é obrigatória'),
     numero: z.string().min(1, 'Número é obrigatório'),

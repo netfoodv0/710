@@ -136,7 +136,6 @@ export const spacing = {
 - `src/pages/Relatorios.tsx` - Substituído `style={{ backgroundColor: '#eeebeb' }}`
 - `src/pages/Horarios/Horarios.tsx` - Substituído `style={{ backgroundColor: '#eeebeb' }}`
 - `src/pages/Estoque/Estoque.tsx` - Substituído `style={{ backgroundColor: 'rgb(238, 235, 235)' }}`
-- `src/pages/Estoque/Insumos.tsx` - Substituído `style={{ backgroundColor: 'rgb(238, 235, 235)' }}`
 - `src/pages/Estoque/Acompanhamentos.tsx` - Substituído `style={{ backgroundColor: 'rgb(238, 235, 235)' }}`
 - `src/pages/Configuracoes/index.tsx` - Substituído `style={{ backgroundColor: '#eeebeb' }}`
 - `src/pages/Usuarios/Operadores.tsx` - Substituído `style={{ backgroundColor: '#eeebeb' }}`

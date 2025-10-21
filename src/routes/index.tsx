@@ -19,24 +19,20 @@ const Pedidos = lazy(() => import('../pages/PaginaPedidos/Pedidos'));
 const PDV = lazy(() => import('../pages/PaginaPDV/PDV'));
 const HistoricoPedidos = lazy(() => import('../pages/PaginaHistoricoPedidos/HistoricoPedidos'));
 const Cardapio = lazy(() => import('../pages/PaginaCardapio/Cardapio'));
-const CadastroProduto = lazy(() => import('../pages/PaginaCadastroProduto/CadastroProduto'));
 
 const Atendimento = lazy(() => import('../pages/PaginaAtendimento/Atendimento'));
-const KDSPage = lazy(() => import('../pages/PaginaKDS/KDS'));
-const Configuracoes = lazy(() => import('../pages/PaginaConfiguracoes/Configuracoes'));
 const Horarios = lazy(() => import('../pages/PaginaHorarios/Horarios'));
+const Configuracoes = lazy(() => import('../pages/PaginaConfiguracoes/Configuracoes'));
 
 const Relatorios = lazy(() => import('../pages/PaginaRelatoriosGeral/RelatoriosGeral'));
 const RelatoriosClientes = lazy(() => import('../pages/PaginaRelatoriosClientes/RelatoriosClientes'));
 const RelatoriosProdutos = lazy(() => import('../pages/PaginaRelatoriosProdutos/RelatoriosProdutos'));
 const RelatoriosCupons = lazy(() => import('../pages/PaginaCupons/Cupons'));
-const Fidelidade = lazy(() => import('../pages/PaginaFidelidade/Fidelidade'));
 const Usuarios = lazy(() => import('../pages/PaginaUsuarios/Usuarios'));
 const Operadores = lazy(() => import('../pages/PaginaOperadores/Operadores'));
 const Motoboys = lazy(() => import('../pages/PaginaMotoboys/Motoboys'));
 const Mapa = lazy(() => import('../pages/PaginaMapa/Mapa'));
 const Estoque = lazy(() => import('../pages/PaginaEstoque/Estoque'));
-const Insumos = lazy(() => import('../pages/PaginaInsumos/Insumos'));
 const Acompanhamentos = lazy(() => import('../pages/PaginaAcompanhamentos/Acompanhamentos'));
 
 
@@ -104,25 +100,6 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-      <Route path="/cardapio/novo-produto" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<FormFallback />}>
-              <CadastroProduto />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/cardapio/editar-produto/:id" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<FormFallback />}>
-              <CadastroProduto />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
       
       <Route path="/cardapio" element={
         <ProtectedRoute>
@@ -144,11 +121,12 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-      <Route path="/kds" element={
+      
+      <Route path="/horarios" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
             <Suspense fallback={<TableFallback />}>
-              <KDSPage />
+              <Horarios />
             </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
@@ -166,15 +144,7 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-      <Route path="/horarios" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<FormFallback />}>
-              <Horarios />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
+      
       
       <Route path="/relatorios/geral" element={
         <ProtectedRoute>
@@ -216,15 +186,6 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
 
-      <Route path="/fidelidade" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<ChartsFallback />}>
-              <Fidelidade />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
 
       <Route path="/usuarios" element={
         <ProtectedRoute>
@@ -287,15 +248,6 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
 
-      <Route path="/estoque/insumos" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<TableFallback />}>
-              <Insumos />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
       
       <Route path="/estoque/acompanhamentos" element={
         <ProtectedRoute>

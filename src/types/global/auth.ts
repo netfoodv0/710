@@ -10,14 +10,17 @@ export const loginSchema = z.object({
 export const cadastroLojaSchema = z.object({
   nomeLoja: z.string().min(2, 'Nome da loja deve ter pelo menos 2 caracteres'),
   email: z.string().email('Email inválido'),
-  senha: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
-  confirmarSenha: z.string(),
-  telefone: z.string().min(10, 'Telefone deve ter pelo menos 10 dígitos'),
-  endereco: z.string().min(5, 'Endereço deve ter pelo menos 5 caracteres'),
-  categoria: z.string().min(1, 'Selecione uma categoria'),
-}).refine((data) => data.senha === data.confirmarSenha, {
-  message: "Senhas não coincidem",
-  path: ["confirmarSenha"],
+  senha: z.string().min(8, 'Senha deve ter pelo menos 8 caracteres'),
+  whatsapp: z.string().min(10, 'WhatsApp deve ter pelo menos 10 dígitos'),
+  segmento: z.string().min(1, 'Selecione um segmento'),
+  endereco: z.object({
+    cep: z.string().min(8, 'CEP deve ter 8 dígitos'),
+    numero: z.string().min(1, 'Número é obrigatório'),
+    rua: z.string().min(3, 'Rua deve ter pelo menos 3 caracteres'),
+    bairro: z.string().min(2, 'Bairro deve ter pelo menos 2 caracteres'),
+    cidade: z.string().min(2, 'Cidade deve ter pelo menos 2 caracteres'),
+    estado: z.string().min(2, 'Estado é obrigatório'),
+  }),
 });
 
 // Tipos derivados dos schemas
@@ -26,25 +29,28 @@ export type CadastroLojaFormData = z.infer<typeof cadastroLojaSchema>;
 
 // Tipos de usuário e loja
 export interface Usuario {
-  id: string;
+  uid: string;
   email: string;
-  nome: string;
-  lojaId: string;
-  role: 'admin' | 'operador' | 'motoboy';
-  ativo: boolean;
   dataCriacao: Date;
   ultimoLogin?: Date;
 }
 
 export interface Loja {
   id: string;
-  nome: string;
+  nomeLoja: string;
+  whatsapp: string;
+  segmento: string;
   email: string;
-  telefone: string;
-  endereco: string;
-  categoria: string;
-  ativa: boolean;
+  endereco: {
+    cep: string;
+    numero: string;
+    rua: string;
+    bairro: string;
+    cidade: string;
+    estado: string;
+  };
   dataCriacao: Date;
+  ativa: boolean;
   configuracoes?: {
     horarioFuncionamento?: {
       abertura: string;

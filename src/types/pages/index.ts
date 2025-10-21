@@ -7,8 +7,6 @@ export * from './cupons';
 export * from './estoque';
 export * from './fidelidade';
 export * from './historico-pedidos';
-export * from './horarios';
-export * from './insumos';
 export * from './kds';
 export * from './mapa';
 export * from './motoboys';

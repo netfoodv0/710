@@ -141,3 +141,5 @@ export const filtrarPedidos = (pedidos: any[], filtro: string): any[] => {
     pedido.id.toLowerCase().includes(filtroLower)
   );
 };
+
+

@@ -41,3 +41,5 @@ export function useRelatoriosProdutosTranslation(): RelatoriosProdutosTranslatio
 
   return translations;
 }
+
+

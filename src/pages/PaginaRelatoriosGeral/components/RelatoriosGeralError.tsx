@@ -26,3 +26,5 @@ export function RelatoriosGeralError({ error, onRetry }: RelatoriosGeralErrorPro
     </div>
   );
 }
+
+

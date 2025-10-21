@@ -1,6 +1,31 @@
 import { useState, useCallback, useMemo } from 'react';
-import { PDVState, Order, Product, Customer, DeliveryPerson, OrderType, PaymentMethod, Discount, ServiceCharge } from '../types/global/pdv';
+import { Order, Product, Customer, DeliveryPerson, OrderType, PaymentMethod, Discount, ServiceCharge } from '../types/global/pdv';
 import { Product as ProductType } from '../types/global/products';
+import { firebasePedidoService } from '../services/firebasePedidoService';
+import { Pedido, StatusPedido, ClientePedido, ItemPedido, PagamentoPedido } from '../types/global/pedidos';
+
+// Tipo local para o estado do PDV
+interface PDVState {
+  isOpen: boolean;
+  currentOrder: any;
+  selectedProducts: any[];
+  selectedCustomer: any;
+  selectedDeliveryPerson: any;
+  orderType: OrderType;
+  paymentMethods: any[];
+  discounts: any[];
+  serviceCharges: any[];
+  total: number;
+  subtotal: number;
+  deliveryFee: number;
+  observations: string;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
+  activeTab: string;
+  isPaymentComplete: boolean;
+  isCustomerDataComplete: boolean;
+}
 
 // Estado inicial do PDV
 const initialPDVState: PDVState = {
@@ -10,14 +35,24 @@ const initialPDVState: PDVState = {
   selectedCustomer: null,
   selectedDeliveryPerson: null,
   orderType: 'delivery',
-  paymentMethods: [],
+  paymentMethods: [
+    { id: 'cash', name: 'Dinheiro', value: 0, enabled: false },
+    { id: 'pix', name: 'PIX', value: 0, enabled: false },
+    { id: 'credit', name: 'Crédito', value: 0, enabled: false },
+    { id: 'debit', name: 'Débito', value: 0, enabled: false }
+  ],
   discounts: [],
   serviceCharges: [],
   total: 0,
   subtotal: 0,
   deliveryFee: 0,
   observations: '',
-  activeTab: 'sacola'
+  customerName: '',
+  customerPhone: '',
+  customerAddress: '',
+  activeTab: 'sacola',
+  isPaymentComplete: false,
+  isCustomerDataComplete: false
 };
 
 export const usePDV = () => {
@@ -152,6 +187,25 @@ export const usePDV = () => {
     setState(prev => ({ ...prev, customerPhone }));
   }, []);
 
+  // Atualizar endereço do cliente
+  const updateCustomerAddress = useCallback((customerAddress: string) => {
+    setState(prev => ({ ...prev, customerAddress }));
+  }, []);
+
+  const updatePaymentMethods = useCallback((paymentMethods: any[]) => {
+    setState(prev => ({ ...prev, paymentMethods }));
+  }, []);
+
+  // Controlar estado de pagamento
+  const setPaymentComplete = useCallback((complete: boolean) => {
+    setState(prev => ({ ...prev, isPaymentComplete: complete }));
+  }, []);
+
+  // Controlar estado dos dados do cliente
+  const setCustomerDataComplete = useCallback((complete: boolean) => {
+    setState(prev => ({ ...prev, isCustomerDataComplete: complete }));
+  }, []);
+
   // Calcular totais
   const calculateTotals = useCallback(() => {
     setState(prev => {
@@ -198,14 +252,105 @@ export const usePDV = () => {
     }));
   }, []);
 
+  // Converter dados do PDV para formato do Firebase
+  const converterParaPedidoFirebase = useCallback((orderData: any): Omit<Pedido, 'id' | 'dataHora' | 'dataAtualizacao'> => {
+    // Converter cliente
+    const cliente: ClientePedido = {
+      id: orderData.customer?.id || 'manual',
+      nome: orderData.customer?.name || orderData.customerName || 'Cliente',
+      telefone: orderData.customer?.phone || orderData.customerPhone || '',
+      email: orderData.customer?.email || ''
+    };
+
+    // Converter itens
+    const itens: ItemPedido[] = orderData.items.map((item: any) => ({
+      id: item.id,
+      produtoId: item.productId,
+      nome: item.name,
+      preco: item.price,
+      quantidade: item.quantity,
+      observacoes: item.observations || '',
+      adicionais: item.customizations || [],
+      subtotal: item.totalPrice
+    }));
+
+    // Converter pagamento (pegar o primeiro método com valor > 0)
+    const metodoPagamento = orderData.paymentMethods?.find((method: any) => method.value > 0);
+    const pagamento: PagamentoPedido = {
+      metodo: metodoPagamento?.id === 'cash' ? 'dinheiro' : 
+              metodoPagamento?.id === 'credit' ? 'cartao' :
+              metodoPagamento?.id === 'debit' ? 'debito' : 'pix',
+      valor: orderData.paymentTotal || 0,
+      troco: orderData.paymentTotal > orderData.total ? orderData.paymentTotal - orderData.total : 0,
+      status: 'aprovado'
+    };
+
+    // Converter endereço se for delivery
+    const enderecoEntrega = orderData.type === 'delivery' && orderData.customer?.addresses?.[0] ? {
+      rua: orderData.customer.addresses[0].street || '',
+      numero: orderData.customer.addresses[0].number || '',
+      complemento: orderData.customer.addresses[0].complement || '',
+      bairro: orderData.customer.addresses[0].neighborhood || '',
+      cidade: orderData.customer.addresses[0].city || '',
+      cep: orderData.customer.addresses[0].zipCode || '',
+      referencia: orderData.customer.addresses[0].reference || ''
+    } : null;
+
+    // Determinar forma de entrega baseado no tipo do pedido
+    const formaEntrega = orderData.type === 'delivery' ? 'delivery' :
+                        orderData.type === 'pickup' ? 'retirada' : 'balcao';
+
+    const pedidoFirebase = {
+      numero: orderData.number,
+      lojaId: firebasePedidoService.getLojaId() || '', // Usar lojaId real
+      cliente,
+      enderecoEntrega,
+      itens,
+      subtotal: orderData.subtotal,
+      taxaEntrega: orderData.deliveryFee || 0,
+      desconto: orderData.discounts?.reduce((sum: number, d: any) => sum + d.value, 0) || 0,
+      total: orderData.total,
+      status: 'pendente' as StatusPedido,
+      pagamento,
+      observacoes: orderData.observations || '',
+      tempoPreparo: 20, // Valor padrão
+      tempoEntrega: orderData.type === 'delivery' ? 30 : null,
+      motoboyId: orderData.selectedDeliveryPerson?.id || null,
+      formaEntrega: formaEntrega as 'delivery' | 'retirada' | 'balcao'
+    };
+    
+    console.log('🔍 Status do pedido antes de salvar:', pedidoFirebase.status);
+    return pedidoFirebase;
+  }, []);
+
   // Criar novo pedido
   const createOrder = useCallback(async (): Promise<Order | null> => {
+    // Validar produtos
     if (state.selectedProducts.length === 0) {
       throw new Error('Adicione produtos antes de criar o pedido');
     }
 
-    if (state.orderType === 'delivery' && !state.selectedCustomer) {
-      throw new Error('Selecione um cliente para pedidos de delivery');
+    // Validar dados do cliente baseado no tipo de pedido
+    if (state.orderType === 'delivery') {
+      if (!state.selectedCustomer && !state.customerName) {
+        throw new Error('Dados do cliente são obrigatórios para delivery');
+      }
+      if (!state.customerPhone) {
+        throw new Error('Telefone do cliente é obrigatório');
+      }
+    } else if (state.orderType === 'pickup') {
+      if (!state.customerName) {
+        throw new Error('Nome do cliente é obrigatório para retirada');
+      }
+      if (!state.customerPhone) {
+        throw new Error('Telefone do cliente é obrigatório');
+      }
+    }
+
+    // Validar pagamento
+    const totalPaid = state.paymentMethods.reduce((total, method) => total + (method.value || 0), 0);
+    if (totalPaid < calculatedValues.total) {
+      throw new Error('Valor pago é menor que o total do pedido');
     }
 
     // Aqui você faria a chamada para a API para criar o pedido
@@ -214,56 +359,82 @@ export const usePDV = () => {
       number: `#${Date.now()}`,
       type: state.orderType,
       status: 'pending',
-      customer: state.selectedCustomer,
+      customer: state.selectedCustomer || {
+        id: 'manual',
+        name: state.customerName,
+        phone: state.customerPhone,
+        email: '',
+        addresses: state.customerAddress ? [{
+          id: 'manual',
+          street: state.customerAddress,
+          number: '',
+          complement: '',
+          neighborhood: '',
+          city: '',
+          zipCode: '',
+          reference: '',
+          isPrimary: true
+        }] : []
+      },
       items: state.selectedProducts.map(product => ({
-        id: Date.now().toString(),
-        product: {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          images: [product.image],
-          available: true,
-          stock: 0,
-          minStock: 0,
-          maxStock: 0,
-          unit: 'un',
-          customizations: [],
-          allergens: [],
-          categoryId: '',
-          category: {
-            id: '',
-            name: '',
-            description: '',
-            icon: '',
-            color: '',
-            order: 0
-          },
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
+        id: `${Date.now()}-${product.id}`,
+        productId: product.id,
+        name: product.name,
+        price: product.price,
         quantity: product.quantity,
         unitPrice: product.price,
         totalPrice: product.price * product.quantity,
-        observations: '',
-        customizations: product.customizations || []
+        observations: product.observations || '',
+        customizations: product.customizations || [],
+        image: product.image || product.images?.[0] || ''
       })),
-      subtotal: state.subtotal,
+      subtotal: calculatedValues.subtotal,
       deliveryFee: state.deliveryFee,
       discounts: state.discounts,
       serviceCharges: state.serviceCharges,
-      total: state.total,
+      total: calculatedValues.total,
+      paymentMethods: state.paymentMethods.filter(method => method.value > 0),
+      paymentTotal: state.paymentMethods.reduce((total, method) => total + (method.value || 0), 0),
       observations: state.observations,
+      customerName: state.customerName,
+      customerPhone: state.customerPhone,
+      customerAddress: state.customerAddress,
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
-    // Simular criação do pedido
-    console.log('Pedido criado:', newOrder);
-    
-    // Limpar estado após criar pedido
-    clearOrder();
-    
-    return newOrder;
+      // Salvar pedido no Firebase
+      try {
+        console.log('=== SALVANDO PEDIDO NO FIREBASE ===');
+        
+        // Converter para formato do Firebase
+        const pedidoFirebase = converterParaPedidoFirebase(newOrder);
+        
+        // Debug: verificar dados antes de salvar
+        console.log('Dados do pedido para Firebase:', JSON.stringify(pedidoFirebase, null, 2));
+        
+        // Salvar no Firebase
+        const pedidoId = await firebasePedidoService.criarPedido(pedidoFirebase);
+      
+      console.log('✅ Pedido salvo no Firebase com ID:', pedidoId);
+      console.log('Número:', newOrder.number);
+      console.log('Tipo:', newOrder.type);
+      console.log('Cliente:', newOrder.customer);
+      console.log('Itens:', newOrder.items.length, 'produtos');
+      console.log('Subtotal:', newOrder.subtotal);
+      console.log('Total:', newOrder.total);
+      console.log('Pagamentos:', newOrder.paymentMethods);
+      console.log('Total Pago:', newOrder.paymentTotal);
+      console.log('=====================================');
+      
+      // Limpar estado após criar pedido
+      clearOrder();
+      
+      return newOrder;
+    } catch (error) {
+      console.error('❌ Erro ao salvar pedido no Firebase:', error);
+      throw new Error('Falha ao salvar pedido no banco de dados');
+    }
   }, [state, clearOrder]);
 
   // Valores calculados
@@ -314,6 +485,10 @@ export const usePDV = () => {
     updateObservations,
     updateCustomerName,
     updateCustomerPhone,
+    updateCustomerAddress,
+    updatePaymentMethods,
+    setPaymentComplete,
+    setCustomerDataComplete,
     calculateTotals,
     clearOrder,
     createOrder,

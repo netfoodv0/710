@@ -40,8 +40,21 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
     onCreate();
   };
 
+  // Handlers memoizados para evitar re-renderizações
+  const handleToggleStatusCallback = React.useCallback((id: string) => {
+    handleToggleStatus(id);
+  }, [handleToggleStatus]);
+
+  const handleEditCallback = React.useCallback((produto: Produto) => {
+    if (onEdit) onEdit(produto);
+  }, [onEdit]);
+
+  const handleDeleteCallback = React.useCallback((id: string) => {
+    handleDelete(id);
+  }, [handleDelete]);
+
   // Componente SortableItem para cada produto
-  function SortableProduto({ produto }: { produto: Produto }) {
+  const SortableProduto = React.memo(({ produto }: { produto: Produto }) => {
     const {
       attributes,
       listeners,
@@ -71,14 +84,14 @@ export const ListaProdutos: React.FC<ListaProdutosProps> = ({
           preco={produto.preco}
           imagem={produto.imagem}
           status={produto.status}
-          onToggleStatus={(status) => onToggleStatus(produto.id, status)}
-          onEditar={() => onEdit(produto)}
-          onExcluir={() => handleDelete(produto.id)}
+          onToggleStatus={() => handleToggleStatusCallback(produto.id)}
+          onEditar={() => handleEditCallback(produto)}
+          onExcluir={() => handleDeleteCallback(produto.id)}
           dragHandleProps={{ attributes, listeners }}
         />
       </div>
     );
-  }
+  });
 
   // Handler para o fim do drag
   const handleDragEnd = (event: DragEndEvent) => {

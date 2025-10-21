@@ -230,3 +230,5 @@ src/pages/PaginaMapa/
 - **Coordenadas Salvas**: Evita geocodificação repetida
 - **Fallback**: Coordenadas padrão se geocodificação falhar
 - **API Nominatim**: Serviço gratuito de geocodificação
+
+

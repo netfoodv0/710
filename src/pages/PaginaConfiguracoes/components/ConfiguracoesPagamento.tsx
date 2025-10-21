@@ -52,3 +52,5 @@ export function ConfiguracoesPagamento({ config, onConfigChange, loading }: Conf
     </div>
   );
 }
+
+

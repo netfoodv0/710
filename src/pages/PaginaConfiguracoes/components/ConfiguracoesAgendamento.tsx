@@ -52,3 +52,5 @@ export function ConfiguracoesAgendamento({ config, onConfigChange, loading }: Co
     </div>
   );
 }
+
+

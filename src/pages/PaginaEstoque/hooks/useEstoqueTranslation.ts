@@ -16,8 +16,8 @@ export function useEstoqueTranslation(): EstoqueTranslations {
     table: {
       nome: 'Produto',
       categoria: 'Categoria',
-      quantidade: 'Quantidade',
-      quantidadeMinima: 'Mínimo',
+      quantidade: 'Estoque Atual',
+      quantidadeMinima: 'Estoque Mínimo',
       precoCusto: 'Preço Custo',
       custoEstoque: 'Custo Estoque',
       status: 'Status',
@@ -41,3 +41,5 @@ export function useEstoqueTranslation(): EstoqueTranslations {
 
   return translations;
 }
+
+

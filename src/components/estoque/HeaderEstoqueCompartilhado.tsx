@@ -22,7 +22,6 @@ export const HeaderEstoqueCompartilhado: React.FC<HeaderEstoqueCompartilhadoProp
   
   // Determinar qual opção está ativa baseado na rota atual
   const getActiveEstoqueType = () => {
-    if (location.pathname.includes('/insumos')) return 'insumos';
     if (location.pathname.includes('/acompanhamentos')) return 'acompanhamentos';
     return 'estoque';
   };
@@ -32,7 +31,6 @@ export const HeaderEstoqueCompartilhado: React.FC<HeaderEstoqueCompartilhadoProp
   // Opções para o componente Radio (tipos de estoque)
   const estoqueTypeOptions = [
     { id: 'estoque', label: 'Produtos' },
-    { id: 'insumos', label: 'Insumos' },
     { id: 'acompanhamentos', label: 'Acompanhamentos' }
   ];
 
@@ -43,9 +41,6 @@ export const HeaderEstoqueCompartilhado: React.FC<HeaderEstoqueCompartilhadoProp
     switch (estoqueType) {
       case 'estoque':
         navigate('/estoque');
-        break;
-      case 'insumos':
-        navigate('/estoque/insumos');
         break;
       case 'acompanhamentos':
         navigate('/estoque/acompanhamentos');

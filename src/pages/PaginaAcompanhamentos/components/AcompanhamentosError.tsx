@@ -18,3 +18,5 @@ export function AcompanhamentosError({ error, onRetry }: AcompanhamentosErrorPro
     </div>
   );
 }
+
+

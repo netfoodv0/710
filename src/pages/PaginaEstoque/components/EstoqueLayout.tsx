@@ -32,15 +32,6 @@ export function EstoqueLayout({
 
         {/* Content */}
         <div className="w-full px-4 sm:px-6 lg:px-8 pt-2 pb-12">
-          {/* Loading state */}
-          {loading && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center gap-2 text-blue-700">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                <span className="text-sm">Carregando dados do estoque...</span>
-              </div>
-            </div>
-          )}
 
           {/* Error state */}
           {error && (
@@ -99,3 +90,5 @@ export function EstoqueLayout({
     </ErrorBoundary>
   );
 }
+
+

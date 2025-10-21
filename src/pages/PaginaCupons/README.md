@@ -85,3 +85,5 @@ src/pages/PaginaCupons/
 - **Tratamento de erros** centralizado
 - **Traduções** organizadas
 - **Mantém funcionalidade original** sem alterações no front-end
+
+

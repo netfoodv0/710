@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNotificationContext } from '../../../context/notificationContextUtils';
 import { historicoPedidosService } from '../services';
 import { HistoricoPedidosData, Pedido } from '../types';
+import { useAuth } from '../../../hooks/useAuth';
 
 export function useHistoricoPedidos() {
   const [data, setData] = useState<HistoricoPedidosData>({
@@ -11,10 +12,15 @@ export function useHistoricoPedidos() {
   });
 
   const { showError, showSuccess } = useNotificationContext();
+  const { getLojaId } = useAuth();
 
   const carregarHistorico = useCallback(async () => {
     try {
       setData(prev => ({ ...prev, loading: true, error: null }));
+      
+      // Configurar lojaId no serviço
+      const lojaId = getLojaId();
+      historicoPedidosService.setLojaId(lojaId);
       
       const pedidos = await historicoPedidosService.obterHistoricoPedidos();
 
@@ -36,6 +42,10 @@ export function useHistoricoPedidos() {
 
   const carregarEstatisticas = useCallback(async () => {
     try {
+      // Configurar lojaId no serviço
+      const lojaId = getLojaId();
+      historicoPedidosService.setLojaId(lojaId);
+      
       const estatisticas = await historicoPedidosService.obterEstatisticasHistorico();
       console.log('Estatísticas carregadas:', estatisticas);
     } catch (error) {
@@ -46,7 +56,7 @@ export function useHistoricoPedidos() {
   const refreshDados = useCallback(() => {
     carregarHistorico();
     carregarEstatisticas();
-  }, [carregarHistorico, carregarEstatisticas]);
+  }, []);
 
   const handleViewPedido = useCallback((pedido: Pedido) => {
     console.log('Visualizar pedido:', pedido);
@@ -68,7 +78,7 @@ export function useHistoricoPedidos() {
   useEffect(() => {
     carregarHistorico();
     carregarEstatisticas();
-  }, [carregarHistorico, carregarEstatisticas]);
+  }, []); // Executar apenas uma vez na montagem
 
   return {
     data,

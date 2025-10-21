@@ -30,55 +30,7 @@ interface CouponSystemProps {
   appliedDiscount?: number;
 }
 
-// Cupons de exemplo (em produção viriam do banco de dados)
-const SAMPLE_COUPONS: Coupon[] = [
-  {
-    id: '1',
-    code: 'WELCOME10',
-    name: 'Bem-vindo 10%',
-    description: '10% de desconto para novos clientes',
-    type: 'percentage',
-    value: 10,
-    minOrderAmount: 30,
-    maxDiscount: 50,
-    validFrom: new Date('2024-01-01'),
-    validUntil: new Date('2024-12-31'),
-    maxUses: 1000,
-    currentUses: 150,
-    isActive: true,
-    createdAt: new Date('2024-01-01')
-  },
-  {
-    id: '2',
-    code: 'FREESHIP',
-    name: 'Frete Grátis',
-    description: 'Frete grátis para pedidos acima de R$ 50',
-    type: 'free_shipping',
-    value: 0,
-    minOrderAmount: 50,
-    validFrom: new Date('2024-01-01'),
-    validUntil: new Date('2024-12-31'),
-    maxUses: 500,
-    currentUses: 89,
-    isActive: true,
-    createdAt: new Date('2024-01-01')
-  },
-  {
-    id: '3',
-    code: 'SAVE20',
-    name: 'Economia 20',
-    description: 'R$ 20 de desconto para pedidos acima de R$ 100',
-    type: 'fixed',
-    value: 20,
-    minOrderAmount: 100,
-    validFrom: new Date('2024-01-01'),
-    validUntil: new Date('2024-12-31'),
-    maxUses: 200,
-    currentUses: 45,
-    isActive: true,
-    createdAt: new Date('2024-01-01')
-  }
-];
+// Cupons serão carregados do Firebase/API
 
 export const CouponSystem: React.FC<CouponSystemProps> = ({
   onCouponApply,
@@ -91,6 +43,7 @@ export const CouponSystem: React.FC<CouponSystemProps> = ({
   const [isValidating, setIsValidating] = useState(false);
   const [validationError, setValidationError] = useState('');
   const [showAvailableCoupons, setShowAvailableCoupons] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>([]);
 
   const validateCoupon = async (code: string): Promise<Coupon | null> => {
     setIsValidating(true);
@@ -100,7 +53,7 @@ export const CouponSystem: React.FC<CouponSystemProps> = ({
       // Simular validação assíncrona
       await new Promise(resolve => setTimeout(resolve, 500));
       
-      const coupon = SAMPLE_COUPONS.find(c => 
+      const coupon = availableCoupons.find(c => 
         c.code.toUpperCase() === code.toUpperCase() && c.isActive
       );
 
@@ -282,7 +235,7 @@ export const CouponSystem: React.FC<CouponSystemProps> = ({
 
         {showAvailableCoupons && (
           <div className="space-y-2">
-            {SAMPLE_COUPONS.map((coupon) => (
+            {availableCoupons.map((coupon) => (
               <div
                 key={coupon.id}
                 className="p-3 border border-gray-200 rounded-lg hover:border-purple-300 transition-colors cursor-pointer"

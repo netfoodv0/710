@@ -1,15 +1,12 @@
 import React from 'react';
-import { useDashboardTranslation } from '../../pages/PaginaDashboard/hooks';
+import { useDashboardTranslation, usePedidosEmAndamento } from '../../pages/PaginaDashboard/hooks';
 import { useDataFormatter } from '../../pages/PaginaDashboard/hooks';
 import { useErrorHandler } from '../../services/errorService';
-import { getDataWithFallback } from '../../services/mockDataService';
 import { PedidoEmAndamento } from '../../pages/PaginaDashboard/types';
 import { ContainerCustom } from '../ui';
 
 interface PedidosAndamentoProps {
   pedidosEmAndamento?: number;
-  pedidos?: PedidoEmAndamento[];
-  loading?: boolean;
 }
 
 // Componente para renderizar item individual
@@ -39,28 +36,45 @@ const PedidoItem: React.FC<{ pedido: PedidoEmAndamento }> = ({ pedido }) => {
 };
 
 export const PedidosAndamento: React.FC<PedidosAndamentoProps> = React.memo(({ 
-  pedidosEmAndamento = 0, 
-  pedidos = [],
-  loading = false
+  pedidosEmAndamento = 0
 }) => {
   const { dashboard } = useDashboardTranslation();
   const { logError } = useErrorHandler();
   
-  // Obter dados com fallback usando o serviço centralizado
-  const pedidosExibir = getDataWithFallback(pedidos, 'pedidos');
+  // Usar hook do Firebase para carregar pedidos em andamento
+  const { 
+    pedidos: pedidosFirebase, 
+    loading: loadingFirebase, 
+    error: errorFirebase 
+  } = usePedidosEmAndamento();
+  
+  // Usar apenas dados do Firebase
+  const pedidosExibir = pedidosFirebase;
+  const isLoading = loadingFirebase;
   
   // Log de erro se não houver dados
   React.useEffect(() => {
-    if (pedidos.length === 0 && !loading) {
+    if (pedidosExibir.length === 0 && !isLoading) {
       logError(
         new Error('No orders data available'),
         { component: 'PedidosAndamento', action: 'data-fallback' },
         'low'
       );
     }
-  }, [pedidos.length, loading, logError]);
+  }, [pedidosExibir.length, isLoading, logError]);
+  
+  // Log de erro do Firebase se houver
+  React.useEffect(() => {
+    if (errorFirebase) {
+      logError(
+        new Error(errorFirebase),
+        { component: 'PedidosAndamento', action: 'firebase-error' },
+        'medium'
+      );
+    }
+  }, [errorFirebase, logError]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <ContainerCustom className="flex flex-col max-h-[500px]" aria-labelledby="pedidos-andamento-title">
         <div className="dashboard-analytics-header">

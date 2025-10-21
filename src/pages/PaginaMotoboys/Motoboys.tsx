@@ -10,13 +10,13 @@ import { useMotoboys } from './hooks/useMotoboys';
 import { MotoboysLayout } from './components/MotoboysLayout';
 
 export default function Motoboys() {
-  const { data } = useMotoboys();
+  const { data, carregarDados } = useMotoboys();
   const { showNotification } = useNotificationContext();
 
   return (
     <ErrorBoundary>
       <div className="min-h-screen">
-        <MotoboysLayout data={data} />
+        <MotoboysLayout data={data} onCreate={carregarDados} />
       </div>
     </ErrorBoundary>
   );

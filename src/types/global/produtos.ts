@@ -79,7 +79,16 @@ export interface Extra {
 // Props para componentes
 export interface ListaProdutosProps {
   produtos: Produto[];
+  categorias?: string[];
   loading?: boolean;
+  onCreate?: () => void;
+  onEdit?: (produto: Produto) => void;
+  onDelete?: (produtoId: string) => void;
+  onDuplicate?: (produtoId: string) => void;
+  onToggleStatus?: (produtoId: string) => void;
+  categoriaSelecionada?: string;
+  onShowCategoryToast?: () => void;
+  onReorderProdutos?: (produtos: Produto[]) => void;
   onProdutoClick?: (produto: Produto) => void;
   onEditarProduto?: (produto: Produto) => void;
   onRemoverProduto?: (produto: Produto) => void;

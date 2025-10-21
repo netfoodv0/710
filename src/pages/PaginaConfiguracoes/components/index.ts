@@ -10,3 +10,5 @@ export { ConfiguracoesPagamento } from './ConfiguracoesPagamento';
 export { ConfiguracoesNotificacoes } from './ConfiguracoesNotificacoes';
 export { ConfiguracoesAparencia } from './ConfiguracoesAparencia';
 export { FusoHorario } from './FusoHorario';
+
+
