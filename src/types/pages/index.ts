@@ -11,7 +11,6 @@ export * from './kds';
 export * from './mapa';
 export * from './motoboys';
 export * from './operadores';
-export * from './pdv';
 export * from './pedidos';
 export * from './relatorios-clientes';
 export * from './relatorios-geral';

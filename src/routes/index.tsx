@@ -12,20 +12,18 @@ import {
 // Importação estática para OrganogramaPage para resolver problema de 404
 import OrganogramaPage from '../pages/PaginaOrganograma/OrganogramaPage';
 import LandingPage from '../pages/auth/LandingPage';
+import NotFound from '../pages/NotFound';
 
 // Lazy loading das páginas para melhor performance
 const Dashboard = lazy(() => import('../pages/PaginaDashboard/Dashboard'));
 const Pedidos = lazy(() => import('../pages/PaginaPedidos/Pedidos'));
-const PDV = lazy(() => import('../pages/PaginaPDV/PDV'));
 const HistoricoPedidos = lazy(() => import('../pages/PaginaHistoricoPedidos/HistoricoPedidos'));
 const Cardapio = lazy(() => import('../pages/PaginaCardapio/Cardapio'));
 
-const Atendimento = lazy(() => import('../pages/PaginaAtendimento/Atendimento'));
 const Horarios = lazy(() => import('../pages/PaginaHorarios/Horarios'));
 const Configuracoes = lazy(() => import('../pages/PaginaConfiguracoes/Configuracoes'));
 
 const Relatorios = lazy(() => import('../pages/PaginaRelatoriosGeral/RelatoriosGeral'));
-const RelatoriosClientes = lazy(() => import('../pages/PaginaRelatoriosClientes/RelatoriosClientes'));
 const RelatoriosProdutos = lazy(() => import('../pages/PaginaRelatoriosProdutos/RelatoriosProdutos'));
 const RelatoriosCupons = lazy(() => import('../pages/PaginaCupons/Cupons'));
 const Usuarios = lazy(() => import('../pages/PaginaUsuarios/Usuarios'));
@@ -35,18 +33,16 @@ const Mapa = lazy(() => import('../pages/PaginaMapa/Mapa'));
 const Estoque = lazy(() => import('../pages/PaginaEstoque/Estoque'));
 const Acompanhamentos = lazy(() => import('../pages/PaginaAcompanhamentos/Acompanhamentos'));
 
-
-
-const Login = lazy(() => import('../pages/auth/Login'));
 const Cadastro = lazy(() => import('../pages/auth/Cadastro'));
+const Login = lazy(() => import('../pages/auth/Login'));
 
 export function AppRoutes() {
   return (
     <Routes>
       {/* Rotas públicas */}
       <Route path="/landing" element={<LandingPage />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
+      <Route path="/login" element={<Login />} />
       
       {/* Rotas protegidas */}
       
@@ -80,16 +76,6 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-      <Route path="/pdv" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<TableFallback />}>
-              <PDV />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
-      
       <Route path="/historico" element={
         <ProtectedRoute>
           <LojaProtectedRoute>
@@ -111,15 +97,6 @@ export function AppRoutes() {
         </ProtectedRoute>
       } />
       
-      <Route path="/atendimento" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<TableFallback />}>
-              <Atendimento />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
       
       
       <Route path="/horarios" element={
@@ -151,16 +128,6 @@ export function AppRoutes() {
           <LojaProtectedRoute>
             <Suspense fallback={<ChartsFallback />}>
               <Relatorios />
-            </Suspense>
-          </LojaProtectedRoute>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/relatorios/clientes" element={
-        <ProtectedRoute>
-          <LojaProtectedRoute>
-            <Suspense fallback={<ChartsFallback />}>
-              <RelatoriosClientes />
             </Suspense>
           </LojaProtectedRoute>
         </ProtectedRoute>
@@ -263,8 +230,8 @@ export function AppRoutes() {
       <Route path="/estoque" element={<Navigate to="/estoque/produtos" replace />} />
       <Route path="/acompanhamentos" element={<Navigate to="/estoque/acompanhamentos" replace />} />
       
-      {/* Rota 404 - redireciona para dashboard */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      {/* Rota 404 - Página não encontrada */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

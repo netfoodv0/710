@@ -78,3 +78,10 @@ export function ModalCaixaFechado({ isOpen, onClose, onConfirm }: ModalCaixaFech
 
 
 
+
+
+
+
+
+
+

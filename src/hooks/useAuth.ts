@@ -22,6 +22,8 @@ export const useAuth = () => {
     isAuthenticated,
     isOwner,
     hasPermission,
+    // Conveniência: lojaId é o mesmo que user.uid
+    lojaId: context.user?.uid || null,
     // Métodos de conveniência
     getLojaId: () => context.user?.uid || null,
     getUserEmail: () => context.user?.email || null,

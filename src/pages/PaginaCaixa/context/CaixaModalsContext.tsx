@@ -7,6 +7,9 @@ interface CaixaModalsContextType {
   isModalAberturaCaixaOpen: boolean;
   openModalAberturaCaixa: () => void;
   closeModalAberturaCaixa: () => void;
+  isModalCaixaAbertoDetalhesOpen: boolean;
+  openModalCaixaAbertoDetalhes: () => void;
+  closeModalCaixaAbertoDetalhes: () => void;
   closeAllModals: () => void;
 }
 
@@ -19,6 +22,7 @@ interface CaixaModalsProviderProps {
 export function CaixaModalsProvider({ children }: CaixaModalsProviderProps) {
   const [isModalCaixaFechadoOpen, setIsModalCaixaFechadoOpen] = useState(false);
   const [isModalAberturaCaixaOpen, setIsModalAberturaCaixaOpen] = useState(false);
+  const [isModalCaixaAbertoDetalhesOpen, setIsModalCaixaAbertoDetalhesOpen] = useState(false);
 
   const openModalCaixaFechado = useCallback(() => {
     setIsModalCaixaFechadoOpen(true);
@@ -36,9 +40,18 @@ export function CaixaModalsProvider({ children }: CaixaModalsProviderProps) {
     setIsModalAberturaCaixaOpen(false);
   }, []);
 
+  const openModalCaixaAbertoDetalhes = useCallback(() => {
+    setIsModalCaixaAbertoDetalhesOpen(true);
+  }, []);
+
+  const closeModalCaixaAbertoDetalhes = useCallback(() => {
+    setIsModalCaixaAbertoDetalhesOpen(false);
+  }, []);
+
   const closeAllModals = useCallback(() => {
     setIsModalCaixaFechadoOpen(false);
     setIsModalAberturaCaixaOpen(false);
+    setIsModalCaixaAbertoDetalhesOpen(false);
   }, []);
 
   return (
@@ -50,6 +63,9 @@ export function CaixaModalsProvider({ children }: CaixaModalsProviderProps) {
         isModalAberturaCaixaOpen,
         openModalAberturaCaixa,
         closeModalAberturaCaixa,
+        isModalCaixaAbertoDetalhesOpen,
+        openModalCaixaAbertoDetalhes,
+        closeModalCaixaAbertoDetalhes,
         closeAllModals,
       }}
     >

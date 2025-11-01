@@ -4,7 +4,6 @@ export { FirebaseClientesService, firebaseClientesService } from './firebaseClie
 export { FirebaseCategoriaService } from './firebaseCategoriaService';
 export { FirebasePedidoService } from './firebasePedidoService';
 export { FirebaseDashboardService } from './firebaseDashboardService';
-export { FirebaseWhatsAppService } from './firebaseWhatsAppService';
 export { FirebaseCardapioService } from './firebaseCardapioService';
 export { HistoricoPedidoService } from './historicoPedidoService';
 

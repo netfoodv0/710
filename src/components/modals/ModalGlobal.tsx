@@ -11,6 +11,7 @@ interface ModalGlobalProps {
   className?: string;
   maxHeight?: string;
   showCloseButton?: boolean;
+  footerAlign?: 'left' | 'center' | 'right' | 'between';
 }
 
 export function ModalGlobal({
@@ -22,7 +23,8 @@ export function ModalGlobal({
   size = 'md',
   className = '',
   maxHeight = '32rem',
-  showCloseButton = true
+  showCloseButton = true,
+  footerAlign = 'right'
 }: ModalGlobalProps) {
   return (
     <Modal
@@ -31,13 +33,14 @@ export function ModalGlobal({
       title={title}
       size={size}
       className={`modal-global ${className}`}
+      showCloseButton={showCloseButton}
     >
       <ModalBody className={`max-h-[${maxHeight}] overflow-y-auto`}>
         {children}
       </ModalBody>
       
       {footer && (
-        <ModalFooter>
+        <ModalFooter align={footerAlign}>
           {footer}
         </ModalFooter>
       )}

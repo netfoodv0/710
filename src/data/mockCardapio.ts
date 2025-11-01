@@ -167,3 +167,10 @@ export const getCategoriasExemplo = (lojaId: string): CategoriaModal[] => [
 
 
 
+
+
+
+
+
+
+

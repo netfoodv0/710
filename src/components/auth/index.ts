@@ -1,4 +1,4 @@
-export { LoginForm } from './LoginForm';
 export { CadastroForm } from './CadastroForm';
+export { LoginForm } from './LoginForm';
 export { ProtectedRoute } from './ProtectedRoute';
-export { LojaProtectedRoute } from './LojaProtectedRoute'; 
+export { LojaProtectedRoute } from './LojaProtectedRoute';

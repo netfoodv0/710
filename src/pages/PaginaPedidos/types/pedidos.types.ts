@@ -16,7 +16,6 @@ export interface PedidosLayoutProps {
   onSearchChange: (term: string) => void;
   onClearSearch: () => void;
   onSearchSubmit: (term: string) => void;
-  onOpenPDV: () => void;
 }
 
 export interface PedidosActions {
@@ -29,7 +28,6 @@ export interface PedidosActions {
   handleSearchChange: (term: string) => void;
   handleClearSearch: () => void;
   handleSearchSubmit: (term: string) => void;
-  handleOpenPDV: () => void;
 }
 
 export interface PedidosTranslation {
@@ -51,7 +49,6 @@ export interface PedidosHeaderProps {
   onSearchChange: (term: string) => void;
   onClearSearch: () => void;
   onSearchSubmit: (term: string) => void;
-  onOpenPDV: () => void;
 }
 
 

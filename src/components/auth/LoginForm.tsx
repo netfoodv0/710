@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, Loader2, LogIn } from 'lucide-react';
 import { loginSchema, type LoginFormData } from '../../types/global/auth';
+import { Link } from 'react-router-dom';
 
 interface LoginFormProps {
   onSubmit: (data: LoginFormData) => Promise<void>;
@@ -37,18 +38,18 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     <div className="w-full max-w-md mx-auto">
       <div className="bg-white border border-slate-200 rounded-lg p-8">
         <div className="text-center mb-8">
-          <h1 className="text-sm font-bold text-gray-900 mb-2">
-            Bem-vindo de volta
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            Bem-vindo de volta!
           </h1>
-          <p className="text-gray-600 text-xs">
-            Faça login para acessar sua loja
+          <p className="text-gray-600 text-sm">
+            Entre com suas credenciais para acessar sua conta
           </p>
         </div>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-          {/* Campo de E-mail */}
+          {/* E-mail */}
           <div>
-            <label htmlFor="email" className="block text-sm text-gray-600 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
               E-mail
             </label>
             <div className="relative">
@@ -59,7 +60,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 {...register('email')}
                 type="email"
                 id="email"
-                className="block w-full pl-10 pr-3 h-10 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                autoComplete="email"
+                className="block w-full pl-10 pr-3 h-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                 placeholder="seu@email.com"
                 disabled={isLoading}
               />
@@ -69,9 +71,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             )}
           </div>
 
-          {/* Campo de Senha */}
+          {/* Senha */}
           <div>
-            <label htmlFor="senha" className="block text-sm text-gray-600 mb-2">
+            <label htmlFor="senha" className="block text-sm font-medium text-gray-700 mb-2">
               Senha
             </label>
             <div className="relative">
@@ -82,7 +84,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 {...register('senha')}
                 type={showPassword ? 'text' : 'password'}
                 id="senha"
-                className="block w-full pl-10 pr-12 h-10 border border-gray-300 rounded focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-colors"
+                autoComplete="current-password"
+                className="block w-full pl-10 pr-12 h-11 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
                 placeholder="••••••••"
                 disabled={isLoading}
               />
@@ -104,6 +107,16 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             )}
           </div>
 
+          {/* Link para recuperar senha */}
+          <div className="flex items-center justify-end">
+            <Link
+              to="/recuperar-senha"
+              className="text-sm text-purple-600 hover:text-purple-700 font-medium"
+            >
+              Esqueceu sua senha?
+            </Link>
+          </div>
+
           {/* Mensagem de Erro */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -115,7 +128,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gray-900 text-white py-3 px-4 rounded font-medium hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-3 px-4 rounded-lg font-medium hover:from-purple-700 hover:to-purple-800 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center shadow-md"
           >
             {isLoading ? (
               <>
@@ -123,24 +136,27 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                 Entrando...
               </>
             ) : (
-              'Entrar'
+              <>
+                <LogIn className="h-5 w-5 mr-2" />
+                Entrar
+              </>
             )}
           </button>
         </form>
 
-        {/* Link para Cadastro */}
+        {/* Link para cadastro */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Não tem uma conta?{' '}
-            <a
-              href="/cadastro"
-              className="font-medium text-gray-900 hover:text-gray-700 transition-colors"
+            <Link
+              to="/cadastro"
+              className="text-purple-600 hover:text-purple-700 font-medium"
             >
-              Criar conta
-            </a>
+              Cadastre-se grátis
+            </Link>
           </p>
         </div>
       </div>
     </div>
   );
-}; 
+};

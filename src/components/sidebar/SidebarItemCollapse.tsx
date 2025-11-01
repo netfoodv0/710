@@ -82,7 +82,7 @@ const SidebarItemCollapse = ({ item, isCollapsed = false }: Props) => {
                   primary={
                     <Typography sx={{ 
                       color: isActive ? "#8217d5" : "#374151", // Roxo quando ativo
-                      fontWeight: isActive ? 700 : 700, // Sempre bold
+                      fontWeight: 400, // Normal (sem bold)
                       fontSize: "14px" // Tamanho do texto 14px
                     }}>
                       {item.sidebarProps.displayText}

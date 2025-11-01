@@ -1,6 +1,5 @@
 import React from 'react';
-import { PageHeader } from '../../components/ui';
-import NavigationToggle from '../ui/NavigationToggle';
+import { FixedPageHeader } from '../../components/ui';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface HeaderEstoqueCompartilhadoProps {
@@ -21,58 +20,58 @@ export const HeaderEstoqueCompartilhado: React.FC<HeaderEstoqueCompartilhadoProp
   const location = useLocation();
   
   // Determinar qual opção está ativa baseado na rota atual
-  const getActiveEstoqueType = () => {
-    if (location.pathname.includes('/acompanhamentos')) return 'acompanhamentos';
-    return 'estoque';
+  const isAcompanhamentos = location.pathname.includes('/acompanhamentos');
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
   };
 
-  const [selectedEstoqueType, setSelectedEstoqueType] = React.useState<string>(getActiveEstoqueType());
-  
-  // Opções para o componente Radio (tipos de estoque)
-  const estoqueTypeOptions = [
-    { id: 'estoque', label: 'Produtos' },
-    { id: 'acompanhamentos', label: 'Acompanhamentos' }
-  ];
-
-  const handleEstoqueTypeChange = React.useCallback((estoqueType: string) => {
-    setSelectedEstoqueType(estoqueType);
-    
-    // Navegar para a página correspondente
-    switch (estoqueType) {
-      case 'estoque':
-        navigate('/estoque');
-        break;
-      case 'acompanhamentos':
-        navigate('/estoque/acompanhamentos');
-        break;
-      default:
-        navigate('/estoque');
-    }
-  }, [navigate]);
-
-  // Atualizar o tipo selecionado quando a rota mudar
-  React.useEffect(() => {
-    setSelectedEstoqueType(getActiveEstoqueType());
-  }, [location.pathname]);
+  // Conteúdo dos botões à direita
+  const rightContent = (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => handleNavigate('/estoque')}
+        className={`px-3 text-sm rounded transition-colors text-gray-700 hover:bg-gray-100 ${
+          !isAcompanhamentos
+            ? 'bg-purple-600 text-white hover:bg-purple-700'
+            : ''
+        }`}
+        style={{ 
+          borderRadius: '100px', 
+          backgroundColor: !isAcompanhamentos ? undefined : '#f5f5f5',
+          border: !isAcompanhamentos ? '1px solid rgb(139, 92, 246)' : '1px solid rgb(209, 213, 219)',
+          height: '32px'
+        }}
+      >
+        Produtos
+      </button>
+      <button
+        onClick={() => handleNavigate('/estoque/acompanhamentos')}
+        className={`px-3 text-sm rounded transition-colors text-gray-700 hover:bg-gray-100 ${
+          isAcompanhamentos
+            ? 'bg-purple-600 text-white hover:bg-purple-700'
+            : ''
+        }`}
+        style={{ 
+          borderRadius: '100px', 
+          backgroundColor: isAcompanhamentos ? undefined : '#f5f5f5',
+          border: isAcompanhamentos ? '1px solid rgb(139, 92, 246)' : '1px solid rgb(209, 213, 219)',
+          height: '32px'
+        }}
+      >
+        Acompanhamentos
+      </button>
+    </div>
+  );
 
   return (
-    <PageHeader
-      title=""
-      subtitle=""
-      leftContent={
-        <div className="flex items-center gap-2">
-          <NavigationToggle
-            options={estoqueTypeOptions}
-            name="estoqueType"
-            defaultValue={selectedEstoqueType}
-            onChange={handleEstoqueTypeChange}
-            size="small"
-            color="#8b5cf6"
-            backgroundColor="#f3f4f6"
-          />
-        </div>
-      }
-      actionButton={actionButton}
-    />
+    <>
+      <FixedPageHeader
+        title={isAcompanhamentos ? "Acompanhamentos" : "Produtos"}
+        rightContent={rightContent}
+      />
+      {/* Espaço para não sobrepor o conteúdo */}
+      <div className="h-[50px]" />
+    </>
   );
 };

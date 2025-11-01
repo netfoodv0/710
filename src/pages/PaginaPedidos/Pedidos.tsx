@@ -15,8 +15,7 @@ export default function Pedidos() {
     handleRecusar,
     handleSearchChange,
     handleClearSearch,
-    handleSearchSubmit,
-    handleOpenPDV
+    handleSearchSubmit
   } = usePedidos();
 
   return (
@@ -29,7 +28,6 @@ export default function Pedidos() {
       onSearchChange={handleSearchChange}
       onClearSearch={handleClearSearch}
       onSearchSubmit={handleSearchSubmit}
-      onOpenPDV={handleOpenPDV}
     />
   );
 }

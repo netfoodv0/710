@@ -4,7 +4,7 @@ import { useDataFormatter } from '../../pages/PaginaDashboard/hooks';
 import { useErrorHandler } from '../../services/errorService';
 import { getDataWithFallback } from '../../services/mockDataService';
 import { ProdutoVendido } from '../../pages/PaginaDashboard/types';
-import { ReportIcon, ContainerCustom } from '../ui';
+import { AccessIcon } from '../ui';
 
 interface ProdutosVendidosProps {
   produtos: ProdutoVendido[];
@@ -20,7 +20,7 @@ const ProdutoItem: React.FC<{ produto: any }> = ({ produto }) => {
   const imagemProduto = produto.imagem || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik00MCAzMkMzNS41ODE3IDMyIDMyIDM1LjU4MTcgMzIgNDBTMzUuNTgxNyA0OCA0MCA0OFM0OCA0NC40MTgzIDQ4IDQwUzQ0LjQxODMgMzIgNDAgMzJaTTQwIDQ0QzM3Ljc5MDkgNDQgMzYgNDIuMjA5MSAzNiA0MFMzNy43OTA5IDM2IDQwIDM2UzQ0IDM3Ljc5MDkgNDQgNDBTNDIuMjA5MSA0NCA0MCA0NFoiIGZpbGw9IiM5Q0EzQUYiLz4KPC9zdmc+';
 
   return (
-    <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 bg-white rounded-lg dashboard-card-border h-[62px]">
+    <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 p-3 bg-white dashboard-card-border h-[62px]" style={{ borderRadius: '4px' }}>
       <div className="w-[40px] h-[40px] rounded-full overflow-hidden flex-shrink-0">
         <img 
           src={imagemProduto} 
@@ -68,55 +68,50 @@ export const ProdutosVendidos: React.FC<ProdutosVendidosProps> = React.memo(({ p
 
   if (loading) {
     return (
-      <section className="dashboard-analytics-card" aria-labelledby="top-produtos-title">
-        <div className="dashboard-analytics-header">
+      <div aria-labelledby="top-produtos-title">
+        <div className="mb-4">
           <div className="h-5 bg-gray-200 rounded w-24"></div>
-          <div className="w-2 h-2 bg-gray-200 rounded-full"></div>
         </div>
-        <div className="dashboard-analytics-content">
+        <div>
           <div className="space-y-2">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="h-16 bg-gray-200 rounded-lg animate-pulse"></div>
             ))}
           </div>
         </div>
-        <div className="mt-auto pt-2 flex-shrink-0">
+        <div className="mt-4">
           <div className="w-full h-10 bg-gray-200 rounded-[100px]"></div>
         </div>
-      </section>
+      </div>
     );
   }
 
   return (
-    <ContainerCustom className="flex flex-col max-h-[500px]" aria-labelledby="top-produtos-title">
-      <div className="dashboard-analytics-header">
+    <div className="flex flex-col max-h-[500px]" aria-labelledby="top-produtos-title">
+      <div className="mb-4 flex items-center justify-between">
         <h2 id="top-produtos-title" className="text-base font-semibold text-gray-900">
           {dashboard.topProdutos}
         </h2>
+        <a 
+          href="/relatorios/geral" 
+          className="inline-flex items-center justify-center px-3 py-2 h-8 bg-[#f5f5f5] text-gray-800 text-sm font-medium rounded-[100px] hover:bg-[#e5e5e5] transition-colors dashboard-focus-visible border border-gray-300"
+          aria-label={dashboard.acessarRelatoriosCompletos}
+          role="button"
+        >
+          <AccessIcon size={24} color="#6b7280" />
+        </a>
       </div>
       
-      <div className="dashboard-analytics-content">
+      <div>
         <div className="flex flex-col h-full">
           <div className="flex-1 space-y-2 overflow-y-auto hide-scrollbar min-h-0">
             {produtosExibir.map((produto, index) => (
               <ProdutoItem key={index} produto={produto} />
             ))}
           </div>
-          
-          <div className="mt-auto pt-2 flex-shrink-0">
-            <a 
-              href="/relatorios/geral" 
-              className="inline-flex items-center justify-center space-x-2 w-full px-3 py-2 bg-purple-600 text-white text-sm font-medium rounded-[100px] hover:bg-purple-700 transition-colors dashboard-focus-visible"
-              aria-label={dashboard.acessarRelatoriosCompletos}
-              role="button"
-            >
-              <ReportIcon size={24} color="#FFFFFF" />
-              <span>{dashboard.acessarRelatoriosCompletos}</span>
-            </a>
-          </div>
         </div>
       </div>
-    </ContainerCustom>
+    </div>
   );
 });
 

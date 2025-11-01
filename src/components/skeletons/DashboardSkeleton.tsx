@@ -200,7 +200,7 @@ const PedidosAndamentoSkeleton = () => (
 
 // Skeleton para o grid de cards principais
 const CardsGridSkeleton = () => (
-  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0 dashboard-grid-mobile">
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0 dashboard-grid-mobile">
     <FormasPedidoSkeleton />
     <TopProdutosSkeleton />
     <PedidosAndamentoSkeleton />

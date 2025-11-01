@@ -34,3 +34,6 @@ export * from './cardapio';
 
 // Hooks de configurações
 export { useConfiguracoesLoja } from './useConfiguracoesLoja';
+
+// Hooks de layout
+export { useSidebarWidth } from './useSidebarWidth';

@@ -11,42 +11,8 @@ interface ModalAberturaCaixaProps {
 }
 
 export function ModalAberturaCaixa({ isOpen, onClose, onConfirm }: ModalAberturaCaixaProps) {
-  const [saldoInicial, setSaldoInicial] = useState('');
+  const [saldoInicial, setSaldoInicial] = useState('R$ 0,00');
   const { abrirCaixa, loading, error, clearError } = useCaixa();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!saldoInicial.trim()) {
-      return;
-    }
-
-    try {
-      clearError();
-      
-      const dados = {
-        saldoInicial: parseFloat(saldoInicial) || 0,
-        observacoes: 'Caixa aberto com saldo inicial'
-      };
-
-      const caixaId = await abrirCaixa(dados);
-      
-      // Reset form
-      setSaldoInicial('');
-      
-      // Callback
-      onConfirm(caixaId);
-    } catch (error) {
-      console.error('Erro ao abrir caixa:', error);
-    }
-  };
-
-  const handleClose = () => {
-    // Reset form ao fechar
-    setSaldoInicial('');
-    clearError();
-    onClose();
-  };
 
   const formatCurrency = (value: string) => {
     // Remove caracteres não numéricos
@@ -62,12 +28,46 @@ export function ModalAberturaCaixa({ isOpen, onClose, onConfirm }: ModalAbertura
     }).format(number);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSaldoInicial(value);
+  const parseCurrencyToNumber = (value: string) => {
+    // Remove "R$", espaços e vírgulas, mantém apenas números
+    const numericValue = value.replace(/R\$\s?|\./g, '').replace(',', '.');
+    return parseFloat(numericValue) || 0;
   };
 
-  const displayValue = saldoInicial ? formatCurrency(saldoInicial) : 'R$ 0,00';
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      clearError();
+      
+      const dados = {
+        saldoInicial: parseCurrencyToNumber(saldoInicial),
+        observacoes: 'Caixa aberto com saldo inicial'
+      };
+
+      const caixaId = await abrirCaixa(dados);
+      
+      // Reset form
+      setSaldoInicial('R$ 0,00');
+      
+      // Callback
+      onConfirm(caixaId);
+    } catch (error) {
+      console.error('Erro ao abrir caixa:', error);
+    }
+  };
+
+  const handleClose = () => {
+    // Reset form ao fechar
+    setSaldoInicial('R$ 0,00');
+    clearError();
+    onClose();
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSaldoInicial(formatCurrency(value));
+  };
 
   const footer = (
     <div className="space-y-3">
@@ -89,7 +89,7 @@ export function ModalAberturaCaixa({ isOpen, onClose, onConfirm }: ModalAbertura
           type="submit"
           variant="primary"
           onClick={handleSubmit}
-          disabled={!saldoInicial.trim() || loading}
+          disabled={loading}
         >
           {loading ? 'Abrindo...' : 'Abrir Caixa'}
         </Button>
@@ -113,9 +113,6 @@ export function ModalAberturaCaixa({ isOpen, onClose, onConfirm }: ModalAbertura
           
           <div className="space-y-4">
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 mb-2">
-                {displayValue}
-              </div>
               <label htmlFor="saldoInicial" className="block text-sm font-medium text-gray-700 mb-2">
                 Saldo Inicial
               </label>
@@ -124,8 +121,7 @@ export function ModalAberturaCaixa({ isOpen, onClose, onConfirm }: ModalAbertura
                 type="text"
                 value={saldoInicial}
                 onChange={handleInputChange}
-                placeholder="0,00"
-                className="text-center text-lg"
+                className="text-left text-lg"
                 required
               />
             </div>
@@ -135,11 +131,3 @@ export function ModalAberturaCaixa({ isOpen, onClose, onConfirm }: ModalAbertura
     </ModalGlobal>
   );
 }
-
-
-
-
-
-
-
-

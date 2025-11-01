@@ -12,7 +12,6 @@ interface PeriodFilterProps {
 
 export function PeriodFilter({ selectedPeriod, onPeriodChange, className = '' }: PeriodFilterProps) {
   const periods: DropdownOption[] = [
-    { value: 'weekly', label: 'Semanal' },
     { value: 'monthly', label: 'Mensal' }
   ];
 

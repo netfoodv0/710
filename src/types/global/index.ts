@@ -10,7 +10,6 @@ export * from './categoria';
 export * from './cupom';
 export * from './customers';
 export * from './orders';
-export * from './pdv';
 export * from './map';
 export * from './modal';
 export * from './icons';

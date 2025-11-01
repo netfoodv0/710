@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { useDashboard, useDashboardActions, useDashboardTranslation, useSkeletonDelay } from './hooks';
+import React, { useMemo, useEffect } from 'react';
+import { useDashboard, useDashboardActions, useSkeletonDelay } from './hooks';
 import { useNotificationContext } from '../../context/notificationContextUtils';
 
 // Componentes refatorados
@@ -11,19 +11,34 @@ import {
 import { NotificationToast } from '../../components/NotificationToast';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { usePeriod } from '../../context/periodContext';
-import { PageHeader } from '../../components/ui';
 import { 
   EstatisticasContainerSkeleton, 
   CardsGridSkeleton 
 } from '../../components/skeletons/DashboardSkeleton';
+import { usePageHeader } from '../../components/ui';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function Dashboard() {
   const { selectedPeriod } = usePeriod();
   const { data, loading, error, refreshData } = useDashboard(selectedPeriod);
   const { notifications, removeNotification } = useNotificationContext();
-  const { handleRefresh, handleRetry } = useDashboardActions(refreshData);
+  const { handleRetry } = useDashboardActions(refreshData);
   const showSkeleton = useSkeletonDelay({ delay: 600 });
-  const { dashboard } = useDashboardTranslation();
+  const { setHeader, clearHeader } = usePageHeader();
+  const { loja } = useAuth();
+
+  // Configurar o cabeçalho quando o componente montar
+  useEffect(() => {
+    setHeader({
+      title: 'Dashboard',
+      subtitle: loja?.nome
+    });
+    
+    // Cleanup quando desmontar
+    return () => {
+      clearHeader();
+    };
+  }, [setHeader, clearHeader, loja]);
 
   // Memoizar dados para evitar re-renders desnecessários
   const memoizedData = useMemo(() => data, [data]);
@@ -48,22 +63,8 @@ export default function Dashboard() {
           />
         ))}
 
-        {/* Cabeçalho da página */}
-        <PageHeader
-          title={dashboard.dashboard}
-          subtitle={dashboard.dashboardSubtitle}
-          actionButton={{
-            label: dashboard.atualizarDados,
-            onClick: handleRefresh,
-            loading: loading,
-            disabled: loading,
-            variant: "primary",
-            size: "md"
-          }}
-        />
-
         {/* Conteúdo Principal */}
-        <div className="px-6 pt-6 flex-1 overflow-hidden">
+        <div className="px-6 pt-6 flex-1 overflow-hidden mt-[50px]">
           {loading || showSkeleton ? (
             <div className="space-y-6">
               <EstatisticasContainerSkeleton />

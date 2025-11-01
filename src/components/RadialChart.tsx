@@ -37,7 +37,7 @@ const chartConfig = {
 
 export function ChartRadialShape() {
   return (
-    <Card className="flex flex-col shadow-none border" style={{ borderColor: '#cfd1d3', background: 'linear-gradient(to bottom, #ffffff, #f5eff2)', borderRadius: '16px' }}>
+    <Card className="flex flex-col shadow-none border" style={{ borderColor: '#cfd1d3', background: '#ffffff', borderRadius: '16px' }}>
       <CardHeader className="items-center pb-0">
         <CardTitle className="text-gray-800">Visão Geral de Clientes</CardTitle>
         <CardDescription className="text-gray-600">Janeiro - Junho 2024</CardDescription>
@@ -46,7 +46,7 @@ export function ChartRadialShape() {
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
-          style={{ background: 'linear-gradient(to bottom, #ffffff, #f5eff2)' }}
+          style={{ background: '#ffffff' }}
         >
           <RadialBarChart
             data={chartData}
@@ -58,7 +58,7 @@ export function ChartRadialShape() {
               gridType="circle"
               radialLines={false}
               stroke="none"
-              className="first:fill-[rgb(220,220,220)] last:fill-[#f5eff2]"
+              className="first:fill-[rgb(220,220,220)] last:fill-white"
               polarRadius={[86, 74]}
             />
             <RadialBar 

@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useNotificationContext } from '../../../context/notificationContextUtils';
 import { useAuth } from '../../../hooks/useAuth';
 import { pedidosService } from '../services';
@@ -13,7 +12,6 @@ export function usePedidos() {
     error: null
   });
 
-  const navigate = useNavigate();
   const { showError, showSuccess } = useNotificationContext();
   const { user, status, getLojaId } = useAuth();
 
@@ -141,11 +139,6 @@ export function usePedidos() {
     setData(prev => ({ ...prev, searchTerm: term }));
   }, []);
 
-
-  const handleOpenPDV = useCallback(() => {
-    navigate('/pdv');
-  }, [navigate]);
-
   useEffect(() => {
     // Só configurar se usuário estiver autenticado
     if (status !== 'authenticated' || !user) {
@@ -174,8 +167,7 @@ export function usePedidos() {
     handleRecusar,
     handleSearchChange,
     handleClearSearch,
-    handleSearchSubmit,
-    handleOpenPDV
+    handleSearchSubmit
   };
 }
 

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useRef, useCallback, useEffect, ReactNode } from 'react';
 
 interface CacheItem<T> {
   data: T;
@@ -39,7 +39,7 @@ export function CacheProvider({ children }: { children: ReactNode }) {
       timestamp: Date.now(),
       ttl
     });
-  }, []);
+  }, [defaultTTL]);
 
   const has = useCallback((key: string): boolean => {
     const item = cache.current.get(key);
@@ -72,7 +72,7 @@ export function CacheProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Limpar cache expirado periodicamente
-  React.useEffect(() => {
+  useEffect(() => {
     const interval = setInterval(clearExpired, 60000); // A cada minuto
     return () => clearInterval(interval);
   }, [clearExpired]);

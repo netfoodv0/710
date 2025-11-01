@@ -56,15 +56,6 @@ export const sidebarRoutes: RouteType[] = [
     }
   },
   {
-    path: "/atendimento",
-    element: null,
-    state: "atendimento",
-    sidebarProps: {
-      displayText: "Atendimento",
-      icon: <SupportIcon />
-    }
-  },
-  {
     path: "/horarios",
     element: null,
     state: "horarios",
@@ -136,16 +127,7 @@ export const sidebarRoutes: RouteType[] = [
         sidebarProps: {
           displayText: "Geral"
         }
-      },
-      {
-        path: "/relatorios/clientes",
-        element: null,
-        state: "relatorios.clientes",
-        sidebarProps: {
-          displayText: "Clientes"
-        }
-      },
-      {
+      },{
         path: "/relatorios/produtos",
         element: null,
         state: "relatorios.produtos",

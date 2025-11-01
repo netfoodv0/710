@@ -1,6 +1,7 @@
 import React from 'react';
-import { ModalCaixaFechado, ModalAberturaCaixa } from './modals';
+import { ModalCaixaFechado, ModalAberturaCaixa, ModalCaixaAbertoDetalhes } from './modals';
 import { useCaixaModals } from '../context/CaixaModalsContext';
+import { useCaixa } from '../hooks';
 
 export function CaixaModals() {
   const { 
@@ -8,9 +9,13 @@ export function CaixaModals() {
     closeModalCaixaFechado,
     isModalAberturaCaixaOpen,
     closeModalAberturaCaixa,
+    isModalCaixaAbertoDetalhesOpen,
+    closeModalCaixaAbertoDetalhes,
     openModalAberturaCaixa,
     closeAllModals
   } = useCaixaModals();
+  
+  const { caixaAtual } = useCaixa();
 
   const handleAbrirCaixa = () => {
     // Abrir modal de abertura por cima do modal de caixa fechado
@@ -42,6 +47,14 @@ export function CaixaModals() {
         onClose={handleCancelarAbertura}
         onConfirm={handleConfirmCaixaAberto}
       />
+
+      {caixaAtual && (
+        <ModalCaixaAbertoDetalhes
+          isOpen={isModalCaixaAbertoDetalhesOpen}
+          onClose={closeModalCaixaAbertoDetalhes}
+          caixa={caixaAtual}
+        />
+      )}
     </>
   );
 }

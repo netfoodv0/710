@@ -9,7 +9,7 @@ interface DashboardAnalyticsProps {
 
 export const DashboardAnalytics: React.FC<DashboardAnalyticsProps> = ({ data, loading = false }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0 dashboard-grid-mobile">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0 dashboard-grid-mobile">
       {/* Formas de Pedido */}
       <FormasPedidas 
         formas={data.formasPedidas} 

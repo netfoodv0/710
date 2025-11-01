@@ -3,7 +3,6 @@ export { default as Dashboard } from '../PaginaDashboard';
 export { Pedidos } from '../PaginaPedidos';
 export { HistoricoPedidos } from '../PaginaHistoricoPedidos';
 export { Cardapio } from '../PaginaCardapio';
-export { Atendimento } from '../PaginaAtendimento';
 export { default as Modal } from '../Modal';
 export { Configuracoes } from '../PaginaConfiguracoes';
 export { Relatorios } from '../PaginaRelatorios';
@@ -17,4 +16,4 @@ export { Motoboys } from '../PaginaMotoboys';
 export { default as OrganogramaPage } from '../PaginaOrganograma';
 
 // Páginas de autenticação
-export { Login, Cadastro, LandingPage, LandingPageDesktop } from '../auth';
+export { Cadastro, LandingPage, LandingPageDesktop } from '../auth';

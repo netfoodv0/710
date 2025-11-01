@@ -106,3 +106,5 @@ A página de acompanhamentos agora funciona automaticamente:
 - [ ] Adicionar funcionalidade de alteração de estoque real
 - [ ] Integrar com sistema de movimentação de estoque
 - [ ] Adicionar relatórios específicos para acompanhamentos
+
+

@@ -11,7 +11,6 @@ export interface HistoricoPedidosData {
 export interface HistoricoPedidosLayoutProps {
   data: HistoricoPedidosData;
   onViewPedido: (pedido: Pedido) => void;
-  onExport: () => void;
   onRetry: () => void;
 }
 
@@ -20,7 +19,6 @@ export interface HistoricoPedidosActions {
   carregarEstatisticas: () => Promise<void>;
   refreshDados: () => void;
   handleViewPedido: (pedido: Pedido) => void;
-  handleExport: () => Promise<void>;
   handleRetry: () => void;
 }
 

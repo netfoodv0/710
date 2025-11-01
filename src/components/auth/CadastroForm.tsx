@@ -421,19 +421,6 @@ export const CadastroForm: React.FC<CadastroFormProps> = ({
             )}
           </button>
         </form>
-
-        {/* Link para Login */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Já tem uma conta?{' '}
-            <a
-              href="/login"
-              className="font-medium text-gray-900 hover:text-gray-700 transition-colors"
-            >
-              Fazer login
-            </a>
-          </p>
-        </div>
       </div>
     </div>
   );

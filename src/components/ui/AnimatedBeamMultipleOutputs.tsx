@@ -46,7 +46,7 @@ export function AnimatedBeamMultipleOutputDemo({
 
   return (
     <>
-      <div className="bg-gradient-to-b from-white to-[#f5eff2] rounded-2xl p-0 shadow-lg relative">
+      <div className="bg-white rounded-2xl p-0 shadow-lg relative">
         <div className="absolute top-4 left-4 z-20 pointer-events-none">
           <p className="text-sm text-gray-700 leading-relaxed max-w-[165px]">
             Tudo o que seu delivery precisa: pedidos, cardápio, clientes, entregas e relatórios, conectados em um só lugar.
@@ -130,7 +130,7 @@ export function AnimatedBeamMultipleOutputDemo({
       </div>
       
       {/* Container em branco separado por 20px */}
-      <div className="mt-5 bg-gradient-to-b from-white to-[#f5eff2] rounded-2xl p-6 shadow-lg h-[400px]">
+      <div className="mt-5 bg-white rounded-2xl p-6 shadow-lg h-[400px]">
         <AnimatedListDemo />
       </div>
     </>

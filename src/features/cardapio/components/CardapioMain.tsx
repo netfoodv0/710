@@ -1,5 +1,4 @@
 import { useMemo, useEffect } from 'react';
-
 import { ListaProdutos } from '../../../components/lists/ListaProdutos';
 import { ComplementoInfo } from '../../../components/cards/ComplementoInfo';
 import { ComplementosList } from '../../../components/cards/ComplementosList';

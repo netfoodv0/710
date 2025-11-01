@@ -73,7 +73,7 @@ export const GraficoFormasPagamento: React.FC<GraficoFormasPagamentoProps> = ({
 
   return (
     <div className={`w-full h-full ${className}`}>
-      <ResponsiveContainer width="100%" height={200} className="min-h-[200px] sm:min-h-[245px]">
+      <ResponsiveContainer width="100%" height={200}>
         <PieChart>
           <Pie
             data={dadosGrafico}

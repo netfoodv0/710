@@ -19,9 +19,9 @@ export const GraficoTiposPedidos: React.FC<GraficoTiposPedidosProps> = ({
 }) => {
   // Dados mockados para demonstração - você pode integrar com dados reais depois
   const [tiposPedidos] = useState([
-    { name: 'Delivery', value: 45, color: '#9333EA' },
-    { name: 'Retirada', value: 35, color: '#A855F7' },
-    { name: 'Balcão', value: 20, color: '#C084FC' }
+    { name: 'Delivery', value: 0, color: '#9333EA' },
+    { name: 'Retirada', value: 0, color: '#A855F7' },
+    { name: 'Balcão', value: 0, color: '#C084FC' }
   ]);
 
   // Converter dados para o formato do gráfico
@@ -33,7 +33,7 @@ export const GraficoTiposPedidos: React.FC<GraficoTiposPedidosProps> = ({
 
   return (
     <div className={`w-full h-full ${className}`}>
-      <ResponsiveContainer width="100%" height={200} className="min-h-[200px] sm:min-h-[245px]">
+      <ResponsiveContainer width="100%" height={200}>
         <PieChart>
           <Pie
             data={dadosGrafico}

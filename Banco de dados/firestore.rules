@@ -94,6 +94,16 @@ service cloud.firestore {
       allow read, write: if request.auth != null;
     }
     
+    // Caixas - Acesso por usuário autenticado
+    match /caixas/{caixaId} {
+      allow read, write: if request.auth != null;
+      
+      // Movimentações do caixa
+      match /movimentacoes/{movimentacaoId} {
+        allow read, write: if request.auth != null;
+      }
+    }
+    
     // ===== REGRAS PARA LOJAS (FUTURA MIGRAÇÃO) =====
     match /lojas/{lojaId} {
       // Permitir leitura e escrita para usuários autenticados

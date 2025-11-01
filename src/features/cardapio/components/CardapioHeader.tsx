@@ -1,9 +1,9 @@
 import React from 'react';
-import { PageHeader } from '../../../components/ui';
+import { FixedPageHeader } from '../../../components/ui';
 
 export function CardapioHeader() {
   return (
-    <PageHeader
+    <FixedPageHeader
       title="Cardápio"
       subtitle="Gerencie seus produtos"
     />

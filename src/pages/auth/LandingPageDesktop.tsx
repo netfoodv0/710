@@ -10,10 +10,6 @@ export default function LandingPageDesktop() {
     navigate('/cadastro');
   };
 
-  const handleLogin = () => {
-    navigate('/login');
-  };
-
   return (
     <div className="min-h-screen bg-[rgb(245,239,242)]">
       {/* Header Fixo Flutuante */}
@@ -22,12 +18,7 @@ export default function LandingPageDesktop() {
           <div className="w-[48px] h-[56px] bg-[#e7e6ec] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#d1d0d6] transition-colors">
             <MenuIcon size={28} color="#666666" />
           </div>
-          <div 
-            onClick={handleLogin}
-            className="bg-[#fae9fd] hover:bg-purple-600 rounded-[8px] px-8 py-3 transition-all duration-500 ease-in-out cursor-pointer group hover:shadow-[0_12px_35px_rgba(147,51,234,0.7)]"
-          >
-            <span className="text-[16px] font-bold text-purple-600 group-hover:text-white transition-all duration-500 ease-in-out">Fazer Login</span>
-          </div>
+          <div className="w-[48px]"></div>
           <div className="w-[48px] h-[56px] bg-[#e7e6ec] rounded-[8px] flex items-center justify-center cursor-pointer hover:bg-[#d1d0d6] transition-colors">
             <MenuIcon size={28} color="#666666" />
           </div>

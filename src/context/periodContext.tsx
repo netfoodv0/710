@@ -13,7 +13,7 @@ interface PeriodProviderProps {
 }
 
 export function PeriodProvider({ children }: PeriodProviderProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('monthly');
 
   return (
     <PeriodContext.Provider value={{ selectedPeriod, setSelectedPeriod }}>

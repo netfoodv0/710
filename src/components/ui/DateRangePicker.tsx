@@ -165,42 +165,42 @@ export function DateRangePicker({
         return;
     }
 
-         setTempStartDate(formatDateToString(start));
-     setTempEndDate(formatDateToString(start));
-     setView('range');
-     setIsOpen(false);
-     setHoveredDate(null);
+    setTempStartDate(formatDateToString(start));
+    setTempEndDate(formatDateToString(end));
+    setView('range');
+    setIsOpen(false);
+    setHoveredDate(null);
   };
 
-     const handleDateClick = (date: Date) => {
-     const dateString = formatDateToString(date);
-     
-     if (view === 'start') {
-       setTempStartDate(dateString);
-       setView('end');
-     } else if (view === 'end') {
-       if (new Date(dateString) >= new Date(tempStartDate)) {
-         setTempEndDate(dateString);
-         setView('range');
-         setHoveredDate(null);
-       }
-     } else {
-       // Modo range - selecionar data inicial
-       setTempStartDate(dateString);
-       setView('end');
-     }
-   };
+  const handleDateClick = (date: Date) => {
+    const dateString = formatDateToString(date);
+    
+    if (view === 'start') {
+      setTempStartDate(dateString);
+      setView('end');
+    } else if (view === 'end') {
+      if (new Date(dateString) >= new Date(tempStartDate)) {
+        setTempEndDate(dateString);
+        setView('range');
+        setHoveredDate(null);
+      }
+    } else {
+      // Modo range - selecionar data inicial
+      setTempStartDate(dateString);
+      setView('end');
+    }
+  };
 
   const handleInputClick = () => {
     setView('start');
     setIsOpen(true);
   };
 
-     const clearDates = () => {
-     setTempStartDate('');
-     setTempEndDate('');
-     setHoveredDate(null);
-   };
+  const clearDates = () => {
+    setTempStartDate('');
+    setTempEndDate('');
+    setHoveredDate(null);
+  };
 
   const getDaysInMonth = (month: Date) => {
     const start = startOfWeek(startOfMonth(month));
@@ -208,35 +208,35 @@ export function DateRangePicker({
     return eachDayOfInterval({ start, end });
   };
 
-     // Função para verificar se uma data está no período hover
-   const isInHoverRange = (date: Date) => {
-     if (!hoveredDate || !tempStartDate || view !== 'end') return false;
-     
-     const startDateObj = parseDate(tempStartDate);
-     const hoverDateObj = hoveredDate;
-     
-     // Se a data hover for anterior à data inicial, inverte a ordem
-     if (hoverDateObj < startDateObj) {
-       return date >= hoverDateObj && date <= startDateObj;
-     } else {
-       return date >= startDateObj && date <= hoverDateObj;
-     }
-   };
+  // Função para verificar se uma data está no período hover
+  const isInHoverRange = (date: Date) => {
+    if (!hoveredDate || !tempStartDate || view !== 'end') return false;
+    
+    const startDateObj = parseDate(tempStartDate);
+    const hoverDateObj = hoveredDate;
+    
+    // Se a data hover for anterior à data inicial, inverte a ordem
+    if (hoverDateObj < startDateObj) {
+      return date >= hoverDateObj && date <= startDateObj;
+    } else {
+      return date >= startDateObj && date <= hoverDateObj;
+    }
+  };
 
-   const isInRange = (date: Date) => {
-     if (!tempStartDate || !tempEndDate) return false;
-     const startDateObj = parseDate(tempStartDate);
-     const endDateObj = parseDate(tempEndDate);
-     return date >= startDateObj && date <= endDateObj;
-   };
+  const isInRange = (date: Date) => {
+    if (!tempStartDate || !tempEndDate) return false;
+    const startDateObj = parseDate(tempStartDate);
+    const endDateObj = parseDate(tempEndDate);
+    return date >= startDateObj && date <= endDateObj;
+  };
 
-   const isStartDate = (date: Date) => {
-     return tempStartDate && isSameDay(date, parseDate(tempStartDate));
-   };
+  const isStartDate = (date: Date) => {
+    return tempStartDate && isSameDay(date, parseDate(tempStartDate));
+  };
 
-   const isEndDate = (date: Date) => {
-     return tempEndDate && isSameDay(date, parseDate(tempEndDate));
-   };
+  const isEndDate = (date: Date) => {
+    return tempEndDate && isSameDay(date, parseDate(tempEndDate));
+  };
 
   const getDateClasses = (date: Date) => {
     const baseClasses = "w-8 h-8 flex items-center justify-center text-sm rounded-md cursor-pointer transition-colors";
@@ -275,15 +275,15 @@ export function DateRangePicker({
     return format(date, 'dd/MM/yyyy', { locale: ptBR });
   };
 
-     const getDisplayText = () => {
-     if (tempStartDate && tempEndDate) {
-       return `${formatDisplayDate(tempStartDate)} - ${formatDisplayDate(tempEndDate)}`;
-     } else if (tempStartDate) {
-       return `${formatDisplayDate(tempStartDate)} - Selecione data final`;
-     } else {
-       return 'Selecione o período';
-     }
-   };
+  const getDisplayText = () => {
+    if (tempStartDate && tempEndDate) {
+      return `${formatDisplayDate(tempStartDate)} - ${formatDisplayDate(tempEndDate)}`;
+    } else if (tempStartDate) {
+      return `${formatDisplayDate(tempStartDate)} - Selecione data final`;
+    } else {
+      return 'Selecione o período';
+    }
+  };
 
   // Lista de atalhos disponíveis
   const shortcuts = [
@@ -310,7 +310,7 @@ export function DateRangePicker({
           onClick={handleInputClick}
           readOnly
           placeholder={placeholder}
-          className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-1 focus:ring-purple-500 focus:border-purple-500 outline-none bg-white cursor-pointer"
+          className="w-full pl-10 pr-10 h-[38px] border border-gray-300 rounded-lg focus:ring-1 focus:ring-purple-500 focus:border-purple-500 outline-none bg-white cursor-pointer"
         />
         
                  {(tempStartDate || tempEndDate) && (
@@ -328,7 +328,7 @@ export function DateRangePicker({
        {isOpen && (
                   <div 
                     ref={dropdownRef}
-                    className={`absolute top-full mt-2 bg-gradient-to-b from-white to-[#f5eff2] border border-gray-200 rounded-lg shadow-2xl z-50 min-w-[800px] ${
+                    className={`absolute top-full mt-2 bg-white border border-gray-200 rounded-lg shadow-2xl z-[9999] min-w-[800px] ${
                       dropdownPosition === 'left' ? 'left-0' : 'right-0'
                     }`}
                   >
@@ -512,7 +512,7 @@ export function DateRangePicker({
                        setView('range');
                        setHoveredDate(null);
                      }}
-                     className="px-3 py-1 text-sm bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+                     className="px-3 py-1 text-sm bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors"
                    >
                      Confirmar
                    </button>

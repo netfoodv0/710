@@ -12,7 +12,6 @@ export default function HistoricoPedidos() {
   const { 
     data, 
     handleViewPedido, 
-    handleExport, 
     handleRetry 
   } = useHistoricoPedidos();
 
@@ -22,7 +21,6 @@ export default function HistoricoPedidos() {
         <HistoricoPedidosLayout 
           data={data}
           onViewPedido={handleViewPedido}
-          onExport={handleExport}
           onRetry={handleRetry}
         />
       </div>

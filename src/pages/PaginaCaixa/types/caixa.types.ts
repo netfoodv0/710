@@ -43,6 +43,14 @@ export interface MovimentoCaixa {
   categoria: 'venda' | 'troco' | 'retirada' | 'outros';
 }
 
+export interface Movimentacao {
+  id: string;
+  tipo: 'entrada' | 'saida';
+  valor: number;
+  descricao: string;
+  createdAt: Date;
+}
+
 
 
 

@@ -6,7 +6,7 @@ import { ComplementosService } from '../../../pages/PaginaComplementos/services/
 import { ProdutoModal } from '../../../types/cardapio/produtoModal';
 import { CategoriaModal } from '../../../types/cardapio/categoriaModal';
 import { Complemento } from '../../../types/cardapio/complemento';
-import { getProdutosExemplo, getCategoriasExemplo } from '../../../data/mockCardapio';
+// Removido uso de dados de exemplo; exibir apenas dados do Firebase
 
 interface UseCardapioDataReturn {
   produtos: ProdutoModal[];
@@ -46,13 +46,7 @@ export function useCardapioData(): UseCardapioDataReturn {
       }
 
       const produtosCarregados = await buscarProdutos(user.uid);
-      
-      // Se não há produtos cadastrados, usar dados de exemplo
-      if (produtosCarregados.length === 0) {
-        setProdutos(getProdutosExemplo(user.uid));
-      } else {
-        setProdutos(produtosCarregados);
-      }
+      setProdutos(produtosCarregados);
     } catch (err) {
       console.error('Erro ao carregar produtos:', err);
       setError('Erro ao carregar produtos');
@@ -72,13 +66,7 @@ export function useCardapioData(): UseCardapioDataReturn {
       }
 
       const categoriasCarregadas = await buscarCategorias(user.uid);
-      
-      // Se não há categorias cadastradas, usar dados de exemplo
-      if (categoriasCarregadas.length === 0) {
-        setCategorias(getCategoriasExemplo(user.uid));
-      } else {
-        setCategorias(categoriasCarregadas);
-      }
+      setCategorias(categoriasCarregadas);
     } catch (err) {
       console.error('Erro ao carregar categorias:', err);
       setError('Erro ao carregar categorias');

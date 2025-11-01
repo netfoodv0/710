@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
+import { FixedPageHeader } from '../../../components/ui';
+import { ModalCriarUsuario } from '../../../components/modals';
 import { MotoboysTable } from './MotoboysTable';
 import { MotoboysLayoutProps } from '../types';
 
 export function MotoboysLayout({ data, onCreate }: MotoboysLayoutProps) {
+  const [showModal, setShowModal] = useState(false);
   // Error state
   if (data.error) {
     return (
@@ -40,16 +43,55 @@ export function MotoboysLayout({ data, onCreate }: MotoboysLayoutProps) {
     if (onCreate) onCreate();
   };
 
+  // Botão Novo Motoboy
+  const rightContent = (
+    <button
+      onClick={() => setShowModal(true)}
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 text-white hover:bg-purple-700 transition-colors font-medium text-sm rounded"
+      style={{ height: '32px' }}
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+      </svg>
+      Novo Motoboy
+    </button>
+  );
+
   return (
     <ErrorBoundary>
-      <div className="min-h-screen p-6">
-        <MotoboysTable
-          motoboys={data.motoboys}
-          loading={data.loading}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          onCreate={handleCreate}
+      <div className="min-h-screen">
+        {/* Cabeçalho fixo */}
+        <FixedPageHeader
+          title="Motoboys"
+          rightContent={rightContent}
         />
+        
+        {/* Espaço para não sobrepor o conteúdo */}
+        <div className="h-[50px]" />
+
+        {/* Content */}
+        <div className="px-4 sm:px-6 pt-4 pb-12" style={{ paddingTop: '16px' }}>
+          <MotoboysTable
+            motoboys={data.motoboys}
+            loading={data.loading}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onCreate={handleCreate}
+          />
+        </div>
+
+        {/* Modal de Criar Usuário */}
+        {showModal && (
+          <ModalCriarUsuario
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
+            onSuccess={() => {
+              setShowModal(false);
+              handleCreate();
+            }}
+            tipoUsuario="motoboy"
+          />
+        )}
       </div>
     </ErrorBoundary>
   );

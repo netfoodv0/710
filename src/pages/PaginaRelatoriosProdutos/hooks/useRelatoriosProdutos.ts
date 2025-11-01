@@ -14,7 +14,7 @@ import {
 } from '../../../data/produtosMock';
 
 export function useRelatoriosProdutos(): UseRelatoriosProdutosReturn {
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('monthly');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   

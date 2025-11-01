@@ -33,9 +33,9 @@ export function ActionButton({
     };
     
     const sizeStyles = {
-      sm: "px-4 h-8 text-xs rounded",
-      md: "px-6 h-10 text-sm rounded",
-      lg: "px-8 h-12 text-base rounded"
+      sm: "px-4 text-xs rounded",
+      md: "px-6 text-sm rounded",
+      lg: "px-8 text-base rounded"
     };
     
     return `${baseStyles} ${variantStyles[variant as keyof typeof variantStyles]} ${sizeStyles[size as keyof typeof sizeStyles]} ${className}`;
@@ -46,6 +46,7 @@ export function ActionButton({
       onClick={onClick}
       disabled={disabled || loading}
       className={getButtonStyles(variant, size)}
+      style={{ height: '32px' }}
       aria-label={loading ? `${label} em andamento...` : label}
     >
       {loading ? (

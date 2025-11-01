@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
-import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getAuth, connectAuthEmulator, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { environment, shouldUseEmulators, isProduction } from "../config/environment";
 
 const firebaseConfig = environment.firebase;
@@ -13,6 +13,17 @@ export const db = getFirestore(app);
 
 // Initialize Auth
 export const auth = getAuth(app);
+
+// Configurar persistência LOCAL (mantém usuário logado após fechar navegador)
+setPersistence(auth, browserLocalPersistence)
+  .then(() => {
+    import('../config/environment').then(({ environment }) => {
+      if (environment.app.debug) console.log('✅ Firebase Auth persistência configurada: LOCAL');
+    });
+  })
+  .catch((error) => {
+    console.error('❌ Erro ao configurar persistência:', error);
+  });
 
 // Verificar se a inicialização foi bem-sucedida
 if (!app) {

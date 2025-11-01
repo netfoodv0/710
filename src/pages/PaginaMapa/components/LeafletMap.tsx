@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet.heat';
+// Import do plugin de heatmap será feito dinamicamente para evitar problemas de pré-empacotamento do Vite
 import '../../../styles/leaflet-custom.css';
 
 // Fix para os ícones padrão do Leaflet
@@ -294,6 +294,13 @@ export function LeafletMap({
     
     try {
       if (showHeatmap && !heatmapLayerRef.current) {
+        // Garantir que o plugin leaflet.heat esteja carregado
+        try {
+          await import('leaflet.heat');
+        } catch (e) {
+          console.error('Erro ao carregar plugin leaflet.heat:', e);
+          return;
+        }
         // Criar mapa de calor
         const dadosHeatmap = await criarDadosHeatmap();
         

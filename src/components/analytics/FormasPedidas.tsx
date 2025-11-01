@@ -3,7 +3,6 @@ import { useDashboardTranslation } from '../../pages/PaginaDashboard/hooks';
 import { useErrorHandler } from '../../services/errorService';
 import { getDataWithFallback } from '../../services/mockDataService';
 import { FormaPedida } from '../../pages/PaginaDashboard/types';
-import { ContainerCustom } from '../ui';
 
 interface FormasPedidasProps {
   formas: FormaPedida[];
@@ -31,7 +30,7 @@ const FormaPedidaItem: React.FC<{ forma: FormaPedida }> = ({ forma }) => {
   };
 
   return (
-    <div className="flex items-center justify-between p-2 bg-white rounded-lg dashboard-card-border">
+    <div className="flex items-center justify-between p-2 bg-white dashboard-card-border" style={{ borderRadius: '4px' }}>
       <div className="flex items-center space-x-3">
         <div className="w-[40px] h-[40px] bg-gray-100 rounded-full flex items-center justify-center">
           <div className="text-gray-600 text-lg">
@@ -71,19 +70,16 @@ export const FormasPedidas: React.FC<FormasPedidasProps> = React.memo(({ formas,
 
   if (loading) {
     return (
-      <div className="dashboard-analytics-card pb-2">
-        <div className="dashboard-analytics-header">
+      <div className="pb-2">
+        <div className="mb-4">
           <div className="h-5 bg-gray-200 rounded w-32"></div>
-          <div className="w-2 h-2 bg-gray-200 rounded-full"></div>
         </div>
-        <div className="dashboard-analytics-content">
-          <div className="space-y-2">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded-lg animate-pulse"></div>
-            ))}
-          </div>
+        <div className="space-y-2">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 bg-gray-200 rounded-lg animate-pulse"></div>
+          ))}
         </div>
-        <div className="dashboard-info-box">
+        <div className="mt-4">
           <div className="h-4 bg-gray-200 rounded w-32 mb-2"></div>
           <div className="h-3 bg-gray-200 rounded w-64"></div>
         </div>
@@ -92,30 +88,28 @@ export const FormasPedidas: React.FC<FormasPedidasProps> = React.memo(({ formas,
   }
 
   return (
-    <ContainerCustom className="flex flex-col max-h-[500px] pb-2" aria-labelledby="formas-pedido-title">
-      <div className="dashboard-analytics-header">
+    <div className="flex flex-col max-h-[500px] pb-2" aria-labelledby="formas-pedido-title">
+      <div className="mb-6">
         <h2 id="formas-pedido-title" className="text-base font-semibold text-gray-900">
           {dashboard.formasDePedido}
         </h2>
       </div>
       
-      <div className="dashboard-analytics-content">
-        <div className="h-full flex flex-col">
-          <div className="flex-1 space-y-2 overflow-y-auto hide-scrollbar min-h-0">
-            {formasExibir.map((forma, index) => (
-              <FormaPedidaItem key={index} forma={forma} />
-            ))}
-          </div>
+      <div className="h-full flex flex-col">
+        <div className="flex-1 space-y-2 overflow-y-auto hide-scrollbar min-h-0">
+          {formasExibir.map((forma, index) => (
+            <FormaPedidaItem key={index} forma={forma} />
+          ))}
         </div>
       </div>
       
-      <div className="dashboard-info-box">
+      <div className="mt-4">
         <h3 className="text-sm font-semibold text-green-800 mb-2">{dashboard.economiaComTaxas}</h3>
         <p className="text-xs text-green-700">
           {dashboard.economiaComTaxasDescricao}
         </p>
       </div>
-    </ContainerCustom>
+    </div>
   );
 });
 

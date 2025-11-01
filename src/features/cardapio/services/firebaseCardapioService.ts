@@ -16,7 +16,7 @@ import {
   QueryDocumentSnapshot,
   DocumentData
 } from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { db, auth } from '../lib/firebase';
 import { Produto, CategoriaAdicional } from '../types';
 
 // Tipos para queries otimizadas
@@ -39,12 +39,27 @@ export class FirebaseCardapioService {
 
   private categoriasAdicionaisCollection = collection(db, 'categoriasAdicionais');
 
+  // Método auxiliar para obter o ID da loja do usuário autenticado
+  private getLojaId(): string {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error('Usuário não autenticado');
+    }
+    return user.uid;
+  }
+
   // ===== PRODUTOS =====
   
   async buscarProdutos(filtros: FiltrosProduto = {}): Promise<Produto[]> {
     try {
+      const lojaId = this.getLojaId();
+      console.log('🔍 FirebaseCardapioService - Buscando produtos para lojaId:', lojaId);
+      
       let q = query(this.produtosCollection);
       const constraints = [];
+
+      // ✅ FILTRO CRÍTICO: Adicionar filtro de lojaId
+      constraints.push(where('lojaId', '==', lojaId));
 
       // Filtros básicos (usando índices compostos)
       if (filtros.status) {
@@ -97,6 +112,8 @@ export class FirebaseCardapioService {
         } as Produto);
       });
 
+      console.log('✅ FirebaseCardapioService - Total de produtos encontrados:', produtos.length);
+
       // Filtro de texto (client-side para flexibilidade)
       if (filtros.termo) {
         const termo = filtros.termo.toLowerCase();
@@ -138,13 +155,18 @@ export class FirebaseCardapioService {
 
   async criarProduto(produto: Omit<Produto, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
     try {
+      const lojaId = this.getLojaId();
+      console.log('🆕 FirebaseCardapioService - Criando produto para lojaId:', lojaId);
+      
       const produtoData = {
         ...produto,
+        lojaId, // ✅ CRÍTICO: Adicionar ID da loja
         dataCriacao: serverTimestamp(),
         dataAtualizacao: serverTimestamp()
       };
 
       const docRef = await addDoc(this.produtosCollection, produtoData);
+      console.log('✅ FirebaseCardapioService - Produto criado com ID:', docRef.id);
       return docRef.id;
     } catch (error) {
       console.error('Erro ao criar produto:', error);
@@ -177,6 +199,7 @@ export class FirebaseCardapioService {
 
   async duplicarProduto(id: string): Promise<string> {
     try {
+      const lojaId = this.getLojaId();
       const produtoOriginal = await this.buscarProduto(id);
       if (!produtoOriginal) {
         throw new Error('Produto não encontrado');
@@ -184,6 +207,7 @@ export class FirebaseCardapioService {
 
       const produtoDuplicado = {
         ...produtoOriginal,
+        lojaId, // ✅ Garantir que o lojaId seja do usuário atual
         nome: `${produtoOriginal.nome} (Cópia)`,
         slug: `${produtoOriginal.slug}-copia`,
         vendasTotais: 0,
@@ -207,8 +231,12 @@ export class FirebaseCardapioService {
 
   async buscarCategoriasAdicionais(): Promise<CategoriaAdicional[]> {
     try {
+      const lojaId = this.getLojaId();
+      console.log('🔍 FirebaseCardapioService - Buscando categorias adicionais para lojaId:', lojaId);
+      
       const q = query(
         this.categoriasAdicionaisCollection,
+        where('lojaId', '==', lojaId), // ✅ FILTRO CRÍTICO: Adicionar filtro de lojaId
         orderBy('nome', 'asc')
       );
 
@@ -225,6 +253,7 @@ export class FirebaseCardapioService {
         } as CategoriaAdicional);
       });
 
+      console.log('✅ FirebaseCardapioService - Total de categorias adicionais encontradas:', categorias.length);
       return categorias;
     } catch (error) {
       console.error('Erro ao buscar categorias adicionais:', error);
@@ -234,13 +263,18 @@ export class FirebaseCardapioService {
 
   async criarCategoriaAdicional(categoria: Omit<CategoriaAdicional, 'id' | 'dataCriacao' | 'dataAtualizacao'>): Promise<string> {
     try {
+      const lojaId = this.getLojaId();
+      console.log('🆕 FirebaseCardapioService - Criando categoria adicional para lojaId:', lojaId);
+      
       const categoriaData = {
         ...categoria,
+        lojaId, // ✅ CRÍTICO: Adicionar ID da loja
         dataCriacao: serverTimestamp(),
         dataAtualizacao: serverTimestamp()
       };
 
       const docRef = await addDoc(this.categoriasAdicionaisCollection, categoriaData);
+      console.log('✅ FirebaseCardapioService - Categoria adicional criada com ID:', docRef.id);
       return docRef.id;
     } catch (error) {
       console.error('Erro ao criar categoria adicional:', error);

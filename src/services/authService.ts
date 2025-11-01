@@ -3,8 +3,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  User as FirebaseUser,
-  updateProfile
+  User as FirebaseUser
 } from 'firebase/auth';
 import {
   doc,
@@ -20,58 +19,15 @@ import { auth, db } from '../lib/firebase';
 import type {
   Usuario,
   Loja,
-  LoginFormData,
   CadastroLojaFormData,
-  CadastroUsuarioFormData
-} from '../types/auth';
+  LoginFormData
+} from '../types/global/auth';
 
 export class AuthService {
-  // Login do usuário
-  static async login(data: LoginFormData): Promise<Usuario> {
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        data.email,
-        data.senha
-      );
-
-      const user = userCredential.user;
-      
-      // Buscar dados do usuário no Firestore
-      const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
-      
-      if (!userDoc.exists()) {
-        throw new Error('Usuário não encontrado');
-      }
-
-      const userData = userDoc.data() as Usuario;
-      
-      // Atualizar último login
-      await updateDoc(doc(db, 'usuarios', user.uid), {
-        ultimoLogin: new Date()
-      });
-
-      return {
-        ...userData,
-        ultimoLogin: new Date()
-      };
-    } catch (error: any) {
-      if (error.code === 'auth/user-not-found') {
-        throw new Error('Usuário não encontrado');
-      } else if (error.code === 'auth/wrong-password') {
-        throw new Error('Senha incorreta');
-      } else if (error.code === 'auth/invalid-email') {
-        throw new Error('E-mail inválido');
-      } else {
-        throw new Error('Erro ao fazer login: ' + error.message);
-      }
-    }
-  }
-
   // Cadastro de usuário e loja
   static async cadastrarLoja(data: CadastroLojaFormData): Promise<{ usuario: Usuario; loja: Loja }> {
     try {
-      console.log('Iniciando cadastro com dados:', {
+      if ((await import('../config/environment')).environment.app.debug) console.log('Iniciando cadastro com dados:', {
         email: data.email,
         nomeLoja: data.nomeLoja,
         whatsapp: data.whatsapp,
@@ -79,13 +35,13 @@ export class AuthService {
       });
 
       // Criar usuário no Firebase Auth
-      console.log('Criando usuário no Firebase Auth...');
+      if ((await import('../config/environment')).environment.app.debug) console.log('Criando usuário no Firebase Auth...');
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         data.email,
         data.senha
       );
-      console.log('Usuário criado no Firebase Auth:', userCredential.user.uid);
+      if ((await import('../config/environment')).environment.app.debug) console.log('Usuário criado no Firebase Auth:', userCredential.user.uid);
 
       const user = userCredential.user;
 
@@ -114,16 +70,18 @@ export class AuthService {
       };
 
       // Salvar dados no Firestore
-      console.log('Salvando dados do usuário no Firestore...');
-      console.log('Dados do usuário:', usuarioData);
-      console.log('Dados da loja:', lojaData);
+      if ((await import('../config/environment')).environment.app.debug) {
+        console.log('Salvando dados do usuário no Firestore...');
+        console.log('Dados do usuário:', usuarioData);
+        console.log('Dados da loja:', lojaData);
+      }
       
       await Promise.all([
         setDoc(doc(db, 'usuarios', user.uid), usuarioData),
         setDoc(doc(db, 'lojas', user.uid), lojaData)
       ]);
       
-      console.log('Dados salvos com sucesso no Firestore');
+      if ((await import('../config/environment')).environment.app.debug) console.log('Dados salvos com sucesso no Firestore');
 
       return {
         usuario: usuarioData,
@@ -131,8 +89,10 @@ export class AuthService {
       };
     } catch (error: any) {
       console.error('Erro no cadastro:', error);
-      console.error('Código do erro:', error.code);
-      console.error('Mensagem do erro:', error.message);
+      if ((await import('../config/environment')).environment.app.debug) {
+        console.error('Código do erro:', error.code);
+        console.error('Mensagem do erro:', error.message);
+      }
       
       if (error.code === 'auth/email-already-in-use') {
         throw new Error('Este e-mail já está em uso');
@@ -144,6 +104,66 @@ export class AuthService {
         throw new Error('Operação não permitida. Verifique as configurações do Firebase');
       } else {
         throw new Error('Erro ao criar conta: ' + error.message);
+      }
+    }
+  }
+
+  // Login de usuário
+  static async login(data: LoginFormData): Promise<Usuario> {
+    try {
+      if ((await import('../config/environment')).environment.app.debug) {
+        console.log('🔑 AuthService.login() - Tentando fazer login...');
+        console.log('📧 Email:', data.email);
+      }
+      
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.senha
+      );
+
+      if ((await import('../config/environment')).environment.app.debug) console.log('✅ signInWithEmailAndPassword bem-sucedido!');
+      const user = userCredential.user;
+      if ((await import('../config/environment')).environment.app.debug) console.log('🆔 UID:', user.uid);
+      
+      // Buscar dados do usuário no Firestore
+      const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
+      
+      if (!userDoc.exists()) {
+        throw new Error('Usuário não encontrado no sistema');
+      }
+
+      const userData = userDoc.data() as Usuario;
+      
+      // Atualizar último login
+      await updateDoc(doc(db, 'usuarios', user.uid), {
+        ultimoLogin: new Date()
+      });
+
+      return {
+        ...userData,
+        ultimoLogin: new Date()
+      };
+    } catch (error: any) {
+      console.error('Erro no login:', error);
+      
+      // Tratar erros específicos do Firebase Authentication
+      if (error.code === 'auth/invalid-credential') {
+        throw new Error('E-mail ou senha incorretos. Verifique seus dados e tente novamente.');
+      } else if (error.code === 'auth/user-not-found') {
+        throw new Error('E-mail não cadastrado. Verifique o e-mail ou crie uma nova conta.');
+      } else if (error.code === 'auth/wrong-password') {
+        throw new Error('Senha incorreta. Verifique sua senha e tente novamente.');
+      } else if (error.code === 'auth/invalid-email') {
+        throw new Error('Formato de e-mail inválido. Digite um e-mail válido.');
+      } else if (error.code === 'auth/user-disabled') {
+        throw new Error('Sua conta foi desativada. Entre em contato com o suporte.');
+      } else if (error.code === 'auth/too-many-requests') {
+        throw new Error('Muitas tentativas de login. Aguarde alguns minutos e tente novamente.');
+      } else if (error.code === 'auth/network-request-failed') {
+        throw new Error('Erro de conexão. Verifique sua internet e tente novamente.');
+      } else {
+        throw new Error('Erro ao fazer login: ' + error.message);
       }
     }
   }
@@ -162,20 +182,20 @@ export class AuthService {
     try {
       const user = auth.currentUser;
       if (!user) {
-        console.log('Nenhum usuário Firebase logado');
+        if ((await import('../config/environment')).environment.app.debug) console.log('Nenhum usuário Firebase logado');
         return null;
       }
 
-      console.log('Buscando dados do usuário:', user.uid);
+      if ((await import('../config/environment')).environment.app.debug) console.log('Buscando dados do usuário:', user.uid);
       const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
       
       if (!userDoc.exists()) {
-        console.log('Documento do usuário não encontrado no Firestore');
+        if ((await import('../config/environment')).environment.app.debug) console.log('Documento do usuário não encontrado no Firestore');
         return null;
       }
 
       const userData = userDoc.data() as Usuario;
-      console.log('Dados do usuário encontrados:', userData);
+      if ((await import('../config/environment')).environment.app.debug) console.log('Dados do usuário encontrados:', userData);
       return userData;
     } catch (error) {
       console.error('Erro ao buscar usuário atual:', error);

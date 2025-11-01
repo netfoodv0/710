@@ -1,11 +1,5 @@
 import { z } from 'zod';
 
-// Schema de validação para login
-export const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
-});
-
 // Schema de validação para cadastro de loja
 export const cadastroLojaSchema = z.object({
   nomeLoja: z.string().min(2, 'Nome da loja deve ter pelo menos 2 caracteres'),
@@ -23,9 +17,15 @@ export const cadastroLojaSchema = z.object({
   }),
 });
 
+// Schema de validação para login
+export const loginSchema = z.object({
+  email: z.string().email('Email inválido'),
+  senha: z.string().min(1, 'Senha é obrigatória'),
+});
+
 // Tipos derivados dos schemas
-export type LoginFormData = z.infer<typeof loginSchema>;
 export type CadastroLojaFormData = z.infer<typeof cadastroLojaSchema>;
+export type LoginFormData = z.infer<typeof loginSchema>;
 
 // Tipos de usuário e loja
 export interface Usuario {
@@ -63,10 +63,9 @@ export interface Loja {
 
 // Estados de autenticação
 export interface AuthState {
-  usuario: Usuario | null;
+  user: Usuario | null;
   loja: Loja | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+  status: AuthStatus;
   error: string | null;
 }
 

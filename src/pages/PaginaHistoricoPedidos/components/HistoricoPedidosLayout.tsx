@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { AlertCircle } from 'lucide-react';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
-import { PageHeader, DataTable, DataTableColumn } from '../../../components/ui';
+import { FixedPageHeader, DataTable, DataTableColumn } from '../../../components/ui';
 import { HistoricoModal } from '../../../features/historico/components';
 import { HistoricoPedidosLayoutProps, Pedido } from '../types';
 import { formatarData, formatarValor, formatarFormaPagamento } from '../utils';
@@ -9,7 +9,6 @@ import { formatarData, formatarValor, formatarFormaPagamento } from '../utils';
 export function HistoricoPedidosLayout({ 
   data, 
   onViewPedido, 
-  onExport, 
   onRetry 
 }: HistoricoPedidosLayoutProps) {
   const [selectedPedido, setSelectedPedido] = useState<Pedido | null>(null);
@@ -86,7 +85,7 @@ export function HistoricoPedidosLayout({
       render: (produto) => (
         <div className="flex flex-col">
           <p className="text-small capitalize">{formatarFormaPagamento(produto.formaPagamento)}</p>
-          <p className="text-xs text-default-400 capitalize">
+          <p className="text-[14px] text-default-400 capitalize">
             {produto.pagamento?.statusPagamento === 'pago' ? 'Pago' : 'Pendente'}
           </p>
         </div>
@@ -102,7 +101,7 @@ export function HistoricoPedidosLayout({
         'bg-purple-100 text-purple-800';
         
         return (
-          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColor}`}>
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[14px] font-medium ${statusColor}`}>
             {produto.status}
           </span>
         );
@@ -115,7 +114,7 @@ export function HistoricoPedidosLayout({
       render: (produto) => (
         <div className="flex flex-col">
           <p className="text-small">{formatarData(produto.dataHora)}</p>
-          <p className="text-xs text-default-400 capitalize">{produto.tempoEstimado}</p>
+          <p className="text-[14px] text-default-400 capitalize">{produto.tempoEstimado}</p>
         </div>
       )
     },
@@ -151,17 +150,13 @@ export function HistoricoPedidosLayout({
   return (
     <ErrorBoundary>
       <div className="min-h-screen">
-        {/* Cabeçalho da página */}
-        <PageHeader
+        {/* Cabeçalho fixo */}
+        <FixedPageHeader
           title="Histórico de Pedidos"
-          subtitle="Visualize e gerencie o histórico de pedidos"
-          actionButton={{
-            label: "Exportar Histórico",
-            onClick: onExport,
-            variant: "secondary",
-            size: "md"
-          }}
         />
+        
+        {/* Espaço para não sobrepor o conteúdo */}
+        <div className="h-[50px]" />
 
         {/* Conteúdo principal */}
         <div className="px-6 py-6 space-y-6">

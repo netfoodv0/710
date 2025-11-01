@@ -1,4 +1,5 @@
 import React from 'react';
+import { StatCard } from './ui';
 
 interface EstatisticaItem {
   label: string;
@@ -14,28 +15,6 @@ interface EstatisticasCustomProps {
   title?: string;
   subtitle?: string;
 }
-
-// Componente para renderizar item individual
-const EstatisticaCard: React.FC<{ 
-  label: string; 
-  valor: string | number; 
-  icon: React.ComponentType<{ size?: number; color?: string }>;
-  iconColor: string;
-}> = ({ label, valor, icon: IconComponent, iconColor }) => {
-  return (
-    <div className="dashboard-stat-card" style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: 'none' }}>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="dashboard-text-xs font-medium text-gray-600">{label}</p>
-          <p className="text-lg font-bold text-gray-900">{valor}</p>
-        </div>
-        <div className="dashboard-icon-container">
-          <IconComponent size={24} color={iconColor} />
-        </div>
-      </div>
-    </div>
-  );
-};
 
 export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({ 
   estatisticas, 
@@ -67,15 +46,12 @@ export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({
         )}
         <div className={`grid grid-cols-1 ${getGridCols(4)} gap-4`}>
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="dashboard-stat-card" style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: 'none' }}>
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="h-3 bg-gray-200 rounded w-20 mb-2"></div>
-                  <div className="h-5 bg-gray-200 rounded w-8"></div>
-                </div>
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0"></div>
-              </div>
-            </div>
+            <StatCard
+              key={i}
+              label=""
+              value=""
+              style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: 'none' }}
+            />
           ))}
         </div>
       </section>
@@ -96,12 +72,13 @@ export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({
       )}
       <div className={`grid grid-cols-1 ${getGridCols(estatisticas.length)} gap-4`}>
         {estatisticas.map((card, index) => (
-          <EstatisticaCard
+          <StatCard
             key={index}
             label={card.label}
-            valor={card.valor}
+            value={card.valor}
             icon={card.icon}
             iconColor={card.iconColor}
+            style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: 'none' }}
           />
         ))}
       </div>

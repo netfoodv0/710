@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Filter, Plus, MoreHorizontal } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { EditIcon } from './EditIcon';
 import { TrashIcon } from './TrashIcon';
 import { ViewIcon } from './ViewIcon';
-import { CustomDropdown, type DropdownOption } from './CustomDropdown';
+import { CustomDropdown } from './CustomDropdown';
 import { DateRangePicker } from './DateRangePicker';
 
 export interface DataTableColumn<T> {
@@ -52,8 +52,8 @@ export function DataTable<T extends { id: string | number }>({
   actions = {},
   pagination = {},
   defaultSort,
-  onAdd,
-  addButtonText = "Adicionar",
+  onAdd: _onAdd,
+  addButtonText: _addButtonText = "Adicionar",
   className = ""
 }: DataTableProps<T>) {
   const [filterValue, setFilterValue] = useState('');
@@ -234,7 +234,7 @@ export function DataTable<T extends { id: string | number }>({
   const renderCell = (item: T, column: DataTableColumn<T>) => {
     if (column.key === 'actions') {
       return (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-2">
           {actions.onView && (
             <button 
               className="text-gray-500 hover:text-gray-700 transition-colors" 
@@ -289,10 +289,10 @@ export function DataTable<T extends { id: string | number }>({
   return (
     <div className={className}>
       {/* Filtros e Busca */}
-      <div className="bg-white/60 rounded-2xl p-4 sm:p-6 mb-6 border-2 border-white" style={{ border: '2px solid rgba(255, 255, 255, 1)' }}>
+      <div className="bg-white/60 rounded p-4 mb-6 border border-gray-300" style={{ border: '1px solid rgba(209, 213, 219, 1)' }}>
         {/* Header dos filtros com toggle para mobile */}
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-medium text-gray-700">Filtros</h3>
+          <h3 className="text-sm text-gray-700">Filtros</h3>
           <button
             onClick={() => setShowFilters(!showFilters)}
             className="lg:hidden flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
@@ -306,7 +306,7 @@ export function DataTable<T extends { id: string | number }>({
         <div className={`${showFilters ? 'block' : 'hidden'} lg:block`}>
           <div className="flex flex-col lg:flex-row gap-4 items-start">
             {/* Busca - sempre visível */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-[2] min-w-0">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
@@ -314,14 +314,14 @@ export function DataTable<T extends { id: string | number }>({
                   placeholder={searchPlaceholder}
                   value={filterValue}
                   onChange={(e) => setFilterValue(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none"
+                  className="w-full pl-10 pr-4 h-[38px] bg-white border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#8217d5] focus:border-[#8217d5] outline-none"
                 />
               </div>
             </div>
 
             {/* Filtros na mesma linha da busca */}
             {filters.showDateRange && (
-              <div className="w-full lg:w-80">
+              <div className="w-full lg:w-64">
                 <DateRangePicker
                   startDate={dateInicio}
                   endDate={dateFim}
@@ -372,19 +372,22 @@ export function DataTable<T extends { id: string | number }>({
       </div>
 
       {/* Tabela */}
-      <div className="bg-white rounded-2xl overflow-hidden" style={{ border: '1px solid hsl(210deg 4.35% 81.96%)' }}>
+      <div className="bg-white rounded-lg overflow-hidden" style={{ border: '1px solid hsl(210deg 4.35% 81.96%)' }}>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gray-50 border-b" style={{ borderColor: 'hsl(210deg 4.35% 81.96%)' }}>
               <tr>
-                {columns.map((column) => (
+                {columns.map((column, columnIndex) => (
                   <th 
                     key={String(column.key)}
-                    className={`px-2 sm:px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
+                    className={`px-2 sm:px-4 py-2 text-left text-[14px] font-medium text-gray-500 uppercase tracking-wider ${
                       column.sortable ? 'cursor-pointer hover:bg-gray-100' : ''
-                    }`}
+                    } ${columnIndex < columns.length - 1 ? 'border-r' : ''}`}
                     onClick={() => column.sortable && handleSort(column.key)}
-                    style={{ width: column.width }}
+                    style={{ 
+                      width: column.width,
+                      borderRightColor: columnIndex < columns.length - 1 ? 'hsl(210deg 4.35% 81.96%)' : undefined
+                    }}
                   >
                     <div className="flex items-center gap-1">
                       <span className="hidden sm:inline">{column.label}</span>
@@ -410,7 +413,7 @@ export function DataTable<T extends { id: string | number }>({
             <tbody className="bg-white divide-y" style={{ borderColor: 'hsl(210deg 4.35% 81.96%)' }}>
               {currentData.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length} className="px-4 py-8 text-center text-sm text-gray-500">
+                  <td colSpan={columns.length} className="px-4 py-8 text-center text-[14px] text-gray-500">
                     Nenhum item encontrado
                   </td>
                 </tr>
@@ -419,8 +422,14 @@ export function DataTable<T extends { id: string | number }>({
                   <tr key={item.id} className="hover:bg-gray-50 transition-colors" style={{ 
                     borderBottom: index < currentData.length - 1 ? '1px solid hsl(210deg 4.35% 81.96%)' : 'none' 
                   }}>
-                    {columns.map((column) => (
-                      <td key={String(column.key)} className="px-2 sm:px-4 py-3 whitespace-nowrap text-small">
+                    {columns.map((column, columnIndex) => (
+                      <td 
+                        key={String(column.key)} 
+                        className={`px-2 sm:px-4 py-3 whitespace-nowrap text-[14px] ${columnIndex < columns.length - 1 ? 'border-r' : ''}`}
+                        style={{ 
+                          borderRightColor: columnIndex < columns.length - 1 ? 'hsl(210deg 4.35% 81.96%)' : undefined
+                        }}
+                      >
                         {renderCell(item, column)}
                       </td>
                     ))}

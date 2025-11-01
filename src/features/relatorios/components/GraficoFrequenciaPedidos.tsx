@@ -19,9 +19,9 @@ export const GraficoFrequenciaPedidos: React.FC<GraficoFrequenciaPedidosProps> =
 }) => {
   // Dados mockados para demonstração - você pode integrar com dados reais depois
   const [frequenciaPedidos] = useState([
-    { name: 'Curiosos', value: 18, color: '#9333EA' },
-    { name: 'Fiéis', value: 12, color: '#A855F7' },
-    { name: 'Super Clientes', value: 8, color: '#C084FC' }
+    { name: 'Curiosos', value: 0, color: '#9333EA' },
+    { name: 'Fiéis', value: 0, color: '#A855F7' },
+    { name: 'Super Clientes', value: 0, color: '#C084FC' }
   ]);
 
   // Converter dados para o formato do gráfico
@@ -33,7 +33,7 @@ export const GraficoFrequenciaPedidos: React.FC<GraficoFrequenciaPedidosProps> =
 
   return (
     <div className={`w-full h-full ${className}`}>
-      <ResponsiveContainer width="100%" height={200} className="min-h-[200px] sm:min-h-[245px]">
+      <ResponsiveContainer width="100%" height={200}>
         <PieChart>
           <Pie
             data={dadosGrafico}

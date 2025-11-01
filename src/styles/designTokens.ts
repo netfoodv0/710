@@ -42,8 +42,8 @@ export const colors = {
   },
   // Cores específicas do dashboard
   dashboard: {
-    background: '#f5eff2',
-    backgroundRgb: 'rgb(238, 235, 235)',
+    background: '#ffffff',
+    backgroundRgb: 'rgb(255, 255, 255)',
     border: '#cfd1d3',
     borderRgb: 'rgb(207, 209, 211)',
     white: '#ffffff',

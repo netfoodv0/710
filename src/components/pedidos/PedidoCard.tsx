@@ -2,7 +2,6 @@ import React, { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarIcon } from './CalendarIcon';
 import { BorderLine } from './BorderLine';
-import { WhatsAppIcon } from './WhatsAppIcon';
 import { PrinterIcon } from './PrinterIcon';
 import { DollarIcon } from './DollarIcon';
 import { PixIcon } from './PixIcon';
@@ -184,9 +183,6 @@ export const PedidoCard = memo(({
               <PrinterIcon size={20} />
             </BorderLine>
             
-            <BorderLine className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-              <WhatsAppIcon size={18} />
-            </BorderLine>
           </div>
         </div>
         <div className="text-sm text-gray-700 mb-2">{cliente}</div>

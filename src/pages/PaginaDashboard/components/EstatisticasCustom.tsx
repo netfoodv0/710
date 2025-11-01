@@ -1,10 +1,12 @@
 import React from 'react';
+import { StatCard } from '../../../components/ui';
 
 interface EstatisticaItem {
   label: string;
   valor: string | number;
   icon: React.ComponentType<{ size?: number; color?: string }>;
   iconColor: string;
+  trendData?: number[];
 }
 
 interface EstatisticasCustomProps {
@@ -15,28 +17,6 @@ interface EstatisticasCustomProps {
   subtitle?: string;
 }
 
-// Componente para renderizar item individual
-const EstatisticaCard: React.FC<{ 
-  label: string; 
-  valor: string | number; 
-  icon: React.ComponentType<{ size?: number; color?: string }>;
-  iconColor: string;
-}> = ({ label, valor, icon: IconComponent, iconColor }) => {
-  return (
-    <div className="dashboard-stat-card">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="dashboard-text-xs font-medium text-gray-600">{label}</p>
-          <p className="text-lg font-bold text-gray-900">{valor}</p>
-        </div>
-        <div className="dashboard-icon-container">
-          <IconComponent size={24} color={iconColor} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({ 
   estatisticas, 
   loading = false, 
@@ -46,15 +26,15 @@ export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({
 }) => {
   // Determinar o número de colunas baseado no número de estatísticas
   const getGridCols = (count: number) => {
-    if (count <= 2) return 'md:grid-cols-2';
-    if (count <= 4) return 'md:grid-cols-4';
-    if (count <= 6) return 'md:grid-cols-6';
-    return 'md:grid-cols-6';
+    if (count <= 2) return 'sm:grid-cols-2';
+    if (count <= 4) return 'sm:grid-cols-2 lg:grid-cols-4';
+    if (count <= 6) return 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6';
+    return 'sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6';
   };
 
   if (loading) {
     return (
-      <section className={`dashboard-card dashboard-section-spacing flex-shrink-0 ${className}`}>
+      <section className={`flex-shrink-0 ${className}`}>
         {(title || subtitle) && (
           <div className="mb-4">
             {title && (
@@ -65,9 +45,9 @@ export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({
             )}
           </div>
         )}
-        <div className={`grid grid-cols-1 ${getGridCols(4)} gap-4`}>
+        <div className={`grid grid-cols-1 ${getGridCols(4)} gap-3 sm:gap-4`}>
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="dashboard-stat-card">
+            <div key={i} className="dashboard-stat-card" style={{ borderRadius: '4px' }}>
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="h-3 bg-gray-200 rounded w-20 mb-2"></div>
@@ -83,7 +63,7 @@ export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({
   }
 
   return (
-    <section className={`dashboard-card dashboard-section-spacing flex-shrink-0 ${className}`}>
+    <section className={`flex-shrink-0 ${className}`}>
       {(title || subtitle) && (
         <div className="mb-4">
           {title && (
@@ -94,12 +74,12 @@ export const EstatisticasCustom: React.FC<EstatisticasCustomProps> = ({
           )}
         </div>
       )}
-      <div className={`grid grid-cols-1 ${getGridCols(estatisticas.length)} gap-4`}>
+      <div className={`grid grid-cols-1 ${getGridCols(estatisticas.length)} gap-3 sm:gap-4`}>
         {estatisticas.map((card, index) => (
-          <EstatisticaCard
+          <StatCard
             key={index}
             label={card.label}
-            valor={card.valor}
+            value={card.valor}
             icon={card.icon}
             iconColor={card.iconColor}
           />

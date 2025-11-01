@@ -11,7 +11,7 @@ export function useHistoricoPedidos() {
     error: null
   });
 
-  const { showError, showSuccess } = useNotificationContext();
+  const { showError } = useNotificationContext();
   const { getLojaId } = useAuth();
 
   const carregarHistorico = useCallback(async () => {
@@ -51,25 +51,16 @@ export function useHistoricoPedidos() {
     } catch (error) {
       console.error('Erro ao carregar estatísticas:', error);
     }
-  }, []);
+  }, [getLojaId]);
 
   const refreshDados = useCallback(() => {
     carregarHistorico();
     carregarEstatisticas();
-  }, []);
+  }, [carregarHistorico, carregarEstatisticas]);
 
   const handleViewPedido = useCallback((pedido: Pedido) => {
     console.log('Visualizar pedido:', pedido);
   }, []);
-
-  const handleExport = useCallback(async () => {
-    try {
-      await historicoPedidosService.exportarHistorico();
-      showSuccess('Histórico exportado com sucesso!');
-    } catch (error) {
-      showError('Erro ao exportar histórico');
-    }
-  }, [showSuccess, showError]);
 
   const handleRetry = useCallback(() => {
     refreshDados();
@@ -86,7 +77,6 @@ export function useHistoricoPedidos() {
     carregarEstatisticas,
     refreshDados,
     handleViewPedido,
-    handleExport,
     handleRetry
   };
 }

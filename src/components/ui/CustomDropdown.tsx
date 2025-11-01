@@ -37,9 +37,9 @@ export function CustomDropdown({
   const selectedOption = options.find(option => option.value === selectedValue);
 
   const sizeClasses = {
-    sm: 'px-3 py-2 text-xs h-10',
-    md: 'px-3 py-2 text-sm h-10',
-    lg: 'px-4 py-2 text-base h-10'
+    sm: 'px-3 py-2 text-xs h-[38px]',
+    md: 'px-3 py-2 text-sm h-[38px]',
+    lg: 'px-4 py-2 text-base h-[38px]'
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -65,9 +65,10 @@ export function CustomDropdown({
       <button
         onClick={() => !disabled && setIsOpen(!isOpen)}
         disabled={disabled}
-        className={`flex items-center gap-2 w-full text-left font-medium text-gray-700 bg-white border border-gray-300 hover:bg-purple-50 hover:border-purple-300 hover:shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200 ${
+        className={`flex items-center gap-2 w-full text-left text-black bg-white border border-gray-300 hover:bg-purple-50 hover:border-purple-300 hover:shadow-sm focus:outline-none focus:ring-1 focus:ring-purple-400 focus:border-purple-400 transition-all duration-200 ${
           disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-        } ${sizeClasses[size]} rounded-md`}
+        } ${sizeClasses[size]} rounded-lg`}
+        style={{ border: '1px solid rgba(209, 213, 219, 1)' }}
       >
         {triggerIcon && <span className="flex-shrink-0">{triggerIcon}</span>}
         <span className="flex-1 truncate">

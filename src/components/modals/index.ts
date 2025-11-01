@@ -7,7 +7,6 @@ export { ModalCadastroAcompanhamento } from './ModalCadastroAcompanhamento';
 export { ModalDetalhesProduto } from './ModalDetalhesProduto';
 export { ModalCriarUsuario } from './ModalCriarUsuario';
 export { ModalSelecaoAvatar } from './ModalSelecaoAvatar';
-export { ModalFormasPagamento } from './ModalFormasPagamento';
 export { AvatarItem } from './AvatarItem';
 export { AvatarList } from './AvatarList';
 export { avataresDisponiveis, type Avatar } from './avatarData';

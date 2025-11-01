@@ -10,8 +10,7 @@ import {
   endAt
 } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
-import { Pedido, StatusPedido } from '../../../types';
-import { ClientePedido, ItemPedido, PagamentoPedido, EnderecoEntrega, Extra } from '../../../types/global/produtos';
+import { Pedido, StatusPedido } from '../../../features/historico/types/historico.types';
 
 export interface FiltrosHistorico {
   status?: StatusPedido;
@@ -108,7 +107,9 @@ class HistoricoPedidosService {
           id: doc.id,
           dataHora: data.dataHora?.toDate() || new Date(),
           dataCriacao: data.dataCriacao?.toDate() || new Date(),
-          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date()
+          dataAtualizacao: data.dataAtualizacao?.toDate() || new Date(),
+          formaPagamento: data.pagamento?.metodo || data.formaPagamento || '',
+          tempoEstimado: data.tempoPreparo || data.tempoEstimado || ''
         } as Pedido);
       });
 

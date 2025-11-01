@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PeriodType } from '../../components/filters/FiltroPeriodo';
-import { PageHeader, ActionButton } from '../../components/ui';
+import { FixedPageHeader } from '../../components/ui';
 import { ModalCriarCupom } from '../modals/ModalCriarCupom';
 
 interface HeaderRelatorioCuponsProps {
@@ -32,25 +32,28 @@ export const HeaderRelatorioCupons: React.FC<HeaderRelatorioCuponsProps> = ({
     // Por exemplo, chamar uma API ou atualizar o estado local
   };
 
+  // Botão Novo Cupom
+  const rightContent = (
+    <button
+      onClick={handleOpenModal}
+      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 text-white hover:bg-purple-700 transition-colors font-medium text-sm rounded"
+      style={{ height: '32px' }}
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+      </svg>
+      Novo Cupom
+    </button>
+  );
+
   return (
     <>
-      <PageHeader
-        title="Relatório de Cupons"
-        subtitle="Análise completa dos cupons, descontos e promoções da sua loja"
-        rightContent={
-          <ActionButton
-            label="Novo Cupom"
-            onClick={handleOpenModal}
-            variant="primary"
-            size="md"
-            icon={
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-            }
-          />
-        }
+      <FixedPageHeader
+        title="Cupons"
+        rightContent={rightContent}
       />
+      {/* Espaço para não sobrepor o conteúdo */}
+      <div className="h-[50px]" />
       
       <ModalCriarCupom
         isOpen={isModalOpen}

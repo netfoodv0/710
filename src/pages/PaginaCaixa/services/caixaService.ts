@@ -1,4 +1,4 @@
-import { Caixa, DadosAberturaCaixa, DadosFechamentoCaixa, CaixaResumo } from '../types';
+import { Caixa, DadosAberturaCaixa, DadosFechamentoCaixa, CaixaResumo, Movimentacao } from '../types';
 import { firebaseCaixaService } from './firebaseCaixaService';
 import { useAuth } from '../../../hooks/useAuth';
 
@@ -55,6 +55,26 @@ class CaixaService {
     } catch (error) {
       console.error('❌ Erro ao atualizar totais do caixa:', error);
       throw new Error('Erro ao atualizar totais do caixa');
+    }
+  }
+
+  async adicionarMovimentacao(caixaId: string, tipo: 'entrada' | 'saida', valor: number, descricao: string): Promise<void> {
+    try {
+      await firebaseCaixaService.adicionarMovimentacao(caixaId, tipo, valor, descricao);
+      console.log('✅ Movimentação adicionada com sucesso');
+    } catch (error) {
+      console.error('❌ Erro ao adicionar movimentação:', error);
+      throw new Error('Erro ao adicionar movimentação');
+    }
+  }
+
+  async buscarMovimentacoes(caixaId: string): Promise<Movimentacao[]> {
+    try {
+      const movimentacoes = await firebaseCaixaService.buscarMovimentacoes(caixaId);
+      return movimentacoes;
+    } catch (error) {
+      console.error('❌ Erro ao buscar movimentações:', error);
+      return [];
     }
   }
 }

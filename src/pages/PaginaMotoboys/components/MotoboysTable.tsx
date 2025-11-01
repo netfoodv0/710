@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { PageHeader, DataTable, DataTableColumn } from '../../../components/ui';
-import { ModalCriarUsuario } from '../../../components/modals';
+import React, { useMemo } from 'react';
+import { DataTable, DataTableColumn } from '../../../components/ui';
 import { MotoboysTableProps } from '../types';
 
 export function MotoboysTable({ 
@@ -8,9 +7,8 @@ export function MotoboysTable({
   loading, 
   onEdit, 
   onDelete, 
-  onCreate 
+  onCreate
 }: MotoboysTableProps) {
-  const [showModal, setShowModal] = useState(false);
 
   const columns: DataTableColumn[] = useMemo(() => [
     {
@@ -77,17 +75,6 @@ export function MotoboysTable({
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Motoboys"
-        subtitle="Gerencie entregadores do sistema"
-        actionButton={{
-          label: "Novo Motoboy",
-          onClick: () => setShowModal(true),
-          variant: "primary",
-          size: "md"
-        }}
-      />
-
       <DataTable
         data={motoboys}
         columns={columns}
@@ -96,18 +83,6 @@ export function MotoboysTable({
         pagination
         itemsPerPage={10}
       />
-
-      {showModal && (
-        <ModalCriarUsuario
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onSuccess={() => {
-            setShowModal(false);
-            onCreate();
-          }}
-          tipoUsuario="motoboy"
-        />
-      )}
     </div>
   );
 }

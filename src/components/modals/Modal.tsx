@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { X } from 'lucide-react';
 import { ModalProps, ModalHeaderProps, ModalBodyProps, ModalFooterProps } from '../../types/global/modal';
+import { cn } from '@/lib/utils';
 import '../../styles/modal.css';
 
 // Contexto para compartilhar a função de fechamento
@@ -153,10 +154,17 @@ export function ModalBody({ children, className = '' }: ModalBodyProps) {
   );
 }
 
-export function ModalFooter({ children, className = '' }: ModalFooterProps) {
+export function ModalFooter({ children, className = '', align = 'right' }: ModalFooterProps) {
+  const alignClasses = {
+    left: 'justify-start',
+    center: 'justify-center',
+    right: 'justify-end',
+    between: 'justify-between'
+  };
+
   return (
-    <div className={`modal-footer ${className}`}>
-      <div className="modal-footer-content">
+    <div className={cn('modal-footer', className)}>
+      <div className={cn('flex items-center gap-3', alignClasses[align])}>
         {children}
       </div>
     </div>

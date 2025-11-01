@@ -52,12 +52,9 @@ export function CuponsLayout({
         onExport={onExport}
         loading={loading}
       />
-      
-      {/* Espaço para não sobrepor o conteúdo */}
-      <div className="h-0" />
 
       {/* Content */}
-      <div className="px-4 sm:px-6 pt-2 pb-12 cupons-content-container">
+      <div className="px-4 sm:px-6 pb-12 cupons-content-container" style={{ paddingTop: '16px' }}>
         {/* Loading state apenas para operações específicas */}
         {loading && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">

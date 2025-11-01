@@ -36,6 +36,7 @@ const DesktopSidebar = () => {
         borderTopRightRadius: "0px",
         borderBottomLeftRadius: "0px",
         borderBottomRightRadius: "0px",
+        borderRight: "1px solid #e5e7eb",
         display: "flex",
         flexDirection: "column",
         position: "relative",

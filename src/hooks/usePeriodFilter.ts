@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { PeriodType } from '../components/PeriodFilter';
 
-export function usePeriodFilter(initialPeriod: PeriodType = 'weekly') {
+export function usePeriodFilter(initialPeriod: PeriodType = 'monthly') {
   const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>(initialPeriod);
 
   const handlePeriodChange = useCallback((period: PeriodType) => {
@@ -17,7 +17,7 @@ export function usePeriodFilter(initialPeriod: PeriodType = 'weekly') {
       case 'monthly':
         return 'Mensal';
       default:
-        return 'Semanal';
+        return 'Mensal';
     }
   }, []);
 
@@ -28,7 +28,7 @@ export function usePeriodFilter(initialPeriod: PeriodType = 'weekly') {
       case 'monthly':
         return 30;
       default:
-        return 7;
+        return 30;
     }
   }, []);
 

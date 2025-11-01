@@ -17,7 +17,7 @@ export function CardapioLayout() {
         <CardapioHeader />
 
         {/* Espaço para não sobrepor o conteúdo */}
-        <div className="h-0" />
+        <div className="h-[50px]" />
 
         {/* Conteúdo Principal */}
         <div className="pt-6 px-6">

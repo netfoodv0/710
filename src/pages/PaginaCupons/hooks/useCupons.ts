@@ -7,7 +7,7 @@ import { UseCuponsReturn, CuponsData, Cupom, PeriodType } from '../types';
 import { FirebaseCuponsService } from '../../../services/firebase/cuponsService';
 
 export function useCupons(): UseCuponsReturn {
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('monthly');
   const [loading, setLoading] = useState(true); // Inicia como true para mostrar loading
   const [error, setError] = useState<string | null>(null);
   const [cupons, setCupons] = useState<Cupom[]>([]);

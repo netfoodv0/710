@@ -21,7 +21,7 @@ export default function Configuracoes() {
     hasChanges
   } = useConfiguracoes();
 
-  const { showNotification } = useNotificationContext();
+  const { showNotification, notifications, removeNotification } = useNotificationContext();
 
   const handleSave = async () => {
     try {
@@ -62,8 +62,17 @@ export default function Configuracoes() {
           abaAtiva={abaAtiva}
           onAbaChange={setAbaAtiva}
         />
-        
-        <NotificationToast />
+
+        {notifications.map((notification) => (
+          <NotificationToast
+            key={notification.id}
+            id={notification.id}
+            message={(notification as any).message}
+            type={notification.type}
+            duration={(notification as any).duration}
+            onClose={removeNotification}
+          />
+        ))}
       </div>
     </ErrorBoundary>
   );

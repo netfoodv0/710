@@ -8,7 +8,7 @@ import { UseRelatoriosGeralReturn } from '../types';
 
 export function useRelatoriosGeral(): UseRelatoriosGeralReturn {
   const navigate = useNavigate();
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('monthly');
   const [selectedReportType, setSelectedReportType] = useState<string>('geral');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +31,6 @@ export function useRelatoriosGeral(): UseRelatoriosGeralReturn {
 
   // Memoizar opções estáticas para evitar recriação a cada render
   const periodOptions = useMemo(() => [
-    { value: 'weekly' as PeriodType, label: 'Semanal' },
     { value: 'monthly' as PeriodType, label: 'Mensal' },
     { value: 'quarterly' as PeriodType, label: 'Trimestral' },
     { value: 'yearly' as PeriodType, label: 'Anual' }
@@ -39,7 +38,6 @@ export function useRelatoriosGeral(): UseRelatoriosGeralReturn {
 
   const reportTypeOptions = useMemo(() => [
     { id: 'geral', label: 'Geral' },
-    { id: 'clientes', label: 'Clientes' },
     { id: 'produtos', label: 'Produtos' }
   ], []);
 
@@ -59,9 +57,6 @@ export function useRelatoriosGeral(): UseRelatoriosGeralReturn {
     switch (reportType) {
       case 'geral':
         navigate('/relatorios/geral');
-        break;
-      case 'clientes':
-        navigate('/relatorios/clientes');
         break;
       case 'produtos':
         navigate('/relatorios/produtos');

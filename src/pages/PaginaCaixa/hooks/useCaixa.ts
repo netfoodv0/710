@@ -9,6 +9,7 @@ interface UseCaixaReturn {
   error: string | null;
   abrirCaixa: (dados: DadosAberturaCaixa) => Promise<string>;
   fecharCaixa: (dados: DadosFechamentoCaixa) => Promise<void>;
+  adicionarMovimentacao: (tipo: 'entrada' | 'saida', valor: number, descricao: string) => Promise<void>;
   refreshCaixa: () => void;
   clearError: () => void;
 }
@@ -89,6 +90,28 @@ export function useCaixa(): UseCaixaReturn {
     }
   }, [caixaAtual, buscarCaixaAtual]);
 
+  const adicionarMovimentacao = useCallback(async (tipo: 'entrada' | 'saida', valor: number, descricao: string): Promise<void> => {
+    if (!caixaAtual) {
+      throw new Error('Nenhum caixa aberto');
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await caixaService.adicionarMovimentacao(caixaAtual.id, tipo, valor, descricao);
+      
+      // Atualizar o caixa atual após adicionar movimentação
+      await buscarCaixaAtual();
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao adicionar movimentação';
+      setError(errorMessage);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [caixaAtual, buscarCaixaAtual]);
+
   const refreshCaixa = useCallback(() => {
     buscarCaixaAtual();
   }, [buscarCaixaAtual]);
@@ -103,6 +126,7 @@ export function useCaixa(): UseCaixaReturn {
     error,
     abrirCaixa,
     fecharCaixa,
+    adicionarMovimentacao,
     refreshCaixa,
     clearError
   };

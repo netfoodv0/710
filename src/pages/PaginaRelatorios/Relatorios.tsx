@@ -17,12 +17,11 @@ import {
 
 export default function Relatorios() {
   const navigate = useNavigate();
-  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('weekly');
+  const [selectedPeriod, setSelectedPeriod] = useState<PeriodType>('monthly');
   const [selectedReportType, setSelectedReportType] = useState<string>('geral');
   
   // Opções do dropdown de período
   const periodOptions: DropdownOption[] = [
-    { value: 'weekly', label: 'Semanal' },
     { value: 'monthly', label: 'Mensal' },
     { value: 'quarterly', label: 'Trimestral' },
     { value: 'yearly', label: 'Anual' }
@@ -31,7 +30,6 @@ export default function Relatorios() {
   // Opções para o componente Radio (tipos de relatório)
   const reportTypeOptions = [
     { id: 'geral', label: 'Geral' },
-    { id: 'clientes', label: 'Clientes' },
     { id: 'produtos', label: 'Produtos' }
   ];
 
@@ -70,9 +68,6 @@ export default function Relatorios() {
     switch (reportType) {
       case 'geral':
         navigate('/relatorios/geral');
-        break;
-      case 'clientes':
-        navigate('/relatorios/clientes');
         break;
       case 'produtos':
         navigate('/relatorios/produtos');
@@ -147,18 +142,6 @@ export default function Relatorios() {
           }
           rightContent={
             <div className="flex items-center gap-4">
-              {/* Filtro de período */}
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">Período:</label>
-                <CustomDropdown
-                  options={periodOptions}
-                  selectedValue={selectedPeriod}
-                  onValueChange={handlePeriodChange}
-                  size="sm"
-                  className="min-w-[140px]"
-                />
-              </div>
-              
               {/* Botões de exportação */}
               <div className="flex items-center gap-2">
                 <button

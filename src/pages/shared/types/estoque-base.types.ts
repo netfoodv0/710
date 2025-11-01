@@ -120,3 +120,6 @@ export interface EstoqueTranslationsBase {
     retry: string;
   };
 }
+
+
+

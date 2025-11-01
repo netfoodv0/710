@@ -1,6 +1,7 @@
 import React from 'react';
 import { CreditCard } from 'lucide-react';
 import { useCaixaModals } from '../context/CaixaModalsContext';
+import { useCaixa } from '../hooks';
 
 interface CaixaButtonProps {
   className?: string;
@@ -13,7 +14,16 @@ export function CaixaButton({
   size = 'md', 
   variant = 'primary' 
 }: CaixaButtonProps) {
-  const { openModalCaixaFechado } = useCaixaModals();
+  const { openModalCaixaFechado, openModalCaixaAbertoDetalhes } = useCaixaModals();
+  const { caixaAtual } = useCaixa();
+
+  const handleClick = () => {
+    if (caixaAtual) {
+      openModalCaixaAbertoDetalhes();
+    } else {
+      openModalCaixaFechado();
+    }
+  };
 
   const sizeClasses = {
     sm: 'px-3 py-1.5 text-sm',
@@ -27,11 +37,11 @@ export function CaixaButton({
     outline: 'border border-red-600 text-red-600 hover:bg-red-50'
   };
 
-  const baseClasses = 'inline-flex items-center gap-2 font-medium transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2';
+  const baseClasses = 'inline-flex items-center gap-2 font-medium transition-colors rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2';
 
   return (
     <button
-      onClick={openModalCaixaFechado}
+      onClick={handleClick}
       className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
       title="Abrir Caixa - Gerenciar operações de caixa"
     >

@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { PageHeader, DataTable, DataTableColumn } from '../../../components/ui';
-import { ModalCriarUsuario } from '../../../components/modals';
+import React, { useMemo } from 'react';
+import { DataTable, DataTableColumn } from '../../../components/ui';
 import { OperadoresTableProps } from '../types';
 
 export function OperadoresTable({ 
@@ -8,9 +7,8 @@ export function OperadoresTable({
   loading, 
   onEdit, 
   onDelete, 
-  onCreate 
+  onCreate
 }: OperadoresTableProps) {
-  const [showModal, setShowModal] = useState(false);
 
   const columns: DataTableColumn[] = useMemo(() => [
     {
@@ -73,17 +71,6 @@ export function OperadoresTable({
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Operadores"
-        subtitle="Gerencie operadores e funcionários do sistema"
-        actionButton={{
-          label: "Novo Operador",
-          onClick: () => setShowModal(true),
-          variant: "primary",
-          size: "md"
-        }}
-      />
-
       <DataTable
         data={operadores}
         columns={columns}
@@ -92,18 +79,6 @@ export function OperadoresTable({
         pagination
         itemsPerPage={10}
       />
-
-      {showModal && (
-        <ModalCriarUsuario
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          onSuccess={() => {
-            setShowModal(false);
-            onCreate();
-          }}
-          tipoUsuario="operador"
-        />
-      )}
     </div>
   );
 }

@@ -271,7 +271,9 @@
 
   /* Responsividade específica para página de cupons */
   .cupons-content-container {
-    padding: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 3rem;
   }
 
   .cupons-stats-wrapper {
@@ -320,7 +322,9 @@
 
   /* Responsividade específica para página de cupons */
   .cupons-content-container {
-    padding: 0.75rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    padding-bottom: 3rem;
   }
 
   .cupons-stats-wrapper {
@@ -350,7 +354,9 @@
 @media (max-width: 480px) {
   /* Responsividade específica para página de cupons */
   .cupons-content-container {
-    padding: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-bottom: 3rem;
   }
 
   .cupons-stats-wrapper {

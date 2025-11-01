@@ -577,6 +577,20 @@
         }
       ]
     },
+    {
+      "collectionGroup": "categoriasAdicionais",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "lojaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "nome",
+          "order": "ASCENDING"
+        }
+      ]
+    },
     
     // ===== ÍNDICES PARA HISTÓRICO DE PEDIDOS =====
     {

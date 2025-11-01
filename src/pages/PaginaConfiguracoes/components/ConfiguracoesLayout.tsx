@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle, Settings, Store, MapPin, Truck, ShoppingCart, Calendar, Receipt, CreditCard, Bell, Palette, Clock } from 'lucide-react';
-import { PageHeader } from '../../../components/ui';
+import { FixedPageHeader } from '../../../components/ui';
 import { NotificationToast } from '../../../components/NotificationToast';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
 import { FormSection } from '../../../components/forms/FormSection';
@@ -60,21 +60,33 @@ export function ConfiguracoesLayout({
     );
   }
 
+  // Botão Salvar Configurações
+  const rightContent = (
+    <button
+      onClick={onSave}
+      disabled={loading}
+      className={`inline-flex items-center gap-1.5 px-3 py-1.5 font-medium text-sm rounded-md transition-colors ${
+        loading 
+          ? 'bg-gray-400 cursor-not-allowed text-white' 
+          : 'bg-green-600 text-white hover:bg-green-700'
+      }`}
+    >
+      {loading ? 'Salvando...' : 'Salvar Configurações'}
+    </button>
+  );
+
   return (
     <ErrorBoundary>
       <div className="min-h-screen">
-        {/* Cabeçalho da página */}
-        <PageHeader
+        {/* Cabeçalho fixo */}
+        <FixedPageHeader
           title="Configurações"
           subtitle="Gerencie as configurações do seu restaurante"
-          actionButton={{
-            label: "Salvar Configurações",
-            onClick: onSave,
-            disabled: loading,
-            variant: "success",
-            size: "md"
-          }}
+          rightContent={rightContent}
         />
+        
+        {/* Espaço para não sobrepor o conteúdo */}
+        <div className="h-[50px]" />
 
         {/* Conteúdo principal */}
         <div className="px-6 py-6 space-y-6">

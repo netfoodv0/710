@@ -24,6 +24,8 @@ export { ClockIcon } from './ClockIcon';
 export { PageHeader } from './PageHeader';
 export { ActionButton } from './ActionButton';
 export { CabecalhoCustom } from './CabecalhoCustom';
+export { FixedPageHeader } from './FixedPageHeader';
+export { PageHeaderProvider, usePageHeader } from './PageHeaderContext';
 export { ReportIcon } from './ReportIcon';
 export { CouponIcon } from './CouponIcon';
 export { HistoryIcon } from './HistoryIcon';
@@ -50,9 +52,11 @@ export { EstoqueIcon } from './EstoqueIcon';
 export { FidelidadeIcon } from './FidelidadeIcon';
 export { ModalIcon } from './ModalIcon';
 export { OrganogramaIcon } from './OrganogramaIcon';
+export { DeliveryIcon } from './DeliveryIcon';
 export { IconExamples } from './IconExamples';
 export { ReportNavigation } from './ReportNavigation';
 export { EstoqueNavigation } from './EstoqueNavigation';
+export { AccessIcon } from './AccessIcon';
 
 
 export { TransitionWrapper } from './TransitionWrapper';
@@ -90,4 +94,5 @@ export {
 export { default as Radio } from './Radio';
 export { default as Toggle } from './Toggle';
 export { default as NavigationToggle } from './NavigationToggle';
-export { ContainerCustom } from './ContainerCustom'; 
+export { ContainerCustom } from './ContainerCustom';
+export { StatCard, type StatCardProps } from './StatCard'; 

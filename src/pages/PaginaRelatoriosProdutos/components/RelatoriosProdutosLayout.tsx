@@ -1,11 +1,10 @@
 import React from 'react';
 import { NotificationToast } from '../../../components/NotificationToast';
 import { ErrorBoundary } from '../../../components/ErrorBoundary';
-import { HeaderRelatorioProdutos } from '../../../components/relatorios';
+import { HeaderRelatoriosCompartilhado } from '../../../components/relatorios';
 import { DataTable } from '../../../components/ui';
-import { EstatisticasCustom } from '../../../components/EstatisticasCustom';
+import { EstatisticasCustom } from '../../../pages/PaginaDashboard/components/EstatisticasCustom';
 import { BagIcon, NewCustomerIcon, CompletedOrderIcon, RevenueIcon } from '../../../components/ui';
-import { ChartBarDaily } from '../../../components/charts/BarChartDaily';
 import { RelatoriosProdutosLayoutProps } from '../types';
 
 export function RelatoriosProdutosLayout({
@@ -25,18 +24,15 @@ export function RelatoriosProdutosLayout({
     <ErrorBoundary>
       <div className="min-h-screen">
         {/* Cabeçalho da página */}
-        <HeaderRelatorioProdutos
+        <HeaderRelatoriosCompartilhado
           selectedPeriod={selectedPeriod}
           onPeriodChange={onPeriodChange}
           onExport={onExport}
           loading={loading}
         />
-        
-        {/* Espaço para não sobrepor o conteúdo */}
-        <div className="h-0" />
 
         {/* Content */}
-        <div className="px-6 pt-2 pb-12" style={{ padding: '24px 24px 50px 24px' }}>
+        <div className="px-6 pt-4 pb-12" style={{ paddingTop: '16px', paddingLeft: '24px', paddingRight: '24px', paddingBottom: '50px' }}>
           {/* Loading state apenas para operações específicas */}
           {loading && (
             <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -99,12 +95,6 @@ export function RelatoriosProdutosLayout({
           />
           
           {/* Margem de 24px abaixo das estatísticas */}
-          <div className="mb-6"></div>
-
-          {/* Gráfico de Barras Diário */}
-          <ChartBarDaily />
-          
-          {/* Margem abaixo do gráfico */}
           <div className="mb-6"></div>
 
           {/* Tabela de Produtos */}

@@ -16,8 +16,6 @@ export function ReportNavigation({ currentPage }: ReportNavigationProps) {
     if (location.pathname.startsWith('/relatorios')) {
       if (location.pathname === '/relatorios/geral') {
         setCurrentPage('relatorios');
-      } else if (location.pathname.includes('/relatorios/clientes')) {
-        setCurrentPage('clientes');
       } else if (location.pathname.includes('/relatorios/produtos')) {
         setCurrentPage('produtos');
       }
@@ -47,12 +45,6 @@ export function ReportNavigation({ currentPage }: ReportNavigationProps) {
         className={getButtonStyle('relatorios')}
       >
         Relatórios
-      </button>
-      <button
-        onClick={() => handleNavigation('/relatorios/clientes')}
-        className={getButtonStyle('clientes')}
-      >
-        Clientes
       </button>
       <button
         onClick={() => handleNavigation('/relatorios/produtos')}

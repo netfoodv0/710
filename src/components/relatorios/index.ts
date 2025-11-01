@@ -3,7 +3,6 @@ export { RelatoriosContent } from './RelatoriosContent';
 export { RelatoriosErrorState } from './RelatoriosErrorState';
 
 // Headers de relatórios
-export { HeaderRelatorioProdutos } from './HeaderRelatorioProdutos';
 export { HeaderRelatorioCupons } from './HeaderRelatorioCupons';
 export { HeaderRelatoriosCompartilhado } from './HeaderRelatoriosCompartilhado';
 

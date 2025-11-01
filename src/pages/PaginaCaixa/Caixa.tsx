@@ -1,9 +1,11 @@
 import React from 'react';
 import { CaixaModals, CaixaButton } from './components';
 import { useCaixa } from './hooks';
+import { useCaixaModals } from './context/CaixaModalsContext';
 
 export function Caixa() {
   const { caixaAtual, loading, error } = useCaixa();
+  const { openModalCaixaAbertoDetalhes } = useCaixaModals();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -37,7 +39,10 @@ export function Caixa() {
             <p className="text-red-600">{error}</p>
           </div>
         ) : caixaAtual ? (
-          <div className="bg-white rounded-lg shadow p-6">
+          <div 
+            className="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={openModalCaixaAbertoDetalhes}
+          >
             <h2 className="text-lg font-semibold text-gray-900 mb-4">
               Caixa Aberto
             </h2>
@@ -84,6 +89,12 @@ export function Caixa() {
     </div>
   );
 }
+
+
+
+
+
+
 
 
 

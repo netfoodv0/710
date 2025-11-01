@@ -40,8 +40,11 @@ export default defineConfig({
       'react',
       'react-dom',
       'react-router-dom',
+      'leaflet',
+      'leaflet.heat'
     ],
     exclude: ['@vite/client', '@vite/env'],
+    dedupe: ['react', 'react-dom', '@emotion/react'],
     force: true,
   },
   // Configurações de esbuild mais conservadoras

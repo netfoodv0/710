@@ -29,14 +29,6 @@ export function CardPedidoHeader({
     }
   };
 
-  const handleWhatsApp = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (pedido.cliente?.telefone) {
-      const numeroLimpo = pedido.cliente.telefone.replace(/\D/g, '');
-      const link = `https://wa.me/55${numeroLimpo}`;
-      window.open(link, '_blank');
-    }
-  };
 
   return (
     <div className="flex items-center justify-between mb-3">
@@ -61,15 +53,6 @@ export function CardPedidoHeader({
         >
           <Printer className="w-4 h-4" />
         </button>
-        {pedido.cliente?.telefone && (
-          <button 
-            onClick={handleWhatsApp}
-            className="p-1 text-gray-400 hover:text-green-600 transition-colors"
-            title="Chamar no WhatsApp"
-          >
-            <MessageCircle className="w-4 h-4" />
-          </button>
-        )}
         <button className="p-1 text-gray-400 hover:text-gray-600">
           <Eye className="w-4 h-4" />
         </button>

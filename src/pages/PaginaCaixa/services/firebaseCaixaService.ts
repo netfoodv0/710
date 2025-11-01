@@ -4,6 +4,7 @@ import {
   updateDoc, 
   doc, 
   getDocs, 
+  getDoc,
   query, 
   where, 
   orderBy, 
@@ -11,7 +12,7 @@ import {
   serverTimestamp 
 } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
-import { Caixa, DadosAberturaCaixa, DadosFechamentoCaixa, CaixaResumo } from '../types';
+import { Caixa, DadosAberturaCaixa, DadosFechamentoCaixa, CaixaResumo, Movimentacao } from '../types';
 
 class FirebaseCaixaService {
   private collectionName = 'caixas';
@@ -155,6 +156,80 @@ class FirebaseCaixaService {
     } catch (error) {
       console.error('❌ Erro ao atualizar totais do caixa:', error);
       throw new Error('Erro ao atualizar totais do caixa');
+    }
+  }
+
+  async adicionarMovimentacao(caixaId: string, tipo: 'entrada' | 'saida', valor: number, descricao: string): Promise<void> {
+    try {
+      // Adicionar a movimentação na subcoleção
+      const movimentacaoData = {
+        tipo,
+        valor,
+        descricao,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+
+      await addDoc(
+        collection(db, this.collectionName, caixaId, 'movimentacoes'),
+        movimentacaoData
+      );
+
+      // Buscar o caixa atual para obter os valores atuais
+      const caixaRef = doc(db, this.collectionName, caixaId);
+      const caixaSnap = await getDoc(caixaRef);
+
+      if (!caixaSnap.exists()) {
+        throw new Error('Caixa não encontrado');
+      }
+
+      const caixaData = caixaSnap.data();
+      const totalEntradasAtual = caixaData.totalEntradas || 0;
+      const totalSaidasAtual = caixaData.totalSaidas || 0;
+
+      // Calcular novos totais baseado no tipo
+      const novosTotais = tipo === 'entrada'
+        ? { totalEntradas: totalEntradasAtual + valor }
+        : { totalSaidas: totalSaidasAtual + valor };
+
+      // Atualizar o caixa com os novos totais
+      await updateDoc(caixaRef, {
+        ...novosTotais,
+        updatedAt: serverTimestamp()
+      });
+
+      console.log(`✅ Movimentação ${tipo === 'entrada' ? 'de entrada' : 'de saída'} adicionada:`, { valor, descricao });
+    } catch (error) {
+      console.error('❌ Erro ao adicionar movimentação:', error);
+      throw new Error('Erro ao adicionar movimentação');
+    }
+  }
+
+  async buscarMovimentacoes(caixaId: string): Promise<Movimentacao[]> {
+    try {
+      const q = query(
+        collection(db, this.collectionName, caixaId, 'movimentacoes'),
+        orderBy('createdAt', 'desc')
+      );
+
+      const querySnapshot = await getDocs(q);
+      
+      const movimentacoes: Movimentacao[] = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          tipo: data.tipo,
+          valor: data.valor,
+          descricao: data.descricao,
+          createdAt: data.createdAt?.toDate() || new Date()
+        };
+      });
+
+      console.log('✅ Movimentações carregadas:', movimentacoes.length);
+      return movimentacoes;
+    } catch (error) {
+      console.error('❌ Erro ao buscar movimentações:', error);
+      return [];
     }
   }
 }

@@ -38,7 +38,7 @@ const chartConfig = {
 
 export function ChartRadarDots() {
   return (
-    <Card className="shadow-none border" style={{ borderColor: '#cfd1d3', background: 'linear-gradient(to bottom, #ffffff, #f5eff2)', borderRadius: '16px' }}>
+    <Card className="shadow-none border" style={{ borderColor: '#cfd1d3', background: '#ffffff', borderRadius: '16px' }}>
       <CardHeader className="items-center">
         <CardTitle className="text-gray-800">Distribuição Mensal</CardTitle>
         <CardDescription className="text-gray-600">

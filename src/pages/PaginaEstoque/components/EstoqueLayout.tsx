@@ -26,12 +26,9 @@ export function EstoqueLayout({
       <div className="min-h-screen w-full overflow-x-hidden">
         {/* Cabeçalho da página */}
         <HeaderEstoqueCompartilhado />
-        
-        {/* Espaço para não sobrepor o conteúdo */}
-        <div className="h-0" />
 
         {/* Content */}
-        <div className="w-full px-4 sm:px-6 lg:px-8 pt-2 pb-12">
+        <div className="w-full px-4 sm:px-6 lg:px-8 pt-4 pb-12" style={{ paddingTop: '16px' }}>
 
           {/* Error state */}
           {error && (

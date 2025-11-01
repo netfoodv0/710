@@ -7,7 +7,7 @@ import { ComplementosService } from '../../../pages/PaginaComplementos/services/
 import { CategoriaModal } from '../../../types/cardapio/categoriaModal';
 import { Complemento } from '../../../types/cardapio/complemento';
 import { auth } from '../../../lib/firebase';
-import { getCategoriasExemplo } from '../../../data/mockCardapio';
+// Removido uso de categorias de exemplo; exibir apenas dados do Firebase
 import { useNotificationContext } from '../../../context/notificationContextUtils';
 
 export function CardapioSidebar() {
@@ -42,24 +42,7 @@ export function CardapioSidebar() {
       }
 
       const categoriasCarregadas = await buscarCategorias(user.uid);
-      
-      // Se não há categorias cadastradas, usar dados de exemplo
-      if (categoriasCarregadas.length === 0) {
-        const categoriasExemplo = getCategoriasExemplo(user.uid);
-        setCategorias(categoriasExemplo);
-        
-        // Selecionar primeira categoria se não houver seleção
-        if (categoriaSelecionada === 'todos' || !categoriaSelecionada) {
-          updateFiltros({ categoria: categoriasExemplo[0].nome });
-        }
-      } else {
-        setCategorias(categoriasCarregadas);
-        
-        // Selecionar primeira categoria se não houver seleção
-        if (categoriasCarregadas.length > 0 && (categoriaSelecionada === 'todos' || !categoriaSelecionada)) {
-          updateFiltros({ categoria: categoriasCarregadas[0].nome });
-        }
-      }
+      setCategorias(categoriasCarregadas);
     } catch (error) {
       console.error('Erro ao carregar categorias:', error);
     }

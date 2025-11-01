@@ -39,11 +39,6 @@ const menuItems = [
   },
 
   {
-    path: '/atendimento',
-    label: 'Atendimento',
-    icon: SupportIcon
-  },
-  {
     path: '/modal',
     label: 'Modal',
     icon: ModalIcon
@@ -94,13 +89,7 @@ const menuItems = [
         path: '/relatorios/geral',
         label: 'Geral',
         icon: ReportIcon
-      },
-      {
-        path: '/relatorios/clientes',
-        label: 'Clientes',
-        icon: ReportIcon
-      },
-      {
+      },{
         path: '/relatorios/produtos',
         label: 'Produtos',
         icon: BagIcon
